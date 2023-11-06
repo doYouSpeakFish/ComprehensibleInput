@@ -13,7 +13,7 @@ hilt = "2.46.1"
 hiltPlugin = "2.46.1"
 hiltNavigation = "1.0.0"
 timber = "5.0.1"
-kotlinStdlib = "1.8.21"
+kotlinStdlib = "1.9.20"
 androidxNavigation = "2.5.3"
 androidxLifecycle = "2.6.1"
 
