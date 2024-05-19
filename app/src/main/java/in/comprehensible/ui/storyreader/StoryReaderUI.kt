@@ -2,6 +2,7 @@ package `in`.comprehensible.ui.storyreader
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -52,6 +53,7 @@ private fun StoryReader(
                         text = state.title,
                         style = MaterialTheme.typography.headlineLarge,
                     )
+                    Spacer(modifier = Modifier.padding(8.dp))
                     Text(
                         text = state.content,
                     )
