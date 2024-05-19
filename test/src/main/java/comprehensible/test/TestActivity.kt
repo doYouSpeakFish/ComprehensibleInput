@@ -1,4 +1,4 @@
-package `in`.comprehensible
+package comprehensible.test
 
 import androidx.activity.ComponentActivity
 import dagger.hilt.android.AndroidEntryPoint

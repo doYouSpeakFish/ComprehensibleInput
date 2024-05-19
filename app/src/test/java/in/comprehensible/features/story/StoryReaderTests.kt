@@ -3,10 +3,10 @@ package `in`.comprehensible.features.story
 import android.os.Build
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import comprehensible.test.TestActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import `in`.comprehensible.TestActivity
 import `in`.comprehensible.data.StoriesTestDataDsl
 import `in`.comprehensible.ui.storyreader.StoryReader
 import kotlinx.coroutines.Dispatchers

@@ -4,7 +4,6 @@
     <application>
         <activity
             android:name=".TestActivity"
-            android:exported="true"
-            android:theme="@style/Theme.ComprehensibleInput"></activity>
+            android:exported="true" />
     </application>
 </manifest>
