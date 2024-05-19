@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import `in`.comprehensible.ui.storyreader.StoryReader
 import `in`.comprehensible.ui.theme.ComprehensibleInputTheme
 import timber.log.Timber
 import javax.inject.Inject
@@ -39,10 +40,10 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
-                        startDestination = "greeting"
+                        startDestination = "storyReader"
                     ) {
-                        composable("greeting") {
-                            Greeting()
+                        composable("storyReader") {
+                            StoryReader()
                         }
                     }
                 }
