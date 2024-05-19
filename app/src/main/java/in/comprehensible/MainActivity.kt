@@ -19,25 +19,30 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.comprehensible.ui.theme.ComprehensibleInputTheme
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+
+        Timber.d("Setting UI content")
+
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             ComprehensibleInputTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
+                        modifier = Modifier.padding(innerPadding),
                         navController = navController,
                         startDestination = "greeting"
                     ) {
                         composable("greeting") {
-                            Greeting(
-                                modifier = Modifier.padding(innerPadding)
-                            )
+                            Greeting()
                         }
                     }
                 }
