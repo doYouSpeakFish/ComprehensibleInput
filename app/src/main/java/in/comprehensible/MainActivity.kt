@@ -11,19 +11,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import `in`.comprehensible.ui.storyreader.StoryReader
 import `in`.comprehensible.ui.theme.ComprehensibleInputTheme
+import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+
+        Timber.d("Setting UI content")
+
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             ComprehensibleInputTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    NavHost(
+                        modifier = Modifier.padding(innerPadding),
+                        navController = navController,
+                        startDestination = "storyReader"
+                    ) {
+                        composable("storyReader") {
+                            StoryReader()
+                        }
+                    }
                 }
             }
         }
@@ -31,10 +53,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(
+    modifier: Modifier = Modifier,
+    viewModel: GreetingViewModel = hiltViewModel()
+) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier,
+        text = "Hello ${viewModel.name}!"
     )
 }
 
@@ -42,6 +67,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     ComprehensibleInputTheme {
-        Greeting("Android")
+        Greeting()
     }
+}
+
+@HiltViewModel
+class GreetingViewModel @Inject constructor() : ViewModel() {
+    val name = "Android"
 }
