@@ -67,12 +67,14 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.hilt)
+    implementation(libs.coroutines)
 
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.coroutines.test)
 
     kaptTest(libs.hilt.compiler)
 
