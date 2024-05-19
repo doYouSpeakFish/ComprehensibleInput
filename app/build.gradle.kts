@@ -1,8 +1,8 @@
 plugins {
-    id("kotlin-kapt")
     alias(libs.plugins.hilt)
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.navigation)
     implementation(libs.hilt)
     implementation(libs.coroutines)
 
@@ -75,6 +76,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.hilt.android.testing)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.androidx.ui.test.junit4)
 
     kaptTest(libs.hilt.compiler)
 
