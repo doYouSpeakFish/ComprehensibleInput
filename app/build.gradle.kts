@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "in.comprehensible"
+    namespace = "input.comprehensible"
     compileSdk = 34
 
     defaultConfig {
