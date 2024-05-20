@@ -60,9 +60,7 @@ class StoryReaderTests {
         )
         composeTestRule.setContent { StoryReader() }
         runCurrent()
-        storyReaderRobot(composeTestRule) {
-            assertStoryTitleIsShown("Test Story")
-        }
+        storyReaderRobot(composeTestRule).assertStoryTitleIsShown("Test Story")
     }
 
     @Test
@@ -73,8 +71,6 @@ class StoryReaderTests {
         )
         composeTestRule.setContent { StoryReader() }
         runCurrent()
-        storyReaderRobot(composeTestRule) {
-            assertStoryLineIsVisible("First line of the story")
-        }
+        storyReaderRobot(composeTestRule).assertStoryLineIsVisible("First line of the story")
     }
 }

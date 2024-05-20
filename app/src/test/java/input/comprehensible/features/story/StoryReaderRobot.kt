@@ -17,5 +17,5 @@ class StoryReaderRobot(private val composeTestRule: ComposeTestRule) {
 
 suspend fun storyReaderRobot(
     composeTestRule: ComposeTestRule,
-    block: suspend StoryReaderRobot.() -> Unit
-) = StoryReaderRobot(composeTestRule).block()
+    block: suspend StoryReaderRobot.() -> Unit = {}
+) = StoryReaderRobot(composeTestRule).apply { block() }
