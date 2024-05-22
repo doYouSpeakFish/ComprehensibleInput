@@ -7,7 +7,7 @@ import comprehensible.test.TestActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import input.comprehensible.data.StoriesTestDataDsl
+import input.comprehensible.data.StoriesTestData
 import input.comprehensible.ui.storyreader.StoryReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +43,7 @@ class StoryReaderTests {
     val composeTestRule = createAndroidComposeRule<TestActivity>(testDispatcher)
 
     @Inject
-    lateinit var storiesData: StoriesTestDataDsl
+    lateinit var storiesData: StoriesTestData
 
     @Before
     fun setUp() {
