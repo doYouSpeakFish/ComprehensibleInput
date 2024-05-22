@@ -22,7 +22,7 @@ class ComprehensibleInputTestScope(
             composeRule.setContent {
                 navController = TestNavHostController(LocalContext.current)
                 navController.navigatorProvider.addNavigator(ComposeNavigator())
-                ComprehensibleInputApp()
+                ComprehensibleInputApp(navController = navController)
             }
             testScope.runCurrent()
             isAppUiLaunched = true
@@ -32,6 +32,11 @@ class ComprehensibleInputTestScope(
     fun goToStoryList() {
         launchAppUi()
         navController.navigate("storyList")
+    }
+
+    fun goToStoryReader() {
+        launchAppUi()
+        navController.navigate("storyReader")
     }
 }
 

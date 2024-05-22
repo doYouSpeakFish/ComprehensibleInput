@@ -3,6 +3,7 @@ package input.comprehensible.features.story
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
+import input.comprehensible.ComprehensibleInputTestScope
 
 class StoryReaderRobot(private val composeTestRule: ComposeTestRule) {
 
@@ -15,7 +16,6 @@ class StoryReaderRobot(private val composeTestRule: ComposeTestRule) {
     }
 }
 
-suspend fun storyReaderRobot(
-    composeTestRule: ComposeTestRule,
+suspend fun ComprehensibleInputTestScope.onStoryReader(
     block: suspend StoryReaderRobot.() -> Unit = {}
-) = StoryReaderRobot(composeTestRule).apply { block() }
+) = StoryReaderRobot(composeRule).apply { block() }

@@ -15,23 +15,32 @@ import org.junit.runners.model.Statement
 import org.robolectric.shadows.ShadowLog
 
 @OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)
-class ComprehensibleInputTestRule : TestRule {
+class ComprehensibleInputTestRule(private val testInstance: Any) : TestRule {
     val testDispatcher = StandardTestDispatcher()
 
     lateinit var composeRule: ComposeContentTestRule
         private set
 
+    lateinit var hiltAndroidRule: HiltAndroidRule
+        private set
+
     override fun apply(base: Statement, description: Description): Statement {
-        val hiltAndroidRule = HiltAndroidRule(this)
-        val hiltRuleStatement = hiltAndroidRule.apply(base, description)
+
+        val testSetupStatement = object : Statement() {
+            override fun evaluate() {
+                Dispatchers.setMain(testDispatcher)
+                ShadowLog.stream = System.out
+                hiltAndroidRule.inject()
+                base.evaluate()
+            }
+        }
 
         composeRule = createAndroidComposeRule<TestActivity>(testDispatcher)
-        val composeRuleStatement = composeRule.apply(hiltRuleStatement, description)
+        val composeRuleStatement = composeRule.apply(testSetupStatement, description)
 
-        Dispatchers.setMain(testDispatcher)
-        ShadowLog.stream = System.out
-        hiltAndroidRule.inject()
+        hiltAndroidRule = HiltAndroidRule(testInstance)
+        val hiltRuleStatement = hiltAndroidRule.apply(composeRuleStatement, description)
 
-        return composeRuleStatement
+        return hiltRuleStatement
     }
 }
