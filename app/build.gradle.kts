@@ -80,6 +80,7 @@ dependencies {
     testImplementation(libs.hilt.android.testing)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.androidx.navigation.testing)
 
     kaptTest(libs.hilt.compiler)
 
