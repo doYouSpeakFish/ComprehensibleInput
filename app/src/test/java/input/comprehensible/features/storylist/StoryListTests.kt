@@ -1,4 +1,4 @@
-package input.comprehensible.features.story
+package input.comprehensible.features.storylist
 
 import android.os.Build
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -6,6 +6,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
+import input.comprehensible.features.story.onStoryReader
 import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -21,8 +22,7 @@ import javax.inject.Inject
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
     application = HiltTestApplication::class,
 )
-class StoryReaderTests {
-
+class StoryListTests {
     @get:Rule
     val testRule = ComprehensibleInputTestRule(this)
 
@@ -30,25 +30,36 @@ class StoryReaderTests {
     lateinit var storiesData: StoriesTestData
 
     @Test
-    fun `story title is shown`() = testRule.runTest {
+    fun `first story can be selected`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
         storiesData.setLocalStories(stories)
 
-        goToStoryReader(stories.first().id)
+        goToStoryList()
         runCurrent()
 
+        onStoryList {
+            selectStory(stories.first())
+            runCurrent()
+        }
+
         onStoryReader {
-            assertStoryTitleIsShown(stories.first().title)
+            assertStoryLineIsVisible(stories.first().content)
         }
     }
 
     @Test
-    fun `story content is shown`() = testRule.runTest {
+    fun `last story can be selected`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
         storiesData.setLocalStories(stories)
 
-        goToStoryReader(stories.last().id)
+        goToStoryList()
         runCurrent()
+
+        onStoryList {
+            findStory(stories.lastIndex)
+            selectStory(stories.last())
+            runCurrent()
+        }
 
         onStoryReader {
             assertStoryLineIsVisible(stories.last().content)

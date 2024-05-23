@@ -8,17 +8,13 @@ import javax.inject.Inject
 class StoriesTestData @Inject constructor(
     private val storiesLocalDataSource: FakeStoriesLocalDataSource
 ) {
-    fun setLocalStory(
-        title: String,
-        content: String
-    ) {
-        storiesLocalDataSource.story = Story(
-            title = title,
-            content = content
-        )
-    }
-
-    fun setLocalStories(listOf100Stories: List<TestStory>) {
-        TODO("Not yet implemented")
+    fun setLocalStories(stories: List<TestStory>) {
+        storiesLocalDataSource.stories = stories.map {
+            Story(
+                id = it.id,
+                title = it.title,
+                content = it.content
+            )
+        }
     }
 }

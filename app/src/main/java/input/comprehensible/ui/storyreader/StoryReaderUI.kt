@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +28,7 @@ fun StoryReader(
     modifier: Modifier = Modifier,
     viewModel: StoryReaderViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
     StoryReader(modifier, state)
 }
 
@@ -39,7 +40,7 @@ private fun StoryReader(
     Box(modifier) {
         when (state) {
             is StoryReaderUiState.Loading -> {
-                CircularProgressIndicator()
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
 
             is StoryReaderUiState.Loaded -> {
