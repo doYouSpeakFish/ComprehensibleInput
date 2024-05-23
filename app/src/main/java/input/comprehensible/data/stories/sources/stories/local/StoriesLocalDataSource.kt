@@ -14,7 +14,7 @@ interface StoriesLocalDataSource {
     /**
      * Gets a story from the local data source.
      */
-    suspend fun getStory(): Story
+    suspend fun getStory(id: String): Story
 }
 
 /**

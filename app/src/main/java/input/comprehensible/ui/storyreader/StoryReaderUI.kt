@@ -27,7 +27,7 @@ fun StoryReader(
     modifier: Modifier = Modifier,
     viewModel: StoryReaderViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
     StoryReader(modifier, state)
 }
 

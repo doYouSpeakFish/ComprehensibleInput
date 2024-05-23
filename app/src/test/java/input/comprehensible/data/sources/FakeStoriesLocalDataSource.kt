@@ -12,9 +12,10 @@ import javax.inject.Singleton
 
 @Singleton
 class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource {
-    var story = Story("title", "content")
-    override suspend fun getStory(): Story {
-        return story
+    var stories = listOf(Story(id = "1", "title", "content"))
+    override suspend fun getStory(id: String): Story {
+        return stories.first { it.id == id }
+    }
     }
 }
 

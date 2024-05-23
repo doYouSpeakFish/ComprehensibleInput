@@ -11,8 +11,9 @@ import kotlinx.coroutines.withContext
 class DefaultStoriesLocalDataSource(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : StoriesLocalDataSource {
-    override suspend fun getStory() = withContext(dispatcher) {
+    override suspend fun getStory(id: String) = withContext(dispatcher) {
         Story(
+            id = "1",
             title = "Geheimes Heilbad [Secret Spa] - A2",
             content = """
             Maria lebt in einem kleinen Dorf. Jeden Morgen geht sie spazieren im Wald neben ihrem Haus. Sie liebt die Ruhe und die frische Luft.

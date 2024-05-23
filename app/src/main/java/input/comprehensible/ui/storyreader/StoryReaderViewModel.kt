@@ -1,13 +1,10 @@
 package input.comprehensible.ui.storyreader
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 /**
@@ -15,19 +12,20 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class StoryReaderViewModel @Inject constructor(
-    private val storiesRepository: StoriesRepository
+    private val storiesRepository: StoriesRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    val story = flow { emit(storiesRepository.getStory()) }
-
-    val state = story.map {
-        StoryReaderUiState.Loaded(
-            title = it.title,
-            content = it.content
-        )
-    }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = StoryReaderUiState.Loading
-        )
+    val state = savedStateHandle
+        .getStateFlow<String?>("storyId", null)
+        .map {
+            if (it == null) {
+                StoryReaderUiState.Loading
+            } else {
+                val story = storiesRepository.getStory(it)
+                StoryReaderUiState.Loaded(
+                    title = story.title,
+                    content = story.content
+                )
+            }
+        }
 }

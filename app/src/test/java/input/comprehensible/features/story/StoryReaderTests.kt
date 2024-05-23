@@ -5,6 +5,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
+import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -30,29 +31,27 @@ class StoryReaderTests {
 
     @Test
     fun `story title is shown`() = testRule.runTest {
-        storiesData.setLocalStory(
-            title = "Test Story",
-            content = "First line of the story"
-        )
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
 
-        goToStoryReader()
+        goToStoryReader(stories.first().id)
+        runCurrent()
 
         onStoryReader {
-            assertStoryTitleIsShown("Test Story")
+            assertStoryTitleIsShown(stories.first().title)
         }
     }
 
     @Test
     fun `story content is shown`() = testRule.runTest {
-        storiesData.setLocalStory(
-            title = "Test Story",
-            content = "First line of the story"
-        )
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
 
-        goToStoryReader()
+        goToStoryReader(stories.last().id)
+        runCurrent()
 
         onStoryReader {
-            assertStoryLineIsVisible("First line of the story")
+            assertStoryLineIsVisible(stories.last().content)
         }
     }
 }
