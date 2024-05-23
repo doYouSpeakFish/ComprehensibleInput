@@ -1,5 +1,6 @@
 package input.comprehensible.data.stories.sources.stories.local
 
+import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -12,10 +13,26 @@ class DefaultStoriesLocalDataSource(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : StoriesLocalDataSource {
     override suspend fun getStory(id: String) = withContext(dispatcher) {
-        Story(
-            id = "1",
-            title = "Geheimes Heilbad [Secret Spa] - A2",
-            content = """
+        stories.firstOrNull { it.id == id }
+    }
+
+    override suspend fun getStories() = withContext(dispatcher) {
+        StoriesList(
+            stories = stories.map {
+                StoriesList.StoriesItem(
+                    id = it.id,
+                    title = it.title,
+                )
+            }
+        )
+    }
+}
+
+private val stories = listOf(
+    Story(
+        id = "1",
+        title = "Geheimes Heilbad [Secret Spa] - A2",
+        content = """
             Maria lebt in einem kleinen Dorf. Jeden Morgen geht sie spazieren im Wald neben ihrem Haus. Sie liebt die Ruhe und die frische Luft.
 
             Eines Tages hört sie das Geräusch von fließendem [flowing] Wasser. Sie folgt dem Geräusch und entdeckt eine Quelle [Spring]. Das Wasser ist warm.
@@ -42,6 +59,5 @@ class DefaultStoriesLocalDataSource(
 
             Ende.
         """.trimIndent()
-        )
-    }
-}
+    )
+)

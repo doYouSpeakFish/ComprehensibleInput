@@ -21,7 +21,9 @@ class StoryReaderViewModel @Inject constructor(
             if (it == null) {
                 StoryReaderUiState.Loading
             } else {
-                val story = storiesRepository.getStory(it)
+                val story = requireNotNull(storiesRepository.getStory(it)) {
+                    "Story with id $it not found"
+                }
                 StoryReaderUiState.Loaded(
                     title = story.title,
                     content = story.content

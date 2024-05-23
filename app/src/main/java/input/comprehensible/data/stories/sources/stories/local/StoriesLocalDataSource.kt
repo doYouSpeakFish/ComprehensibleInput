@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
 import javax.inject.Singleton
 
@@ -14,7 +15,12 @@ interface StoriesLocalDataSource {
     /**
      * Gets a story from the local data source.
      */
-    suspend fun getStory(id: String): Story
+    suspend fun getStory(id: String): Story?
+
+    /**
+     * Gets a list of stories from the local data source.
+     */
+    suspend fun getStories(): StoriesList
 }
 
 /**
