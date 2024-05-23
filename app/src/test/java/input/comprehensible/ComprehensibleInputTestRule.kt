@@ -4,19 +4,27 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import comprehensible.test.TestActivity
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.robolectric.shadows.ShadowLog
+import javax.inject.Singleton
+
+private val standardTestDispatcher = StandardTestDispatcher()
 
 @OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)
 class ComprehensibleInputTestRule(private val testInstance: Any) : TestRule {
-    val testDispatcher = StandardTestDispatcher()
+    val testDispatcher = standardTestDispatcher
 
     lateinit var composeRule: ComposeContentTestRule
         private set
@@ -43,4 +51,12 @@ class ComprehensibleInputTestRule(private val testInstance: Any) : TestRule {
 
         return hiltRuleStatement
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class CoroutinesModule {
+    @Provides
+    @Singleton
+    fun provideTestDispatcher(): TestDispatcher = standardTestDispatcher
 }
