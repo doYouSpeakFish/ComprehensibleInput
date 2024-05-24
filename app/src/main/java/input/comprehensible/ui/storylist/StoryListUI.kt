@@ -19,11 +19,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
-/**
- * A screen for displaying a list of stories.
- */
 @Composable
-fun StoryListScreen(
+internal fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (id: String) -> Unit,
     viewModel: StoryListViewModel = hiltViewModel()

@@ -11,7 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import input.comprehensible.ui.storylist.StoryListScreen
+import input.comprehensible.ui.storylist.STORY_LIST_ROUTE
+import input.comprehensible.ui.storylist.storyList
 import input.comprehensible.ui.storyreader.StoryReader
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 
@@ -27,7 +28,7 @@ fun ComprehensibleInputApp(
             NavHost(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
-                startDestination = "storyList"
+                startDestination = STORY_LIST_ROUTE
             ) {
                 composable(
                     route = "storyReader/{storyId}",
@@ -40,14 +41,11 @@ fun ComprehensibleInputApp(
                 ) {
                     StoryReader(Modifier.fillMaxSize())
                 }
-                composable("StoryList") {
-                    StoryListScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        onStorySelected = {
-                            navController.navigate("storyReader/${it}")
-                        }
-                    )
-                }
+                storyList(
+                    onStorySelected = {
+                        navController.navigate("storyReader/${it}")
+                    }
+                )
             }
         }
     }
