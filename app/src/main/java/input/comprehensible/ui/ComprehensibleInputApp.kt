@@ -6,13 +6,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import input.comprehensible.ui.storylist.StoryListScreen
-import input.comprehensible.ui.storyreader.StoryReader
+import input.comprehensible.ui.storylist.STORY_LIST_ROUTE
+import input.comprehensible.ui.storylist.storyList
+import input.comprehensible.ui.storyreader.navigateToStoryReader
+import input.comprehensible.ui.storyreader.storyReader
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 
 /**
@@ -27,27 +26,12 @@ fun ComprehensibleInputApp(
             NavHost(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
-                startDestination = "storyList"
+                startDestination = STORY_LIST_ROUTE
             ) {
-                composable(
-                    route = "storyReader/{storyId}",
-                    arguments = listOf(
-                        navArgument("storyId") {
-                            type = NavType.StringType
-                            defaultValue = "1"
-                        }
-                    )
-                ) {
-                    StoryReader(Modifier.fillMaxSize())
-                }
-                composable("StoryList") {
-                    StoryListScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        onStorySelected = {
-                            navController.navigate("storyReader/${it}")
-                        }
-                    )
-                }
+                storyReader()
+                storyList(
+                    onStorySelected = navController::navigateToStoryReader
+                )
             }
         }
     }
