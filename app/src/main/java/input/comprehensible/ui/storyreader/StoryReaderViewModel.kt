@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
+import input.comprehensible.ui.components.storycontent.part.toStoryContentPartUiState
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -27,6 +28,7 @@ class StoryReaderViewModel @Inject constructor(
                 StoryReaderUiState.Loaded(
                     title = story.title,
                     content = story.content
+                        .map { storyElement -> storyElement.toStoryContentPartUiState() }
                 )
             }
         }

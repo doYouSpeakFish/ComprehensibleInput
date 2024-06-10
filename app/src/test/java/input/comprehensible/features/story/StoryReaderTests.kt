@@ -51,7 +51,7 @@ class StoryReaderTests {
         runCurrent()
 
         onStoryReader {
-            assertStoryLineIsVisible(stories.last().content)
+            assertStoryTextIsVisible(stories.last().paragraphs.first().text)
         }
     }
 }
