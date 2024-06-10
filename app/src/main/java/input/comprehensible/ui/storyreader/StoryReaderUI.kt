@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import input.comprehensible.ui.components.storycontent.part.StoryContentPart
+import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
@@ -55,9 +57,11 @@ private fun StoryReader(
                         style = MaterialTheme.typography.headlineLarge,
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
-                    Text(
-                        text = state.content,
-                    )
+                    state.content.forEach {
+                        StoryContentPart(
+                            state = it,
+                        )
+                    }
                 }
             }
         }
@@ -71,7 +75,9 @@ fun StoryReaderPreview() {
         StoryReader(
             state = StoryReaderUiState.Loaded(
                 title = "Title",
-                content = "Content"
+                content = listOf(
+                    StoryContentPartUiState.Paragraph("Content")
+                )
             )
         )
     }

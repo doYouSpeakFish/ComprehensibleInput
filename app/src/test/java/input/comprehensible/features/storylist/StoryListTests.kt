@@ -43,7 +43,7 @@ class StoryListTests {
         }
 
         onStoryReader {
-            assertStoryLineIsVisible(stories.first().content)
+            assertStoryTextIsVisible(stories.first().paragraphs.first().text)
         }
     }
 
@@ -62,7 +62,7 @@ class StoryListTests {
         }
 
         onStoryReader {
-            assertStoryLineIsVisible(stories.last().content)
+            assertStoryTextIsVisible(stories.last().paragraphs.first().text)
         }
     }
 }

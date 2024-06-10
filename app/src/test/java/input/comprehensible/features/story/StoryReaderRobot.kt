@@ -11,7 +11,7 @@ class StoryReaderRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
     }
 
-    fun assertStoryLineIsVisible(line: String) {
+    fun assertStoryTextIsVisible(line: String) {
         composeTestRule.onNodeWithText(line).assertIsDisplayed()
     }
 }
