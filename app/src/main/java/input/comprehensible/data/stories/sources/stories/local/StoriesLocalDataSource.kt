@@ -1,7 +1,7 @@
 package input.comprehensible.data.stories.sources.stories.local
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import input.comprehensible.data.stories.model.StoriesList
@@ -28,8 +28,10 @@ interface StoriesLocalDataSource {
  */
 @Module
 @InstallIn(SingletonComponent::class)
-class StoriesLocalDataSourceModule {
-    @Provides
+interface StoriesLocalDataSourceModule {
+    @Binds
     @Singleton
-    fun provideStoriesLocalDataSource(): StoriesLocalDataSource = DefaultStoriesLocalDataSource()
+    fun provideStoriesLocalDataSource(
+        defaultStoriesLocalDataSource: DefaultStoriesLocalDataSource
+    ): StoriesLocalDataSource
 }
