@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    kotlin("plugin.serialization").version(libs.versions.kotlin.get())
     id("kotlin-kapt")
 }
 
@@ -72,6 +73,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.coroutines)
     implementation(libs.timber)
+    implementation(libs.serialization.json)
 
     kapt(libs.hilt.compiler)
 

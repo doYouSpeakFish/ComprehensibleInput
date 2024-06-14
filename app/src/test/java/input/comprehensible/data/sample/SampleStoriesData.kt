@@ -6,7 +6,11 @@ object SampleStoriesData {
             id = "$storyNumber",
             title = "Title $storyNumber",
             content = List(10) { paragraphNumber ->
-                TestStoryPart.Paragraph(text = "Paragraph $paragraphNumber")
+                if (paragraphNumber % 2 == 0) {
+                    TestStoryPart.Image(contentDescription = "Image $paragraphNumber")
+                } else {
+                    TestStoryPart.Paragraph(text = "Paragraph $paragraphNumber")
+                }
             }
         )
     }
@@ -19,8 +23,13 @@ data class TestStory(
 ) {
     val paragraphs: List<TestStoryPart.Paragraph> =
         content.filterIsInstance<TestStoryPart.Paragraph>()
+
+    val images: List<TestStoryPart.Image> =
+        content.filterIsInstance<TestStoryPart.Image>()
 }
 
 sealed interface TestStoryPart {
     data class Paragraph(val text: String) : TestStoryPart
+
+    data class Image(val contentDescription: String) : TestStoryPart
 }

@@ -1,5 +1,7 @@
 package input.comprehensible.data.stories.model
 
+import android.graphics.Bitmap
+
 /**
  * A story that can be read.
  */
@@ -17,4 +19,12 @@ sealed interface StoryElement {
      * A paragraph of text.
      */
     data class Paragraph(val text: String) : StoryElement
+
+    /**
+     * An image in a story.
+     */
+    data class Image(
+        val contentDescription: String,
+        val bitmap: Bitmap
+    ) : StoryElement
 }

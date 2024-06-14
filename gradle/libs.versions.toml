@@ -16,6 +16,7 @@ coroutines = "1.8.1"
 timber = "5.0.1"
 appcompat = "1.7.0"
 navigationTesting = "2.7.7"
+serialization-json = "1.6.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
+serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization-json" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

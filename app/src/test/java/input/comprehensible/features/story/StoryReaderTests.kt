@@ -54,4 +54,18 @@ class StoryReaderTests {
             assertStoryTextIsVisible(stories.last().paragraphs.first().text)
         }
     }
+
+    @Test
+    fun `first image for story is shown`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        val story = stories.first()
+        goToStoryReader(story.id)
+        runCurrent()
+
+        onStoryReader {
+            assertImageIsShown(story.images.first())
+        }
+    }
 }
