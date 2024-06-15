@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -88,11 +89,19 @@ private fun StoryListItem(
             bitmap = story.featuredImage.asImageBitmap(),
             contentDescription = story.featuredImageContentDescription,
         )
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = story.title,
-            style = MaterialTheme.typography.titleMedium
-        )
+        Column(
+            Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = story.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = story.subtitle,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
     }
 }
 
@@ -107,6 +116,7 @@ private fun StoryListScreenPreview() {
                     StoryListUiState.StoryListItem(
                         id = "$it",
                         title = "Title $it",
+                        subtitle = "Subtitle $it",
                         featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
                         featuredImageContentDescription = "Content description $it"
                     )
