@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,28 +40,30 @@ private fun StoryReader(
     modifier: Modifier = Modifier,
     state: StoryReaderUiState
 ) {
-    Box(modifier) {
-        when (state) {
-            is StoryReaderUiState.Loading -> {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
-            }
+    Scaffold(modifier) { paddingValues ->
+        Box(Modifier.padding(paddingValues)) {
+            when (state) {
+                is StoryReaderUiState.Loading -> {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
 
-            is StoryReaderUiState.Loaded -> {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Text(
-                        text = state.title,
-                        style = MaterialTheme.typography.headlineLarge,
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    state.content.forEach {
-                        StoryContentPart(
-                            state = it,
+                is StoryReaderUiState.Loaded -> {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = state.title,
+                            style = MaterialTheme.typography.headlineLarge,
                         )
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        state.content.forEach {
+                            StoryContentPart(
+                                state = it,
+                            )
+                        }
                     }
                 }
             }
