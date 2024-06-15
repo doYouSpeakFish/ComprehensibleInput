@@ -39,6 +39,11 @@ class ComprehensibleInputTestScope(
         navController.navigate("storyReader/$id")
     }
 
+    fun goToSoftwareLicences() {
+        launchAppUi()
+        navController.navigate("softwareLicences")
+    }
+
     fun runCurrent() {
         testScope.runCurrent()
     }
