@@ -1,13 +1,13 @@
 package input.comprehensible.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import input.comprehensible.ui.settings.settings.navigateToSettings
+import input.comprehensible.ui.settings.settingsNavGraph
 import input.comprehensible.ui.storylist.STORY_LIST_ROUTE
 import input.comprehensible.ui.storylist.storyList
 import input.comprehensible.ui.storyreader.navigateToStoryReader
@@ -22,17 +22,17 @@ fun ComprehensibleInputApp(
     navController: NavHostController = rememberNavController()
 ) {
     ComprehensibleInputTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            NavHost(
-                modifier = Modifier.padding(innerPadding),
-                navController = navController,
-                startDestination = STORY_LIST_ROUTE
-            ) {
-                storyReader()
-                storyList(
-                    onStorySelected = navController::navigateToStoryReader
-                )
-            }
+        NavHost(
+            modifier = Modifier.fillMaxSize(),
+            navController = navController,
+            startDestination = STORY_LIST_ROUTE,
+        ) {
+            settingsNavGraph(navController)
+            storyReader()
+            storyList(
+                onStorySelected = navController::navigateToStoryReader,
+                onSettingsClick = navController::navigateToSettings,
+            )
         }
     }
 }

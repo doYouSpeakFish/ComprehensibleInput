@@ -6,7 +6,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import timber.log.Timber
 
 const val STORY_LIST_ROUTE = "storyList"
 
@@ -27,14 +26,13 @@ fun NavController.navigateToStoryList(
  */
 fun NavGraphBuilder.storyList(
     onStorySelected: (String) -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     composable("StoryList") {
         StoryListScreen(
             modifier = Modifier.fillMaxSize(),
-            onStorySelected = {
-                Timber.d("navigating to story $it")
-                onStorySelected(it)
-            }
+            onStorySelected = onStorySelected,
+            onSettingsClick = onSettingsClick,
         )
     }
 }

@@ -3,7 +3,6 @@ package input.comprehensible.ui.storylist
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -14,14 +13,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import input.comprehensible.R
+import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
@@ -29,13 +32,15 @@ import input.comprehensible.util.DefaultPreview
 internal fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (id: String) -> Unit,
-    viewModel: StoryListViewModel = hiltViewModel()
+    onSettingsClick: () -> Unit,
+    viewModel: StoryListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
     StoryListScreen(
         modifier = modifier,
         onStorySelected = { onStorySelected(it.id) },
-        state = state
+        onSettingsClick = onSettingsClick,
+        state = state,
     )
 }
 
@@ -43,10 +48,20 @@ internal fun StoryListScreen(
 private fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (StoryListUiState.StoryListItem) -> Unit,
-    state: StoryListUiState
+    onSettingsClick: () -> Unit,
+    state: StoryListUiState,
 ) {
-    Box(modifier) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopBar(
+                onSettingsClick = onSettingsClick,
+                title = stringResource(R.string.stories_screen_title),
+            )
+        }
+    ) { paddingValues ->
         LazyVerticalStaggeredGrid(
+            modifier = Modifier.padding(paddingValues),
             columns = StaggeredGridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(16.dp),
             verticalItemSpacing = 16.dp,
@@ -91,16 +106,16 @@ private fun StoryListItem(
         )
         Column(
             Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = story.title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
             Text(
                 text = story.subtitle,
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
             )
         }
     }
@@ -112,6 +127,7 @@ private fun StoryListScreenPreview() {
     ComprehensibleInputTheme {
         StoryListScreen(
             onStorySelected = {},
+            onSettingsClick = {},
             state = StoryListUiState(
                 stories = List(100) {
                     StoryListUiState.StoryListItem(
@@ -119,10 +135,10 @@ private fun StoryListScreenPreview() {
                         title = "Title $it",
                         subtitle = "Subtitle $it",
                         featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
-                        featuredImageContentDescription = "Content description $it"
+                        featuredImageContentDescription = "Content description $it",
                     )
                 }
-            )
+            ),
         )
     }
 }
