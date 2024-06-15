@@ -7,7 +7,7 @@ object SampleStoriesData {
             title = "Title $storyNumber",
             content = List(10) { paragraphNumber ->
                 if (paragraphNumber % 2 == 0) {
-                    TestStoryPart.Image(contentDescription = "Image $paragraphNumber")
+                    TestStoryPart.Image(contentDescription = "Image $storyNumber-$paragraphNumber")
                 } else {
                     TestStoryPart.Paragraph(text = "Paragraph $paragraphNumber")
                 }

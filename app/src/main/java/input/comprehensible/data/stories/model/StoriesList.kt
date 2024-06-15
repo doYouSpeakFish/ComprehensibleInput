@@ -1,10 +1,12 @@
 package input.comprehensible.data.stories.model
 
+import android.graphics.Bitmap
+
 /**
  * A list of stories.
  */
 data class StoriesList(
-    val stories: List<StoriesItem>
+    val stories: List<StoriesItem>,
 ) {
     /**
      * A story.
@@ -12,5 +14,7 @@ data class StoriesList(
     data class StoriesItem(
         val id: String,
         val title: String,
+        val featuredImage: Bitmap,
+        val featuredImageContentDescription: String,
     )
 }

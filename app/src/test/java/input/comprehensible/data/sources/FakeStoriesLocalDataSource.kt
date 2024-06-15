@@ -6,6 +6,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
+import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSourceModule
 import javax.inject.Inject
@@ -21,9 +22,12 @@ class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource 
     override suspend fun getStories(): StoriesList {
         return StoriesList(
             stories = stories.map {
+                val featureImage = it.content.filterIsInstance<StoryElement.Image>().first()
                 StoriesList.StoriesItem(
                     id = it.id,
                     title = it.title,
+                    featuredImage = featureImage.bitmap,
+                    featuredImageContentDescription = featureImage.contentDescription,
                 )
             }
         )

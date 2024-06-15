@@ -33,9 +33,10 @@ class DefaultStoriesLocalDataSource @Inject constructor(
     }
 
     override suspend fun getStories() = withContext(dispatcher) {
-        StoriesList(
-            stories = stories
-        )
+        context.assets
+            .open("story_list.json")
+            .use { Json.decodeFromStream<StoriesListData>(it) }
+            .toStoriesList()
     }
 
     private fun StoryData.toStory() = Story(
@@ -56,7 +57,45 @@ class DefaultStoriesLocalDataSource @Inject constructor(
         .assets
         .open(path)
         .use { BitmapFactory.decodeStream(it) }
+
+    private fun StoriesListData.toStoriesList() = StoriesList(
+        stories = stories.map { it.toStoriesItem() }
+    )
+
+    private fun StoryItemData.toStoriesItem() = StoriesList.StoriesItem(
+        id = id,
+        title = title,
+        featuredImage = loadImageFromAssets("$id/${featuredImage.path}"),
+        featuredImageContentDescription = featuredImage.contentDescription,
+    )
 }
+
+/**
+ * A list of stories retrieved from local storage.
+ */
+@Serializable
+data class StoriesListData(
+    val stories: List<StoryItemData>,
+)
+
+/**
+ * A story list item retrieved from local storage.
+ */
+@Serializable
+data class StoryItemData(
+    val id: String,
+    val title: String,
+    val featuredImage: FeaturedImage,
+)
+
+/**
+ * The featured image of a story list item retrieved from local storage.
+ */
+@Serializable
+data class FeaturedImage(
+    val path: String,
+    val contentDescription: String,
+)
 
 /**
  * A story.
@@ -90,34 +129,3 @@ sealed interface StoryElementData {
         val path: String,
     ) : StoryElementData
 }
-
-private val stories = listOf(
-    StoriesList.StoriesItem(
-        id = "1",
-        title = "Geheimes Heilbad [Secret Spa] - A2",
-    ),
-    StoriesList.StoriesItem(
-        id = "2",
-        title = "Kein Halt am Mars [No stop at Mars] - A2",
-    ),
-    StoriesList.StoriesItem(
-        id = "3",
-        title = "Der leere Karneval [The empty carnival] - A2",
-    ),
-    StoriesList.StoriesItem(
-        id = "4",
-        title = "Die winzigen Wikinger von Berlin [The tiny Vikings of Berlin] - A2",
-    ),
-    StoriesList.StoriesItem(
-        id = "5",
-        title = "Der Tag, an dem Magie Wirklichkeit wurde [The day magic became reality] - A2",
-    ),
-    StoriesList.StoriesItem(
-        id = "6",
-        title = "Alter Baum [Old Tree] - A2",
-    ),
-    StoriesList.StoriesItem(
-        id = "7",
-        title = "Geisterflüstern und Herzschläge [Ghostly whispers and heartbeats] - A2",
-    ),
-)
