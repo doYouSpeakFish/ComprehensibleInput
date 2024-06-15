@@ -99,7 +99,8 @@ private fun StoryListItem(
             )
             Text(
                 text = story.subtitle,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)
             )
         }
     }
