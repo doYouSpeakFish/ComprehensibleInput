@@ -4,12 +4,15 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,16 +71,37 @@ private fun StoryListItem(
     onClick: () -> Unit,
     story: StoryListUiState.StoryListItem,
 ) {
-    Card(modifier = modifier, onClick = onClick) {
+    Card(
+        modifier = modifier,
+        onClick = onClick,
+        shape = RoundedCornerShape(
+            topStart = 32.dp,
+            topEnd = 0.dp,
+            bottomStart = 0.dp,
+            bottomEnd = 32.dp,
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
+    ) {
         Image(
             bitmap = story.featuredImage.asImageBitmap(),
             contentDescription = story.featuredImageContentDescription,
         )
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = story.title,
-            style = MaterialTheme.typography.titleMedium
-        )
+        Column(
+            Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = story.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = story.subtitle,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
     }
 }
 
@@ -92,6 +116,7 @@ private fun StoryListScreenPreview() {
                     StoryListUiState.StoryListItem(
                         id = "$it",
                         title = "Title $it",
+                        subtitle = "Subtitle $it",
                         featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
                         featuredImageContentDescription = "Content description $it"
                     )

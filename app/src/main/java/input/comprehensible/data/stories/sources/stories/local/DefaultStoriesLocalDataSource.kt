@@ -65,6 +65,7 @@ class DefaultStoriesLocalDataSource @Inject constructor(
     private fun StoryItemData.toStoriesItem() = StoriesList.StoriesItem(
         id = id,
         title = title,
+        subtitle = subtitle,
         featuredImage = loadImageFromAssets("$id/${featuredImage.path}"),
         featuredImageContentDescription = featuredImage.contentDescription,
     )
@@ -85,6 +86,7 @@ data class StoriesListData(
 data class StoryItemData(
     val id: String,
     val title: String,
+    val subtitle: String,
     val featuredImage: FeaturedImage,
 )
 

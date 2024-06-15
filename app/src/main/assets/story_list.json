@@ -2,7 +2,8 @@
   "stories": [
     {
       "id": "1",
-      "title": "Geheimes Heilbad [Secret Spa] - A2",
+      "title": "Geheimes Heilbad",
+      "subtitle": "Secret Spa",
       "featuredImage": {
         "path": "1",
         "contentDescription": "An image of a natural spring. There is a waterfall in the foreground, spilling from the spring. Moss covered rocks are visible in the background, behind steam in the air, illuminated by rays of sunshine piercing through a canopy of trees above."
@@ -10,7 +11,8 @@
     },
     {
       "id": "2",
-      "title": "Kein Halt am Mars [No stop at Mars] - A2",
+      "title": "Kein Halt am Mars",
+      "subtitle": "No stop at Mars",
       "featuredImage": {
         "path": "1",
         "contentDescription": "An astronaut stands, with the red ground of Phobos and the red planet Mars reflected in the visor of their space suit."
@@ -18,7 +20,8 @@
     },
     {
       "id": "3",
-      "title": "Der leere Karneval [The empty carnival] - A2",
+      "title": "Der leere Karneval",
+      "subtitle": "The empty carnival",
       "featuredImage": {
         "path": "1",
         "contentDescription": "An empty street with colourful buntings and decorations hanging above."
@@ -26,7 +29,8 @@
     },
     {
       "id": "4",
-      "title": "Die winzigen Wikinger von Berlin [The tiny Vikings of Berlin] - A2",
+      "title": "Die winzigen Wikinger von Berlin",
+      "subtitle": "The tiny Vikings of Berlin",
       "featuredImage": {
         "path": "1",
         "contentDescription": "Several tiny Vikings in viking row boats on the Spree river in Berlin."
@@ -34,7 +38,8 @@
     },
     {
       "id": "5",
-      "title": "Der Tag, an dem Magie Wirklichkeit wurde [The day magic became reality] - A2",
+      "title": "Der Tag, an dem Magie Wirklichkeit wurde",
+      "subtitle": "The day magic became reality",
       "featuredImage": {
         "path": "1",
         "contentDescription": "Four children and a dog holding sparkling wands. The children are smiling and three of them are floating in the air."
@@ -42,7 +47,8 @@
     },
     {
       "id": "6",
-      "title": "Alter Baum [Old Tree] - A2",
+      "title": "Alter Baum",
+      "subtitle": "Old tree",
       "featuredImage": {
         "path": "1",
         "contentDescription": "A seedling sprouting from the ground."
@@ -50,7 +56,8 @@
     },
     {
       "id": "7",
-      "title": "Geisterflüstern und Herzschläge [Ghostly whispers and heartbeats] - A2",
+      "title": "Geisterflüstern und Herzschläge",
+      "subtitle": "Ghostly whispers and heartbeats",
       "featuredImage": {
         "path": "1",
         "contentDescription": "A large gothic style house. Lightning flashes in the background."
