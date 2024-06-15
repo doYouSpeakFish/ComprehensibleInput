@@ -25,6 +25,8 @@ class StoryListViewModel @Inject constructor(
                     StoryListUiState.StoryListItem(
                         id = story.id,
                         title = story.title,
+                        featuredImage = story.featuredImage,
+                        featuredImageContentDescription = story.featuredImageContentDescription,
                     )
                 }
             )

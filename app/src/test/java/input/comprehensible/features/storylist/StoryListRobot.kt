@@ -2,6 +2,7 @@ package input.comprehensible.features.storylist
 
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -24,6 +25,12 @@ class StoryListRobot(
             .onNode(hasScrollAction())
             .performScrollToIndex(index)
             .performClick()
+    }
+
+    fun assertStoryImageIsVisible(contentDescription: String) {
+        composeTestRule
+            .onNodeWithContentDescription(contentDescription)
+            .assertExists()
     }
 }
 

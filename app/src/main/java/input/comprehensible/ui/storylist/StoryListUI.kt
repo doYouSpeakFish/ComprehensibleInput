@@ -1,5 +1,7 @@
 package input.comprehensible.ui.storylist
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,6 +69,10 @@ private fun StoryListItem(
     story: StoryListUiState.StoryListItem,
 ) {
     Card(modifier = modifier, onClick = onClick) {
+        Image(
+            bitmap = story.featuredImage.asImageBitmap(),
+            contentDescription = story.featuredImageContentDescription,
+        )
         Text(
             modifier = Modifier.padding(16.dp),
             text = story.title,
@@ -85,6 +92,8 @@ private fun StoryListScreenPreview() {
                     StoryListUiState.StoryListItem(
                         id = "$it",
                         title = "Title $it",
+                        featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
+                        featuredImageContentDescription = "Content description $it"
                     )
                 }
             )

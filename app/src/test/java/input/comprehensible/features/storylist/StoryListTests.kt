@@ -65,4 +65,17 @@ class StoryListTests {
             assertStoryTextIsVisible(stories.last().paragraphs.first().text)
         }
     }
+
+    @Test
+    fun `images are shown for stories in the list`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        goToStoryList()
+        runCurrent()
+
+        onStoryList {
+            assertStoryImageIsVisible(stories.first().images.first().contentDescription)
+        }
+    }
 }
