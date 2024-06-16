@@ -21,6 +21,16 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Setup keystore file
+      run: |
+        echo $UPLOAD_KEYSTORE_PROPERTIES_BASE64 | base64 --decode > keystore.properties
+        echo $UPLOAD_KEYSTORE_FILE_BASE64 | base64 --decode > upload-keystore.jks
+        cat keystore.properties | sha256sum | echo "Keystore properties hash: $(cat)"
+        cat upload-keystore.jks | sha256sum | echo "Keystore file hash: $(cat)"
+      env:
+        UPLOAD_KEYSTORE_FILE_BASE64: ${{ secrets.UPLOAD_KEYSTORE_FILE_BASE64 }}
+        UPLOAD_KEYSTORE_PROPERTIES_BASE64: ${{ secrets.UPLOAD_KEYSTORE_PROPERTIES_BASE64 }}
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
