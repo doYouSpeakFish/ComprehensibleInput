@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.compose.test.screenshots)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
     id("kotlin-kapt")
 }
@@ -73,6 +74,8 @@ android {
             isIncludeAndroidResources = true
         }
     }
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 dependencies {
@@ -113,6 +116,8 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    screenshotTestImplementation(libs.androidx.ui.tooling)
 }
 
 kapt {
