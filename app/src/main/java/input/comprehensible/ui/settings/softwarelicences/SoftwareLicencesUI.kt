@@ -35,7 +35,7 @@ internal fun SoftwareLicences(
 
 @DefaultPreview
 @Composable
-private fun PreviewSoftwareLicences() {
+fun PreviewSoftwareLicences() {
     ComprehensibleInputTheme {
         SoftwareLicences(
             onNavigateUp = {}

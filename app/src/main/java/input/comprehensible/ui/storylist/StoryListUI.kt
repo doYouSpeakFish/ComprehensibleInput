@@ -123,7 +123,7 @@ private fun StoryListItem(
 
 @DefaultPreview
 @Composable
-private fun StoryListScreenPreview() {
+fun StoryListScreenPreview() {
     ComprehensibleInputTheme {
         StoryListScreen(
             onStorySelected = {},
