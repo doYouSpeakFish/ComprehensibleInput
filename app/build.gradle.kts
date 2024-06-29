@@ -97,8 +97,11 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.aboutLibraries.core)
     implementation(libs.aboutLibraries.compose)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
 
     ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
@@ -106,6 +109,7 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.navigation.testing)
+    testImplementation(libs.room.testing)
 
     kspTest(libs.hilt.compiler)
 
