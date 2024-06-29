@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -46,21 +46,17 @@ dependencies {
     implementation(libs.hilt)
     implementation(libs.timber)
 
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.hilt.android.testing)
     testImplementation(libs.coroutines.test)
 
-    kaptTest(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-}
-
-kapt {
-    correctErrorTypes = true
 }

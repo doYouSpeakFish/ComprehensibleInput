@@ -8,8 +8,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.compose.test.screenshots)
+    alias(libs.plugins.ksp)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
-    id("kotlin-kapt")
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -98,7 +98,7 @@ dependencies {
     implementation(libs.aboutLibraries.core)
     implementation(libs.aboutLibraries.compose)
 
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
@@ -107,7 +107,7 @@ dependencies {
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.navigation.testing)
 
-    kaptTest(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
@@ -118,8 +118,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     screenshotTestImplementation(libs.androidx.ui.tooling)
-}
-
-kapt {
-    correctErrorTypes = true
 }
