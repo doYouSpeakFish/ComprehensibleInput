@@ -15,12 +15,12 @@ interface StoriesLocalDataSource {
     /**
      * Gets a story from the local data source.
      */
-    suspend fun getStory(id: String): Story?
+    suspend fun getStory(id: String, language: String): Story?
 
     /**
      * Gets a list of stories from the local data source.
      */
-    suspend fun getStories(): StoriesList
+    suspend fun getStories(learningLanguage: String): StoriesList
 }
 
 /**

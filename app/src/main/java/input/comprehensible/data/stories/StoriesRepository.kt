@@ -18,8 +18,10 @@ class StoriesRepository @Inject constructor(
     private val storiesLocalDataSource: StoriesLocalDataSource,
     @AppScope val scope: CoroutineScope
 ) {
+    private val learningLanguage = "de"
+
     val storiesList = flow {
-        emit(storiesLocalDataSource.getStories())
+        emit(storiesLocalDataSource.getStories(learningLanguage = learningLanguage))
     }
         .stateIn(
             scope = scope,
@@ -30,5 +32,8 @@ class StoriesRepository @Inject constructor(
     /**
      * Gets a story.
      */
-    suspend fun getStory(id: String) = storiesLocalDataSource.getStory(id)
+    suspend fun getStory(id: String) = storiesLocalDataSource.getStory(
+        id = id,
+        language = learningLanguage
+    )
 }

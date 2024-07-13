@@ -15,11 +15,11 @@ import javax.inject.Singleton
 @Singleton
 class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource {
     var stories = listOf<Story>()
-    override suspend fun getStory(id: String): Story {
+    override suspend fun getStory(id: String, language: String): Story {
         return stories.first { it.id == id }
     }
 
-    override suspend fun getStories(): StoriesList {
+    override suspend fun getStories(learningLanguage: String): StoriesList {
         return StoriesList(
             stories = stories.map {
                 val featureImage = it.content.filterIsInstance<StoryElement.Image>().first()

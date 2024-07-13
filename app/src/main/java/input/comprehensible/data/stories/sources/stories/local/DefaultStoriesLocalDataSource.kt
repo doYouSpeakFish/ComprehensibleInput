@@ -25,21 +25,26 @@ class DefaultStoriesLocalDataSource @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
 ) : StoriesLocalDataSource {
-    override suspend fun getStory(id: String) = withContext(dispatcher) {
+    override suspend fun getStory(
+        id: String,
+        language: String
+    ): Story = withContext(dispatcher) {
         context.assets
-            .open("stories/$id/story.json")
+            .open("stories/$id/$language.json")
             .use { Json.decodeFromStream<StoryData>(it) }
             .toStory()
     }
 
-    override suspend fun getStories() = withContext(dispatcher) {
+    override suspend fun getStories(
+        learningLanguage: String
+    ): StoriesList = withContext(dispatcher) {
         StoriesList(
             stories = context.assets
                 .list("stories")
                 .orEmpty()
                 .map { storyId ->
                     context.assets
-                        .open("stories/$storyId/story.json")
+                        .open("stories/$storyId/$learningLanguage.json")
                         .use { Json.decodeFromStream<StoryData>(it) }
                         .toStoryListItem()
                 }
