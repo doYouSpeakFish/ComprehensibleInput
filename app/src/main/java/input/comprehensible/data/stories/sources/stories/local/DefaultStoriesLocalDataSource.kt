@@ -27,16 +27,36 @@ class DefaultStoriesLocalDataSource @Inject constructor(
 ) : StoriesLocalDataSource {
     override suspend fun getStory(id: String) = withContext(dispatcher) {
         context.assets
-            .open("$id/story.json")
+            .open("stories/$id/story.json")
             .use { Json.decodeFromStream<StoryData>(it) }
             .toStory()
     }
 
     override suspend fun getStories() = withContext(dispatcher) {
-        context.assets
-            .open("story_list.json")
-            .use { Json.decodeFromStream<StoriesListData>(it) }
-            .toStoriesList()
+        StoriesList(
+            stories = context.assets
+                .list("stories")
+                .orEmpty()
+                .map { storyId ->
+                    context.assets
+                        .open("stories/$storyId/story.json")
+                        .use { Json.decodeFromStream<StoryData>(it) }
+                        .toStoryListItem()
+                }
+        )
+    }
+
+    private fun StoryData.toStoryListItem(): StoriesList.StoriesItem {
+        val featureImageData = content
+            .filterIsInstance<StoryElementData.ImageData>()
+            .first()
+        return StoriesList.StoriesItem(
+            id = id,
+            title = title,
+            subtitle = title,
+            featuredImage = loadImageFromAssets(path = "stories/$id/${featureImageData.path}"),
+            featuredImageContentDescription = featureImageData.contentDescription,
+        )
     }
 
     private fun StoryData.toStory() = Story(
@@ -49,7 +69,7 @@ class DefaultStoriesLocalDataSource @Inject constructor(
         is StoryElementData.ParagraphData -> StoryElement.Paragraph(text)
         is StoryElementData.ImageData -> StoryElement.Image(
             contentDescription = contentDescription,
-            bitmap = loadImageFromAssets("$storyId/$path")
+            bitmap = loadImageFromAssets("stories/$storyId/$path")
         )
     }
 
@@ -57,47 +77,7 @@ class DefaultStoriesLocalDataSource @Inject constructor(
         .assets
         .open(path)
         .use { BitmapFactory.decodeStream(it) }
-
-    private fun StoriesListData.toStoriesList() = StoriesList(
-        stories = stories.map { it.toStoriesItem() }
-    )
-
-    private fun StoryItemData.toStoriesItem() = StoriesList.StoriesItem(
-        id = id,
-        title = title,
-        subtitle = subtitle,
-        featuredImage = loadImageFromAssets("$id/${featuredImage.path}"),
-        featuredImageContentDescription = featuredImage.contentDescription,
-    )
 }
-
-/**
- * A list of stories retrieved from local storage.
- */
-@Serializable
-data class StoriesListData(
-    val stories: List<StoryItemData>,
-)
-
-/**
- * A story list item retrieved from local storage.
- */
-@Serializable
-data class StoryItemData(
-    val id: String,
-    val title: String,
-    val subtitle: String,
-    val featuredImage: FeaturedImage,
-)
-
-/**
- * The featured image of a story list item retrieved from local storage.
- */
-@Serializable
-data class FeaturedImage(
-    val path: String,
-    val contentDescription: String,
-)
 
 /**
  * A story.
