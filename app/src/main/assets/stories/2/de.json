@@ -8,12 +8,12 @@
     },
     {
       "type": "image",
-      "contentDescription": "An astronaut stands, with the red ground of Phobos and the red planet Mars reflected in the visor of their space suit.",
+      "contentDescription": "Ein Astronaut steht, mit dem roten Boden von Phobos und dem roten Planeten Mars, die sich im Visier seines Raumanzugs spiegeln.",
       "path": "1"
     },
     {
       "type": "paragraph",
-      "text": "Aber in meinem Herzen ist auch ein kleines bisschen Traurigkeit. Ich werde nie auf Mars selbst laufen können. Diese Mission ist nur für Phobos. Aber ich bin auch aufgeregt. Phobos ist ein mysteriöser Ort, und ich bin der Erste, der ihn erkunden darf."
+      "text": "Aber in meinem Herzen ist auch ein kleines bisschen Traurigkeit. Ich werde nie auf dem Mars selbst laufen können. Diese Mission ist nur für Phobos. Aber ich bin auch aufgeregt. Phobos ist ein mysteriöser Ort, und ich bin der Erste, der ihn erkunden darf."
     },
     {
       "type": "paragraph",
@@ -21,7 +21,7 @@
     },
     {
       "type": "image",
-      "contentDescription": "An astronaut jumping high in the air on the rocky surface of Phobos. The sky above is full of stars.",
+      "contentDescription": "Ein Astronaut springt hoch in die Luft auf der felsigen Oberfläche von Phobos. Der Himmel darüber ist voller Sterne.",
       "path": "2"
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "type": "image",
-      "contentDescription": "An astronaut with rain and clouds in their helmet, showing their thoughts of earth.",
+      "contentDescription": "Ein Astronaut mit Regen und Wolken in seinem Helm, der seine Gedanken an die Erde zeigt.",
       "path": "3"
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "type": "image",
-      "contentDescription": "An astronaut walking with purpose across the rocky surface of Phobos, with Mars in the background.",
+      "contentDescription": "Ein Astronaut geht zielstrebig über die felsige Oberfläche von Phobos, mit Mars im Hintergrund.",
       "path": "4"
     },
     {

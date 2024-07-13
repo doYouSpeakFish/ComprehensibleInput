@@ -1,0 +1,51 @@
+{
+  "id": "6",
+  "title": "Old Tree",
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "It all began when I was a small seed. A bird had carried me far away from my parents and hidden me in the soft earth. Soon I began to grow. The sun warmed me, and the rain gave me something to drink."
+    },
+    {
+      "type": "image",
+      "contentDescription": "A seedling sprouting from the ground.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "text": "Years passed, and I became bigger and stronger. Children came and played under my branches, and I heard their laughter. Sometimes they climbed high and built little houses in my branches. I felt happy to bring them joy."
+    },
+    {
+      "type": "image",
+      "contentDescription": "A large tree with a treehouse in its branches. Children run towards the tree excitedly.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "text": "As I got older, the world around me changed. New buildings were erected, and the landscape transformed. I saw horses being replaced by cars, and the lights of the city grew brighter. Yet through all the changes, I remained a silent witness to time."
+    },
+    {
+      "type": "image",
+      "contentDescription": "A city skyline, seen through the branches of a tree.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "text": "In my best years, I was a home to many birds and small animals. They sought shelter in my foliage and fed on the fruits I bore. I was proud to be a part of the cycle of life."
+    },
+    {
+      "type": "image",
+      "contentDescription": "A squirrel curled up in a bird's nest. Another squirrel sits on a branch in the background, eating nuts.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "text": "Now I am very old. My bark is cracked, and my branches are not as strong as they used to be. But I still stand here, offering shade and comfort to those who seek it. I hope that I will stand here for many more years, to tell the stories of life."
+    },
+    {
+      "type": "image",
+      "contentDescription": "An old gnarled tree, standing strong.",
+      "path": "5"
+    }
+  ]
+}

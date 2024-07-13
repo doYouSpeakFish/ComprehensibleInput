@@ -8,7 +8,7 @@
     },
     {
       "type": "image",
-      "contentDescription": "A seedling sprouting from the ground.",
+      "contentDescription": "Ein Keimling, der aus dem Boden sprießt.",
       "path": "1"
     },
     {
@@ -17,7 +17,7 @@
     },
     {
       "type": "image",
-      "contentDescription": "A large tree with a treehouse in its branches. Children run towards the tree excitedly.",
+      "contentDescription": "Ein großer Baum mit einem Baumhaus in seinen Zweigen. Kinder laufen aufgeregt auf den Baum zu.",
       "path": "2"
     },
     {
@@ -26,7 +26,7 @@
     },
     {
       "type": "image",
-      "contentDescription": "A city skyline, seen through the branches of a tree.",
+      "contentDescription": "Eine Skyline der Stadt, gesehen durch die Zweige eines Baumes.",
       "path": "3"
     },
     {
@@ -35,16 +35,16 @@
     },
     {
       "type": "image",
-      "contentDescription": "A squirrel curled up in a birds nest. Another squirrel sits on a branch in the background, eating nuts.",
+      "contentDescription": "Ein Eichhörnchen, das in einem Vogelnest zusammengerollt ist. Ein weiteres Eichhörnchen sitzt im Hintergrund auf einem Ast und isst Nüsse.",
       "path": "4"
     },
     {
       "type": "paragraph",
-      "text": "Jetzt bin ich sehr alt. Meine Rinde ist rissig, und meine Äste sind nicht mehr so stark wie früher. Aber ich stehe immer noch hier, und ich biete Schatten und Trost [comfort] für diejenigen [those], die ihn suchen. Ich hoffe, dass ich noch viele Jahre hier stehen werde, um die Geschichten des Lebens zu erzählen."
+      "text": "Jetzt bin ich sehr alt. Meine Rinde ist rissig, und meine Äste sind nicht mehr so stark wie früher. Aber ich stehe immer noch hier, und ich biete Schatten und Trost für diejenigen, die ihn suchen. Ich hoffe, dass ich noch viele Jahre hier stehen werde, um die Geschichten des Lebens zu erzählen."
     },
     {
       "type": "image",
-      "contentDescription": "An old gnarled tree, standing strong.",
+      "contentDescription": "Ein alter knorriger Baum, der stark steht.",
       "path": "5"
     }
   ]
