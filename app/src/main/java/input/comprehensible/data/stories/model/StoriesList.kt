@@ -14,7 +14,6 @@ data class StoriesList(
     data class StoriesItem(
         val id: String,
         val title: String,
-        val subtitle: String,
         val featuredImage: Bitmap,
         val featuredImageContentDescription: String,
     )

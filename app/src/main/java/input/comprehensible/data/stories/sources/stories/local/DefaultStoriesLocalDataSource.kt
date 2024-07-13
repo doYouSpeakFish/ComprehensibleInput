@@ -58,7 +58,6 @@ class DefaultStoriesLocalDataSource @Inject constructor(
         return StoriesList.StoriesItem(
             id = id,
             title = title,
-            subtitle = title,
             featuredImage = loadImageFromAssets(path = "stories/$id/${featureImageData.path}"),
             featuredImageContentDescription = featureImageData.contentDescription,
         )

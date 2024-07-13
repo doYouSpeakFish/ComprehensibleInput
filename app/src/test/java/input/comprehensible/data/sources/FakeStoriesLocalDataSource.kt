@@ -26,7 +26,6 @@ class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource 
                 StoriesList.StoriesItem(
                     id = it.id,
                     title = it.title,
-                    subtitle = it.title,
                     featuredImage = featureImage.bitmap,
                     featuredImageContentDescription = featureImage.contentDescription,
                 )
