@@ -133,7 +133,7 @@ fun StoryListScreenPreview() {
                     StoryListUiState.StoryListItem(
                         id = "$it",
                         title = "Title $it",
-                        subtitle = "Subtitle $it",
+                        subtitle = "Translated Title $it",
                         featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
                         featuredImageContentDescription = "Content description $it",
                     )

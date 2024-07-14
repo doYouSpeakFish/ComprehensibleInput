@@ -1,0 +1,51 @@
+{
+  "id": "6",
+  "title": "Alter Baum",
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "Es begann alles, als ich ein kleiner Samen war. Ein Vogel hatte mich weit weg von meinen Eltern getragen und mich in der weichen Erde versteckt. Bald begann ich zu wachsen. Die Sonne wärmte mich, und der Regen gab mir zu trinken."
+    },
+    {
+      "type": "image",
+      "contentDescription": "Ein Keimling, der aus dem Boden sprießt.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "text": "Jahre gingen vorbei, und ich wurde größer und stärker. Kinder kamen und spielten unter meinen Ästen, und ich hörte ihr Lachen. Manchmal kletterten sie hoch und bauten kleine Häuser in meinen Zweigen. Ich fühlte mich glücklich, ihnen Freude zu bringen."
+    },
+    {
+      "type": "image",
+      "contentDescription": "Ein großer Baum mit einem Baumhaus in seinen Zweigen. Kinder laufen aufgeregt auf den Baum zu.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "text": "Als ich älter wurde, veränderte sich die Welt um mich herum. Neue Gebäude wurden errichtet, und die Landschaft veränderte sich. Ich sah Pferde, die durch Autos ersetzt wurden, und die Lichter der Stadt wurden heller. Doch durch all die Veränderungen blieb ich ein stilles Zeugnis der Zeit."
+    },
+    {
+      "type": "image",
+      "contentDescription": "Eine Skyline der Stadt, gesehen durch die Zweige eines Baumes.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "text": "In meinen besten Jahren war ich ein Zuhause für viele Vögel und kleine Tiere. Sie suchten Schutz in meinem Laub und ernährten sich von den Früchten, die ich trug. Ich war stolz darauf, ein Teil des Lebenskreislaufs zu sein."
+    },
+    {
+      "type": "image",
+      "contentDescription": "Ein Eichhörnchen, das in einem Vogelnest zusammengerollt ist. Ein weiteres Eichhörnchen sitzt im Hintergrund auf einem Ast und isst Nüsse.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "text": "Jetzt bin ich sehr alt. Meine Rinde ist rissig, und meine Äste sind nicht mehr so stark wie früher. Aber ich stehe immer noch hier, und ich biete Schatten und Trost für diejenigen, die ihn suchen. Ich hoffe, dass ich noch viele Jahre hier stehen werde, um die Geschichten des Lebens zu erzählen."
+    },
+    {
+      "type": "image",
+      "contentDescription": "Ein alter knorriger Baum, der stark steht.",
+      "path": "5"
+    }
+  ]
+}

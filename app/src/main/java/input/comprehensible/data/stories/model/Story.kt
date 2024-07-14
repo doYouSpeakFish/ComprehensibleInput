@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 data class Story(
     val id: String,
     val title: String,
+    val translatedTitle: String,
     val content: List<StoryElement>,
 )
 
@@ -18,7 +19,10 @@ sealed interface StoryElement {
     /**
      * A paragraph of text.
      */
-    data class Paragraph(val text: String) : StoryElement
+    data class Paragraph(
+        val text: String,
+        val translation: String,
+    ) : StoryElement
 
     /**
      * An image in a story.

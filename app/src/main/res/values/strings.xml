@@ -6,4 +6,6 @@
     <string name="settings_item_software_licences">Software licences</string>
     <string name="software_licences_screen_title">Software licences</string>
     <string name="stories_screen_title">Stories</string>
+    <string name="language_selector_en_content_description">Select English</string>
+    <string name="language_selector_de_content_description">Select German</string>
 </resources>
