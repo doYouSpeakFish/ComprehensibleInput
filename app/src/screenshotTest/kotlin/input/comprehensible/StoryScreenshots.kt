@@ -2,6 +2,7 @@ package input.comprehensible
 
 import androidx.compose.runtime.Composable
 import input.comprehensible.ui.storyreader.StoryReaderPreview
+import input.comprehensible.ui.storyreader.StoryReaderTranslationPreview
 import input.comprehensible.util.DefaultPreview
 
 class StoryScreenshots {
@@ -9,5 +10,11 @@ class StoryScreenshots {
     @Composable
     fun StoryReaderScreenshot() {
         StoryReaderPreview()
+    }
+
+    @DefaultPreview
+    @Composable
+    fun StoryReaderTranslationScreenshot() {
+        StoryReaderTranslationPreview()
     }
 }

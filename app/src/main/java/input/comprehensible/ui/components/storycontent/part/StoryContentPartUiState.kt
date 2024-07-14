@@ -25,8 +25,10 @@ sealed interface StoryContentPartUiState {
 /**
  * Converts a [StoryElement] to a [StoryContentPartUiState].
  */
-fun StoryElement.toStoryContentPartUiState() = when (this) {
-    is StoryElement.Paragraph -> StoryContentPartUiState.Paragraph(text)
+fun StoryElement.toStoryContentPartUiState(areTranslationsEnabled: Boolean) = when (this) {
+    is StoryElement.Paragraph -> StoryContentPartUiState.Paragraph(
+        paragraph = if (areTranslationsEnabled) translation else text
+    )
     is StoryElement.Image -> StoryContentPartUiState.Image(
         contentDescription = contentDescription,
         bitmap = bitmap

@@ -68,4 +68,43 @@ class StoryReaderTests {
             assertImageIsShown(story.images.first())
         }
     }
+
+    @Test
+    fun `the story can be switched from German to English`() = testRule.runTest {
+        // GIVEN a German story is open
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        goToStoryReader(stories.first().id)
+        runCurrent()
+
+        onStoryReader {
+            // WHEN the user switches to English
+            setLanguage("en")
+            runCurrent()
+
+            // THEN the story is shown in English
+            assertStoryTextIsVisible(stories.last().paragraphs.first().englishText)
+        }
+    }
+
+    @Test
+    fun `the story can be switched from English to German`() = testRule.runTest {
+        // GIVEN a German story is open
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        goToStoryReader(stories.first().id)
+        runCurrent()
+
+        onStoryReader {
+            // WHEN the user switches to English
+            setLanguage("en")
+            runCurrent()
+            // AND the user switches to German
+            setLanguage("de")
+            runCurrent()
+
+            // THEN the story is shown in German
+            assertStoryTextIsVisible(stories.last().paragraphs.first().germanText)
+        }
+    }
 }
