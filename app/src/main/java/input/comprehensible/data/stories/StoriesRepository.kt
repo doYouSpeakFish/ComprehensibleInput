@@ -29,7 +29,8 @@ class StoriesRepository @Inject constructor(
 
     val storiesList: StateFlow<StoriesList> = flow {
         val stories = storiesLocalDataSource.getStories(learningLanguage = learningLanguage)
-        val translations = storiesLocalDataSource.getStories(learningLanguage = learningLanguage)
+        val translations =
+            storiesLocalDataSource.getStories(learningLanguage = translationsLanguage)
         val storiesList = StoriesList(
             stories = stories.zip(translations).map { (story, translation) ->
                 val featuredImage = story
