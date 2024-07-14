@@ -16,3 +16,4 @@ local.properties
 /app/release/app-release.aab
 /keystore.properties
 /upload-keystore.jks
+/.kotlin/sessions/
