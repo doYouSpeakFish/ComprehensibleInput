@@ -1,37 +1,28 @@
 package input.comprehensible.data.sources
 
+import android.graphics.Bitmap
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import input.comprehensible.data.stories.model.StoriesList
-import input.comprehensible.data.stories.model.Story
-import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSourceModule
+import input.comprehensible.data.stories.sources.stories.local.StoryData
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource {
-    var stories = listOf<Story>()
-    override suspend fun getStory(id: String, language: String): Story {
-        return stories.first { it.id == id }
-    }
+    var stories = mapOf<String, List<StoryData>>()
 
-    override suspend fun getStories(learningLanguage: String): StoriesList {
-        return StoriesList(
-            stories = stories.map {
-                val featureImage = it.content.filterIsInstance<StoryElement.Image>().first()
-                StoriesList.StoriesItem(
-                    id = it.id,
-                    title = it.title,
-                    featuredImage = featureImage.bitmap,
-                    featuredImageContentDescription = featureImage.contentDescription,
-                )
-            }
-        )
-    }
+    override suspend fun getStory(id: String, language: String): StoryData? =
+        stories[language]?.first { it.id == id }
+
+    override suspend fun getStories(learningLanguage: String): List<StoryData> =
+        stories[learningLanguage] ?: emptyList()
+
+    override suspend fun loadStoryImage(storyId: String, path: String): Bitmap =
+        Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
 }
 
 @Module

@@ -38,7 +38,7 @@ class StoryReaderTests {
         runCurrent()
 
         onStoryReader {
-            assertStoryTitleIsShown(stories.first().title)
+            assertStoryTitleIsShown(stories.first().germanTitle)
         }
     }
 
@@ -51,7 +51,7 @@ class StoryReaderTests {
         runCurrent()
 
         onStoryReader {
-            assertStoryTextIsVisible(stories.last().paragraphs.first().text)
+            assertStoryTextIsVisible(stories.last().paragraphs.first().germanText)
         }
     }
 

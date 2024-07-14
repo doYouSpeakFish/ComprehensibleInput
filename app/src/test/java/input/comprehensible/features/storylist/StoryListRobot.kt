@@ -15,7 +15,7 @@ class StoryListRobot(
 ) {
     fun selectStory(story: TestStory) {
         composeTestRule
-            .onNodeWithText(story.title)
+            .onNodeWithText(story.germanTitle)
             .performScrollTo()
             .performClick()
     }

@@ -4,12 +4,16 @@ object SampleStoriesData {
     val listOf100Stories = List(100) { storyNumber ->
         TestStory(
             id = "$storyNumber",
-            title = "Title $storyNumber",
+            germanTitle = "German Title $storyNumber",
+            englishTitle = "English Title $storyNumber",
             content = List(10) { paragraphNumber ->
                 if (paragraphNumber % 2 == 0) {
                     TestStoryPart.Image(contentDescription = "Image $storyNumber-$paragraphNumber")
                 } else {
-                    TestStoryPart.Paragraph(text = "Paragraph $paragraphNumber")
+                    TestStoryPart.Paragraph(
+                        germanText = "German Paragraph $paragraphNumber",
+                        englishText = "English Paragraph $paragraphNumber"
+                    )
                 }
             }
         )
@@ -18,7 +22,8 @@ object SampleStoriesData {
 
 data class TestStory(
     val id: String,
-    val title: String,
+    val germanTitle: String,
+    val englishTitle: String,
     val content: List<TestStoryPart>,
 ) {
     val paragraphs: List<TestStoryPart.Paragraph> =
@@ -29,7 +34,10 @@ data class TestStory(
 }
 
 sealed interface TestStoryPart {
-    data class Paragraph(val text: String) : TestStoryPart
+    data class Paragraph(
+        val germanText: String,
+        val englishText: String,
+    ) : TestStoryPart
 
     data class Image(val contentDescription: String) : TestStoryPart
 }
