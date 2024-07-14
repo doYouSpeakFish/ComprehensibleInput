@@ -29,17 +29,19 @@ class StoriesRepository @Inject constructor(
 
     val storiesList: StateFlow<StoriesList> = flow {
         val stories = storiesLocalDataSource.getStories(learningLanguage = learningLanguage)
+        val translations = storiesLocalDataSource.getStories(learningLanguage = learningLanguage)
         val storiesList = StoriesList(
-            stories = stories.map {
-                val featuredImage = it
+            stories = stories.zip(translations).map { (story, translation) ->
+                val featuredImage = story
                     .content
                     .filterIsInstance<StoryElementData.ImageData>()
                     .first()
                 StoriesList.StoriesItem(
-                    id = it.id,
-                    title = it.title,
+                    id = story.id,
+                    title = story.title,
+                    titleTranslated = translation.title,
                     featuredImage = storiesLocalDataSource.loadStoryImage(
-                        storyId = it.id,
+                        storyId = story.id,
                         path = featuredImage.path,
                     ),
                     featuredImageContentDescription = featuredImage.contentDescription,

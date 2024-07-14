@@ -112,6 +112,11 @@ private fun StoryListItem(
                 text = story.title,
                 style = MaterialTheme.typography.titleMedium,
             )
+            Text(
+                text = story.subtitle,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
+            )
         }
     }
 }
@@ -128,6 +133,7 @@ fun StoryListScreenPreview() {
                     StoryListUiState.StoryListItem(
                         id = "$it",
                         title = "Title $it",
+                        subtitle = "Translated Title $it",
                         featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
                         featuredImageContentDescription = "Content description $it",
                     )
