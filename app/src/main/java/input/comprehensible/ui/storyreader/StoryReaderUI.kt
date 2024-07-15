@@ -1,6 +1,7 @@
 package input.comprehensible.ui.storyreader
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,14 +11,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import input.comprehensible.R
 import input.comprehensible.ui.components.SelectableText
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
@@ -75,16 +79,11 @@ private fun StoryContent(
             state = rememberLazyListState(),
         ) {
             item {
-                SelectableText(
-                    text = state.title,
-                    onTextClicked = { onTitleClicked() },
-                    selectedText = TextRange(
-                        start = 0,
-                        end = state.title.length
-                    ).takeIf { state.isTitleHighlighted },
-                    style = MaterialTheme.typography.headlineLarge,
+                Title(
+                    onTitleClicked = onTitleClicked,
+                    title = state.title,
+                    isTitleHighlighted = state.isTitleHighlighted
                 )
-                Spacer(modifier = Modifier.padding(8.dp))
             }
             items(state.content) {
                 StoryContentPart(
@@ -92,6 +91,33 @@ private fun StoryContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun Title(
+    modifier: Modifier = Modifier,
+    onTitleClicked: () -> Unit,
+    title: String,
+    isTitleHighlighted: Boolean,
+) {
+    Column(modifier) {
+        SelectableText(
+            text = title,
+            onTextClicked = { onTitleClicked() },
+            selectedText = TextRange(
+                start = 0,
+                end = title.length
+            ).takeIf { isTitleHighlighted },
+            style = MaterialTheme.typography.headlineLarge,
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(
+            text = stringResource(R.string.story_reader_tap_to_translate_explainer),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
     }
 }
 
