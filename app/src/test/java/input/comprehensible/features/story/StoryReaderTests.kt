@@ -1,6 +1,8 @@
 package input.comprehensible.features.story
 
 import android.os.Build
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.github.takahirom.roborazzi.captureScreenRoboImage
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
@@ -12,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
@@ -21,6 +24,8 @@ import javax.inject.Inject
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
     application = HiltTestApplication::class,
 )
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@OptIn(ExperimentalRoborazziApi::class)
 class StoryReaderTests {
 
     @get:Rule
@@ -51,7 +56,7 @@ class StoryReaderTests {
         runCurrent()
 
         onStoryReader {
-            assertStoryTextIsVisible(stories.last().paragraphs.first().germanText)
+            assertStoryTextIsVisible(stories.last().paragraphs.first().germanSentences)
         }
     }
 
@@ -76,14 +81,15 @@ class StoryReaderTests {
         storiesData.setLocalStories(stories)
         goToStoryReader(stories.first().id)
         runCurrent()
+        awaitIdle()
 
         onStoryReader {
-            // WHEN the user switches to English
-            setLanguage("en")
-            runCurrent()
+            // WHEN the user taps on a German sentence
+            tapOnSentence(sentence = stories.first().paragraphs.first().germanSentences.first())
+            awaitIdle()
 
-            // THEN the story is shown in English
-            assertStoryTextIsVisible(stories.last().paragraphs.first().englishText)
+            // THEN the sentence is shown in English
+            captureScreenRoboImage("screenshots/german_sentence_to_english.png")
         }
     }
 
@@ -93,18 +99,57 @@ class StoryReaderTests {
         val stories = SampleStoriesData.listOf100Stories
         storiesData.setLocalStories(stories)
         goToStoryReader(stories.first().id)
-        runCurrent()
+        awaitIdle()
 
         onStoryReader {
-            // WHEN the user switches to English
-            setLanguage("en")
-            runCurrent()
-            // AND the user switches to German
-            setLanguage("de")
-            runCurrent()
+            // WHEN the user taps on a German sentence
+            tapOnSentence(sentence = stories.first().paragraphs.first().germanSentences.first())
+            awaitIdle()
+            // WHEN the user taps on an English sentence
+            tapOnSentence(sentence = stories.first().paragraphs.first().englishSentences.first())
+            awaitIdle()
 
-            // THEN the story is shown in German
-            assertStoryTextIsVisible(stories.last().paragraphs.first().germanText)
+            // THEN the sentence is shown in German
+            captureScreenRoboImage("screenshots/english_sentence_to_german.png")
+        }
+    }
+
+    @Test
+    fun `the title can be switched from German to English`() = testRule.runTest {
+        // GIVEN a German story is open
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        goToStoryReader(stories.first().id)
+        awaitIdle()
+
+        onStoryReader {
+            // WHEN the user taps on the title
+            tapOnSentence(sentence = stories.first().germanTitle)
+            awaitIdle()
+
+            // THEN the title is shown in English
+            captureScreenRoboImage("screenshots/german_title_to_english.png")
+        }
+    }
+
+    @Test
+    fun `the title can be switched from English to German`() = testRule.runTest {
+        // GIVEN a German story is open
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        goToStoryReader(stories.first().id)
+        awaitIdle()
+
+        onStoryReader {
+            // WHEN the user taps on the title
+            tapOnSentence(sentence = stories.first().germanTitle)
+            awaitIdle()
+            // WHEN the user taps on the title
+            tapOnSentence(sentence = stories.first().englishTitle)
+            awaitIdle()
+
+            // THEN the title is shown in German
+            captureScreenRoboImage("screenshots/english_title_to_german.png")
         }
     }
 }

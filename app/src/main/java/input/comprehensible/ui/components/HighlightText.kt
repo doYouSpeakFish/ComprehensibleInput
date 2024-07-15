@@ -40,7 +40,8 @@ fun SelectableText(
     val annotatedText = rememberHighlightedText(
         text = text,
         selectedText = selectedText,
-        span = span
+        span = span,
+        defaultStyle = style,
     )
     ClickableText(
         modifier = modifier,
@@ -66,8 +67,9 @@ private fun rememberHighlightedText(
     text: String,
     selectedText: TextRange?,
     span: SpanStyle,
+    defaultStyle: TextStyle,
 ): AnnotatedString {
-    val defaultStyle = MaterialTheme.typography.bodyLarge.toSpanStyle().copy(
+    val defaultSpanStyle = defaultStyle.toSpanStyle().copy(
         background = Color.Transparent,
         color = LocalContentColor.current,
     )
@@ -75,7 +77,7 @@ private fun rememberHighlightedText(
         buildAnnotatedString {
             val selectionStartIndex = selectedText?.start?.coerceAtLeast(0)
             val selectionEndIndex = selectedText?.end?.coerceAtMost(text.length)
-            withStyle(defaultStyle) {
+            withStyle(defaultSpanStyle) {
                 append(
                     text.substring(
                         startIndex = 0,
@@ -91,7 +93,7 @@ private fun rememberHighlightedText(
                     )
                 )
             }
-            withStyle(defaultStyle) {
+            withStyle(defaultSpanStyle) {
                 append(
                     text.substring(
                         startIndex = selectionEndIndex ?: text.lastIndex

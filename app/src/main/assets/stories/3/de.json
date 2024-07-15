@@ -4,7 +4,10 @@
   "content": [
     {
       "type": "paragraph",
-      "text": "Es war einmal ein kleiner Ort in Deutschland, der für seinen bunten und lebhaften Karneval bekannt war. Jedes Jahr kamen Menschen von überall her, um die festlichen Aktivitäten und die fröhliche Musik zu genießen."
+      "sentences": [
+        "Es war einmal ein kleiner Ort in Deutschland, der für seinen bunten und lebhaften Karneval bekannt war.",
+        "Jedes Jahr kamen Menschen von überall her, um die festlichen Aktivitäten und die fröhliche Musik zu genießen."
+      ]
     },
     {
       "type": "image",
@@ -13,7 +16,12 @@
     },
     {
       "type": "paragraph",
-      "text": "Aber dieses Jahr war etwas anders. Als Anna, eine junge Frau, die in der Nähe wohnte, zum Festplatz kam, war alles merkwürdig still. \"Wo sind alle Menschen?\" fragte sie sich. Die Straßen waren leer, keine Musik spielte, keine Kinder lachten."
+      "sentences": [
+        "Aber dieses Jahr war etwas anders.",
+        "Als Anna, eine junge Frau, die in der Nähe wohnte, zum Festplatz kam, war alles merkwürdig still.",
+        "\"Wo sind alle Menschen?\" fragte sie sich.",
+        "Die Straßen waren leer, keine Musik spielte, keine Kinder lachten."
+      ]
     },
     {
       "type": "image",
@@ -22,7 +30,10 @@
     },
     {
       "type": "paragraph",
-      "text": "Anna ging durch die Gassen und sah die geschmückten Buden, aber es gab keine Verkäufer, keine Glitzerlichter, keine Ballons. Es war, als hätte der Karneval nie begonnen."
+      "sentences": [
+        "Anna ging durch die Gassen und sah die geschmückten Buden, aber es gab keine Verkäufer, keine Glitzerlichter, keine Ballons.",
+        "Es war, als hätte der Karneval nie begonnen."
+      ]
     },
     {
       "type": "image",
@@ -31,7 +42,12 @@
     },
     {
       "type": "paragraph",
-      "text": "Plötzlich hörte sie ein leises Geräusch. \"Hallo?\" rief sie. Keine Antwort. Sie folgte dem Geräusch und fand einen kleinen, verängstigten Hund, der sich unter einer Bank versteckte."
+      "sentences": [
+        "Plötzlich hörte sie ein leises Geräusch.",
+        "\"Hallo?\" rief sie.",
+        "Keine Antwort.",
+        "Sie folgte dem Geräusch und fand einen kleinen, verängstigten Hund, der sich unter einer Bank versteckte."
+      ]
     },
     {
       "type": "image",
@@ -40,19 +56,31 @@
     },
     {
       "type": "paragraph",
-      "text": "\"Was machst du denn hier ganz alleine?\" fragte Anna den Hund. Der Hund schaute sie mit großen Augen an, als wollte er sagen: \"Ich weiß es auch nicht.\""
+      "sentences": [
+        "\"Was machst du denn hier ganz alleine?\" fragte Anna den Hund.",
+        "Der Hund schaute sie mit großen Augen an, als wollte er sagen: \"Ich weiß es auch nicht.\""
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Anna beschloss, den Hund zu begleiten, und gemeinsam suchten sie nach Hinweisen. Sie fanden ein Plakat, auf dem stand: \"Karneval verschoben! Neue Termine folgen bald.\""
+      "sentences": [
+        "Anna beschloss, den Hund zu begleiten, und gemeinsam suchten sie nach Hinweisen.",
+        "Sie fanden ein Plakat, auf dem stand: \"Karneval verschoben! Neue Termine folgen bald.\""
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Anna verstand jetzt, warum niemand da war. Der Karneval wurde verschoben, aber sie hatte nichts davon gewusst. Sie lächelte den Hund an und sagte: \"Nun, es sieht so aus, als hätten wir den ganzen Platz für uns.\""
+      "sentences": [
+        "Anna verstand jetzt, warum niemand da war.",
+        "Der Karneval wurde verschoben, aber sie hatte nichts davon gewusst.",
+        "Sie lächelte den Hund an und sagte: \"Nun, es sieht so aus, als hätten wir den ganzen Platz für uns.\""
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Und so verbrachten Anna und der kleine Hund den Tag zusammen auf dem leeren Festplatz, spielten zwischen den bunten Buden und genossen die unerwartete Ruhe."
+      "sentences": [
+        "Und so verbrachten Anna und der kleine Hund den Tag zusammen auf dem leeren Festplatz, spielten zwischen den bunten Buden und genossen die unerwartete Ruhe."
+      ]
     },
     {
       "type": "image",
@@ -61,7 +89,10 @@
     },
     {
       "type": "paragraph",
-      "text": "Als es dunkel wurde, brachte Anna den Hund nach Hause und versprach, ihn am nächsten Tag wiederzubesuchen. Vielleicht würde der Karneval bald für alle geöffnet werden, aber für heute war es ihr kleines Geheimnis - das Geheimnis des leeren Karnevals."
+      "sentences": [
+        "Als es dunkel wurde, brachte Anna den Hund nach Hause und versprach, ihn am nächsten Tag wiederzubesuchen.",
+        "Vielleicht würde der Karneval bald für alle geöffnet werden, aber für heute war es ihr kleines Geheimnis - das Geheimnis des leeren Karnevals."
+      ]
     },
     {
       "type": "image",
@@ -70,7 +101,10 @@
     },
     {
       "type": "paragraph",
-      "text": "Und die Moral von der Geschichte? Manchmal, wenn die Dinge nicht so laufen, wie wir es erwarten, finden wir Freude in den ungewöhnlichsten Momenten und Freundschaften an den unerwarteten Orten."
+      "sentences": [
+        "Und die Moral von der Geschichte?",
+        "Manchmal, wenn die Dinge nicht so laufen, wie wir es erwarten, finden wir Freude in den ungewöhnlichsten Momenten und Freundschaften an den unerwarteten Orten."
+      ]
     }
   ]
 }

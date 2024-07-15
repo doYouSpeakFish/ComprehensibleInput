@@ -24,7 +24,7 @@ class StoriesTestData @Inject constructor(
                             )
 
                             is TestStoryPart.Paragraph -> StoryElementData.ParagraphData(
-                                text = part.germanText,
+                                sentences = part.germanSentences,
                             )
                         }
                     }
@@ -43,7 +43,7 @@ class StoriesTestData @Inject constructor(
                             )
 
                             is TestStoryPart.Paragraph -> StoryElementData.ParagraphData(
-                                text = part.englishText,
+                                sentences = part.englishSentences,
                             )
                         }
                     }

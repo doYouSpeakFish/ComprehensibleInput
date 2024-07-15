@@ -20,8 +20,8 @@ sealed interface StoryElement {
      * A paragraph of text.
      */
     data class Paragraph(
-        val text: String,
-        val translation: String,
+        val sentences: List<String>,
+        val sentencesTranslations: List<String>,
     ) : StoryElement
 
     /**

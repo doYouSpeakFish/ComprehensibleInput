@@ -11,8 +11,12 @@ object SampleStoriesData {
                     TestStoryPart.Image(contentDescription = "Image $storyNumber-$paragraphNumber")
                 } else {
                     TestStoryPart.Paragraph(
-                        germanText = "German Paragraph $paragraphNumber",
-                        englishText = "English Paragraph $paragraphNumber"
+                        germanSentences = List(10) { sentenceNumber ->
+                            "German Paragraph $paragraphNumber Sentence $sentenceNumber"
+                        },
+                        englishSentences = List(10) { sentenceNumber ->
+                            "English Paragraph $paragraphNumber Sentence $sentenceNumber"
+                        }
                     )
                 }
             }
@@ -35,8 +39,8 @@ data class TestStory(
 
 sealed interface TestStoryPart {
     data class Paragraph(
-        val germanText: String,
-        val englishText: String,
+        val germanSentences: List<String>,
+        val englishSentences: List<String>,
     ) : TestStoryPart
 
     data class Image(val contentDescription: String) : TestStoryPart

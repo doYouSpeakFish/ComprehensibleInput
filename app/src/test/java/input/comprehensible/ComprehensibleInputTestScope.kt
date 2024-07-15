@@ -47,6 +47,11 @@ class ComprehensibleInputTestScope(
     fun runCurrent() {
         testScope.runCurrent()
     }
+
+    suspend fun awaitIdle() {
+        testScope.runCurrent()
+        composeRule.awaitIdle()
+    }
 }
 
 fun ComprehensibleInputTestRule.runTest(

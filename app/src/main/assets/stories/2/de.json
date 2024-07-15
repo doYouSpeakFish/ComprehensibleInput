@@ -4,7 +4,14 @@
   "content": [
     {
       "type": "paragraph",
-      "text": "Heute ist ein besonderer Tag. Ich bin der erste Mensch, der auf Phobos steht, einem kleinen Mond von Mars. Ich stehe hier in meinem Raumanzug und schaue hoch zum roten Planeten. Mars ist so groß und wunderschön. Die Farben sind intensiv – rotes und oranges Licht. Es ist ein unglaublicher Anblick."
+      "sentences": [
+        "Heute ist ein besonderer Tag.",
+        "Ich bin der erste Mensch, der auf Phobos steht, einem kleinen Mond von Mars.",
+        "Ich stehe hier in meinem Raumanzug und schaue hoch zum roten Planeten.",
+        "Mars ist so groß und wunderschön.",
+        "Die Farben sind intensiv – rotes und oranges Licht.",
+        "Es ist ein unglaublicher Anblick."
+      ]
     },
     {
       "type": "image",
@@ -13,11 +20,22 @@
     },
     {
       "type": "paragraph",
-      "text": "Aber in meinem Herzen ist auch ein kleines bisschen Traurigkeit. Ich werde nie auf dem Mars selbst laufen können. Diese Mission ist nur für Phobos. Aber ich bin auch aufgeregt. Phobos ist ein mysteriöser Ort, und ich bin der Erste, der ihn erkunden darf."
+      "sentences": [
+        "Aber in meinem Herzen ist auch ein kleines bisschen Traurigkeit.",
+        "Ich werde nie auf dem Mars selbst laufen können.",
+        "Diese Mission ist nur für Phobos.",
+        "Aber ich bin auch aufgeregt.",
+        "Phobos ist ein mysteriöser Ort, und ich bin der Erste, der ihn erkunden darf."
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Die Schwerkraft hier ist sehr niedrig. Ich fühle mich leicht und kann hoch springen. Jeder Schritt fühlt sich seltsam an, fast wie fliegen. Es ist lustig und macht mich glücklich."
+      "sentences": [
+        "Die Schwerkraft hier ist sehr niedrig.",
+        "Ich fühle mich leicht und kann hoch springen.",
+        "Jeder Schritt fühlt sich seltsam an, fast wie fliegen.",
+        "Es ist lustig und macht mich glücklich."
+      ]
     },
     {
       "type": "image",
@@ -26,11 +44,20 @@
     },
     {
       "type": "paragraph",
-      "text": "Wir haben nur zwanzig Tage auf Phobos. Die Wissenschaftler und Ingenieure haben hart gearbeitet, um die Reise kurz zu machen. Es ist weniger gefährlich so. Ich möchte viel entdecken in dieser kurzen Zeit."
+      "sentences": [
+        "Wir haben nur zwanzig Tage auf Phobos.",
+        "Die Wissenschaftler und Ingenieure haben hart gearbeitet, um die Reise kurz zu machen.",
+        "Es ist weniger gefährlich so.",
+        "Ich möchte viel entdecken in dieser kurzen Zeit."
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Ich freue mich auch darauf, nach Hause zu gehen. Ich vermisse die Wolken und den Regen. Ich stelle mir vor, wie ich wieder unter einem blauen Himmel stehe und das Wasser auf meiner Haut spüre."
+      "sentences": [
+        "Ich freue mich auch darauf, nach Hause zu gehen.",
+        "Ich vermisse die Wolken und den Regen.",
+        "Ich stelle mir vor, wie ich wieder unter einem blauen Himmel stehe und das Wasser auf meiner Haut spüre."
+      ]
     },
     {
       "type": "image",
@@ -39,7 +66,12 @@
     },
     {
       "type": "paragraph",
-      "text": "Aber jetzt, hier auf Phobos, ist es Zeit für Abenteuer. Es gibt so viel zu tun. Ich nehme meinen ersten Schritt und beginne mit meiner Arbeit. Es ist ein großer Moment – für mich und für alle Menschen auf der Erde."
+      "sentences": [
+        "Aber jetzt, hier auf Phobos, ist es Zeit für Abenteuer.",
+        "Es gibt so viel zu tun.",
+        "Ich nehme meinen ersten Schritt und beginne mit meiner Arbeit.",
+        "Es ist ein großer Moment – für mich und für alle Menschen auf der Erde."
+      ]
     },
     {
       "type": "image",
@@ -48,7 +80,9 @@
     },
     {
       "type": "paragraph",
-      "text": "Ende"
+      "sentences": [
+        "Ende"
+      ]
     }
   ]
 }

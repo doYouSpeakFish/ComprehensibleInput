@@ -1,13 +1,16 @@
 package input.comprehensible.ui.storyreader
 
+import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
-import input.comprehensible.ui.components.storycontent.part.toStoryContentPartUiState
+import input.comprehensible.data.stories.model.StoryElement
+import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 /**
@@ -18,7 +21,6 @@ class StoryReaderViewModel @Inject constructor(
     private val storiesRepository: StoriesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val areTranslationsEnabled = MutableStateFlow(false)
     private val story = savedStateHandle
         .getStateFlow<String?>("storyId", null)
         .map {
@@ -26,32 +28,129 @@ class StoryReaderViewModel @Inject constructor(
                 "Story with id $it not found"
             }
         }
+    private val selectedText = MutableStateFlow<SelectedText?>(null)
 
     val state = combine(
         story,
-        areTranslationsEnabled
-    ) { story, areTranslationsEnabled ->
+        selectedText,
+    ) { story, selectedText ->
         if (story == null) {
             StoryReaderUiState.Loading
         } else {
+            val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
             StoryReaderUiState.Loaded(
-                title = if (areTranslationsEnabled) story.translatedTitle else story.title,
+                title = if (selectedText is SelectedText.Title && selectedText.isTranslated) {
+                    story.translatedTitle
+                } else {
+                    story.title
+                },
+                isTitleHighlighted = selectedText is SelectedText.Title,
                 content = story.content
-                    .map { storyElement ->
+                    .mapIndexed { i, storyElement ->
                         storyElement.toStoryContentPartUiState(
-                            areTranslationsEnabled = areTranslationsEnabled,
+                            paragraphIndex = i,
+                            selectedSentenceIndex = selectedSentence?.takeIf { it.paragraphIndex == i }?.selectedSentenceIndex,
+                            areTranslationsEnabled = selectedSentence?.isTranslated == true,
                         )
                     },
-                areTranslationsEnabled = areTranslationsEnabled
             )
         }
     }
 
     /**
-     * Switch to the translation language, or disable translations to switch back to the learning
-     * language.
+     * Toggles whether translations are enabled for the title.
      */
-    fun onTranslationsEnabledChanged(enabled: Boolean) {
-        areTranslationsEnabled.value = enabled
+    fun onTitleSelected() {
+        selectedText.update { selectedText ->
+            if (selectedText is SelectedText.Title) {
+                selectedText.copy(isTranslated = !selectedText.isTranslated)
+            } else {
+                SelectedText.Title(isTranslated = true)
+            }
+        }
     }
+
+    private fun StoryElement.toStoryContentPartUiState(
+        paragraphIndex: Int,
+        selectedSentenceIndex: Int?,
+        areTranslationsEnabled: Boolean,
+    ) = when (this) {
+        is StoryElement.Paragraph -> this.toStoryContentPartUiState(
+            paragraphIndex = paragraphIndex,
+            selectedSentenceIndex = selectedSentenceIndex,
+            areTranslationsEnabled = areTranslationsEnabled,
+        )
+
+        is StoryElement.Image -> StoryContentPartUiState.Image(
+            contentDescription = contentDescription,
+            bitmap = bitmap
+        )
+    }
+
+    private fun StoryElement.Paragraph.toStoryContentPartUiState(
+        paragraphIndex: Int,
+        selectedSentenceIndex: Int?,
+        areTranslationsEnabled: Boolean,
+    ): StoryContentPartUiState.Paragraph {
+        val combinedSentences = List(sentences.size) { i ->
+            if (i == selectedSentenceIndex && areTranslationsEnabled) {
+                sentencesTranslations[i]
+            } else {
+                sentences[i]
+            }
+        }
+        val sentencesIndex = combinedSentences
+            .runningFold(0) { acc, sentence -> acc + sentence.length + 1 }
+            .zipWithNext { a, b -> TextRange(a, b) }
+        return StoryContentPartUiState.Paragraph(
+            paragraph = combinedSentences.joinToString(separator = " "),
+            onClick = { characterIndex ->
+                onSentenceSelected(
+                    paragraphIndex = paragraphIndex,
+                    sentenceIndex = sentencesIndex.indexOfFirst { characterIndex in it },
+                )
+            },
+            selectedTextRange = if (selectedSentenceIndex != null) {
+                val selectedSentenceRange = sentencesIndex[selectedSentenceIndex]
+                TextRange(
+                    start = selectedSentenceRange.start,
+                    end = selectedSentenceRange.end - 1, // Don't highlight space between sentences
+                )
+            } else {
+                null
+            }
+        )
+    }
+
+    private fun onSentenceSelected(
+        paragraphIndex: Int,
+        sentenceIndex: Int,
+    ) {
+        selectedText.update { selectedText ->
+            val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
+            val sameParagraph = selectedSentence?.paragraphIndex == paragraphIndex
+            val sameSentence = selectedSentence?.selectedSentenceIndex == sentenceIndex
+            if (sameParagraph && sameSentence) {
+                return@update selectedSentence?.copy(isTranslated = !selectedText.isTranslated)
+            }
+
+            SelectedText.SentenceInParagraph(
+                paragraphIndex = paragraphIndex,
+                selectedSentenceIndex = sentenceIndex,
+                isTranslated = true
+            )
+        }
+    }
+}
+
+private sealed interface SelectedText {
+    data class Title(
+        val isTranslated: Boolean,
+    ) : SelectedText
+
+    data class SentenceInParagraph(
+        val paragraphIndex: Int,
+        val selectedSentenceIndex: Int,
+        val isTranslated: Boolean,
+    ) : SelectedText
 }
