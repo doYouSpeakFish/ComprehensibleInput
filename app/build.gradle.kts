@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.compose.test.screenshots)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.roborazzi)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
@@ -106,6 +107,8 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.navigation.testing)
+    testImplementation(libs.roborazzi.core)
+    testImplementation(libs.roborazzi.compose)
 
     kspTest(libs.hilt.compiler)
 
