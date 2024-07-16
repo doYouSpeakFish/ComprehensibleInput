@@ -112,6 +112,7 @@ dependencies {
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.junit)
 
     kspTest(libs.hilt.compiler)
 
