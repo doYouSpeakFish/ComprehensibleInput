@@ -4,7 +4,12 @@
   "content": [
     {
       "type": "paragraph",
-      "text": "Es begann alles, als ich ein kleiner Samen war. Ein Vogel hatte mich weit weg von meinen Eltern getragen und mich in der weichen Erde versteckt. Bald begann ich zu wachsen. Die Sonne wärmte mich, und der Regen gab mir zu trinken."
+      "sentences": [
+        "Es begann alles, als ich ein kleiner Samen war.",
+        "Ein Vogel hatte mich weit weg von meinen Eltern getragen und mich in der weichen Erde versteckt.",
+        "Bald begann ich zu wachsen.",
+        "Die Sonne wärmte mich, und der Regen gab mir zu trinken."
+      ]
     },
     {
       "type": "image",
@@ -13,7 +18,12 @@
     },
     {
       "type": "paragraph",
-      "text": "Jahre gingen vorbei, und ich wurde größer und stärker. Kinder kamen und spielten unter meinen Ästen, und ich hörte ihr Lachen. Manchmal kletterten sie hoch und bauten kleine Häuser in meinen Zweigen. Ich fühlte mich glücklich, ihnen Freude zu bringen."
+      "sentences": [
+        "Jahre gingen vorbei, und ich wurde größer und stärker.",
+        "Kinder kamen und spielten unter meinen Ästen, und ich hörte ihr Lachen.",
+        "Manchmal kletterten sie hoch und bauten kleine Häuser in meinen Zweigen.",
+        "Ich fühlte mich glücklich, ihnen Freude zu bringen."
+      ]
     },
     {
       "type": "image",
@@ -22,7 +32,12 @@
     },
     {
       "type": "paragraph",
-      "text": "Als ich älter wurde, veränderte sich die Welt um mich herum. Neue Gebäude wurden errichtet, und die Landschaft veränderte sich. Ich sah Pferde, die durch Autos ersetzt wurden, und die Lichter der Stadt wurden heller. Doch durch all die Veränderungen blieb ich ein stilles Zeugnis der Zeit."
+      "sentences": [
+        "Als ich älter wurde, veränderte sich die Welt um mich herum.",
+        "Neue Gebäude wurden errichtet, und die Landschaft veränderte sich.",
+        "Ich sah Pferde, die durch Autos ersetzt wurden, und die Lichter der Stadt wurden heller.",
+        "Doch durch all die Veränderungen blieb ich ein stilles Zeugnis der Zeit."
+      ]
     },
     {
       "type": "image",
@@ -31,7 +46,11 @@
     },
     {
       "type": "paragraph",
-      "text": "In meinen besten Jahren war ich ein Zuhause für viele Vögel und kleine Tiere. Sie suchten Schutz in meinem Laub und ernährten sich von den Früchten, die ich trug. Ich war stolz darauf, ein Teil des Lebenskreislaufs zu sein."
+      "sentences": [
+        "In meinen besten Jahren war ich ein Zuhause für viele Vögel und kleine Tiere.",
+        "Sie suchten Schutz in meinem Laub und ernährten sich von den Früchten, die ich trug.",
+        "Ich war stolz darauf, ein Teil des Lebenskreislaufs zu sein."
+      ]
     },
     {
       "type": "image",
@@ -40,7 +59,12 @@
     },
     {
       "type": "paragraph",
-      "text": "Jetzt bin ich sehr alt. Meine Rinde ist rissig, und meine Äste sind nicht mehr so stark wie früher. Aber ich stehe immer noch hier, und ich biete Schatten und Trost für diejenigen, die ihn suchen. Ich hoffe, dass ich noch viele Jahre hier stehen werde, um die Geschichten des Lebens zu erzählen."
+      "sentences": [
+        "Jetzt bin ich sehr alt.",
+        "Meine Rinde ist rissig, und meine Äste sind nicht mehr so stark wie früher.",
+        "Aber ich stehe immer noch hier, und ich biete Schatten und Trost für diejenigen, die ihn suchen.",
+        "Ich hoffe, dass ich noch viele Jahre hier stehen werde, um die Geschichten des Lebens zu erzählen."
+      ]
     },
     {
       "type": "image",

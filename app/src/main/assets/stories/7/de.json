@@ -4,7 +4,13 @@
   "content": [
     {
       "type": "paragraph",
-      "text": "Marco rannte durch den Regen. Blitz zuckte am dunklen Himmel und Donner rollte. Er kam bei einem großen, alten Haus an. Es sah aus wie ein Schloss, groß und ein wenig gruselig. Aysha wartete auf ihn im Licht des Eingangs."
+      "sentences": [
+        "Marco rannte durch den Regen.",
+        "Blitz zuckte am dunklen Himmel und Donner rollte.",
+        "Er kam bei einem großen, alten Haus an.",
+        "Es sah aus wie ein Schloss, groß und ein wenig gruselig.",
+        "Aysha wartete auf ihn im Licht des Eingangs."
+      ]
     },
     {
       "type": "image",
@@ -13,11 +19,20 @@
     },
     {
       "type": "paragraph",
-      "text": "Sie lächelte und winkte. \"Komm rein! Es ist nur ein Gewitter.\""
+      "sentences": [
+        "Sie lächelte und winkte.",
+        "\"Komm rein! Es ist nur ein Gewitter.\""
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Aber Marco wusste, dass es nicht nur das Gewitter war. In diesem Haus gab es Geister. Er hatte sie gehört und manchmal, in der Nacht, gesehen. Marco mochte keine Geister. Aber er mochte Aysha sehr."
+      "sentences": [
+        "Aber Marco wusste, dass es nicht nur das Gewitter war.",
+        "In diesem Haus gab es Geister.",
+        "Er hatte sie gehört und manchmal, in der Nacht, gesehen.",
+        "Marco mochte keine Geister.",
+        "Aber er mochte Aysha sehr."
+      ]
     },
     {
       "type": "image",
@@ -26,15 +41,32 @@
     },
     {
       "type": "paragraph",
-      "text": "Sie gingen zusammen in die Küche. Das Haus knarrte. Aysha machte Tee und sie sprachen über normale Dinge: Arbeit, Bücher, Musik. Marco versuchte, die Geister zu vergessen."
+      "sentences": [
+        "Sie gingen zusammen in die Küche.",
+        "Das Haus knarrte.",
+        "Aysha machte Tee und sie sprachen über normale Dinge: Arbeit, Bücher, Musik.",
+        "Marco versuchte, die Geister zu vergessen."
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Plötzlich hörten sie ein Geräusch oben. Aysha lachte. \"Ach, das ist nur das Haus. Es ist alt.\""
+      "sentences": [
+        "Plötzlich hörten sie ein Geräusch oben.",
+        "Aysha lachte.",
+        "\"Ach, das ist nur das Haus.",
+        "Es ist alt.\""
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Marco sah sie an. Wie konnte sie keine Angst haben? Aysha sah seine Sorge und nahm seine Hand. \"Du gewöhnst dich daran. Die Geister tun nichts. Sie sind ein Teil des Hauses.\""
+      "sentences": [
+        "Marco sah sie an.",
+        "Wie konnte sie keine Angst haben?",
+        "Aysha sah seine Sorge und nahm seine Hand.",
+        "\"Du gewöhnst dich daran.",
+        "Die Geister tun nichts.",
+        "Sie sind ein Teil des Hauses.\""
+      ]
     },
     {
       "type": "image",
@@ -43,11 +75,24 @@
     },
     {
       "type": "paragraph",
-      "text": "Marco wollte mutig sein. \"Okay,\" sagte er und trank seinen Tee. Aber tief in seinem Herzen fühlte er, dass etwas nicht stimmte. Trotzdem, er war verliebt. Und für Aysha würde er die Geister, das Gruseln, ja sogar seine Angst akzeptieren."
+      "sentences": [
+        "Marco wollte mutig sein.",
+        "\"Okay,\" sagte er und trank seinen Tee.",
+        "Aber tief in seinem Herzen fühlte er, dass etwas nicht stimmte.",
+        "Trotzdem, er war verliebt.",
+        "Und für Aysha würde er die Geister, das Gruseln, ja sogar seine Angst akzeptieren."
+      ]
     },
     {
       "type": "paragraph",
-      "text": "Die Nacht kam und sie gingen ins Bett. Im dunklen Zimmer flüsterte etwas Unbekanntes. Marco hielt Ayshas Hand fest. Er würde bleiben. Aus Liebe. Aber er fragte sich, ob die Liebe genug war, um die Schatten zu besiegen."
+      "sentences": [
+        "Die Nacht kam und sie gingen ins Bett.",
+        "Im dunklen Zimmer flüsterte etwas Unbekanntes.",
+        "Marco hielt Ayshas Hand fest.",
+        "Er würde bleiben.",
+        "Aus Liebe.",
+        "Aber er fragte sich, ob die Liebe genug war, um die Schatten zu besiegen."
+      ]
     },
     {
       "type": "image",

@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.compose.test.screenshots)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.roborazzi)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
@@ -72,6 +73,9 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            all {
+                it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+            }
         }
     }
     @Suppress("UnstableApiUsage")
@@ -106,6 +110,9 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.navigation.testing)
+    testImplementation(libs.roborazzi.core)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.junit)
 
     kspTest(libs.hilt.compiler)
 

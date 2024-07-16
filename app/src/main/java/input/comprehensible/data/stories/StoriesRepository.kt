@@ -99,14 +99,24 @@ class StoriesRepository @Inject constructor(
         translation: StoryElementData
     ): StoryElement? {
         return when (this) {
-            is StoryElementData.ParagraphData -> StoryElement.Paragraph(
-                text = text,
-                translation = (translation as? StoryElementData.ParagraphData)?.text
+            is StoryElementData.ParagraphData -> {
+                (translation as? StoryElementData.ParagraphData)
                     ?: run {
                         Timber.e("No matching translation found for paragraph in story $storyId")
                         return null
                     }
-            )
+                if (sentences.size != translation.sentences.size) {
+                    Timber.e(
+                        "Mismatched number of sentences in story $storyId for languages " +
+                                "$learningLanguage and $translationsLanguage"
+                    )
+                    return null
+                }
+                StoryElement.Paragraph(
+                    sentences = sentences,
+                    sentencesTranslations = translation.sentences
+                )
+            }
 
             is StoryElementData.ImageData -> StoryElement.Image(
                 contentDescription = contentDescription,

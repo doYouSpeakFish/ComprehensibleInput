@@ -8,4 +8,5 @@
     <string name="stories_screen_title">Stories</string>
     <string name="language_selector_en_content_description">Select English</string>
     <string name="language_selector_de_content_description">Select German</string>
+    <string name="story_reader_tap_to_translate_explainer">(Tap on any sentence to translate it.)</string>
 </resources>

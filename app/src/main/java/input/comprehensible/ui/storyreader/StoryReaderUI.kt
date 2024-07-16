@@ -3,7 +3,7 @@ package input.comprehensible.ui.storyreader
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import input.comprehensible.ui.components.LanguageSelection
-import input.comprehensible.ui.components.LanguageSelector
+import input.comprehensible.R
+import input.comprehensible.ui.components.SelectableText
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -37,7 +39,7 @@ fun StoryReader(
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
     StoryReader(
         modifier = modifier,
-        onTranslationsEnabledChanged = viewModel::onTranslationsEnabledChanged,
+        onTitleClicked = viewModel::onTitleSelected,
         state = state,
     )
 }
@@ -45,7 +47,7 @@ fun StoryReader(
 @Composable
 private fun StoryReader(
     modifier: Modifier = Modifier,
-    onTranslationsEnabledChanged: (Boolean) -> Unit,
+    onTitleClicked: () -> Unit,
     state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
@@ -55,8 +57,8 @@ private fun StoryReader(
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
 
                 is StoryReaderUiState.Loaded -> StoryContent(
-                    onTranslationsEnabledChanged = onTranslationsEnabledChanged,
                     state = state,
+                    onTitleClicked = onTitleClicked,
                 )
             }
         }
@@ -66,23 +68,22 @@ private fun StoryReader(
 @Composable
 private fun StoryContent(
     modifier: Modifier = Modifier,
-    onTranslationsEnabledChanged: (Boolean) -> Unit,
+    onTitleClicked: () -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
-    Column(modifier) {
+    Box(modifier) {
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
-                .weight(1f),
+                .fillMaxSize(),
             state = rememberLazyListState(),
         ) {
             item {
-                Text(
-                    text = state.title,
-                    style = MaterialTheme.typography.headlineLarge,
+                Title(
+                    onTitleClicked = onTitleClicked,
+                    title = state.title,
+                    isTitleHighlighted = state.isTitleHighlighted
                 )
-                Spacer(modifier = Modifier.padding(8.dp))
             }
             items(state.content) {
                 StoryContentPart(
@@ -90,13 +91,33 @@ private fun StoryContent(
                 )
             }
         }
-        LanguageSelector(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            learningLanguage = LanguageSelection.GERMAN,
-            translationLanguage = LanguageSelection.ENGLISH,
-            onTranslationsEnabledChanged = onTranslationsEnabledChanged,
-            areTranslationsEnabled = state.areTranslationsEnabled,
+    }
+}
+
+@Composable
+private fun Title(
+    modifier: Modifier = Modifier,
+    onTitleClicked: () -> Unit,
+    title: String,
+    isTitleHighlighted: Boolean,
+) {
+    Column(modifier) {
+        SelectableText(
+            text = title,
+            onTextClicked = { onTitleClicked() },
+            selectedText = TextRange(
+                start = 0,
+                end = title.length
+            ).takeIf { isTitleHighlighted },
+            style = MaterialTheme.typography.headlineLarge,
         )
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(
+            text = stringResource(R.string.story_reader_tap_to_translate_explainer),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
     }
 }
 
@@ -105,13 +126,17 @@ private fun StoryContent(
 fun StoryReaderPreview() {
     ComprehensibleInputTheme {
         StoryReader(
-            onTranslationsEnabledChanged = {},
+            onTitleClicked = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
+                isTitleHighlighted = false,
                 content = listOf(
-                    StoryContentPartUiState.Paragraph("Content")
+                    StoryContentPartUiState.Paragraph(
+                        paragraph = "Content",
+                        onClick = {},
+                        selectedTextRange = null
+                    )
                 ),
-                areTranslationsEnabled = false
             )
         )
     }
@@ -122,13 +147,17 @@ fun StoryReaderPreview() {
 fun StoryReaderTranslationPreview() {
     ComprehensibleInputTheme {
         StoryReader(
-            onTranslationsEnabledChanged = {},
+            onTitleClicked = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
+                isTitleHighlighted = true,
                 content = listOf(
-                    StoryContentPartUiState.Paragraph("Content")
+                    StoryContentPartUiState.Paragraph(
+                        paragraph = "Content",
+                        onClick = {},
+                        selectedTextRange = null
+                    )
                 ),
-                areTranslationsEnabled = true
             )
         )
     }

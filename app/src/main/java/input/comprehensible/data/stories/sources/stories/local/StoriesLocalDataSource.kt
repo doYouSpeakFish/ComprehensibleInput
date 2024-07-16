@@ -50,7 +50,7 @@ sealed interface StoryElementData {
      */
     @Serializable
     @SerialName("paragraph")
-    data class ParagraphData(val text: String) : StoryElementData
+    data class ParagraphData(val sentences: List<String>) : StoryElementData
 
     /**
      * An image, with [contentDescription] and [path] to the image file.
