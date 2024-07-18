@@ -21,6 +21,7 @@ import javax.inject.Inject
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
     application = HiltTestApplication::class,
+    qualifiers = "w360dp-h640dp-mdpi",
 )
 class StoryListTests {
     @get:Rule
