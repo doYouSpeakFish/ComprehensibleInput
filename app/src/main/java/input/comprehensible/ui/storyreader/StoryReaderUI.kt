@@ -1,22 +1,32 @@
 package input.comprehensible.ui.storyreader
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -71,24 +81,44 @@ private fun StoryContent(
     onTitleClicked: () -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
+    var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
     Box(modifier) {
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize(),
             state = rememberLazyListState(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
                 Title(
                     onTitleClicked = onTitleClicked,
                     title = state.title,
-                    isTitleHighlighted = state.isTitleHighlighted
+                    isTitleHighlighted = state.isTitleHighlighted,
                 )
+            }
+            item {
+                AnimatedVisibility(timesExplainerTapped < 11) {
+                    TranslateExplainer(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        onExplainerTapped = { timesExplainerTapped++ },
+                        timesExplainerTapped = timesExplainerTapped,
+                    )
+                }
             }
             items(state.content) {
                 StoryContentPart(
                     state = it,
                 )
+            }
+            if (timesExplainerTapped > 10) {
+                item {
+                    TranslateExplainer(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        onExplainerTapped = { timesExplainerTapped++ },
+                        timesExplainerTapped = timesExplainerTapped,
+                    )
+                }
             }
         }
     }
@@ -107,17 +137,41 @@ private fun Title(
             onTextClicked = { onTitleClicked() },
             selectedText = TextRange(
                 start = 0,
-                end = title.length
+                end = title.length,
             ).takeIf { isTitleHighlighted },
             style = MaterialTheme.typography.headlineLarge,
         )
-        Spacer(modifier = Modifier.padding(4.dp))
+    }
+}
+
+@Composable
+private fun TranslateExplainer(
+    modifier: Modifier = Modifier,
+    onExplainerTapped: () -> Unit,
+    timesExplainerTapped: Int,
+) {
+    val explainerMessages =
+        stringArrayResource(id = R.array.story_reader_tap_to_translate_explainer)
+    Box(modifier, propagateMinConstraints = true) {
         Text(
-            text = stringResource(R.string.story_reader_tap_to_translate_explainer),
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.onBackground)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.background,
+                    shape = CircleShape,
+                )
+                .padding(vertical = 4.dp, horizontal = 12.dp)
+                .clickable(
+                    onClick = onExplainerTapped,
+                    enabled = timesExplainerTapped < explainerMessages.lastIndex,
+                )
+                .animateContentSize(),
+            text = explainerMessages.getOrElse(timesExplainerTapped) { explainerMessages.last() },
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.background,
         )
-        Spacer(modifier = Modifier.padding(8.dp))
     }
 }
 
