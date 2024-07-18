@@ -116,7 +116,7 @@ private fun StoryListScaffold(
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize(),
             content = {
-                val columns = (maxWidth / 150.dp).toInt()
+                val columns = (maxWidth / 200.dp).toInt()
                 content(paddingValues, columns)
             }
         )
