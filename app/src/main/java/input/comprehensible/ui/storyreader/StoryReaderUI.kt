@@ -3,7 +3,6 @@ package input.comprehensible.ui.storyreader
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
@@ -155,12 +153,9 @@ private fun TranslateExplainer(
     Box(modifier, propagateMinConstraints = true) {
         Text(
             modifier = Modifier
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.onBackground)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.background,
-                    shape = CircleShape,
+                .background(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    shape = CircleShape
                 )
                 .padding(vertical = 4.dp, horizontal = 12.dp)
                 .clickable(
