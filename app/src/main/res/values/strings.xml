@@ -8,5 +8,21 @@
     <string name="stories_screen_title">Stories</string>
     <string name="language_selector_en_content_description">Select English</string>
     <string name="language_selector_de_content_description">Select German</string>
-    <string name="story_reader_tap_to_translate_explainer">(Tap on any sentence to translate it.)</string>
+    <string-array name="story_reader_tap_to_translate_explainer">
+        <item>Tap on any sentence to translate it</item>
+        <item>Well, almost any sentence</item>
+        <item>You can also tap on the title</item>
+        <item>Seriously, stop tapping this sentence</item>
+        <item>It won\'t translate</item>
+        <item>What do you want from me!</item>
+        <item>Fine, I\'ve disabled translations</item>
+        <item>Just kidding, I can\'t do that</item>
+        <item>I\'m just a sentence in a box</item>
+        <item>Last warning</item>
+        <item />
+        <item>You found me again!</item>
+        <item>I give up</item>
+        <item>You win</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
 </resources>

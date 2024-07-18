@@ -29,8 +29,8 @@ fun SelectableText(
     text: String,
     onTextClicked: (index: Int) -> Unit,
     selectedText: TextRange?,
-    selectedTextColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    selectedTextBackgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    selectedTextColor: Color = MaterialTheme.colorScheme.background,
+    selectedTextBackgroundColor: Color = MaterialTheme.colorScheme.onBackground,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
 ) {
     val span = rememberHighlightSpanStyle(
