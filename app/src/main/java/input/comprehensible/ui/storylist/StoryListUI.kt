@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -139,42 +140,64 @@ private fun StoryListItem(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Image(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .border(1.dp, color = backgroundDark, shape = CircleShape)
-                    .clip(CircleShape),
-                bitmap = story.featuredImage.asImageBitmap(),
-                contentDescription = story.featuredImageContentDescription,
-                contentScale = ContentScale.FillHeight,
+            FeatureImage(
+                image = story.featuredImage.asImageBitmap(),
+                contentDescription = story.featuredImageContentDescription
             )
             Box {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = "\n", style = MaterialTheme.typography.titleMedium)
-                    Text(text = "\n", style = MaterialTheme.typography.labelMedium)
-                }
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = story.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = story.subtitle,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+                // Add empty title with max lines to force every card to have the same height
+                StoryTitle(title = "\n", subtitle = "\n")
+                StoryTitle(title = story.title, subtitle = story.subtitle)
             }
         }
+    }
+}
+
+@Composable
+private fun FeatureImage(
+    modifier: Modifier = Modifier,
+    image: ImageBitmap,
+    contentDescription: String,
+) {
+    Box(modifier, propagateMinConstraints = true) {
+        Image(
+            modifier = Modifier
+                .aspectRatio(1f)
+                .border(1.dp, color = backgroundDark, shape = CircleShape)
+                .clip(CircleShape),
+            bitmap = image,
+            contentDescription = contentDescription,
+            contentScale = ContentScale.FillHeight,
+        )
+    }
+}
+
+@Composable
+private fun StoryTitle(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
