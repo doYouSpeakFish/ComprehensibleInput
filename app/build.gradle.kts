@@ -101,6 +101,7 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.aboutLibraries.core)
     implementation(libs.aboutLibraries.compose)
+    implementation(libs.androidx.adaptive.android)
 
     ksp(libs.hilt.compiler)
 

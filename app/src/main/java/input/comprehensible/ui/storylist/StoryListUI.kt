@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -20,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -36,6 +36,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
 import input.comprehensible.R
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -102,8 +104,10 @@ private fun StoryListScreen(
 private fun StoryListScaffold(
     modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit,
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
     content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
 ) {
+    val columns = if (windowSizeClass.windowWidthSizeClass == COMPACT) 2 else 4
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -113,10 +117,9 @@ private fun StoryListScaffold(
             )
         },
     ) { paddingValues ->
-        BoxWithConstraints(
+        Box(
             modifier = Modifier.fillMaxSize(),
             content = {
-                val columns = (maxWidth / 200.dp).toInt()
                 content(paddingValues, columns)
             }
         )
