@@ -1,6 +1,8 @@
 package input.comprehensible.ui.storylist
 
 import android.graphics.Bitmap
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -37,9 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
+import input.comprehensible.extensions.orError
+import input.comprehensible.ui.LocalNavAnimatedVisibilityScope
+import input.comprehensible.ui.LocalSharedTransitionScope
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
-import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 
 @Composable
@@ -153,22 +157,38 @@ private fun StoryListItem(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun FeatureImage(
     modifier: Modifier = Modifier,
     image: ImageBitmap,
     contentDescription: String,
 ) {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        .orError { "No SharedTransitionScope provided" }
+    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
+        .orError { "No NavAnimatedVisibilityScope provided" }
     Box(modifier, propagateMinConstraints = true) {
-        Image(
-            modifier = Modifier
-                .aspectRatio(1f)
-                .border(1.dp, color = backgroundDark, shape = CircleShape)
-                .clip(CircleShape),
-            bitmap = image,
-            contentDescription = contentDescription,
-            contentScale = ContentScale.FillHeight,
-        )
+        with(sharedTransitionScope) {
+            Image(
+                modifier = Modifier
+                    .sharedElement(
+                        state = rememberSharedContentState(key = contentDescription),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize,
+                    )
+                    .aspectRatio(1f)
+                    .border(
+                        1.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = CircleShape
+                    )
+                    .clip(CircleShape),
+                bitmap = image,
+                contentDescription = contentDescription,
+                contentScale = ContentScale.FillHeight,
+            )
+        }
     }
 }
 

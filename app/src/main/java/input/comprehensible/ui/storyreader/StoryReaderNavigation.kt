@@ -1,6 +1,7 @@
 package input.comprehensible.ui.storyreader
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -8,6 +9,7 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import input.comprehensible.ui.LocalNavAnimatedVisibilityScope
 
 private const val BASE_ROUTE = "storyReader"
 private const val STORY_ID_NAV_KEY = "storyId"
@@ -37,8 +39,10 @@ fun NavGraphBuilder.storyReader() {
             navArgument(STORY_ID_NAV_KEY) {
                 type = NavType.StringType
             }
-        )
+        ),
     ) {
-        StoryReader(Modifier.fillMaxSize())
+        CompositionLocalProvider(value = LocalNavAnimatedVisibilityScope provides this) {
+            StoryReader(Modifier.fillMaxSize())
+        }
     }
 }

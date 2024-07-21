@@ -1,5 +1,7 @@
 package input.comprehensible.ui.components.storycontent.part
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -13,13 +15,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import input.comprehensible.extensions.orError
+import input.comprehensible.ui.LocalNavAnimatedVisibilityScope
+import input.comprehensible.ui.LocalSharedTransitionScope
 import input.comprehensible.ui.components.SelectableText
 
 /**
  * A composable for displaying a part of a stories main content.
  */
 @Composable
-fun StoryContentPart(modifier: Modifier = Modifier, state: StoryContentPartUiState) {
+fun StoryContentPart(
+    modifier: Modifier = Modifier,
+    state: StoryContentPartUiState,
+) {
     Box(modifier) {
         when (state) {
             is StoryContentPartUiState.Paragraph -> Paragraph(state = state)
@@ -43,25 +51,37 @@ private fun Paragraph(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun StoryImage(
     modifier: Modifier = Modifier,
-    state: StoryContentPartUiState.Image
+    state: StoryContentPartUiState.Image,
 ) {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        .orError { "No SharedTransitionScope provided" }
+    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
+        .orError { "No NavAnimatedVisibilityScope provided" }
     Box(modifier) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(16.dp)
-                ),
-            bitmap = state.bitmap.asImageBitmap(),
-            contentDescription = state.contentDescription,
-            contentScale = ContentScale.FillWidth,
-        )
+        with(sharedTransitionScope) {
+            Image(
+                modifier = Modifier
+                    .sharedElement(
+                        state = rememberSharedContentState(key = state.contentDescription),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize,
+                    )
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                bitmap = state.bitmap.asImageBitmap(),
+                contentDescription = state.contentDescription,
+                contentScale = ContentScale.FillWidth,
+            )
+        }
     }
 }

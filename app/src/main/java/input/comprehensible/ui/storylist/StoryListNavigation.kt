@@ -1,11 +1,13 @@
 package input.comprehensible.ui.storylist
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import input.comprehensible.ui.LocalNavAnimatedVisibilityScope
 
 const val STORY_LIST_ROUTE = "storyList"
 
@@ -28,11 +30,15 @@ fun NavGraphBuilder.storyList(
     onStorySelected: (String) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable("StoryList") {
-        StoryListScreen(
-            modifier = Modifier.fillMaxSize(),
-            onStorySelected = onStorySelected,
-            onSettingsClick = onSettingsClick,
-        )
+    composable(
+        route = "StoryList",
+    ) {
+        CompositionLocalProvider(value = LocalNavAnimatedVisibilityScope provides this) {
+            StoryListScreen(
+                modifier = Modifier.fillMaxSize(),
+                onStorySelected = onStorySelected,
+                onSettingsClick = onSettingsClick,
+            )
+        }
     }
 }
