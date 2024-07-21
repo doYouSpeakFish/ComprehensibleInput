@@ -8,6 +8,10 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import input.comprehensible.ui.components.animations.defaultEnterTransition
+import input.comprehensible.ui.components.animations.defaultExitTransition
+import input.comprehensible.ui.components.animations.defaultPopEnterTransition
+import input.comprehensible.ui.components.animations.defaultPopExitTransition
 
 private const val BASE_ROUTE = "storyReader"
 private const val STORY_ID_NAV_KEY = "storyId"
@@ -37,7 +41,11 @@ fun NavGraphBuilder.storyReader() {
             navArgument(STORY_ID_NAV_KEY) {
                 type = NavType.StringType
             }
-        )
+        ),
+        enterTransition = defaultEnterTransition,
+        exitTransition = defaultExitTransition,
+        popEnterTransition = defaultPopEnterTransition,
+        popExitTransition = defaultPopExitTransition,
     ) {
         StoryReader(Modifier.fillMaxSize())
     }
