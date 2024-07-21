@@ -59,7 +59,11 @@ private fun StoryReader(
     state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
-        Box(Modifier.padding(paddingValues)) {
+        Box(
+            Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
             when (state) {
                 is StoryReaderUiState.Loading ->
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
