@@ -6,6 +6,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import input.comprehensible.ui.components.animations.defaultEnterTransition
+import input.comprehensible.ui.components.animations.defaultExitTransition
+import input.comprehensible.ui.components.animations.defaultPopEnterTransition
+import input.comprehensible.ui.components.animations.defaultPopExitTransition
 
 const val STORY_LIST_ROUTE = "storyList"
 
@@ -28,7 +32,13 @@ fun NavGraphBuilder.storyList(
     onStorySelected: (String) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable("StoryList") {
+    composable(
+        route = "StoryList",
+        enterTransition = defaultEnterTransition,
+        exitTransition = defaultExitTransition,
+        popEnterTransition = defaultPopEnterTransition,
+        popExitTransition = defaultPopExitTransition,
+    ) {
         StoryListScreen(
             modifier = Modifier.fillMaxSize(),
             onStorySelected = onStorySelected,
