@@ -19,7 +19,7 @@ appcompat = "1.7.0"
 navigationTesting = "2.7.7"
 serialization-json = "1.7.1"
 aboutLibraries = "11.2.2"
-roborazzi = "1.22.2"
+roborazzi = "1.23.0"
 adaptiveAndroid = "1.0.0-beta04"
 
 [libraries]
