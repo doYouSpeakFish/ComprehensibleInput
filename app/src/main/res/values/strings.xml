@@ -8,6 +8,10 @@
     <string name="stories_screen_title">Stories</string>
     <string name="language_selector_en_content_description">Select English</string>
     <string name="language_selector_de_content_description">Select German</string>
+    <string name="language_selector_es_content_description">Select Spanish</string>
+    <string name="language_selector_en_language_name">English</string>
+    <string name="language_selector_de_language_name">German</string>
+    <string name="language_selector_es_language_name">Spanish</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Tap on any sentence to translate it</item>
         <item>Well, almost any sentence</item>
