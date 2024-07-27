@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,12 +26,17 @@ class StoriesRepository @Inject constructor(
     private val storiesLocalDataSource: StoriesLocalDataSource,
     @AppScope val scope: CoroutineScope
 ) {
-    private val translationsLanguage = "en"
+
+    private val _translationsLanguage = MutableStateFlow("en")
+    val translationsLanguage = _translationsLanguage.asStateFlow()
 
     private val _learningLanguage = MutableStateFlow("de")
     val learningLanguage = _learningLanguage.asStateFlow()
 
-    val storiesList: StateFlow<StoriesList> = learningLanguage.map { learningLanguage ->
+    val storiesList: StateFlow<StoriesList> = combine(
+        learningLanguage,
+        translationsLanguage,
+    ) { learningLanguage, translationsLanguage ->
         val stories = storiesLocalDataSource
             .getStories(learningLanguage = learningLanguage)
         val translations = storiesLocalDataSource
@@ -83,7 +88,7 @@ class StoriesRepository @Inject constructor(
         }
         val translatedStoryData = storiesLocalDataSource.getStory(
             id = id,
-            language = translationsLanguage
+            language = translationsLanguage.value
         ) ?: run {
             Timber.e("Translation $translationsLanguage not found for story $id")
             return null
@@ -96,6 +101,13 @@ class StoriesRepository @Inject constructor(
      */
     fun setLearningLanguage(language: String) {
         _learningLanguage.value = language
+    }
+
+    /**
+     * Sets the translation language.
+     */
+    fun setTranslationLanguage(language: String) {
+        _translationsLanguage.value = language
     }
 
     private suspend fun StoryData.toStory(id: String, translation: StoryData): Story? {

@@ -49,8 +49,25 @@ class StoryListRobot(
         }
         composeTestRule.apply {
             onNodeWithContentDescription(
-                "Select a language to learn",
-                substring = true
+                label = "Select a language to learn",
+                substring = true,
+            ).performClick()
+            awaitIdle()
+            onNodeWithContentDescription(languageContentDescription).performClick()
+        }
+    }
+
+    suspend fun setTranslationLanguage(languageCode: String) {
+        val languageContentDescription = when (languageCode) {
+            "de" -> "Select German"
+            "en" -> "Select English"
+            "es" -> "Select Spanish"
+            else -> error("Unknown language code: $languageCode")
+        }
+        composeTestRule.apply {
+            onNodeWithContentDescription(
+                label = "Select a language for translations",
+                substring = true,
             ).performClick()
             awaitIdle()
             onNodeWithContentDescription(languageContentDescription).performClick()

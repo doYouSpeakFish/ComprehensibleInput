@@ -128,4 +128,34 @@ class StoryListTests {
             assertStoryTitleIsVisible(stories.first().spanishTitle)
         }
     }
+
+    @Test
+    fun `Translation text matches translation language setting`() = testRule.runTest {
+        // GIVEN a story available in German, English, and Spanish
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        // AND the story list is shown
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // AND the translation language is set to English
+            setTranslationLanguage("en")
+            awaitIdle()
+            // WHEN the translation language is set to Spanish
+            setTranslationLanguage("es")
+            awaitIdle()
+            // AND a story is selected
+            selectStory(stories.first())
+            awaitIdle()
+        }
+
+        onStoryReader {
+            // AND the user taps on a sentence to translate it
+            tapOnSentence(stories.first().paragraphs.first().germanSentences.first())
+            awaitIdle()
+            // THEN translations are shown in Spanish
+            assertStoryTextIsVisible(stories.first().paragraphs.first().spanishSentences)
+        }
+    }
 }

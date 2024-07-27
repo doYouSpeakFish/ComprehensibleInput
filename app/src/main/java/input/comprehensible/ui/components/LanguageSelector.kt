@@ -4,13 +4,20 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
@@ -20,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -60,32 +68,118 @@ enum class LanguageSelection(
 }
 
 /**
+ * A language selector that allows the user to select from two drop down lists of languages, to
+ * pick the language they wish to learn and the language they wish to get translations in.
+ */
+@Composable
+fun LanguageSelector(
+    modifier: Modifier = Modifier,
+    onLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
+    leaningLanguage: LanguageSelection?,
+    translationLanguage: LanguageSelection?,
+    languageOptions: List<LanguageSelection>,
+) {
+    var isLearningLanguageMenuShown by remember { mutableStateOf(false) }
+    var isTranslationLanguageMenuShown by remember { mutableStateOf(false) }
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        translationLanguage?.let {
+            LanguageSelector(
+                title = stringResource(R.string.top_bar_language_picker_translations_label),
+                languageSelection = translationLanguage,
+                onLanguageSelected = onTranslationLanguageSelected,
+                isMenuShown = isTranslationLanguageMenuShown,
+                onMenuShownChanged = { isTranslationLanguageMenuShown = it },
+                languagesList = languageOptions,
+                contentDescription = stringResource(
+                    R.string.language_selector_select_translation_language_content_description,
+                    stringResource(translationLanguage.languageName)
+                )
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = null
+        )
+        leaningLanguage?.let {
+            LanguageSelector(
+                title = stringResource(R.string.top_bar_language_picker_learning_label),
+                languageSelection = leaningLanguage,
+                onLanguageSelected = onLanguageSelected,
+                isMenuShown = isLearningLanguageMenuShown,
+                onMenuShownChanged = { isLearningLanguageMenuShown = it },
+                languagesList = languageOptions,
+                contentDescription = stringResource(
+                    R.string.language_selector_select_learning_language_content_description,
+                    stringResource(leaningLanguage.languageName)
+                )
+            )
+        }
+    }
+}
+
+/**
  * A language selector that allows the user to select from a drop down list of languages.
  */
 @Composable
 fun LanguageSelector(
     modifier: Modifier = Modifier,
+    title: String,
     languageSelection: LanguageSelection,
     onLanguageSelected: (LanguageSelection) -> Unit,
     isMenuShown: Boolean,
     onMenuShownChanged: (Boolean) -> Unit,
     languagesList: List<LanguageSelection> = LanguageSelection.entries,
+    contentDescription: String,
 ) {
     Box(modifier) {
         LanguageToggleButton(
             languageSelection = languageSelection,
-            onClick = { onMenuShownChanged(!isMenuShown) }
+            onClick = { onMenuShownChanged(!isMenuShown) },
+            contentDescription = contentDescription
         )
         DropdownMenu(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    shape = RoundedCornerShape(8.dp)
+                ),
             expanded = isMenuShown,
-            onDismissRequest = { onMenuShownChanged(false) }
+            onDismissRequest = { onMenuShownChanged(false) },
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = "Learning"
+                text = title
             )
-            languagesList.forEach { languageSelection ->
+            DropdownMenuItem(
+                text = { Text(text = stringResource(languageSelection.languageName)) },
+                onClick = {
+                    onLanguageSelected(languageSelection)
+                    onMenuShownChanged(false)
+                },
+                leadingIcon = {
+                    Image(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                shape = CircleShape,
+                            ),
+                        painter = painterResource(languageSelection.flag),
+                        contentDescription = stringResource(languageSelection.contentDescription),
+                        contentScale = ContentScale.FillHeight,
+                    )
+                }
+            )
+            (languagesList - languageSelection).forEach { languageSelection ->
                 DropdownMenuItem(
                     text = { Text(text = stringResource(languageSelection.languageName)) },
                     onClick = {
@@ -96,7 +190,12 @@ fun LanguageSelector(
                         Image(
                             modifier = Modifier
                                 .size(32.dp)
-                                .clip(CircleShape),
+                                .clip(CircleShape)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    shape = CircleShape,
+                                ),
                             painter = painterResource(languageSelection.flag),
                             contentDescription = stringResource(languageSelection.contentDescription),
                             contentScale = ContentScale.FillHeight,
@@ -113,6 +212,7 @@ private fun LanguageToggleButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     languageSelection: LanguageSelection,
+    contentDescription: String,
 ) {
     OutlinedIconButton(
         modifier = modifier,
@@ -124,10 +224,7 @@ private fun LanguageToggleButton(
                 .size(32.dp)
                 .clip(CircleShape),
             painter = painterResource(languageSelection.flag),
-            contentDescription = stringResource(
-                R.string.language_selector_content_description,
-                stringResource(languageSelection.languageName)
-            ),
+            contentDescription = contentDescription,
             contentScale = ContentScale.FillHeight,
         )
     }
@@ -141,10 +238,12 @@ private fun LanguageSelectorPreview() {
     ComprehensibleInputTheme {
         Surface(Modifier.fillMaxSize()) {
             LanguageSelector(
+                title = "Learning",
                 languageSelection = languageSelection,
                 onLanguageSelected = { languageSelection = it },
                 isMenuShown = isMenuShown,
                 onMenuShownChanged = { isMenuShown = it },
+                contentDescription = "",
             )
         }
     }

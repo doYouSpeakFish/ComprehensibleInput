@@ -8,6 +8,7 @@ import input.comprehensible.ui.components.LanguageSelection
  */
 data class StoryListUiState(
     val learningLanguage: LanguageSelection?,
+    val translationLanguage: LanguageSelection?,
     val languagesAvailable: List<LanguageSelection>,
     val stories: List<StoryListItem>,
 ) {
@@ -26,6 +27,7 @@ data class StoryListUiState(
         val INITIAL = StoryListUiState(
             stories = emptyList(),
             learningLanguage = null,
+            translationLanguage = null,
             languagesAvailable = emptyList()
         )
     }

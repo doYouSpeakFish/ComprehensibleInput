@@ -20,7 +20,8 @@ class StoryListViewModel @Inject constructor(
     val state = combine(
         storiesRepository.storiesList,
         storiesRepository.learningLanguage,
-    ) { storiesList, learningLanguage ->
+        storiesRepository.translationsLanguage,
+    ) { storiesList, learningLanguage, translationsLanguage ->
         StoryListUiState(
             stories = storiesList.stories.map { story ->
                 StoryListUiState.StoryListItem(
@@ -33,6 +34,8 @@ class StoryListViewModel @Inject constructor(
             },
             learningLanguage = LanguageSelection.entries
                 .firstOrNull { it.languageCode == learningLanguage },
+            translationLanguage = LanguageSelection.entries
+                .firstOrNull { it.languageCode == translationsLanguage },
             languagesAvailable = LanguageSelection.entries
         )
     }
@@ -47,5 +50,12 @@ class StoryListViewModel @Inject constructor(
      */
     fun onLearningLanguageSelected(learningLanguage: LanguageSelection) {
         storiesRepository.setLearningLanguage(learningLanguage.languageCode)
+    }
+
+    /**
+     * Called when the user selects a language to learn.
+     */
+    fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
+        storiesRepository.setTranslationLanguage(translationLanguage.languageCode)
     }
 }

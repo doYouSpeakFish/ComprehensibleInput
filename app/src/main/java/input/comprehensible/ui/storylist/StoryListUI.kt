@@ -56,6 +56,7 @@ internal fun StoryListScreen(
         onStorySelected = { onStorySelected(it.id) },
         onSettingsClick = onSettingsClick,
         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+        onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
         state = state,
     )
 }
@@ -66,6 +67,7 @@ private fun StoryListScreen(
     onStorySelected: (StoryListUiState.StoryListItem) -> Unit,
     onSettingsClick: () -> Unit,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     state: StoryListUiState,
 ) {
     val storiesWithIndex = remember(state.stories) { state.stories.withIndex().toList() }
@@ -73,8 +75,10 @@ private fun StoryListScreen(
         modifier = modifier,
         onSettingsClick = onSettingsClick,
         learningLanguage = state.learningLanguage,
+        translationLanguage = state.translationLanguage,
         languagesAvailable = state.languagesAvailable,
         onLearningLanguageSelected = onLearningLanguageSelected,
+        onTranslationLanguageSelected = onTranslationLanguageSelected,
     ) { paddingValues, columns ->
         LazyVerticalGrid(
             modifier = Modifier.padding(paddingValues),
@@ -110,8 +114,10 @@ private fun StoryListScaffold(
     onSettingsClick: () -> Unit,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
     learningLanguage: LanguageSelection?,
+    translationLanguage: LanguageSelection?,
     languagesAvailable: List<LanguageSelection>,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
 ) {
     val columns = if (windowSizeClass.windowWidthSizeClass == COMPACT) 2 else 4
@@ -121,8 +127,10 @@ private fun StoryListScaffold(
             TopBar(
                 modifier = Modifier,
                 leaningLanguage = learningLanguage,
+                translationLanguage = translationLanguage,
                 languageOptions = languagesAvailable,
                 onLanguageSelected = onLearningLanguageSelected,
+                onTranslationLanguageSelected = onTranslationLanguageSelected,
                 onSettingsClick = onSettingsClick,
             )
         },
@@ -222,6 +230,7 @@ fun StoryListScreenPreview() {
             onStorySelected = {},
             onSettingsClick = {},
             onLearningLanguageSelected = {},
+            onTranslationLanguageSelected = {},
             state = StoryListUiState(
                 stories = List(100) {
                     StoryListUiState.StoryListItem(
@@ -232,7 +241,8 @@ fun StoryListScreenPreview() {
                         featuredImageContentDescription = "Content description $it",
                     )
                 },
-                learningLanguage = LanguageSelection.ENGLISH,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
             ),
         )
