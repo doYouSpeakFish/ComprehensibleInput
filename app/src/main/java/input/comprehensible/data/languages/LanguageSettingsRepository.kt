@@ -1,6 +1,7 @@
 package input.comprehensible.data.languages
 
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,6 +26,11 @@ class LanguageSettingsRepository @Inject constructor(
      * Sets the learning language.
      */
     suspend fun setLearningLanguage(language: String) {
+        val translationLanguage = translationsLanguage.first()
+        if (language == translationLanguage) {
+            val oldLearningLanguage = languageSettingsLocalDataSource.learningLanguage.first()
+            languageSettingsLocalDataSource.setTranslationLanguage(oldLearningLanguage)
+        }
         languageSettingsLocalDataSource.setLearningLanguage(language)
     }
 
@@ -32,6 +38,12 @@ class LanguageSettingsRepository @Inject constructor(
      * Sets the translation language.
      */
     suspend fun setTranslationLanguage(language: String) {
+        val learningLanguage = learningLanguage.first()
+        if (language == learningLanguage) {
+            val oldTranslationLanguage =
+                languageSettingsLocalDataSource.translationsLanguage.first()
+            languageSettingsLocalDataSource.setLearningLanguage(oldTranslationLanguage)
+        }
         languageSettingsLocalDataSource.setTranslationLanguage(language)
     }
 }
