@@ -1,0 +1,110 @@
+{
+  "id": "3",
+  "title": "Le Carnaval Vide",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Il était une fois, une petite ville en Allemagne connue pour son carnaval coloré et animé.",
+        "Chaque année, des gens venaient de partout pour profiter des activités festives et de la musique joyeuse."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une rue vide avec des guirlandes colorées et des décorations suspendues au-dessus.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mais cette année était différente.",
+        "Quand Anna, une jeune femme qui vivait à proximité, est arrivée à la foire, tout était étrangement calme.",
+        "\"Où sont tous les gens ?\" se demanda-t-elle.",
+        "Les rues étaient vides, aucune musique ne jouait, aucun enfant ne riait."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une fille se tient à l'entrée d'une foire, regardant autour d'elle, confuse. En arrière-plan, un carrousel désert est visible.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Anna a marché dans les allées et a vu les stands décorés, mais il n'y avait ni vendeurs, ni lumières scintillantes, ni ballons.",
+        "C'était comme si le carnaval n'avait jamais commencé."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Des stands de foire avec des décorations colorées, mais personne autour. Une atmosphère de vide et de silence dans l'air.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Soudain, elle entendit un faible son.",
+        "\"Bonjour ?\" appela-t-elle.",
+        "Pas de réponse.",
+        "Elle suivit le son et trouva un petit chien effrayé caché sous un banc."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un chien se cache sous un banc, l'air effrayé.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "\"Que fais-tu ici tout seul ?\" demanda Anna au chien.",
+        "Le chien la regarda avec de grands yeux, comme pour dire : \"Je ne sais pas non plus.\""
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Anna décida d'accompagner le chien, et ensemble, ils cherchèrent des indices.",
+        "Ils trouvèrent une affiche qui disait : \"Carnaval reporté ! Nouvelles dates à suivre bientôt.\""
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Anna comprit maintenant pourquoi personne n'était là.",
+        "Le carnaval avait été reporté, mais elle ne le savait pas.",
+        "Elle sourit au chien et dit : \"Eh bien, il semble que nous ayons tout l'endroit pour nous seuls.\""
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Et ainsi, Anna et le petit chien passèrent la journée ensemble à la foire vide, jouant parmi les stands colorés et profitant de cette paix inattendue."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une fille lance une balle pour qu'un chien l'attrape, devant des stands de foire vides. Le chien a l'air heureux et joueur.",
+      "path": "5"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "À la tombée de la nuit, Anna ramena le chien chez elle et promit de lui rendre visite le lendemain.",
+        "Peut-être que le carnaval ouvrirait bientôt pour tout le monde, mais pour aujourd'hui, c'était leur petit secret - le secret du carnaval vide."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une fille s'éloigne d'une foire vide, suivie par un chien. Le soleil se couche à l'horizon.",
+      "path": "6"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Et la morale de l'histoire ?",
+        "Parfois, quand les choses ne se passent pas comme prévu, nous trouvons de la joie dans les moments les plus inhabituels et des amitiés dans les endroits les plus inattendus."
+      ]
+    }
+  ]
+}

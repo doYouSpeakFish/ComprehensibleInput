@@ -1,0 +1,85 @@
+{
+  "id": "5",
+  "title": "Jour de Magie",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Un jour, par un matin tout à fait ordinaire, quelque chose d'incroyable est arrivé : la magie est soudainement devenue réelle !",
+        "Les gens dans la rue pouvaient à peine croire ce qui se passait.",
+        "Ils voyaient des enfants flotter dans les airs et des chiens qui pouvaient parler !"
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Quatre enfants et un chien tenant des baguettes magiques scintillantes. Les enfants sourient et trois d'entre eux flottent dans les airs.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Dans un petit village, la journée a commencé comme les autres.",
+        "Mais ensuite, les gens ont commencé à lancer des sorts.",
+        "Un garçon a transformé sa pomme en or, et une femme a fait pousser des fleurs de sa main."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un garçon tend une pomme dorée à une fille qui a des fleurs dans les cheveux.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Les scientifiques étaient confus mais excités.",
+        "Ils avaient toujours pensé que la magie n'existait que dans les contes de fées.",
+        "Maintenant, ils avaient la chance d'étudier l'impossible."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Des scientifiques en blouses blanches et lunettes regardant une boule de cristal lumineuse.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mais tout n'était pas parfait.",
+        "Certaines personnes utilisaient la magie pour faire des farces, et cela causait des problèmes.",
+        "Des voitures volaient dans les airs, et certains bâtiments changeaient de couleur !"
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Des voitures et des bus volant dans les airs. Les bâtiments en arrière-plan sont très colorés.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Puis, aussi soudainement que la magie était apparue, elle a disparu.",
+        "Le lendemain, tout était redevenu normal.",
+        "Les gens ont parlé de ce jour magique pendant longtemps, mais personne ne savait pourquoi cela était arrivé ni si cela se reproduirait un jour."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un groupe de personnes regardant le ciel nocturne avec émerveillement.",
+      "path": "5"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Ce jour-là nous a montré que la vie est pleine de surprises.",
+        "Parfois, des choses se produisent que nous n'aurions jamais pu imaginer.",
+        "Et peut-être, juste peut-être, que la magie est quelque part là-bas, attendant le bon moment pour redevenir réalité."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "La Fin"
+      ]
+    }
+  ]
+}

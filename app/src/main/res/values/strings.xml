@@ -9,9 +9,11 @@
     <string name="language_selector_en_content_description">Select English</string>
     <string name="language_selector_de_content_description">Select German</string>
     <string name="language_selector_es_content_description">Select Spanish</string>
+    <string name="language_selector_fr_content_description">Select French</string>
     <string name="language_selector_en_language_name">English</string>
     <string name="language_selector_de_language_name">German</string>
     <string name="language_selector_es_language_name">Spanish</string>
+    <string name="language_selector_fr_language_name">French</string>
     <string name="language_selector_select_learning_language_content_description">Select a language to learn. Currently learning %1$s</string>
     <string name="language_selector_select_translation_language_content_description">Select a language for translations. Currently translating into %1$s</string>
     <string name="top_bar_language_picker_translations_label">Translations</string>
