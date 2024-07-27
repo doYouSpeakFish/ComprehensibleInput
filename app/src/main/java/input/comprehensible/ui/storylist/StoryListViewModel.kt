@@ -3,8 +3,9 @@ package input.comprehensible.ui.storylist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import input.comprehensible.data.stories.StoriesRepository
+import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.ui.components.LanguageSelection
+import input.comprehensible.usecases.GetStoriesListUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -15,12 +16,13 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class StoryListViewModel @Inject constructor(
-    private val storiesRepository: StoriesRepository
+    private val languageSettingsRepository: LanguageSettingsRepository,
+    getStoriesListUseCase: GetStoriesListUseCase,
 ) : ViewModel() {
     val state = combine(
-        storiesRepository.storiesList,
-        storiesRepository.learningLanguage,
-        storiesRepository.translationsLanguage,
+        getStoriesListUseCase(),
+        languageSettingsRepository.learningLanguage,
+        languageSettingsRepository.translationsLanguage,
     ) { storiesList, learningLanguage, translationsLanguage ->
         StoryListUiState(
             stories = storiesList.stories.map { story ->
@@ -49,13 +51,13 @@ class StoryListViewModel @Inject constructor(
      * Called when the user selects a language to learn.
      */
     fun onLearningLanguageSelected(learningLanguage: LanguageSelection) {
-        storiesRepository.setLearningLanguage(learningLanguage.languageCode)
+        languageSettingsRepository.setLearningLanguage(learningLanguage.languageCode)
     }
 
     /**
      * Called when the user selects a language to learn.
      */
     fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
-        storiesRepository.setTranslationLanguage(translationLanguage.languageCode)
+        languageSettingsRepository.setTranslationLanguage(translationLanguage.languageCode)
     }
 }

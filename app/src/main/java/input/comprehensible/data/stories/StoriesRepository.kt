@@ -6,14 +6,6 @@ import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
-import input.comprehensible.di.AppScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,19 +16,12 @@ import javax.inject.Singleton
 @Singleton
 class StoriesRepository @Inject constructor(
     private val storiesLocalDataSource: StoriesLocalDataSource,
-    @AppScope val scope: CoroutineScope
 ) {
 
-    private val _translationsLanguage = MutableStateFlow("en")
-    val translationsLanguage = _translationsLanguage.asStateFlow()
-
-    private val _learningLanguage = MutableStateFlow("de")
-    val learningLanguage = _learningLanguage.asStateFlow()
-
-    val storiesList: StateFlow<StoriesList> = combine(
-        learningLanguage,
-        translationsLanguage,
-    ) { learningLanguage, translationsLanguage ->
+    suspend fun storiesList(
+        learningLanguage: String,
+        translationsLanguage: String,
+    ): StoriesList {
         val stories = storiesLocalDataSource
             .getStories(learningLanguage = learningLanguage)
         val translations = storiesLocalDataSource
@@ -50,7 +35,7 @@ class StoriesRepository @Inject constructor(
                 }
             }
         }
-        StoriesList(
+        return StoriesList(
             stories = storiesWithTranslations.map { (story, translation) ->
                 val featuredImage = story
                     .content
@@ -69,48 +54,44 @@ class StoriesRepository @Inject constructor(
             }
         )
     }
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = StoriesList(stories = emptyList())
-        )
 
     /**
-     * Gets a story.
+     * Gets a story in the given [learningLanguage] with translations in the given
+     * [translationsLanguage].
      */
-    suspend fun getStory(id: String): Story? {
+    suspend fun getStory(
+        id: String,
+        learningLanguage: String,
+        translationsLanguage: String
+    ): Story? {
         val storyData = storiesLocalDataSource.getStory(
             id = id,
-            language = learningLanguage.value
+            language = learningLanguage
         ) ?: run {
-            Timber.e("Story $id not found for language ${learningLanguage.value}")
+            Timber.e("Story $id not found for language $learningLanguage")
             return null
         }
         val translatedStoryData = storiesLocalDataSource.getStory(
             id = id,
-            language = translationsLanguage.value
+            language = translationsLanguage
         ) ?: run {
             Timber.e("Translation $translationsLanguage not found for story $id")
             return null
         }
-        return storyData.toStory(id = id, translation = translatedStoryData)
+        return storyData.toStory(
+            id = id,
+            translation = translatedStoryData,
+            learningLanguage = learningLanguage,
+            translationsLanguage = translationsLanguage
+        )
     }
 
-    /**
-     * Sets the learning language.
-     */
-    fun setLearningLanguage(language: String) {
-        _learningLanguage.value = language
-    }
-
-    /**
-     * Sets the translation language.
-     */
-    fun setTranslationLanguage(language: String) {
-        _translationsLanguage.value = language
-    }
-
-    private suspend fun StoryData.toStory(id: String, translation: StoryData): Story? {
+    private suspend fun StoryData.toStory(
+        id: String,
+        translation: StoryData,
+        learningLanguage: String,
+        translationsLanguage: String
+    ): Story? {
         return Story(
             id = id,
             title = title,
@@ -120,7 +101,9 @@ class StoriesRepository @Inject constructor(
                 .map { (storyElementData, translation) ->
                     storyElementData.toStoryElement(
                         storyId = id,
-                        translation = translation
+                        translation = translation,
+                        learningLanguage = learningLanguage,
+                        translationsLanguage = translationsLanguage,
                     ) ?: return null
                 }
         )
@@ -128,7 +111,9 @@ class StoriesRepository @Inject constructor(
 
     private suspend fun StoryElementData.toStoryElement(
         storyId: String,
-        translation: StoryElementData
+        translation: StoryElementData,
+        learningLanguage: String,
+        translationsLanguage: String,
     ): StoryElement? {
         return when (this) {
             is StoryElementData.ParagraphData -> {
@@ -140,7 +125,7 @@ class StoriesRepository @Inject constructor(
                 if (sentences.size != translation.sentences.size) {
                     Timber.e(
                         "Mismatched number of sentences in story $storyId for languages " +
-                                "${learningLanguage.value} and $translationsLanguage"
+                                "$learningLanguage and $translationsLanguage"
                     )
                     return null
                 }
