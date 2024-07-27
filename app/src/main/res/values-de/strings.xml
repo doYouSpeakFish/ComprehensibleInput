@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">ComprehensibleInput</string>
+    <string name="navigate_up">Nach oben navigieren</string>
+    <string name="settings_button_description">Einstellungen</string>
+    <string name="settings_screen_title">Einstellungen</string>
+    <string name="settings_item_software_licences">Softwarelizenzen</string>
+    <string name="software_licences_screen_title">Softwarelizenzen</string>
+    <string name="stories_screen_title">Geschichten</string>
+    <string name="language_selector_en_content_description">Englisch auswählen</string>
+    <string name="language_selector_de_content_description">Deutsch auswählen</string>
+    <string name="language_selector_es_content_description">Spanisch auswählen</string>
+    <string name="language_selector_fr_content_description">Französisch auswählen</string>
+    <string name="language_selector_en_language_name">Englisch</string>
+    <string name="language_selector_de_language_name">Deutsch</string>
+    <string name="language_selector_es_language_name">Spanisch</string>
+    <string name="language_selector_fr_language_name">Französisch</string>
+    <string name="language_selector_select_learning_language_content_description">Wählen Sie eine Sprache zum Lernen. Derzeit lernen Sie %1$s</string>
+    <string name="language_selector_select_translation_language_content_description">Wählen Sie eine Sprache für Übersetzungen. Derzeit übersetzen Sie in %1$s</string>
+    <string name="top_bar_language_picker_translations_label">Übersetzungen</string>
+    <string name="top_bar_language_picker_learning_label">Lernen</string>
+    <string-array name="story_reader_tap_to_translate_explainer">
+        <item>Tippen Sie auf einen Satz, um ihn zu übersetzen</item>
+        <item>Naja, fast jeder Satz</item>
+        <item>Sie können auch auf den Titel tippen</item>
+        <item>Im Ernst, hören Sie auf, diesen Satz zu tippen</item>
+        <item>Es wird nicht übersetzen</item>
+        <item>Was willst du von mir!</item>
+        <item>Na gut, ich habe die Übersetzungen deaktiviert</item>
+        <item>Nur ein Scherz, das kann ich nicht tun</item>
+        <item>Ich bin nur ein Satz in einer Box</item>
+        <item>Letzte Warnung</item>
+        <item />
+        <item>Sie haben mich wieder gefunden!</item>
+        <item>Ich gebe auf</item>
+        <item>Du gewinnst</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
+</resources>

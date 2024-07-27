@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,7 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
-import input.comprehensible.R
+import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.ui.theme.backgroundDark
@@ -56,6 +55,8 @@ internal fun StoryListScreen(
         modifier = modifier,
         onStorySelected = { onStorySelected(it.id) },
         onSettingsClick = onSettingsClick,
+        onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+        onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
         state = state,
     )
 }
@@ -65,12 +66,19 @@ private fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (StoryListUiState.StoryListItem) -> Unit,
     onSettingsClick: () -> Unit,
+    onLearningLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     state: StoryListUiState,
 ) {
     val storiesWithIndex = remember(state.stories) { state.stories.withIndex().toList() }
     StoryListScaffold(
         modifier = modifier,
-        onSettingsClick = onSettingsClick
+        onSettingsClick = onSettingsClick,
+        learningLanguage = state.learningLanguage,
+        translationLanguage = state.translationLanguage,
+        languagesAvailable = state.languagesAvailable,
+        onLearningLanguageSelected = onLearningLanguageSelected,
+        onTranslationLanguageSelected = onTranslationLanguageSelected,
     ) { paddingValues, columns ->
         LazyVerticalGrid(
             modifier = Modifier.padding(paddingValues),
@@ -105,6 +113,11 @@ private fun StoryListScaffold(
     modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
+    learningLanguage: LanguageSelection?,
+    translationLanguage: LanguageSelection?,
+    languagesAvailable: List<LanguageSelection>,
+    onLearningLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
 ) {
     val columns = if (windowSizeClass.windowWidthSizeClass == COMPACT) 2 else 4
@@ -112,8 +125,13 @@ private fun StoryListScaffold(
         modifier = modifier,
         topBar = {
             TopBar(
+                modifier = Modifier,
+                leaningLanguage = learningLanguage,
+                translationLanguage = translationLanguage,
+                languageOptions = languagesAvailable,
+                onLanguageSelected = onLearningLanguageSelected,
+                onTranslationLanguageSelected = onTranslationLanguageSelected,
                 onSettingsClick = onSettingsClick,
-                title = stringResource(R.string.stories_screen_title),
             )
         },
     ) { paddingValues ->
@@ -211,6 +229,8 @@ fun StoryListScreenPreview() {
         StoryListScreen(
             onStorySelected = {},
             onSettingsClick = {},
+            onLearningLanguageSelected = {},
+            onTranslationLanguageSelected = {},
             state = StoryListUiState(
                 stories = List(100) {
                     StoryListUiState.StoryListItem(
@@ -220,7 +240,10 @@ fun StoryListScreenPreview() {
                         featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
                         featuredImageContentDescription = "Content description $it",
                     )
-                }
+                },
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }

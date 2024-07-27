@@ -1,0 +1,88 @@
+{
+  "id": "2",
+  "title": "Pas d'Arrêt sur Mars",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Aujourd'hui est un jour spécial.",
+        "Je suis la première personne à me tenir sur Phobos, une petite lune de Mars.",
+        "Je me tiens ici dans ma combinaison spatiale et je regarde la planète rouge.",
+        "Mars est si grande et belle.",
+        "Les couleurs sont intenses – lumière rouge et orange.",
+        "C'est une vue incroyable."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un astronaute se tient avec la surface rouge de Phobos et la planète rouge Mars reflétées dans la visière de son casque spatial.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mais dans mon cœur, il y a aussi un peu de tristesse.",
+        "Je ne pourrai jamais marcher sur Mars elle-même.",
+        "Cette mission est uniquement pour Phobos.",
+        "Mais je suis aussi excité.",
+        "Phobos est un endroit mystérieux, et je suis le premier à l'explorer."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "La gravité ici est très faible.",
+        "Je me sens léger et je peux sauter haut.",
+        "Chaque pas est étrange, presque comme voler.",
+        "C'est amusant et cela me rend heureux."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un astronaute saute haut dans les airs sur la surface rocheuse de Phobos. Le ciel au-dessus est plein d'étoiles.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Nous avons seulement vingt jours sur Phobos.",
+        "Les scientifiques et les ingénieurs ont travaillé dur pour rendre le voyage court.",
+        "C'est moins dangereux de cette façon.",
+        "Je veux découvrir beaucoup de choses en ce court laps de temps."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "J'ai aussi hâte de rentrer chez moi.",
+        "Les nuages et la pluie me manquent.",
+        "J'imagine me tenir sous un ciel bleu à nouveau et sentir l'eau sur ma peau."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un astronaute avec de la pluie et des nuages dans son casque, montrant ses pensées pour la Terre.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mais maintenant, ici sur Phobos, c'est le moment de l'aventure.",
+        "Il y a tellement de choses à faire.",
+        "Je fais mon premier pas et commence mon travail.",
+        "C'est un grand moment – pour moi et pour tous les gens sur Terre."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un astronaute marche résolument sur la surface rocheuse de Phobos, avec Mars en arrière-plan.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "La fin"
+      ]
+    }
+  ]
+}

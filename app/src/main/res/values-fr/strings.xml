@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">ComprehensibleInput</string>
+    <string name="navigate_up">Naviguer vers le haut</string>
+    <string name="settings_button_description">Paramètres</string>
+    <string name="settings_screen_title">Paramètres</string>
+    <string name="settings_item_software_licences">Licences des logiciels</string>
+    <string name="software_licences_screen_title">Licences des logiciels</string>
+    <string name="stories_screen_title">Histoires</string>
+    <string name="language_selector_en_content_description">Sélectionner l\'anglais</string>
+    <string name="language_selector_de_content_description">Sélectionner l\'allemand</string>
+    <string name="language_selector_es_content_description">Sélectionner l\'espagnol</string>
+    <string name="language_selector_fr_content_description">Sélectionner le français</string>
+    <string name="language_selector_en_language_name">Anglais</string>
+    <string name="language_selector_de_language_name">Allemand</string>
+    <string name="language_selector_es_language_name">Espagnol</string>
+    <string name="language_selector_fr_language_name">Français</string>
+    <string name="language_selector_select_learning_language_content_description">Sélectionnez une langue à apprendre. Actuellement en train d\'apprendre %1$s</string>
+    <string name="language_selector_select_translation_language_content_description">Sélectionnez une langue pour les traductions. Actuellement en train de traduire en %1$s</string>
+    <string name="top_bar_language_picker_translations_label">Traductions</string>
+    <string name="top_bar_language_picker_learning_label">Apprentissage</string>
+    <string-array name="story_reader_tap_to_translate_explainer">
+        <item>Appuyez sur n\'importe quelle phrase pour la traduire</item>
+        <item>Eh bien, presque n\'importe quelle phrase</item>
+        <item>Vous pouvez aussi appuyer sur le titre</item>
+        <item>Sérieusement, arrêtez d\'appuyer sur cette phrase</item>
+        <item>Ça ne se traduira pas</item>
+        <item>Que voulez-vous de moi!</item>
+        <item>Très bien, j\'ai désactivé les traductions</item>
+        <item>Je plaisante, je ne peux pas faire ça</item>
+        <item>Je suis juste une phrase dans une boîte</item>
+        <item>Dernier avertissement</item>
+        <item />
+        <item>Vous m\'avez retrouvé encore une fois!</item>
+        <item>J\'abandonne</item>
+        <item>Vous avez gagné</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
+</resources>

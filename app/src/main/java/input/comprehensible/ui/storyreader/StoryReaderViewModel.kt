@@ -4,30 +4,43 @@ import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import input.comprehensible.data.stories.StoriesRepository
+import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
+import input.comprehensible.usecases.GetStoryUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * A view model for providing the data for a story to the UI.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class StoryReaderViewModel @Inject constructor(
-    private val storiesRepository: StoriesRepository,
+    getStoryUseCase: GetStoryUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val story = savedStateHandle
+    private val story: Flow<Story?> = savedStateHandle
         .getStateFlow<String?>("storyId", null)
-        .map {
-            requireNotNull(storiesRepository.getStory(it ?: return@map null)) {
-                "Story with id $it not found"
-            }
+        .transformLatest { id ->
+            id ?: return@transformLatest emit(null)
+            val story = getStoryUseCase(id = id)
+                .onEach {
+                    if (it == null) {
+                        Timber.e("Story with id $id not found")
+                    }
+                }
+            emitAll(story)
         }
+
     private val selectedText = MutableStateFlow<SelectedText?>(null)
 
     val state = combine(

@@ -102,6 +102,7 @@ dependencies {
     implementation(libs.aboutLibraries.core)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.androidx.adaptive.android)
+    implementation(libs.androidx.dataStore)
 
     ksp(libs.hilt.compiler)
 

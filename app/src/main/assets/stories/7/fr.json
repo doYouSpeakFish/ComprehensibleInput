@@ -1,0 +1,103 @@
+{
+  "id": "7",
+  "title": "Murmures de Fantômes et Battements de Cœur",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Marco courait sous la pluie.",
+        "Les éclairs illuminaient le ciel sombre et le tonnerre grondait.",
+        "Il arriva devant une grande maison ancienne.",
+        "Elle ressemblait à un château, grande et un peu effrayante.",
+        "Aysha l'attendait dans la lumière de l'entrée."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une grande maison de style gothique. Il y a des éclairs en arrière-plan.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Elle sourit et fit un signe de la main.",
+        "\"Entre! Ce n'est qu'un orage.\""
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mais Marco savait que ce n'était pas juste l'orage.",
+        "Il y avait des fantômes dans cette maison.",
+        "Il les avait entendus et parfois, la nuit, il les avait vus.",
+        "Marco n'aimait pas les fantômes.",
+        "Mais il aimait beaucoup Aysha."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une femme fait signe et sourit en guise de salut à l'entrée d'une grande maison de style gothique. En arrière-plan, une silhouette sombre et fantomatique est visible.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Ils allèrent ensemble dans la cuisine.",
+        "La maison craquait.",
+        "Aysha fit du thé et ils parlèrent de choses normales : le travail, les livres, la musique.",
+        "Marco essayait d'oublier les fantômes."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Soudain, ils entendirent un bruit à l'étage.",
+        "Aysha rit.",
+        "\"Oh, c'est juste la maison.",
+        "Elle est vieille.\""
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Marco la regarda.",
+        "Comment pouvait-elle ne pas avoir peur?",
+        "Aysha vit son inquiétude et lui prit la main.",
+        "\"On s'y habitue.",
+        "Les fantômes ne font rien.",
+        "Ils font partie de la maison.\""
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un homme et une femme sont assis à la table et boivent du thé. La femme a l'air détendue. En arrière-plan, une silhouette sombre et fantomatique est visible, comme si elle les observait.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Marco voulait être courageux.",
+        "\"D'accord,\" dit-il en buvant son thé.",
+        "Mais au fond de son cœur, il sentait que quelque chose n'allait pas.",
+        "Cependant, il était amoureux.",
+        "Et pour Aysha, il accepterait les fantômes, l'effrayant, même sa peur."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "La nuit tomba et ils allèrent se coucher.",
+        "Dans la chambre sombre, quelque chose d'inconnu murmurait.",
+        "Marco tenait fermement la main d'Aysha.",
+        "Il resterait.",
+        "Par amour.",
+        "Mais il se demandait si l'amour suffirait à vaincre les ombres."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un homme et une femme dans un lit. L'homme semble murmurer quelque chose à la femme. En arrière-plan, une silhouette fantomatique imite l'homme, comme pour se moquer de lui.",
+      "path": "4"
+    }
+  ]
+}

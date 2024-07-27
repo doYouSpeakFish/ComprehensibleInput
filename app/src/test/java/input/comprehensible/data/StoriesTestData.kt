@@ -49,9 +49,29 @@ class StoriesTestData @Inject constructor(
                     }
             )
         }
+        val spanishStories = stories.map { testStory ->
+            StoryData(
+                id = testStory.id,
+                title = testStory.spanishTitle,
+                content = testStory.content
+                    .map { part ->
+                        when (part) {
+                            is TestStoryPart.Image -> StoryElementData.ImageData(
+                                contentDescription = part.contentDescription,
+                                path = ""
+                            )
+
+                            is TestStoryPart.Paragraph -> StoryElementData.ParagraphData(
+                                sentences = part.spanishSentences,
+                            )
+                        }
+                    }
+            )
+        }
         storiesLocalDataSource.stories = mapOf(
             "de" to germanStories,
-            "en" to englishStories
+            "en" to englishStories,
+            "es" to spanishStories,
         )
     }
 }

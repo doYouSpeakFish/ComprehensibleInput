@@ -1,0 +1,75 @@
+{
+  "id": "6",
+  "title": "Vieil Arbre",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Tout a commencé quand j'étais une petite graine.",
+        "Un oiseau m'avait emporté loin de mes parents et m'avait caché dans la terre douce.",
+        "Bientôt, j'ai commencé à pousser.",
+        "Le soleil me réchauffait, et la pluie me donnait à boire."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une plantule poussant du sol.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Les années passèrent, et je devins plus grand et plus fort.",
+        "Les enfants venaient jouer sous mes branches, et j'entendais leurs rires.",
+        "Parfois, ils grimpaient haut et construisaient de petites maisons dans mes branches.",
+        "J'étais heureux de leur apporter de la joie."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un grand arbre avec une cabane dans ses branches. Des enfants courent avec enthousiasme vers l'arbre.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "En vieillissant, le monde autour de moi changeait.",
+        "De nouveaux bâtiments furent érigés, et le paysage changea.",
+        "J'ai vu les chevaux remplacés par des voitures, et les lumières de la ville devenaient plus brillantes.",
+        "Pourtant, à travers tous ces changements, je suis resté un témoin silencieux du passage du temps."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Une ligne d'horizon de la ville vue à travers les branches d'un arbre.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Dans mes meilleures années, j'étais un foyer pour de nombreux oiseaux et petits animaux.",
+        "Ils cherchaient refuge dans mon feuillage et se nourrissaient des fruits que je portais.",
+        "J'étais fier de faire partie du cycle de la vie."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un écureuil enroulé dans un nid d'oiseau. Un autre écureuil est assis en arrière-plan sur une branche en train de manger des noix.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Maintenant, je suis très vieux.",
+        "Mon écorce est craquelée, et mes branches ne sont plus aussi fortes qu'avant.",
+        "Mais je suis toujours là, et j'offre de l'ombre et du réconfort à ceux qui le cherchent.",
+        "J'espère rester ici encore de nombreuses années, pour raconter les histoires de la vie."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un vieil arbre noueux se tenant fort.",
+      "path": "5"
+    }
+  ]
+}

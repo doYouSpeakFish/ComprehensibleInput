@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import input.comprehensible.R
+import input.comprehensible.ui.components.LanguageSelection
+import input.comprehensible.ui.components.LanguageSelector
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
@@ -40,6 +43,43 @@ fun TopBar(
                 )
             }
         }
+    )
+}
+
+/**
+ * A top bar with a title and a settings button, and a language selector for picking the learning
+ * language.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(
+    modifier: Modifier = Modifier,
+    leaningLanguage: LanguageSelection?,
+    translationLanguage: LanguageSelection?,
+    languageOptions: List<LanguageSelection>,
+    onLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
+    onSettingsClick: () -> Unit,
+) {
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        title = {
+            LanguageSelector(
+                leaningLanguage = leaningLanguage,
+                translationLanguage = translationLanguage,
+                languageOptions = languageOptions,
+                onLanguageSelected = onLanguageSelected,
+                onTranslationLanguageSelected = onTranslationLanguageSelected,
+            )
+        },
+        actions = {
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.settings_button_description)
+                )
+            }
+        },
     )
 }
 

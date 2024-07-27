@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">ComprehensibleInput</string>
+    <string name="navigate_up">Navegar hacia arriba</string>
+    <string name="settings_button_description">Configuración</string>
+    <string name="settings_screen_title">Configuración</string>
+    <string name="settings_item_software_licences">Licencias de software</string>
+    <string name="software_licences_screen_title">Licencias de software</string>
+    <string name="stories_screen_title">Historias</string>
+    <string name="language_selector_en_content_description">Seleccionar inglés</string>
+    <string name="language_selector_de_content_description">Seleccionar alemán</string>
+    <string name="language_selector_es_content_description">Seleccionar español</string>
+    <string name="language_selector_fr_content_description">Seleccionar francés</string>
+    <string name="language_selector_en_language_name">Inglés</string>
+    <string name="language_selector_de_language_name">Alemán</string>
+    <string name="language_selector_es_language_name">Español</string>
+    <string name="language_selector_fr_language_name">Francés</string>
+    <string name="language_selector_select_learning_language_content_description">Selecciona un idioma para aprender. Actualmente aprendiendo %1$s</string>
+    <string name="language_selector_select_translation_language_content_description">Selecciona un idioma para traducciones. Actualmente traduciendo al %1$s</string>
+    <string name="top_bar_language_picker_translations_label">Traducciones</string>
+    <string name="top_bar_language_picker_learning_label">Aprendizaje</string>
+    <string-array name="story_reader_tap_to_translate_explainer">
+        <item>Toca cualquier oración para traducirla</item>
+        <item>Bueno, casi cualquier oración</item>
+        <item>También puedes tocar el título</item>
+        <item>En serio, deja de tocar esta oración</item>
+        <item>No se traducirá</item>
+        <item>¿Qué quieres de mí?</item>
+        <item>Está bien, he deshabilitado las traducciones</item>
+        <item>Es broma, no puedo hacer eso</item>
+        <item>Soy solo una oración en una caja</item>
+        <item>Última advertencia</item>
+        <item />
+        <item>¡Me encontraste de nuevo!</item>
+        <item>Me rindo</item>
+        <item>Ganas</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
+</resources>
