@@ -1,12 +1,15 @@
 package input.comprehensible.ui.storylist
 
 import android.graphics.Bitmap
+import input.comprehensible.ui.components.LanguageSelection
 
 /**
  * The UI state for the story list screen.
  */
 data class StoryListUiState(
-    val stories: List<StoryListItem>
+    val learningLanguage: LanguageSelection?,
+    val languagesAvailable: List<LanguageSelection>,
+    val stories: List<StoryListItem>,
 ) {
     /**
      * A story list item.
@@ -20,6 +23,10 @@ data class StoryListUiState(
     )
 
     companion object {
-        val INITIAL = StoryListUiState(stories = emptyList())
+        val INITIAL = StoryListUiState(
+            stories = emptyList(),
+            learningLanguage = null,
+            languagesAvailable = emptyList()
+        )
     }
 }

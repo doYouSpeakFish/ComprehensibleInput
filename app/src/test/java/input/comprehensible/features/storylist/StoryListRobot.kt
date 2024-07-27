@@ -13,9 +13,16 @@ import input.comprehensible.data.sample.TestStory
 class StoryListRobot(
     private val composeTestRule: ComposeTestRule
 ) {
-    fun selectStory(story: TestStory) {
+    fun selectStory(story: TestStory, learningLanguage: String = "de") {
         composeTestRule
-            .onNodeWithText(story.germanTitle)
+            .onNodeWithText(
+                when (learningLanguage) {
+                    "de" -> story.germanTitle
+                    "en" -> story.englishTitle
+                    "es" -> story.spanishTitle
+                    else -> error("Unknown language code: $learningLanguage")
+                }
+            )
             .performScrollTo()
             .performClick()
     }
@@ -30,6 +37,29 @@ class StoryListRobot(
     fun assertStoryImageIsVisible(contentDescription: String) {
         composeTestRule
             .onNodeWithContentDescription(contentDescription)
+            .assertExists()
+    }
+
+    suspend fun setLearningLanguage(languageCode: String) {
+        val languageContentDescription = when (languageCode) {
+            "de" -> "Select German"
+            "en" -> "Select English"
+            "es" -> "Select Spanish"
+            else -> error("Unknown language code: $languageCode")
+        }
+        composeTestRule.apply {
+            onNodeWithContentDescription(
+                "Select a language to learn",
+                substring = true
+            ).performClick()
+            awaitIdle()
+            onNodeWithContentDescription(languageContentDescription).performClick()
+        }
+    }
+
+    fun assertStoryTitleIsVisible(title: String) {
+        composeTestRule
+            .onNodeWithText(title)
             .assertExists()
     }
 }

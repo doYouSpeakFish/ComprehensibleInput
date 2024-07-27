@@ -79,4 +79,53 @@ class StoryListTests {
             assertStoryImageIsVisible(stories.first().images.first().contentDescription)
         }
     }
+
+    @Test
+    fun `Story text matches learning language setting`() = testRule.runTest {
+        // GIVEN a story available in German, English, and Spanish
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        // AND the story list is shown
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // AND the learning language is set to German
+            setLearningLanguage("de")
+            awaitIdle()
+            // WHEN the learning language is set to Spanish
+            setLearningLanguage("es")
+            awaitIdle()
+            // AND a story is selected
+            selectStory(stories.first(), learningLanguage = "es")
+            awaitIdle()
+        }
+
+        onStoryReader {
+            // THEN the story content is shown in Spanish
+            assertStoryTextIsVisible(stories.first().paragraphs.first().spanishSentences)
+        }
+    }
+
+    @Test
+    fun `Story title shown in learning language setting`() = testRule.runTest {
+        // GIVEN a story available in German, English, and Spanish
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        // AND the story list is shown
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // AND the learning language is set to German
+            setLearningLanguage("de")
+            awaitIdle()
+            // WHEN the learning language is set to Spanish
+            setLearningLanguage("es")
+            awaitIdle()
+
+            // THEN the story title is shown in Spanish
+            assertStoryTitleIsVisible(stories.first().spanishTitle)
+        }
+    }
 }

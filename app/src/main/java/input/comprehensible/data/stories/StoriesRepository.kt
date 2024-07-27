@@ -8,9 +8,11 @@ import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
 import input.comprehensible.di.AppScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,15 +26,27 @@ class StoriesRepository @Inject constructor(
     private val storiesLocalDataSource: StoriesLocalDataSource,
     @AppScope val scope: CoroutineScope
 ) {
-    private val learningLanguage = "de"
     private val translationsLanguage = "en"
 
-    val storiesList: StateFlow<StoriesList> = flow {
-        val stories = storiesLocalDataSource.getStories(learningLanguage = learningLanguage)
-        val translations =
-            storiesLocalDataSource.getStories(learningLanguage = translationsLanguage)
-        val storiesList = StoriesList(
-            stories = stories.zip(translations).map { (story, translation) ->
+    private val _learningLanguage = MutableStateFlow("de")
+    val learningLanguage = _learningLanguage.asStateFlow()
+
+    val storiesList: StateFlow<StoriesList> = learningLanguage.map { learningLanguage ->
+        val stories = storiesLocalDataSource
+            .getStories(learningLanguage = learningLanguage)
+        val translations = storiesLocalDataSource
+            .getStories(learningLanguage = translationsLanguage)
+            .associateBy { it.id }
+        val storiesWithTranslations = buildList {
+            stories.forEach { story ->
+                val translation = translations[story.id]
+                if (translation != null) {
+                    add(story to translation)
+                }
+            }
+        }
+        StoriesList(
+            stories = storiesWithTranslations.map { (story, translation) ->
                 val featuredImage = story
                     .content
                     .filterIsInstance<StoryElementData.ImageData>()
@@ -49,7 +63,6 @@ class StoriesRepository @Inject constructor(
                 )
             }
         )
-        emit(storiesList)
     }
         .stateIn(
             scope = scope,
@@ -63,9 +76,9 @@ class StoriesRepository @Inject constructor(
     suspend fun getStory(id: String): Story? {
         val storyData = storiesLocalDataSource.getStory(
             id = id,
-            language = learningLanguage
+            language = learningLanguage.value
         ) ?: run {
-            Timber.e("Story $id not found for language $learningLanguage")
+            Timber.e("Story $id not found for language ${learningLanguage.value}")
             return null
         }
         val translatedStoryData = storiesLocalDataSource.getStory(
@@ -76,6 +89,13 @@ class StoriesRepository @Inject constructor(
             return null
         }
         return storyData.toStory(id = id, translation = translatedStoryData)
+    }
+
+    /**
+     * Sets the learning language.
+     */
+    fun setLearningLanguage(language: String) {
+        _learningLanguage.value = language
     }
 
     private suspend fun StoryData.toStory(id: String, translation: StoryData): Story? {
@@ -108,7 +128,7 @@ class StoriesRepository @Inject constructor(
                 if (sentences.size != translation.sentences.size) {
                     Timber.e(
                         "Mismatched number of sentences in story $storyId for languages " +
-                                "$learningLanguage and $translationsLanguage"
+                                "${learningLanguage.value} and $translationsLanguage"
                     )
                     return null
                 }

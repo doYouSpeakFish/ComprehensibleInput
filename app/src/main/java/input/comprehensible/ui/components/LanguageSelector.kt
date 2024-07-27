@@ -124,7 +124,10 @@ private fun LanguageToggleButton(
                 .size(32.dp)
                 .clip(CircleShape),
             painter = painterResource(languageSelection.flag),
-            contentDescription = stringResource(languageSelection.contentDescription),
+            contentDescription = stringResource(
+                R.string.language_selector_content_description,
+                stringResource(languageSelection.languageName)
+            ),
             contentScale = ContentScale.FillHeight,
         )
     }
