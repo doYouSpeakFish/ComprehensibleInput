@@ -1,6 +1,5 @@
 package input.comprehensible.ui.components.topbar
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -51,7 +50,7 @@ fun TopBar(
  * A top bar with a title and a settings button, and a language selector for picking the learning
  * language.
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
