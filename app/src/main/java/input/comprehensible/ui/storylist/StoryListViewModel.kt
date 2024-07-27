@@ -9,6 +9,7 @@ import input.comprehensible.usecases.GetStoriesListUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -51,13 +52,17 @@ class StoryListViewModel @Inject constructor(
      * Called when the user selects a language to learn.
      */
     fun onLearningLanguageSelected(learningLanguage: LanguageSelection) {
-        languageSettingsRepository.setLearningLanguage(learningLanguage.languageCode)
+        viewModelScope.launch {
+            languageSettingsRepository.setLearningLanguage(learningLanguage.languageCode)
+        }
     }
 
     /**
      * Called when the user selects a language to learn.
      */
     fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
-        languageSettingsRepository.setTranslationLanguage(translationLanguage.languageCode)
+        viewModelScope.launch {
+            languageSettingsRepository.setTranslationLanguage(translationLanguage.languageCode)
+        }
     }
 }
