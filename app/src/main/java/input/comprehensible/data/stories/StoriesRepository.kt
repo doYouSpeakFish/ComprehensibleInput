@@ -66,7 +66,7 @@ class StoriesRepository @Inject constructor(
             learningLanguage = learningLanguage,
             translationLanguage = translationsLanguage,
         )
-        return aiStoryData.content.toStory(
+        return aiStoryData?.content?.toStory(
             id = aiStoryData.content.id,
             translation = aiStoryData.translations,
             learningLanguage = learningLanguage,

@@ -17,7 +17,7 @@ interface StoriesRemoteDataSource {
     suspend fun generateAiStory(
         learningLanguage: String,
         translationLanguage: String,
-    ): AiStoryData
+    ): AiStoryData?
 }
 
 @Module

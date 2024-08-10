@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class StoryData(
-    val id: String,
+    val id: String = "",
     val title: String,
     val content: List<StoryElementData>,
 )

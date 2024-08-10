@@ -14,8 +14,11 @@ plugins {
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
+val localPropertiesFile = rootProject.file("local.properties")
 val keystoreProperties = Properties()
+val localProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+localProperties.load(FileInputStream(localPropertiesFile))
 
 android {
     namespace = "input.comprehensible"
@@ -32,6 +35,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            type = "String",
+            name = "GEMINI_API_KEY",
+            value = "\"\""
+        )
     }
 
     signingConfigs {
@@ -51,6 +59,13 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+        }
+        debug {
+            buildConfigField(
+                type = "String",
+                name = "GEMINI_API_KEY",
+                value = "\"${localProperties["geminiApiKey"]}\""
+            )
         }
     }
     compileOptions {
@@ -103,6 +118,7 @@ dependencies {
     implementation(libs.aboutLibraries.compose)
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.dataStore)
+    implementation(libs.gemini)
 
     ksp(libs.hilt.compiler)
 
