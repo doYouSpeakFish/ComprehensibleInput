@@ -29,7 +29,7 @@ fun NavController.navigateToStoryList(
  * Adds the story list screen to the navigation graph.
  */
 fun NavGraphBuilder.storyList(
-    onStorySelected: (String) -> Unit,
+    onStorySelected: (String?) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     composable(

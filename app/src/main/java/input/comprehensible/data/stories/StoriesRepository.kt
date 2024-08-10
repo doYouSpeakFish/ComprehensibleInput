@@ -4,8 +4,9 @@ import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
-import input.comprehensible.data.stories.sources.stories.local.StoryData
-import input.comprehensible.data.stories.sources.stories.local.StoryElementData
+import input.comprehensible.data.stories.sources.stories.model.StoryData
+import input.comprehensible.data.stories.sources.stories.model.StoryElementData
+import input.comprehensible.data.stories.sources.stories.remote.StoriesRemoteDataSource
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,6 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class StoriesRepository @Inject constructor(
     private val storiesLocalDataSource: StoriesLocalDataSource,
+    private val storiesRemoteDataSource: StoriesRemoteDataSource,
 ) {
 
     suspend fun storiesList(
@@ -52,6 +54,23 @@ class StoriesRepository @Inject constructor(
                     featuredImageContentDescription = featuredImage.contentDescription,
                 )
             }
+        )
+    }
+
+    suspend fun getAiStory(
+        learningLanguage: String,
+        translationsLanguage: String
+    ): Story? {
+        Timber.d("Generating AI story for $learningLanguage and $translationsLanguage")
+        val aiStoryData = storiesRemoteDataSource.generateAiStory(
+            learningLanguage = learningLanguage,
+            translationLanguage = translationsLanguage,
+        )
+        return aiStoryData.content.toStory(
+            id = aiStoryData.content.id,
+            translation = aiStoryData.translations,
+            learningLanguage = learningLanguage,
+            translationsLanguage = translationsLanguage,
         )
     }
 

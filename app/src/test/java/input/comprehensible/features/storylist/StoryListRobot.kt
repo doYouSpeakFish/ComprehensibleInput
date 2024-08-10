@@ -34,6 +34,12 @@ class StoryListRobot(
             .performClick()
     }
 
+    fun selectAiStory() {
+        composeTestRule
+            .onNodeWithText("AI Story")
+            .performClick()
+    }
+
     fun assertStoryImageIsVisible(contentDescription: String) {
         composeTestRule
             .onNodeWithContentDescription(contentDescription)

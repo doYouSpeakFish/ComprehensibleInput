@@ -3,18 +3,18 @@ package input.comprehensible.ui.storyreader
 import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
+import input.comprehensible.usecases.GetAiStoryUseCase
 import input.comprehensible.usecases.GetStoryUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,24 +22,25 @@ import javax.inject.Inject
 /**
  * A view model for providing the data for a story to the UI.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class StoryReaderViewModel @Inject constructor(
     getStoryUseCase: GetStoryUseCase,
+    getAiStoryUseCase: GetAiStoryUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val story: Flow<Story?> = savedStateHandle
-        .getStateFlow<String?>("storyId", null)
-        .transformLatest { id ->
-            id ?: return@transformLatest emit(null)
-            val story = getStoryUseCase(id = id)
-                .onEach {
-                    if (it == null) {
-                        Timber.e("Story with id $id not found")
-                    }
-                }
-            emitAll(story)
-        }
+    private val storyId: String? = savedStateHandle["storyId"]
+
+    private val story: Flow<Story?> = if (storyId == null) {
+        Timber.d("Generating AI story")
+        getAiStoryUseCase()
+    } else {
+        Timber.d("Loading story with id $storyId")
+        getStoryUseCase(id = storyId)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = null
+    )
 
     private val selectedText = MutableStateFlow<SelectedText?>(null)
 

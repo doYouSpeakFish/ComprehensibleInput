@@ -30,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,16 +39,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
+import input.comprehensible.BuildConfig
+import input.comprehensible.R
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
-import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 
 @Composable
 internal fun StoryListScreen(
     modifier: Modifier = Modifier,
-    onStorySelected: (id: String) -> Unit,
+    onStorySelected: (id: String?) -> Unit,
     onSettingsClick: () -> Unit,
     viewModel: StoryListViewModel = hiltViewModel(),
 ) {
@@ -57,6 +60,7 @@ internal fun StoryListScreen(
         onSettingsClick = onSettingsClick,
         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
         onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+        onAiGeneratedStorySelected = { onStorySelected(null) },
         state = state,
     )
 }
@@ -65,6 +69,7 @@ internal fun StoryListScreen(
 private fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (StoryListUiState.StoryListItem) -> Unit,
+    onAiGeneratedStorySelected: () -> Unit,
     onSettingsClick: () -> Unit,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
@@ -87,6 +92,11 @@ private fun StoryListScreen(
             verticalArrangement = Arrangement.spacedBy((-120).dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
         ) {
+            if (BuildConfig.DEBUG) {
+                item("aiImage") {
+                    AiStoryItem(onClick = onAiGeneratedStorySelected)
+                }
+            }
             items(
                 items = storiesWithIndex,
                 key = { it.value.id }
@@ -94,10 +104,10 @@ private fun StoryListScreen(
                 val column = it.index % columns
                 val shouldAddTopPadding = column % 2 == 0
                 val shouldAddBottomPadding =
-                    (column % 2 == 0) && it.index != state.stories.lastIndex
-                StoryListItem(
+                    (column % 2 == 1) && it.index != state.stories.lastIndex
+                AiStoryItem(
                     modifier = Modifier.padding(
-                        top = if (shouldAddTopPadding) 0.dp else 140.dp,
+                        top = if (shouldAddTopPadding) 140.dp else 0.dp,
                         bottom = if (shouldAddBottomPadding) 140.dp else 0.dp,
                     ),
                     onClick = { onStorySelected(it.value) },
@@ -145,7 +155,7 @@ private fun StoryListScaffold(
 }
 
 @Composable
-private fun StoryListItem(
+private fun AiStoryItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     story: StoryListUiState.StoryListItem,
@@ -175,6 +185,53 @@ private fun StoryListItem(
 }
 
 @Composable
+private fun AiStoryItem(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier,
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent,
+        )
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .border(
+                        1.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = CircleShape
+                    )
+                    .border(3.dp, color = MaterialTheme.colorScheme.background, shape = CircleShape)
+                    .border(
+                        3.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = CircleShape
+                    )
+                    .clip(CircleShape),
+                painter = painterResource(R.drawable.robot),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+            )
+            Box {
+                // Add empty title with max lines to force every card to have the same height
+                StoryTitle(title = "\n", subtitle = "\n")
+                StoryTitle(
+                    title = stringResource(R.string.story_list_ai_story_title),
+                    subtitle = stringResource(R.string.story_list_ai_story_subtitle)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun FeatureImage(
     modifier: Modifier = Modifier,
     image: ImageBitmap,
@@ -184,7 +241,7 @@ private fun FeatureImage(
         Image(
             modifier = Modifier
                 .aspectRatio(1f)
-                .border(1.dp, color = backgroundDark, shape = CircleShape)
+                .border(1.dp, color = MaterialTheme.colorScheme.onBackground, shape = CircleShape)
                 .clip(CircleShape),
             bitmap = image,
             contentDescription = contentDescription,
@@ -231,6 +288,7 @@ fun StoryListScreenPreview() {
             onSettingsClick = {},
             onLearningLanguageSelected = {},
             onTranslationLanguageSelected = {},
+            onAiGeneratedStorySelected = {},
             state = StoryListUiState(
                 stories = List(100) {
                     StoryListUiState.StoryListItem(

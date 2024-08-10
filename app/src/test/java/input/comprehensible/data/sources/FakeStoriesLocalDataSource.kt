@@ -7,7 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSourceModule
-import input.comprehensible.data.stories.sources.stories.local.StoryData
+import input.comprehensible.data.stories.sources.stories.model.StoryData
 import javax.inject.Inject
 import javax.inject.Singleton
 

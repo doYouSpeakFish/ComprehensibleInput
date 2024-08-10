@@ -35,4 +35,6 @@
         <item>Vous avez gagné</item>
         <item>Rydych chi wedi tapio digon!</item>
     </string-array>
+    <string name="story_list_ai_story_title">Histoire de l\'IA</string>
+    <string name="story_list_ai_story_subtitle">Créer une histoire unique</string>
 </resources>

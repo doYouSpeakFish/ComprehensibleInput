@@ -2,35 +2,26 @@ package input.comprehensible.usecases
 
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesRepository
-import input.comprehensible.data.stories.model.Story
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
- * A use case for getting a story.
+ * A use case for getting an AI story.
  */
-class GetStoryUseCase @Inject constructor(
+class GetAiStoryUseCase @Inject constructor(
     private val languageSettingsRepository: LanguageSettingsRepository,
     private val storiesRepository: StoriesRepository,
 ) {
     /**
-     * Gets a story.
+     * Gets an AI story.
      */
-    operator fun invoke(id: String): Flow<Story?> = combine(
+    operator fun invoke() = combine(
         languageSettingsRepository.learningLanguage,
         languageSettingsRepository.translationsLanguage,
     ) { learningLanguage, translationsLanguage ->
-        storiesRepository.getStory(
-            id = id,
+        storiesRepository.getAiStory(
             learningLanguage = learningLanguage,
             translationsLanguage = translationsLanguage,
         )
-    }.onEach {
-        if (it == null) {
-            Timber.e("Failed to get story with id: $id")
-        }
     }
 }

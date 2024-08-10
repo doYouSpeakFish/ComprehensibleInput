@@ -16,17 +16,17 @@ import input.comprehensible.ui.components.animations.defaultPopExitTransition
 private const val BASE_ROUTE = "storyReader"
 private const val STORY_ID_NAV_KEY = "storyId"
 
-const val STORY_READER_ROUTE = "$BASE_ROUTE/{$STORY_ID_NAV_KEY}"
+const val STORY_READER_ROUTE = "$BASE_ROUTE?storyId={$STORY_ID_NAV_KEY}"
 
 /**
  * Navigate to the story reader screen.
  */
 fun NavController.navigateToStoryReader(
-    storyId: String,
+    storyId: String?,
     builder: NavOptionsBuilder.() -> Unit = {}
 ) {
     navigate(
-        route = "$BASE_ROUTE/$storyId",
+        route = storyId?.let { "$BASE_ROUTE?storyId=$storyId" } ?: BASE_ROUTE,
         builder = builder
     )
 }
@@ -40,6 +40,7 @@ fun NavGraphBuilder.storyReader() {
         arguments = listOf(
             navArgument(STORY_ID_NAV_KEY) {
                 type = NavType.StringType
+                nullable = true
             }
         ),
         enterTransition = defaultEnterTransition,

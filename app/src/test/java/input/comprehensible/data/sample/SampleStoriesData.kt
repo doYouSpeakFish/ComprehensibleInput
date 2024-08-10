@@ -26,6 +26,30 @@ object SampleStoriesData {
             }
         )
     }
+
+    val aiGeneratedStory = TestStory(
+        id = "ai",
+        germanTitle = "AI-Generated German Title",
+        englishTitle = "AI-Generated English Title",
+        spanishTitle = "AI-Generated Spanish Title",
+        content = List(10) { paragraphNumber ->
+            if (paragraphNumber % 2 == 0) {
+                TestStoryPart.Image(contentDescription = "AI-Generated Image $paragraphNumber")
+            } else {
+                TestStoryPart.Paragraph(
+                    germanSentences = List(10) { sentenceNumber ->
+                        "AI-Generated German Paragraph $paragraphNumber Sentence $sentenceNumber"
+                    },
+                    englishSentences = List(10) { sentenceNumber ->
+                        "AI-Generated English Paragraph $paragraphNumber Sentence $sentenceNumber"
+                    },
+                    spanishSentences = List(10) { sentenceNumber ->
+                        "AI-Generated Spanish Paragraph $paragraphNumber Sentence $sentenceNumber"
+                    }
+                )
+            }
+        }
+    )
 }
 
 data class TestStory(

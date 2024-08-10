@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
+import input.comprehensible.data.stories.sources.stories.model.StoryData
 import input.comprehensible.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

@@ -3,8 +3,8 @@ package input.comprehensible.data
 import input.comprehensible.data.sample.TestStory
 import input.comprehensible.data.sample.TestStoryPart
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
-import input.comprehensible.data.stories.sources.stories.local.StoryData
-import input.comprehensible.data.stories.sources.stories.local.StoryElementData
+import input.comprehensible.data.stories.sources.stories.model.StoryData
+import input.comprehensible.data.stories.sources.stories.model.StoryElementData
 import javax.inject.Inject
 
 class StoriesTestData @Inject constructor(
