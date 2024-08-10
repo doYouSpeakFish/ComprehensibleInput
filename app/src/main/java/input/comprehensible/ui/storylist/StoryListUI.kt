@@ -92,7 +92,8 @@ private fun StoryListScreen(
             verticalArrangement = Arrangement.spacedBy((-120).dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            if (BuildConfig.DEBUG) {
+            val isAiStoryAvailable = BuildConfig.DEBUG
+            if (isAiStoryAvailable) {
                 item("aiImage") {
                     AiStoryItem(onClick = onAiGeneratedStorySelected)
                 }
@@ -101,10 +102,11 @@ private fun StoryListScreen(
                 items = storiesWithIndex,
                 key = { it.value.id }
             ) {
-                val column = it.index % columns
-                val shouldAddTopPadding = column % 2 == 0
+                val index = it.index + if (isAiStoryAvailable) 1 else 0
+                val column = index % columns
+                val shouldAddTopPadding = column % 2 == 1
                 val shouldAddBottomPadding =
-                    (column % 2 == 1) && it.index != state.stories.lastIndex
+                    (column % 2 == 0) && it.index != state.stories.lastIndex
                 AiStoryItem(
                     modifier = Modifier.padding(
                         top = if (shouldAddTopPadding) 140.dp else 0.dp,
