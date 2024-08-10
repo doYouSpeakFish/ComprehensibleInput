@@ -20,6 +20,9 @@
     <string name="top_bar_language_picker_learning_label">Learning</string>
     <string name="story_list_ai_story_title">AI Story</string>
     <string name="story_list_ai_story_subtitle">Generate a unique story</string>
+    <string name="error_dialog_title">Something went wrong!</string>
+    <string name="error_dialog_message">Please try again later.</string>
+    <string name="ok">OK</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Tap on any sentence to translate it</item>
         <item>Well, almost any sentence</item>

@@ -37,4 +37,7 @@
     </string-array>
     <string name="story_list_ai_story_title">KI-Geschichte</string>
     <string name="story_list_ai_story_subtitle">Erzeugen Sie eine einzigartige Geschichte</string>
+    <string name="ok">OK</string>
+    <string name="error_dialog_title">Etwas ist schief gelaufen!</string>
+    <string name="error_dialog_message">Bitte versuchen Sie es später erneut.</string>
 </resources>

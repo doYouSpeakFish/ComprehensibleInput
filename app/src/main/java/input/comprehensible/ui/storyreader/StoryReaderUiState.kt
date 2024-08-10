@@ -19,4 +19,9 @@ sealed interface StoryReaderUiState {
         val isTitleHighlighted: Boolean,
         val content: List<StoryContentPartUiState>,
     ) : StoryReaderUiState
+
+    /**
+     * The UI state when an error occurred.
+     */
+    data object Error : StoryReaderUiState
 }

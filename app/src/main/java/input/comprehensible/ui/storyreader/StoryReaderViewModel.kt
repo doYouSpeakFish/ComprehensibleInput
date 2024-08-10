@@ -13,6 +13,7 @@ import input.comprehensible.usecases.GetStoryUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -29,6 +30,7 @@ class StoryReaderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val storyId: String? = savedStateHandle["storyId"]
+    private val hasError = MutableStateFlow(false)
 
     private val story: Flow<Story?> = if (storyId == null) {
         Timber.d("Generating AI story")
@@ -36,40 +38,52 @@ class StoryReaderViewModel @Inject constructor(
     } else {
         Timber.d("Loading story with id $storyId")
         getStoryUseCase(id = storyId)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = null
-    )
+    }
+        .catch {
+            Timber.e(it, "Failed to load story")
+            hasError.value = true
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = null
+        )
 
     private val selectedText = MutableStateFlow<SelectedText?>(null)
 
     val state = combine(
         story,
         selectedText,
-    ) { story, selectedText ->
-        if (story == null) {
-            StoryReaderUiState.Loading
-        } else {
-            val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
-            StoryReaderUiState.Loaded(
-                title = if (selectedText is SelectedText.Title && selectedText.isTranslated) {
-                    story.translatedTitle
-                } else {
-                    story.title
-                },
-                isTitleHighlighted = selectedText is SelectedText.Title,
-                content = story.content
-                    .mapIndexed { i, storyElement ->
-                        storyElement.toStoryContentPartUiState(
-                            paragraphIndex = i,
-                            selectedSentenceIndex = selectedSentence?.takeIf { it.paragraphIndex == i }?.selectedSentenceIndex,
-                            areTranslationsEnabled = selectedSentence?.isTranslated == true,
-                        )
+        hasError,
+    ) { story, selectedText, hasError ->
+        when {
+            hasError -> StoryReaderUiState.Error
+            story == null -> StoryReaderUiState.Loading
+            else -> {
+                val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
+                StoryReaderUiState.Loaded(
+                    title = if (selectedText is SelectedText.Title && selectedText.isTranslated) {
+                        story.translatedTitle
+                    } else {
+                        story.title
                     },
-            )
+                    isTitleHighlighted = selectedText is SelectedText.Title,
+                    content = story.content
+                        .mapIndexed { i, storyElement ->
+                            storyElement.toStoryContentPartUiState(
+                                paragraphIndex = i,
+                                selectedSentenceIndex = selectedSentence?.takeIf { it.paragraphIndex == i }?.selectedSentenceIndex,
+                                areTranslationsEnabled = selectedSentence?.isTranslated == true,
+                            )
+                        },
+                )
+            }
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = StoryReaderUiState.Loading
+    )
 
     /**
      * Toggles whether translations are enabled for the title.

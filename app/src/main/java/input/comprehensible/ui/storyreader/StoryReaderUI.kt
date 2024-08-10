@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
 import input.comprehensible.ui.components.SelectableText
+import input.comprehensible.ui.components.dialogs.ErrorDialog
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -42,12 +43,14 @@ import input.comprehensible.util.DefaultPreview
 @Composable
 fun StoryReader(
     modifier: Modifier = Modifier,
+    onBack: () -> Unit,
     viewModel: StoryReaderViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
     StoryReader(
         modifier = modifier,
         onTitleClicked = viewModel::onTitleSelected,
+        onBack = onBack,
         state = state,
     )
 }
@@ -56,6 +59,7 @@ fun StoryReader(
 private fun StoryReader(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
+    onBack: () -> Unit,
     state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
@@ -72,6 +76,8 @@ private fun StoryReader(
                     state = state,
                     onTitleClicked = onTitleClicked,
                 )
+
+                StoryReaderUiState.Error -> ErrorDialog(onDismissRequest = onBack)
             }
         }
     }
@@ -180,6 +186,7 @@ fun StoryReaderPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
+            onBack = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = false,
@@ -201,6 +208,7 @@ fun StoryReaderTranslationPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
+            onBack = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = true,

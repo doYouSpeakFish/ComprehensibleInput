@@ -60,13 +60,13 @@ class StoriesRepository @Inject constructor(
     suspend fun getAiStory(
         learningLanguage: String,
         translationsLanguage: String
-    ): Story? {
+    ): Story {
         Timber.d("Generating AI story for $learningLanguage and $translationsLanguage")
         val aiStoryData = storiesRemoteDataSource.generateAiStory(
             learningLanguage = learningLanguage,
             translationLanguage = translationsLanguage,
         )
-        return aiStoryData?.content?.toStory(
+        return aiStoryData.content.toStory(
             id = aiStoryData.content.id,
             translation = aiStoryData.translations,
             learningLanguage = learningLanguage,
@@ -110,7 +110,7 @@ class StoriesRepository @Inject constructor(
         translation: StoryData,
         learningLanguage: String,
         translationsLanguage: String
-    ): Story? {
+    ): Story {
         return Story(
             id = id,
             title = title,
@@ -123,7 +123,7 @@ class StoriesRepository @Inject constructor(
                         translation = translation,
                         learningLanguage = learningLanguage,
                         translationsLanguage = translationsLanguage,
-                    ) ?: return null
+                    )
                 }
         )
     }
@@ -133,20 +133,15 @@ class StoriesRepository @Inject constructor(
         translation: StoryElementData,
         learningLanguage: String,
         translationsLanguage: String,
-    ): StoryElement? {
+    ): StoryElement {
         return when (this) {
             is StoryElementData.ParagraphData -> {
-                (translation as? StoryElementData.ParagraphData)
-                    ?: run {
-                        Timber.e("No matching translation found for paragraph in story $storyId")
-                        return null
-                    }
-                if (sentences.size != translation.sentences.size) {
-                    Timber.e(
-                        "Mismatched number of sentences in story $storyId for languages " +
-                                "$learningLanguage and $translationsLanguage"
-                    )
-                    return null
+                require(translation is StoryElementData.ParagraphData) {
+                    "No matching translation found for paragraph in story $storyId"
+                }
+                require(sentences.size == translation.sentences.size) {
+                    "Mismatched number of sentences in story $storyId for languages " +
+                            "$learningLanguage and $translationsLanguage"
                 }
                 StoryElement.Paragraph(
                     sentences = sentences,

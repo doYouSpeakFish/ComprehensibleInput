@@ -21,17 +21,16 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
     override suspend fun generateAiStory(
         learningLanguage: String,
         translationLanguage: String
-    ): AiStoryData? {
-        val storyJson = generateStory(learningLanguage)
-            .onFailure { Timber.e(it, "Failed to generate story") }
-            .getOrNull() ?: return null
-        val translationJson = translateStory(storyJson, translationLanguage)
-            .onFailure { Timber.e(it, "Failed to translate story") }
-            .getOrNull() ?: return null
-
+    ): AiStoryData {
         val id = UUID.randomUUID().toString()
+
+        Timber.i("Generating story")
+        val storyJson = generateStory(learningLanguage)
         val story = Json.decodeFromString<StoryData>(storyJson)
             .copy(id = id)
+
+        Timber.i("Translating story")
+        val translationJson = translateStory(storyJson, translationLanguage)
         val translation = Json.decodeFromString<StoryData>(translationJson)
             .copy(id = id)
 
@@ -43,8 +42,8 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
 
     private suspend fun generateStory(
         learningLanguage: String,
-    ): Result<String?> = runCatching {
-        model.generateContent(
+    ): String {
+        val response = model.generateContent(
             prompt = """
             Write a story in the language $learningLanguage. The story should be written using
             language that is appropriate for an A2 level speaker.
@@ -65,31 +64,35 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
                 ]
             }
         """.trimIndent(),
-        ).text?.let {
-            Timber.d("Generated story: $it")
-            it.firstJsonObjectOrNull()
+        )
+        val story = requireNotNull(response.text) {
+            "No story content received from the AI model."
         }
+        Timber.d("Generated story: $story")
+        return story.firstJsonObject()
     }
 
     private suspend fun translateStory(
         story: String,
         translationLanguage: String,
-    ): Result<String?> = runCatching {
-        model.generateContent(
+    ): String {
+        val response = model.generateContent(
             prompt = """
             Translate the story in the following JSON into the language $translationLanguage.
             Retain the same structure and keys of the JSON.
             
             $story
         """.trimIndent()
-        ).text?.let {
-            Timber.d("Generated translation: $it")
-            it.firstJsonObjectOrNull()
+        )
+        val translation = requireNotNull(response.text) {
+            "No translation received from the AI model."
         }
+        Timber.d("Translated story: $translation")
+        return translation.firstJsonObject()
     }
 }
 
-private fun String.firstJsonObjectOrNull(): String? {
+private fun String.firstJsonObject(): String {
     var startIndex = -1
     var endIndex = -1
     var numberOfOpenBrackets = 0
@@ -113,7 +116,7 @@ private fun String.firstJsonObjectOrNull(): String? {
     }
 
     if (startIndex == -1 || endIndex == -1) {
-        return null
+        error("No JSON object found in string: $this")
     }
     return substring(startIndex, endIndex + 1)
 }

@@ -28,7 +28,7 @@ fun ComprehensibleInputApp(
             startDestination = STORY_LIST_ROUTE,
         ) {
             settingsNavGraph(navController)
-            storyReader()
+            storyReader(navController)
             storyList(
                 onStorySelected = navController::navigateToStoryReader,
                 onSettingsClick = navController::navigateToSettings,

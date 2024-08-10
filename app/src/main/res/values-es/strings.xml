@@ -37,4 +37,9 @@
     </string-array>
     <string name="story_list_ai_story_title">Historia de AI</string>
     <string name="story_list_ai_story_subtitle">Generar una historia única</string>
+    <string name="ok">OK</string>
+    <string name="error_dialog_title">¡Algo salió mal!</string>
+    <string name="error_dialog_message">Por favor, inténtelo de nuevo más tarde.</string>
+
+
 </resources>

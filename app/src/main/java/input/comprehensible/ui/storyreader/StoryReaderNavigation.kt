@@ -34,7 +34,7 @@ fun NavController.navigateToStoryReader(
 /**
  * Add the story reader screen to the navigation graph.
  */
-fun NavGraphBuilder.storyReader() {
+fun NavGraphBuilder.storyReader(navController: NavController) {
     composable(
         route = STORY_READER_ROUTE,
         arguments = listOf(
@@ -48,6 +48,9 @@ fun NavGraphBuilder.storyReader() {
         popEnterTransition = defaultPopEnterTransition,
         popExitTransition = defaultPopExitTransition,
     ) {
-        StoryReader(Modifier.fillMaxSize())
+        StoryReader(
+            modifier = Modifier.fillMaxSize(),
+            onBack = navController::popBackStack,
+        )
     }
 }
