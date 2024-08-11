@@ -75,12 +75,12 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
     ): AiStoryData {
         val id = UUID.randomUUID().toString()
 
-        Timber.i("Generating story")
+        Timber.i("Generating story $id")
         val storyJson = generateStory(learningLanguage)
         val story = parser.decodeFromString<StoryData>(storyJson)
             .copy(id = id)
 
-        Timber.i("Translating story")
+        Timber.i("Translating story $id")
         val translationJson = translateStory(storyJson, translationLanguage)
         val translation = parser.decodeFromString<StoryData>(translationJson)
             .copy(id = id)
@@ -172,7 +172,9 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
         val response = storyGenerationModel.generateContent(
             prompt = """
             Translate the story in the following JSON into the language $translationLanguage.
-            Retain the same structure and keys of the JSON.
+            Retain the same structure and keys of the JSON. This translation is to assist language
+            learners, so each sentence should be translated as literally as possible, without
+            changing the meaning of the sentence.
             
             $story
         """.trimIndent()
