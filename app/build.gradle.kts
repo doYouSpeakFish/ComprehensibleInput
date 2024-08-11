@@ -14,11 +14,14 @@ plugins {
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
-val localPropertiesFile = rootProject.file("local.properties")
 val keystoreProperties = Properties()
-val localProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-localProperties.load(FileInputStream(localPropertiesFile))
+
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties()
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
 
 android {
     namespace = "input.comprehensible"
@@ -64,7 +67,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "GEMINI_API_KEY",
-                value = "\"${localProperties["geminiApiKey"]}\""
+                value = "\"${localProperties["geminiApiKey"] ?: ""}\""
             )
         }
     }
