@@ -11,6 +11,7 @@ data class StoryListUiState(
     val translationLanguage: LanguageSelection?,
     val languagesAvailable: List<LanguageSelection>,
     val stories: List<StoryListItem>,
+    val areAiStoriesAvailable: Boolean,
 ) {
     /**
      * A story list item.
@@ -28,7 +29,8 @@ data class StoryListUiState(
             stories = emptyList(),
             learningLanguage = null,
             translationLanguage = null,
-            languagesAvailable = emptyList()
+            languagesAvailable = emptyList(),
+            areAiStoriesAvailable = false,
         )
     }
 }

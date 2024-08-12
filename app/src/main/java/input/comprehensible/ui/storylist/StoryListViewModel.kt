@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.usecases.GetStoriesListUseCase
+import input.comprehensible.util.FeatureFlagProvider
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StoryListViewModel @Inject constructor(
     private val languageSettingsRepository: LanguageSettingsRepository,
+    private val featureFlagProvider: FeatureFlagProvider,
     getStoriesListUseCase: GetStoriesListUseCase,
 ) : ViewModel() {
     val state = combine(
@@ -39,7 +41,8 @@ class StoryListViewModel @Inject constructor(
                 .firstOrNull { it.languageCode == learningLanguage },
             translationLanguage = LanguageSelection.entries
                 .firstOrNull { it.languageCode == translationsLanguage },
-            languagesAvailable = LanguageSelection.entries
+            languagesAvailable = LanguageSelection.entries,
+            areAiStoriesAvailable = featureFlagProvider.isAiStoriesEnabled,
         )
     }
         .stateIn(

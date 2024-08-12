@@ -39,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
-import input.comprehensible.BuildConfig
 import input.comprehensible.R
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
@@ -92,8 +91,7 @@ private fun StoryListScreen(
             verticalArrangement = Arrangement.spacedBy((-120).dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            val isAiStoryAvailable = BuildConfig.DEBUG
-            if (isAiStoryAvailable) {
+            if (state.areAiStoriesAvailable) {
                 item("aiImage") {
                     AiStoryItem(onClick = onAiGeneratedStorySelected)
                 }
@@ -102,7 +100,7 @@ private fun StoryListScreen(
                 items = storiesWithIndex,
                 key = { it.value.id }
             ) {
-                val index = it.index + if (isAiStoryAvailable) 1 else 0
+                val index = it.index + if (state.areAiStoriesAvailable) 1 else 0
                 val column = index % columns
                 val shouldAddTopPadding = column % 2 == 1
                 val shouldAddBottomPadding =
@@ -304,6 +302,7 @@ fun StoryListScreenPreview() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                areAiStoriesAvailable = true,
             ),
         )
     }
