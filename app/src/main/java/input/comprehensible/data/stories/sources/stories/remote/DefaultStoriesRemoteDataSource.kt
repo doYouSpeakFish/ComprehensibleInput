@@ -112,6 +112,12 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             the scene. Tweak the story where necessary to make it flow naturally.
         """.trimIndent()
         val response = storyGenerationModel.generateContent(prompt = prompt)
+        response.usageMetadata?.promptTokenCount?.let { tokenCount ->
+            Timber.d("Story prompt token count: $tokenCount")
+        }
+        response.usageMetadata?.candidatesTokenCount?.let { tokenCount ->
+            Timber.d("Story candidates token count: $tokenCount")
+        }
         val story = requireNotNull(response.text) {
             "No story content received from the AI model."
         }
@@ -158,6 +164,12 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             the answer is no, keep writing until you find the perfect conclusion to your story.
         """.trimIndent()
         val response = planningModel.generateContent(prompt = prompt)
+        response.usageMetadata?.promptTokenCount?.let { tokenCount ->
+            Timber.d("Planning prompt token count: $tokenCount")
+        }
+        response.usageMetadata?.candidatesTokenCount?.let { tokenCount ->
+            Timber.d("Planning candidates token count: $tokenCount")
+        }
         val plan = requireNotNull(response.text) {
             "No story plan received from the AI model."
         }
@@ -179,6 +191,12 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             $story
         """.trimIndent()
         )
+        response.usageMetadata?.promptTokenCount?.let { tokenCount ->
+            Timber.d("Translation prompt token count: $tokenCount")
+        }
+        response.usageMetadata?.candidatesTokenCount?.let { tokenCount ->
+            Timber.d("Translation candidates token count: $tokenCount")
+        }
         val translation = requireNotNull(response.text) {
             "No translation received from the AI model."
         }
