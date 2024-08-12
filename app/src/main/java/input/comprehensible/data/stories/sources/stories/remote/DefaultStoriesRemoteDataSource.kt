@@ -188,6 +188,11 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             learners, so each sentence should be translated as literally as possible, without
             changing the meaning of the sentence.
             
+            Be careful to ensure that the translation contains the same number of paragraphs and
+            each paragraph contains the same number of sentences as the original story. Ensure
+            quotation marks are properly escaped in the translation, to avoid this creating extra
+            sentences.
+            
             $story
         """.trimIndent()
         )
