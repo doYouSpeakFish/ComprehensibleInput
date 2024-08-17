@@ -25,7 +25,7 @@ object SampleStoriesData {
                 }
             }
         )
-    }
+    }.reversed()
 }
 
 data class TestStory(
