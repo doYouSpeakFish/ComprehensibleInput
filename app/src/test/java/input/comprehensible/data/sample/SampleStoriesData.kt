@@ -25,7 +25,7 @@ object SampleStoriesData {
                 }
             }
         )
-    }
+    }.reversed()
 
     val aiGeneratedStory = TestStory(
         id = "ai",

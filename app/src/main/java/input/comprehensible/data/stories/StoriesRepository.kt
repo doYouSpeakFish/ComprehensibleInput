@@ -26,6 +26,7 @@ class StoriesRepository @Inject constructor(
     ): StoriesList {
         val stories = storiesLocalDataSource
             .getStories(learningLanguage = learningLanguage)
+            .sortedByDescending { it.id }
         val translations = storiesLocalDataSource
             .getStories(learningLanguage = translationsLanguage)
             .associateBy { it.id }
