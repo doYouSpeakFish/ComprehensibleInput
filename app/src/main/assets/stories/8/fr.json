@@ -1,0 +1,581 @@
+{
+  "id": "8",
+  "content": [
+    {
+      "type": "image",
+      "contentDescription": "Un dessin minimaliste en noir et blanc de Maya assise à son bureau, l'air fatiguée, avec un gros livre devant elle et un élégant ordinateur portable argenté à côté.",
+      "path": "1"
+    },
+    {
+      "sentences": [
+        "Maya était assise à son bureau et regardait son livre de biologie."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Les mots étaient flous."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya était fatiguée."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle avait tellement de choses à faire!"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle avait l'impression d'avoir une lourde plaque sur la poitrine."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "C'était difficile de respirer."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya essayait de se concentrer, mais elle avait mal à la tête."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle regardait son ordinateur portable."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Il était sur le bureau à côté de son livre."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "type": "image",
+      "contentDescription": "Un gros plan de l'ordinateur portable argenté sur le bureau, reflétant la lumière d'une lampe à proximité. L'ordinateur est élégant et moderne, avec la faible lueur de l'écran étant la seule source de couleur dans l'image.",
+      "path": "2"
+    },
+    {
+      "sentences": [
+        "L'ordinateur portable était argenté et brillait sous la lampe."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ce n'était pas un ordinateur portable normal."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "C'était un prototype."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Un ami de la famille avait donné l'ordinateur portable à Maya."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Cet ami travaillait dans une entreprise de technologie."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "L'entreprise développait de nouveaux appareils."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ces appareils étaient connectés au corps."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "L'ordinateur portable n'était pas juste un outil."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Il était censé apprendre avec Maya."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Il devait s'adapter à ses ondes cérébrales."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Il devait rendre l'apprentissage plus rapide et plus facile."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "C'est du moins ce qu'ils promettaient."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais ces derniers temps, Maya ne se sentait pas mieux."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle se sentait fatiguée."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle avait mal à la tête."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses émotions étaient folles."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Parfois, elle riait beaucoup."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Parfois, elle avait envie de pleurer."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya se comportait bizarrement."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses amis étaient inquiets."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "La semaine dernière, elle s'était disputée avec Lena."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Lena était sa meilleure amie."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "C'était pour quelque chose de petit."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya avait crié sur Lena."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle était toujours désolée."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Lena voulait juste l'aider."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle avait demandé si Maya voulait faire une pause dans ses études."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais Maya avait explosé."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle avait crié à Lena de s'occuper de ses affaires."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Le pire, c'est que Maya ne pouvait pas expliquer son comportement."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle savait qu'elle agissait étrangement."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais c'était comme si quelque chose d'autre prenait le contrôle."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle soupçonnait que c'était lié à l'ordinateur portable."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Un jour, Maya faisait des recherches pour son devoir de biologie."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle a trouvé un article sur les fréquences électromagnétiques."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "L'article disait que certaines fréquences peuvent être dangereuses."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "type": "image",
+      "contentDescription": "Le visage de Maya près de l'écran de l'ordinateur portable, ses yeux grands ouverts en réalisant qu'elle lit quelque chose d'alarmant.",
+      "path": "3"
+    },
+    {
+      "sentences": [
+        "Maya a lu l'article."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Son cœur battait plus vite."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Est-ce que c'était ça?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "L'ordinateur portable émettait-il des fréquences nocives?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Cela affectait-il son cerveau?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya a paniqué."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle devait arrêter d'utiliser l'ordinateur portable."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle devait aller chez le médecin."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle devait parler à quelqu'un."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais si elle se trompait?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Et si tout était dans sa tête?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Et si elle jouait avec son avenir?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Et si elle abandonnait sa chance d'avoir une bonne éducation à cause d'une paranoïa sans fondement?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya a hésité."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle était déchirée entre la peur et l'ambition."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais il était trop tard."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Les changements étaient maintenant indéniables."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses sens étaient aiguisés."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses pensées étaient rapides comme l'éclair."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle a obtenu un A à son examen de biologie."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle pouvait se rappeler sans effort des concepts complexes."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses professeurs étaient étonnés."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses camarades de classe étaient jaloux."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais plus Maya apprenait, plus elle se sentait étrangère."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Les autres personnes lui semblaient sans importance."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Leurs conversations étaient futiles."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Leurs soucis étaient banals."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya avait accès à des connaissances et une compréhension qu'ils ne pouvaient même pas imaginer."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Pourquoi avait-elle besoin d'une vie normale?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "À quoi servaient l'amitié?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "À quoi servait l'amour?"
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle pouvait passer chaque minute éveillée à percer les secrets de l'univers."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Un soir, Lena a trouvé Maya dans sa chambre."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya était devant un tableau blanc."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Elle l'avait couvert d'équations."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Lena la regarda."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "\"Maya?\"",
+        "demanda-t-elle doucement."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "\"Ça va?\""
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Maya se retourna."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Ses yeux étaient froids et calculateurs."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "\"Ça va?\"",
+        "dit-elle."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "\"Je vais mieux que bien, Lena.\""
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "\"Je suis enfin réveillée.\""
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Lena tendit la main."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "Mais Maya la repoussa."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "type": "image",
+      "contentDescription": "Maya et Lena se font face, Maya repousse la main de Lena. L'expression de Maya est froide et détachée, tandis que Lena a l'air inquiète. La scène est en noir et blanc, avec la seule couleur étant une douce lueur bleue de l'ordinateur portable.",
+      "path": "4"
+    },
+    {
+      "sentences": [
+        "\"Tu ne vois pas?\"",
+        "demanda-t-elle."
+      ],
+      "type": "paragraph"
+    },
+    {
+      "sentences": [
+        "\"Ce n'est que le début.\""
+      ],
+      "type": "paragraph"
+    }
+  ],
+  "title": "L'Ordinateur Portable"
+}
