@@ -4,10 +4,8 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.Schema
 import com.google.ai.client.generativeai.type.generationConfig
 import input.comprehensible.BuildConfig
-import input.comprehensible.data.stories.sources.stories.model.StoryData
 import kotlinx.serialization.json.Json
 import timber.log.Timber
-import java.util.UUID
 
 private val storyResponseSchema = Schema.obj(
     name = "story",
@@ -16,23 +14,30 @@ private val storyResponseSchema = Schema.obj(
         name = "title",
         description = "The title of the story",
     ),
+    Schema.str(
+        name = "titleTranslation",
+        description = "The title of the story",
+    ),
     Schema.arr(
         name = "content",
         description = "the content of the story",
         Schema.obj(
-            name = "story_element",
-            description = "An element of a story",
-            Schema.enum(
-                name = "type",
-                description = "The type of story element",
-                values = listOf("paragraph"),
-            ),
+            name = "paragraph",
+            description = "A paragraph in a story",
             Schema.arr(
                 name = "sentences",
                 description = "the sentences in the paragraph",
-                Schema.str(
+                Schema.obj(
                     name = "sentence",
                     description = "A sentence in the paragraph",
+                    Schema.str(
+                        name = "text",
+                        description = "The sentence in the learning language",
+                    ),
+                    Schema.str(
+                        name = "translation",
+                        description = "The sentence in the translation language",
+                    ),
                 ),
             ),
         ),
@@ -49,7 +54,7 @@ val parser = Json {
 class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
     private val planningModel by lazy {
         GenerativeModel(
-            modelName = "gemini-1.5-pro",
+            modelName = "gemini-1.5-flash",
             apiKey = BuildConfig.GEMINI_API_KEY,
             generationConfig = generationConfig {
                 maxOutputTokens = 8192
@@ -72,48 +77,26 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
         learningLanguage: String,
         translationLanguage: String
     ): AiStoryData {
-        val id = UUID.randomUUID().toString()
-
-        Timber.i("Generating story $id")
-        val storyJson = generateStory(learningLanguage)
-        val story = parser.decodeFromString<StoryData>(storyJson)
-            .copy(id = id)
-
-        Timber.i("Translating story $id")
-        val translationJson = translateStory(storyJson, translationLanguage)
-        val translation = parser.decodeFromString<StoryData>(translationJson)
-            .copy(id = id)
-
-        return AiStoryData(
-            content = story,
-            translations = translation
-        )
+        val storyJson = generateStory(learningLanguage, translationLanguage)
+        return parser.decodeFromString<AiStoryData>(storyJson)
     }
 
     private suspend fun generateStory(
         learningLanguage: String,
+        translationLanguage: String,
     ): String {
-        val inspirationWords = a2Vocabulary
-            .shuffled()
-            .take(10)
-            .joinToString(separator = ", ")
-        Timber.d("Generating story with inspiration words: $inspirationWords")
-        val plan = planStory(inspirationWords)
+        val finalDraft = writeStory(learningLanguage)
         val prompt = """
-            Write a story in the language $learningLanguage. The story should be written using 
-            language that is appropriate for an A1 level speaker.
+            $finalDraft
             
-            Use the following plan as a guide to structure your story.
+            Write the above story into a JSON structure.
             
-            $plan
-            
-            Re-write the story from the above plan, adding description to flesh it out and to set
-            the scene. Tweak the story where necessary to make it flow naturally.
-            
-            Remember, it is extremely important that the story is accessible to A1 level speakers,
-            so simplify the language where necessary and avoid using complex sentence structures.
-            This is incredibly important. Make sure A1 level speakers can understand the story.
+            After writing each sentence in each paragraph of the story, include an accompanying
+            translation sentence in the language $translationLanguage. This will aid language
+            learners in understanding the story, so make sure the translation is as literal as
+            possible.
         """.trimIndent()
+        Timber.d("Generating story")
         val response = storyGenerationModel.generateContent(prompt = prompt)
         response.usageMetadata?.promptTokenCount?.let { tokenCount ->
             Timber.d("Story prompt token count: $tokenCount")
@@ -128,15 +111,61 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
         return story
     }
 
-    private suspend fun planStory(
-        inspirationWords: String,
-    ): String {
-        Timber.d("Planning story with inspiration words: $inspirationWords")
+    private suspend fun writeStory(learningLanguage: String): String {
+        val inspirationWords = a2Vocabulary
+            .shuffled()
+            .take(10)
+            .joinToString(separator = ", ")
+        val plan = planStory(inspirationWords)
+        val prompt = """
+            Target language level: A1
+            
+            Inspiration words:
+            $inspirationWords
+            
+            Plan:
+            $plan
+            
+            Based on the above plan, write the final draft of this story in the language 
+            $learningLanguage.
+            
+            Remember, it is extremely important that the story is accessible to A1 level speakers,
+            so simplify the language where necessary and avoid using complex sentence structures.
+            This is incredibly important. Make sure A1 level speakers can understand the story.
+        """.trimIndent()
+        Timber.d("Writing final draft of story")
+        val response = planningModel.generateContent(prompt = prompt)
+        response.usageMetadata?.promptTokenCount?.let { tokenCount ->
+            Timber.d("Final draft prompt token count: $tokenCount")
+        }
+        response.usageMetadata?.candidatesTokenCount?.let { tokenCount ->
+            Timber.d("Final draft candidates token count: $tokenCount")
+        }
+        val story = requireNotNull(response.text) {
+            "No story content received from the AI model."
+        }
+        Timber.d("Generated final draft: $story")
+        return story
+    }
+
+    private suspend fun planStory(inspirationWords: String): String {
+        val inspirationNames = names
+            .shuffled()
+            .take(10)
+            .joinToString(separator = ", ")
+        val genre = genres.random()
+        Timber.d("Planning $genre story with inspiration words: $inspirationWords")
         val prompt = """
             Plan a story.
             
+            Genre: $genre
+            
             Work as much of the following vocabulary into the story as possible:
             $inspirationWords
+            
+            Below are some names that can be used in the story. You don't need to use all the names,
+            they are just for inspiration:
+            $inspirationNames
             
             Show your chain of thought as you brainstorm ideas to make this story as interesting as 
             possible. Iterate as you develop the plan, being self critical and actively changing
@@ -180,37 +209,5 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
         }
         Timber.d("Generated story plan: $plan")
         return plan
-    }
-
-    private suspend fun translateStory(
-        story: String,
-        translationLanguage: String,
-    ): String {
-        val response = storyGenerationModel.generateContent(
-            prompt = """
-            Translate the story in the following JSON into the language $translationLanguage.
-            Retain the same structure and keys of the JSON. This translation is to assist language
-            learners, so each sentence should be translated as literally as possible, without
-            changing the meaning of the sentence.
-            
-            Be careful to ensure that the translation contains the same number of paragraphs and
-            each paragraph contains the same number of sentences as the original story. Ensure
-            quotation marks are properly escaped in the translation, to avoid this creating extra
-            sentences.
-            
-            $story
-        """.trimIndent()
-        )
-        response.usageMetadata?.promptTokenCount?.let { tokenCount ->
-            Timber.d("Translation prompt token count: $tokenCount")
-        }
-        response.usageMetadata?.candidatesTokenCount?.let { tokenCount ->
-            Timber.d("Translation candidates token count: $tokenCount")
-        }
-        val translation = requireNotNull(response.text) {
-            "No translation received from the AI model."
-        }
-        Timber.d("Translated story: $translation")
-        return translation
     }
 }

@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import input.comprehensible.data.stories.sources.stories.model.StoryData
+import kotlinx.serialization.Serializable
 import javax.inject.Singleton
 
 /**
@@ -28,7 +28,20 @@ class StoriesRemoteDataSourceModule {
     fun provideStoriesRemoteDataSource(): StoriesRemoteDataSource = DefaultStoriesRemoteDataSource()
 }
 
+@Serializable
 data class AiStoryData(
-    val content: StoryData,
-    val translations: StoryData,
+    val title: String,
+    val titleTranslation: String,
+    val content: List<AiParagraphData>
+)
+
+@Serializable
+data class AiParagraphData(
+    val sentences: List<AiSentenceData>
+)
+
+@Serializable
+data class AiSentenceData(
+    val text: String,
+    val translation: String,
 )

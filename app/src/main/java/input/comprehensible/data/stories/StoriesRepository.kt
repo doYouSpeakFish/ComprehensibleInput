@@ -6,6 +6,7 @@ import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.model.StoryData
 import input.comprehensible.data.stories.sources.stories.model.StoryElementData
+import input.comprehensible.data.stories.sources.stories.remote.AiStoryData
 import input.comprehensible.data.stories.sources.stories.remote.StoriesRemoteDataSource
 import timber.log.Timber
 import javax.inject.Inject
@@ -67,12 +68,7 @@ class StoriesRepository @Inject constructor(
             learningLanguage = learningLanguage,
             translationLanguage = translationsLanguage,
         )
-        return aiStoryData.content.toStory(
-            id = aiStoryData.content.id,
-            translation = aiStoryData.translations,
-            learningLanguage = learningLanguage,
-            translationsLanguage = translationsLanguage,
-        )
+        return aiStoryData.toStory(id = aiStoryData.title)
     }
 
     /**
@@ -142,7 +138,9 @@ class StoriesRepository @Inject constructor(
                 }
                 require(sentences.size == translation.sentences.size) {
                     "Mismatched number of sentences in story $storyId for languages " +
-                            "$learningLanguage and $translationsLanguage"
+                            "$learningLanguage and $translationsLanguage.\n" +
+                            "Learning language paragraph: $this\n" +
+                            "Translations language paragraph: $translation"
                 }
                 StoryElement.Paragraph(
                     sentences = sentences,
@@ -159,4 +157,16 @@ class StoriesRepository @Inject constructor(
             )
         }
     }
+
+    private fun AiStoryData.toStory(id: String) = Story(
+        id = id,
+        title = title,
+        translatedTitle = titleTranslation,
+        content = content.map { paragraph ->
+            StoryElement.Paragraph(
+                sentences = paragraph.sentences.map { it.text },
+                sentencesTranslations = paragraph.sentences.map { it.translation }
+            )
+        }
+    )
 }
