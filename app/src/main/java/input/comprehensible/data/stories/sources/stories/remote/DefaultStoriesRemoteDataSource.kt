@@ -53,7 +53,6 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             apiKey = BuildConfig.GEMINI_API_KEY,
             generationConfig = generationConfig {
                 maxOutputTokens = 8192
-                temperature = 2f
             }
         )
     }
@@ -102,7 +101,7 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
         val plan = planStory(inspirationWords)
         val prompt = """
             Write a story in the language $learningLanguage. The story should be written using 
-            language that is appropriate for an A2 level speaker.
+            language that is appropriate for an A1 level speaker.
             
             Use the following plan as a guide to structure your story.
             
@@ -110,6 +109,10 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             
             Re-write the story from the above plan, adding description to flesh it out and to set
             the scene. Tweak the story where necessary to make it flow naturally.
+            
+            Remember, it is extremely important that the story is accessible to A1 level speakers,
+            so simplify the language where necessary and avoid using complex sentence structures.
+            This is incredibly important. Make sure A1 level speakers can understand the story.
         """.trimIndent()
         val response = storyGenerationModel.generateContent(prompt = prompt)
         response.usageMetadata?.promptTokenCount?.let { tokenCount ->
@@ -146,11 +149,13 @@ class DefaultStoriesRemoteDataSource : StoriesRemoteDataSource {
             thoughts as they come to you in a free form creative process.
             
             After planning, write an initial first draft of the story. The story should be roughly 
-            1500 words long and written in language suitable for an A2 level speaker. Don't pick a
-            title until the end.
+            1500 words long. It is very important that the language is accessible to an A1 level
+            speaker. Remember, A1 level speakers are still learning the language, so the story
+            should be simple and easy to understand. Don't pick a title until the end.
             
             After writing the first draft, give your thoughts on how the story could be improved and
-            any plot holes or things that don't make sense that should be addressed.
+            any plot holes or things that don't make sense that should be addressed. Most
+            importantly, consider whether or not the story is accessible to an A1 level speaker.
             
             Rewrite the ending a few times to explore different options.
             Ask yourself the following questions:
