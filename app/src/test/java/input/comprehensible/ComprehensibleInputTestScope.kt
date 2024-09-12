@@ -5,6 +5,9 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import input.comprehensible.ui.ComprehensibleInputApp
+import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
+import input.comprehensible.ui.storylist.StoryListRoute
+import input.comprehensible.ui.storyreader.StoryReaderRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -31,17 +34,17 @@ class ComprehensibleInputTestScope(
 
     fun goToStoryList() {
         launchAppUi()
-        navController.navigate("storyList")
+        navController.navigate(StoryListRoute)
     }
 
     fun goToStoryReader(id: String) {
         launchAppUi()
-        navController.navigate("storyReader/$id")
+        navController.navigate(StoryReaderRoute(storyId = id))
     }
 
     fun goToSoftwareLicences() {
         launchAppUi()
-        navController.navigate("softwareLicences")
+        navController.navigate(SoftwareLicencesRoute)
     }
 
     fun runCurrent() {
