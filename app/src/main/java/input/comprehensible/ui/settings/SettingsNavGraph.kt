@@ -3,21 +3,22 @@ package input.comprehensible.ui.settings
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
-import input.comprehensible.ui.settings.settings.SETTINGS_SCREEN_ROUTE
+import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.settings.settingsScreen
-import input.comprehensible.ui.settings.softwarelicences.navigateToSoftwareLicences
+import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.settings.softwarelicences.softwareLicences
+import kotlinx.serialization.Serializable
 
-internal const val SETTINGS_ROUTE = "settings_graph"
+@Serializable
+data object SettingsGraphRoute
 
 internal fun NavGraphBuilder.settingsNavGraph(navController: NavController) {
-    navigation(
-        route = SETTINGS_ROUTE,
-        startDestination = SETTINGS_SCREEN_ROUTE,
+    navigation<SettingsGraphRoute>(
+        startDestination = SettingsRoute,
     ) {
         settingsScreen(
             onNavigateUp = navController::navigateUp,
-            onGoToSoftwareLicences = navController::navigateToSoftwareLicences,
+            onGoToSoftwareLicences = { navController.navigate(SoftwareLicencesRoute) },
         )
         softwareLicences(
             onNavigateUp = navController::navigateUp,
