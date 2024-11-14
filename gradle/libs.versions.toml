@@ -22,6 +22,7 @@ aboutLibraries = "11.2.3"
 roborazzi = "1.29.0"
 adaptiveAndroid = "1.1.0-alpha05"
 dataStore = "1.1.1"
+room = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,12 @@ roborazzi-core = { group = "io.github.takahirom.roborazzi", name = "roborazzi", 
 roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
 roborazzi-junit = { group = "io.github.takahirom.roborazzi", name = "roborazzi-junit-rule", version.ref = "roborazzi" }
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+[bundles]
+androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
