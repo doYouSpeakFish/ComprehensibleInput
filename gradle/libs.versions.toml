@@ -20,7 +20,7 @@ navigationTesting = "2.8.3"
 serialization-json = "1.7.3"
 aboutLibraries = "11.2.3"
 roborazzi = "1.32.2"
-adaptiveAndroid = "1.1.0-alpha06"
+adaptiveAndroid = "1.1.0-alpha07"
 dataStore = "1.1.1"
 
 [libraries]
