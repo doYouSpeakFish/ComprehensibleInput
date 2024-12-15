@@ -3,7 +3,9 @@ package input.comprehensible.ui.storyreader
 import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import input.comprehensible.data.stories.StoriesRepository
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,9 +28,14 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class StoryReaderViewModel @Inject constructor(
+    private val storiesRepository: StoriesRepository,
     getStoryUseCase: GetStoryUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val id: String = requireNotNull(savedStateHandle["storyId"]) {
+        "Story opened without an explicit story ID"
+    }
+
     private val story: Flow<Story?> = savedStateHandle
         .getStateFlow<String?>("storyId", null)
         .transformLatest { id ->
@@ -66,6 +74,7 @@ class StoryReaderViewModel @Inject constructor(
                             areTranslationsEnabled = selectedSentence?.isTranslated == true,
                         )
                     },
+                storyPosition = story.currentStoryElementIndex,
             )
         }
     }
@@ -80,6 +89,19 @@ class StoryReaderViewModel @Inject constructor(
             } else {
                 SelectedText.Title(isTranslated = true)
             }
+        }
+    }
+
+    /**
+     * Persists the current story location, so if the story is closed, it can be resumed from this
+     * point.
+     */
+    fun onStoryLocationUpdated(storyPartIndex: Int) {
+        viewModelScope.launch {
+            storiesRepository.updateStoryPosition(
+                id = id,
+                position = storyPartIndex
+            )
         }
     }
 
@@ -144,7 +166,7 @@ class StoryReaderViewModel @Inject constructor(
             val sameParagraph = selectedSentence?.paragraphIndex == paragraphIndex
             val sameSentence = selectedSentence?.selectedSentenceIndex == sentenceIndex
             if (sameParagraph && sameSentence) {
-                return@update selectedSentence?.copy(isTranslated = !selectedText.isTranslated)
+                return@update selectedSentence.copy(isTranslated = !selectedText.isTranslated)
             }
 
             SelectedText.SentenceInParagraph(

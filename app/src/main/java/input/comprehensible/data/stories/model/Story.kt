@@ -10,6 +10,7 @@ data class Story(
     val title: String,
     val translatedTitle: String,
     val content: List<StoryElement>,
+    val currentStoryElementIndex: Int,
 )
 
 /**

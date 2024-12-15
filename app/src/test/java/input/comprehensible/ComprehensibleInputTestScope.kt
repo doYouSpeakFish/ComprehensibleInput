@@ -47,6 +47,10 @@ class ComprehensibleInputTestScope(
         navController.navigate(SoftwareLicencesRoute)
     }
 
+    fun navigateBack() {
+        navController.popBackStack()
+    }
+
     fun runCurrent() {
         testScope.runCurrent()
     }
