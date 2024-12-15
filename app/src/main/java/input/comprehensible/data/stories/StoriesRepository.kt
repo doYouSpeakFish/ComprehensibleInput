@@ -6,6 +6,8 @@ import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
+import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
+import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class StoriesRepository @Inject constructor(
     private val storiesLocalDataSource: StoriesLocalDataSource,
+    private val storiesInfoLocalDataSource: StoriesInfoLocalDataSource,
 ) {
 
     suspend fun storiesList(
@@ -65,6 +68,11 @@ class StoriesRepository @Inject constructor(
         learningLanguage: String,
         translationsLanguage: String
     ): Story? {
+        val storyInfo = storiesInfoLocalDataSource.getStory(id)
+            ?: StoryEntity(id = id, position = 0).also {
+                // First time story opened. Insert info into db so this story can be tracked
+                storiesInfoLocalDataSource.insertStory(story = it)
+            }
         val storyData = storiesLocalDataSource.getStory(
             id = id,
             language = learningLanguage
@@ -83,7 +91,14 @@ class StoriesRepository @Inject constructor(
             id = id,
             translation = translatedStoryData,
             learningLanguage = learningLanguage,
-            translationsLanguage = translationsLanguage
+            translationsLanguage = translationsLanguage,
+            position = storyInfo.position,
+        )
+    }
+
+    suspend fun updateStoryPosition(id: String, position: Int) {
+        storiesInfoLocalDataSource.updateStory(
+            story = StoryEntity(id = id, position = position)
         )
     }
 
@@ -91,7 +106,8 @@ class StoriesRepository @Inject constructor(
         id: String,
         translation: StoryData,
         learningLanguage: String,
-        translationsLanguage: String
+        translationsLanguage: String,
+        position: Int,
     ): Story? {
         return Story(
             id = id,
@@ -106,7 +122,8 @@ class StoriesRepository @Inject constructor(
                         learningLanguage = learningLanguage,
                         translationsLanguage = translationsLanguage,
                     ) ?: return null
-                }
+                },
+            currentStoryElementIndex = position,
         )
     }
 

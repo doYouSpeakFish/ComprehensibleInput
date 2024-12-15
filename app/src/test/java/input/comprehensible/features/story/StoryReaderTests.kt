@@ -166,4 +166,34 @@ class StoryReaderTests {
             captureScreenRoboImage("screenshots/english_title_to_german.png")
         }
     }
+
+    @Test
+    fun `Partially read story opens at correct position`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        val sentence = story.paragraphs[3].germanSentences[9]
+
+        // GIVEN a story is open
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // AND half of the story is read
+            skipToSentence(sentence = sentence)
+            awaitIdle()
+            // AND the story is closed
+            navigateBack()
+            awaitIdle()
+        }
+
+        // WHEN the story is re-opened
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // THEN the midpoint of the story is shown
+            assertStoryTextIsVisible(sentence = sentence)
+        }
+    }
 }
