@@ -1,14 +1,14 @@
 [versions]
-agp = "8.7.1"
+agp = "8.7.3"
 kotlin = "2.0.21"
-coreKtx = "1.13.1"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntime = "2.8.6"
+lifecycleRuntime = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.00"
-composeNavigation = "2.8.3"
+composeBom = "2024.11.00"
+composeNavigation = "2.8.4"
 composeScreenshots = "0.0.1-alpha07"
 robolectric = "4.13"
 hilt = "2.52"
@@ -16,11 +16,11 @@ hiltNavigationCompose = "1.2.0"
 coroutines = "1.9.0"
 timber = "5.0.1"
 appcompat = "1.7.0"
-navigationTesting = "2.8.3"
+navigationTesting = "2.8.4"
 serialization-json = "1.7.3"
 aboutLibraries = "11.2.3"
-roborazzi = "1.29.0"
-adaptiveAndroid = "1.1.0-alpha05"
+roborazzi = "1.34.0"
+adaptiveAndroid = "1.1.0-alpha07"
 dataStore = "1.1.1"
 room = "2.6.1"
 
@@ -74,5 +74,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-test-screenshots = { id = "com.android.compose.screenshot", version.ref = "composeScreenshots" }
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
-ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.25" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.28" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
