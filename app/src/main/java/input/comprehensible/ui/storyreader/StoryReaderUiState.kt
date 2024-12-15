@@ -18,5 +18,6 @@ sealed interface StoryReaderUiState {
         val title: String,
         val isTitleHighlighted: Boolean,
         val content: List<StoryContentPartUiState>,
+        val storyPosition: Int,
     ) : StoryReaderUiState
 }

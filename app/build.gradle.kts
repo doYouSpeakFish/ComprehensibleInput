@@ -103,8 +103,10 @@ dependencies {
     implementation(libs.aboutLibraries.compose)
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.dataStore)
+    implementation(libs.bundles.androidx.room)
 
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

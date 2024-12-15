@@ -7,7 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,10 +20,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -35,6 +39,8 @@ import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
  * A screen for reading a story.
@@ -48,6 +54,7 @@ fun StoryReader(
     StoryReader(
         modifier = modifier,
         onTitleClicked = viewModel::onTitleSelected,
+        onStoryPartVisible = viewModel::onStoryLocationUpdated,
         state = state,
     )
 }
@@ -56,6 +63,7 @@ fun StoryReader(
 private fun StoryReader(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
+    onStoryPartVisible: (index: Int) -> Unit,
     state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
@@ -71,6 +79,7 @@ private fun StoryReader(
                 is StoryReaderUiState.Loaded -> StoryContent(
                     state = state,
                     onTitleClicked = onTitleClicked,
+                    onStoryPartVisible = onStoryPartVisible,
                 )
             }
         }
@@ -81,31 +90,51 @@ private fun StoryReader(
 private fun StoryContent(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
+    onStoryPartVisible: (index: Int) -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
+    val isExplainerShownAtStart = timesExplainerTapped < 11
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = if (state.storyPosition == 0 ) {
+            0
+        } else {
+            state.storyPosition + 1 // Accounts for header
+        }
+    )
+    LaunchedEffect(Unit) {
+        snapshotFlow { listState.firstVisibleItemIndex }
+            .conflate()
+            .distinctUntilChanged()
+            .collect { currentItemIndex ->
+                val currentStoryPart = (currentItemIndex - 1) // Don't count header item
+                    .coerceAtLeast(0)
+                onStoryPartVisible(currentStoryPart)
+            }
+    }
     Box(modifier) {
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize(),
-            state = rememberLazyListState(),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                Title(
-                    onTitleClicked = onTitleClicked,
-                    title = state.title,
-                    isTitleHighlighted = state.isTitleHighlighted,
-                )
-            }
-            item {
-                AnimatedVisibility(timesExplainerTapped < 11) {
-                    TranslateExplainer(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        onExplainerTapped = { timesExplainerTapped++ },
-                        timesExplainerTapped = timesExplainerTapped,
+                Column {
+                    Title(
+                        onTitleClicked = onTitleClicked,
+                        title = state.title,
+                        isTitleHighlighted = state.isTitleHighlighted,
                     )
+                    Spacer(Modifier.height(8.dp))
+                    AnimatedVisibility(isExplainerShownAtStart) {
+                        TranslateExplainer(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            onExplainerTapped = { timesExplainerTapped++ },
+                            timesExplainerTapped = timesExplainerTapped,
+                        )
+                    }
                 }
             }
             items(state.content) {
@@ -113,7 +142,7 @@ private fun StoryContent(
                     state = it,
                 )
             }
-            if (timesExplainerTapped > 10) {
+            if (!isExplainerShownAtStart) {
                 item {
                     TranslateExplainer(
                         modifier = Modifier.padding(vertical = 16.dp),
@@ -180,6 +209,7 @@ fun StoryReaderPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
+            onStoryPartVisible = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = false,
@@ -190,6 +220,7 @@ fun StoryReaderPreview() {
                         selectedTextRange = null
                     )
                 ),
+                storyPosition = 0,
             )
         )
     }
@@ -201,6 +232,7 @@ fun StoryReaderTranslationPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
+            onStoryPartVisible = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = true,
@@ -211,6 +243,7 @@ fun StoryReaderTranslationPreview() {
                         selectedTextRange = null
                     )
                 ),
+                storyPosition = 0,
             )
         )
     }
