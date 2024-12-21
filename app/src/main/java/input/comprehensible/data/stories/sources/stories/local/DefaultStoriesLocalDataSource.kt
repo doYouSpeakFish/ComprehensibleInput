@@ -54,4 +54,8 @@ class DefaultStoriesLocalDataSource @Inject constructor(
             .open("stories/$storyId/$path")
             .use { BitmapFactory.decodeStream(it) }
     }
+
+    override suspend fun importStory(): StoryData? {
+        TODO("Not yet implemented")
+    }
 }

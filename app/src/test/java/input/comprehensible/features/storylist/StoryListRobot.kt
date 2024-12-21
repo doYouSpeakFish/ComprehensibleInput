@@ -79,6 +79,10 @@ class StoryListRobot(
             .onNodeWithText(title)
             .assertExists()
     }
+
+    fun importStory() {
+        TODO("Not yet implemented")
+    }
 }
 
 suspend fun ComprehensibleInputTestScope.onStoryList(

@@ -158,4 +158,24 @@ class StoryListTests {
             assertStoryTextIsVisible(stories.first().paragraphs.first().spanishSentences)
         }
     }
+
+    @Test
+    fun `Imported stories show up in the stories list`() = testRule.runTest {
+        // GIVEN a story available in German, English, and Spanish
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        // WHEN the user imports a story
+        val importedStory = SampleStoriesData.importedStory
+        importStory(story = importedStory)
+        awaitIdle()
+        // AND the story list is shown
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // THEN the imported story is shown in the list
+            assertStoryTitleIsVisible(importedStory.germanTitle)
+        }
+    }
 }

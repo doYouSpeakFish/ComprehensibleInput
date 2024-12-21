@@ -27,6 +27,8 @@ interface StoriesLocalDataSource {
      * Loads an image from the assets folder.
      */
     suspend fun loadStoryImage(storyId: String, path: String): Bitmap
+
+    suspend fun importStory(): StoryData?
 }
 
 
