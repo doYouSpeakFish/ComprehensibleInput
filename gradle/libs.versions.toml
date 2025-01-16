@@ -21,7 +21,7 @@ serialization-json = "1.8.0"
 aboutLibraries = "11.4.0"
 roborazzi = "1.39.0"
 adaptiveAndroid = "1.1.0-alpha08"
-dataStore = "1.1.1"
+dataStore = "1.1.2"
 room = "2.6.1"
 
 [libraries]
