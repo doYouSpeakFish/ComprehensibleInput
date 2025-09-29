@@ -49,6 +49,19 @@ class StoryReaderTests {
     lateinit var storiesData: StoriesTestData
 
     @Test
+    fun `story reader screenshot`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        goToStoryReader(stories.first().id)
+        awaitIdle()
+
+        onStoryReader {
+            captureScreenRoboImage("screenshots/story-reader-screen.png")
+        }
+    }
+
+    @Test
     fun `story title is shown`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
         storiesData.setLocalStories(stories)

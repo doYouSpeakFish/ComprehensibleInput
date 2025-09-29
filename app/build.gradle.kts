@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -7,7 +8,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutLibraries)
-    alias(libs.plugins.compose.test.screenshots)
     alias(libs.plugins.ksp)
     alias(libs.plugins.roborazzi)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
@@ -19,12 +19,12 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
     namespace = "input.comprehensible"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "in.comprehensible"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 7
         versionName = "0.5.0"
 
@@ -57,8 +57,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
+        }
     }
     buildFeatures {
         compose = true
@@ -69,7 +71,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -78,8 +79,6 @@ android {
             }
         }
     }
-    @Suppress("UnstableApiUsage")
-    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 dependencies {
@@ -127,6 +126,4 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    screenshotTestImplementation(libs.androidx.ui.tooling)
 }
