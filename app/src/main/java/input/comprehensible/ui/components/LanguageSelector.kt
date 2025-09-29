@@ -43,9 +43,9 @@ import input.comprehensible.util.DefaultPreview
  */
 enum class LanguageSelection(
     val languageCode: String,
-    @DrawableRes val flag: Int,
-    @StringRes val languageName: Int,
-    @StringRes val contentDescription: Int,
+    @param:DrawableRes val flag: Int,
+    @param:StringRes val languageName: Int,
+    @param:StringRes val contentDescription: Int,
 ) {
     SPANISH(
         languageCode = "es",

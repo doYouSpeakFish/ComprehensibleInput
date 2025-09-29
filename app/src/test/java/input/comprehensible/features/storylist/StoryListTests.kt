@@ -1,6 +1,8 @@
 package input.comprehensible.features.storylist
 
 import android.os.Build
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.github.takahirom.roborazzi.captureScreenRoboImage
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
@@ -13,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
@@ -23,12 +26,27 @@ import javax.inject.Inject
     application = HiltTestApplication::class,
     qualifiers = "w360dp-h640dp-mdpi",
 )
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class StoryListTests {
     @get:Rule
     val testRule = ComprehensibleInputTestRule(this)
 
     @Inject
     lateinit var storiesData: StoriesTestData
+
+    @OptIn(ExperimentalRoborazziApi::class)
+    @Test
+    fun `story list screenshot`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            captureScreenRoboImage("screenshots/story-list-screen.png")
+        }
+    }
 
     @Test
     fun `first story can be selected`() = testRule.runTest {
