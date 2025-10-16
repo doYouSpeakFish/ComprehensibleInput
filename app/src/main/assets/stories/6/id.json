@@ -1,0 +1,75 @@
+{
+  "id": "6",
+  "title": "Pohon Tua",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Semuanya dimulai ketika saya masih benih kecil.",
+        "Seekor burung telah membawaku jauh dari orang tuaku dan menyembunyikanku di tanah lunak.",
+        "Segera saya mulai tumbuh.",
+        "Matahari menghangatkanku, dan hujan memberiku minuman."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Sebuah bibit yang tumbuh dari tanah.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Tahun-tahun berlalu, dan saya menjadi lebih besar dan lebih kuat.",
+        "Anak-anak datang dan bermain di bawah dahan saya, dan saya mendengar tawa mereka.",
+        "Kadang-kadang mereka memanjat tinggi dan membangun rumah-rumah kecil di dahan-dahanku.",
+        "Saya merasa senang bisa memberi mereka kegembiraan."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Sebuah pohon besar dengan rumah pohon di cabang-cabangnya. Anak-anak berlarian penuh semangat menuju pohon itu.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Seiring bertambahnya usia, dunia di sekitar saya berubah.",
+        "Bangunan-bangunan baru didirikan, dan lanskap berubah.",
+        "Saya melihat kuda digantikan oleh mobil, dan lampu kota semakin terang.",
+        "Namun melalui semua perubahan itu, saya tetap menjadi saksi bisu perjalanan waktu."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Cakrawala kota terlihat melalui cabang-cabang pohon.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Di tahun-tahun terbaik saya, saya adalah rumah bagi banyak burung dan hewan kecil.",
+        "Mereka mencari perlindungan di dedaunan saya dan memakan buah-buahan yang saya hasilkan.",
+        "Saya bangga menjadi bagian dari siklus kehidupan."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Seekor tupai meringkuk di sarang burung. Tupai lain duduk di latar belakang dahan sambil memakan kacang.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Sekarang saya sudah sangat tua.",
+        "Kulit pohonku retak, dan ranting-rantingku tidak lagi sekuat dulu.",
+        "Namun Aku tetap berdiri di sini, dan Aku menawarkan keteduhan dan kenyamanan bagi mereka yang mencarinya.",
+        "Saya harap saya akan berdiri di sini selama bertahun-tahun lagi, untuk menceritakan kisah-kisah kehidupan."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Sebuah pohon tua berbonggol-bonggol berdiri kokoh.",
+      "path": "5"
+    }
+  ]
+}

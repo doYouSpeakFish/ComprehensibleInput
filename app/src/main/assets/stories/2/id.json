@@ -1,0 +1,88 @@
+{
+  "id": "2",
+  "title": "Tidak Berhenti di Mars",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Hari ini adalah hari yang istimewa.",
+        "Saya orang pertama yang berdiri di Phobos, bulan kecil Mars.",
+        "Saya berdiri di sini dengan pakaian antariksa dan melihat ke planet merah.",
+        "Mars sangat besar dan indah.",
+        "Warnanya intens – merah dan oranye terang.",
+        "Sungguh pemandangan yang luar biasa."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Seorang astronot berdiri dengan permukaan merah Phobos dan planet merah Mars terpantul di pelindung pakaian antariksanya.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Namun di hati saya juga ada sedikit kesedihan.",
+        "Saya tidak akan pernah bisa berjalan di Mars sendiri.",
+        "Misi ini hanya untuk Phobos.",
+        "Tapi saya juga bersemangat.",
+        "Phobos adalah tempat yang misterius, dan saya orang pertama yang menjelajahinya."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Gravitasi di sini sangat rendah.",
+        "Saya merasa ringan dan bisa melompat tinggi.",
+        "Setiap langkah terasa aneh, hampir seperti terbang.",
+        "Itu menyenangkan dan membuatku bahagia."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Seorang astronot melompat tinggi ke udara di permukaan berbatu Phobos. Langit di atas penuh dengan bintang.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Kita hanya punya dua puluh hari di Phobos.",
+        "Para ilmuwan dan insinyur telah bekerja keras untuk mempersingkat perjalanan ini.",
+        "Tidak terlalu berbahaya dengan cara itu.",
+        "Saya ingin menemukan banyak hal dalam waktu singkat ini."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Saya juga menantikan untuk pulang.",
+        "Aku rindu awan dan hujan.",
+        "Saya membayangkan berdiri di bawah langit biru lagi dan merasakan air di kulit saya."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Seorang astronot dengan hujan dan awan di helmnya, menunjukkan pemikirannya tentang Bumi.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Namun kini, di Phobos, saatnya berpetualang.",
+        "Ada banyak hal yang harus dilakukan.",
+        "Saya mengambil langkah pertama saya dan memulai pekerjaan saya.",
+        "Ini adalah momen besar – bagi saya dan semua orang di Bumi."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Seorang astronot berjalan dengan sengaja melintasi permukaan berbatu Phobos, dengan latar belakang Mars.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Akhir"
+      ]
+    }
+  ]
+}

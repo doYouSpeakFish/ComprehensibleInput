@@ -1,0 +1,85 @@
+{
+  "id": "5",
+  "title": "Hari Ajaib",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Suatu ketika, pada suatu pagi yang biasa, sesuatu yang luar biasa terjadi: keajaiban tiba-tiba menjadi nyata!",
+        "Orang-orang di jalan hampir tidak percaya dengan apa yang terjadi.",
+        "Mereka melihat anak-anak melayang di udara dan anjing-anjing yang dapat berbicara!"
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Empat anak dan seekor anjing memegang tongkat sihir berkilau. Anak-anak tersenyum dan mereka bertiga melayang di udara.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Di sebuah desa kecil, hari dimulai seperti hari lainnya.",
+        "Tapi kemudian orang-orang mulai merapal mantra.",
+        "Seorang anak laki-laki mengubah apelnya menjadi emas, dan seorang wanita membuat bunga tumbuh dari tangannya."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Seorang anak laki-laki mengulurkan apel emas kepada seorang gadis yang memiliki bunga di rambutnya.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Para ilmuwan bingung namun bersemangat.",
+        "Mereka selalu mengira bahwa keajaiban hanya ada dalam dongeng.",
+        "Sekarang mereka mempunyai kesempatan untuk mempelajari hal yang mustahil."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Para ilmuwan berjas lab dan berkacamata melihat bola kristal bercahaya.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Tapi tidak semuanya sempurna.",
+        "Beberapa orang menggunakan sihir untuk bercanda, dan itu menimbulkan masalah.",
+        "Mobil terbang di udara, dan beberapa bangunan berubah warna!"
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Mobil dan bus terbang di udara. Bangunan-bangunan di latar belakangnya sangat berwarna.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Kemudian, tiba-tiba ketika keajaiban itu datang, keajaiban itu menghilang lagi.",
+        "Keesokan harinya, semuanya kembali normal.",
+        "Orang-orang sudah lama membicarakan tentang hari ajaib itu, tetapi tidak ada yang tahu mengapa hal itu terjadi atau apakah hal itu akan terjadi lagi."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Sekelompok orang memandang dengan heran ke langit malam.",
+      "path": "5"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Hari itu menunjukkan kepada kita bahwa hidup ini penuh kejutan.",
+        "Terkadang terjadi hal-hal yang tidak pernah kita bayangkan.",
+        "Dan mungkin, mungkin saja, keajaiban ada di luar sana, menunggu saat yang tepat untuk menjadi kenyataan lagi."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Akhir"
+      ]
+    }
+  ]
+}
