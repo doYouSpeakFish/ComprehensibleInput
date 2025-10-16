@@ -71,6 +71,18 @@ enum class LanguageSelection(
         languageName = R.string.language_selector_fr_language_name,
         contentDescription = R.string.language_selector_fr_content_description,
     ),
+    PORTUGUESE(
+        languageCode = "pt",
+        flag = R.drawable.pt_flag,
+        languageName = R.string.language_selector_pt_language_name,
+        contentDescription = R.string.language_selector_pt_content_description,
+    ),
+    INDONESIAN(
+        languageCode = "id",
+        flag = R.drawable.id_flag,
+        languageName = R.string.language_selector_id_language_name,
+        contentDescription = R.string.language_selector_id_content_description,
+    ),
 }
 
 /**

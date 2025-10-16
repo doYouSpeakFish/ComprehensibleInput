@@ -10,10 +10,14 @@
     <string name="language_selector_de_content_description">Seleccionar alemán</string>
     <string name="language_selector_es_content_description">Seleccionar español</string>
     <string name="language_selector_fr_content_description">Seleccionar francés</string>
+    <string name="language_selector_pt_content_description">Seleccionar portugués</string>
+    <string name="language_selector_id_content_description">Seleccionar indonesio</string>
     <string name="language_selector_en_language_name">Inglés</string>
     <string name="language_selector_de_language_name">Alemán</string>
     <string name="language_selector_es_language_name">Español</string>
     <string name="language_selector_fr_language_name">Francés</string>
+    <string name="language_selector_pt_language_name">Portugués</string>
+    <string name="language_selector_id_language_name">Indonesio</string>
     <string name="language_selector_select_learning_language_content_description">Selecciona un idioma para aprender. Actualmente aprendiendo %1$s</string>
     <string name="language_selector_select_translation_language_content_description">Selecciona un idioma para traducciones. Actualmente traduciendo al %1$s</string>
     <string name="top_bar_language_picker_translations_label">Traducciones</string>

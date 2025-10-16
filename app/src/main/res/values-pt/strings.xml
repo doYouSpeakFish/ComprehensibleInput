@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">ComprehensibleInput</string>
+    <string name="navigate_up">Voltar</string>
+    <string name="settings_button_description">Configurações</string>
+    <string name="settings_screen_title">Configurações</string>
+    <string name="settings_item_software_licences">Licenças de software</string>
+    <string name="software_licences_screen_title">Licenças de software</string>
+    <string name="stories_screen_title">Histórias</string>
+    <string name="language_selector_en_content_description">Selecionar inglês</string>
+    <string name="language_selector_de_content_description">Selecionar alemão</string>
+    <string name="language_selector_es_content_description">Selecionar espanhol</string>
+    <string name="language_selector_fr_content_description">Selecionar francês</string>
+    <string name="language_selector_pt_content_description">Selecionar português</string>
+    <string name="language_selector_id_content_description">Selecionar indonésio</string>
+    <string name="language_selector_en_language_name">Inglês</string>
+    <string name="language_selector_de_language_name">Alemão</string>
+    <string name="language_selector_es_language_name">Espanhol</string>
+    <string name="language_selector_fr_language_name">Francês</string>
+    <string name="language_selector_pt_language_name">Português</string>
+    <string name="language_selector_id_language_name">Indonésio</string>
+    <string name="language_selector_select_learning_language_content_description">Selecione um idioma para aprender. Atualmente aprendendo %1$s</string>
+    <string name="language_selector_select_translation_language_content_description">Selecione um idioma para traduções. Atualmente traduzindo para %1$s</string>
+    <string name="top_bar_language_picker_translations_label">Traduções</string>
+    <string name="top_bar_language_picker_learning_label">Aprendizado</string>
+    <string-array name="story_reader_tap_to_translate_explainer">
+        <item>Toque em qualquer frase para traduzi-la</item>
+        <item>Bem, quase qualquer frase</item>
+        <item>Você também pode tocar no título</item>
+        <item>Sério, pare de tocar nesta frase</item>
+        <item>Ela não vai traduzir</item>
+        <item>O que você quer de mim?!</item>
+        <item>Tudo bem, desativei as traduções</item>
+        <item>Brincadeira, não posso fazer isso</item>
+        <item>Sou apenas uma frase em uma caixa</item>
+        <item>Último aviso</item>
+        <item />
+        <item>Você me encontrou de novo!</item>
+        <item>Eu desisto</item>
+        <item>Você venceu</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
+</resources>

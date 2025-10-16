@@ -1,0 +1,88 @@
+{
+  "id": "2",
+  "title": "Sem parada em Marte",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Hoje é um dia especial.",
+        "Sou a primeira pessoa a pisar em Fobos, uma pequena lua de Marte.",
+        "Estou aqui com meu traje espacial e olho para o planeta vermelho.",
+        "Marte é tão grande e lindo.",
+        "As cores são intensas – vermelho e laranja claro.",
+        "É uma visão incrível."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Um astronauta com a superfície vermelha de Fobos e o planeta vermelho Marte refletidos na viseira do seu traje espacial.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mas no meu coração também há um pouco de tristeza.",
+        "Nunca poderei andar em Marte.",
+        "Esta missão é apenas para Fobos.",
+        "Mas também estou animado.",
+        "Fobos é um lugar misterioso e sou o primeiro a explorá-lo."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "A gravidade aqui é muito baixa.",
+        "Sinto-me leve e posso pular alto.",
+        "Cada passo parece estranho, quase como voar.",
+        "É divertido e me deixa feliz."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Um astronauta salta alto na superfície rochosa de Fobos. O céu acima está cheio de estrelas.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Só temos vinte dias em Fobos.",
+        "Os cientistas e engenheiros trabalharam arduamente para tornar a viagem curta.",
+        "É menos perigoso assim.",
+        "Quero descobrir muito neste curto espaço de tempo."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Também estou ansioso para voltar para casa.",
+        "Sinto falta das nuvens e da chuva.",
+        "Imagino-me novamente sob um céu azul e sentindo a água na pele."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Um astronauta com chuva e nuvens no capacete, mostrando seus pensamentos sobre a Terra.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mas agora, aqui em Fobos, é hora de aventura.",
+        "Há muito o que fazer.",
+        "Dou meu primeiro passo e começo meu trabalho.",
+        "É um grande momento – para mim e para todas as pessoas na Terra."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Um astronauta caminha propositalmente pela superfície rochosa de Fobos, com Marte ao fundo.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "O fim"
+      ]
+    }
+  ]
+}
