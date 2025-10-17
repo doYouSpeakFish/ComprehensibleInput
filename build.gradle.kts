@@ -42,6 +42,21 @@ tasks.withType<Detekt>().configureEach {
 
 configure<KoverProjectExtension> {
     useJacoco()
+    reports {
+        filters {
+            excludes {
+                packages(
+                    "input.comprehensible.data.stories.sources",
+                    "input.comprehensible.data.languages.sources",
+                )
+                classes(
+                    "input.comprehensible.App",
+                    "input.comprehensible.MainActivity",
+                    "input.comprehensible.data.AppDb",
+                )
+            }
+        }
+    }
 }
 
 subprojects {
