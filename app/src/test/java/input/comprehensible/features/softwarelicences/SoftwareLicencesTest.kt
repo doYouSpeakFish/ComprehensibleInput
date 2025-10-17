@@ -30,7 +30,7 @@ class SoftwareLicencesTest {
     @Test
     fun `about libraries software licence is shown in the list`() = testRule.runTest {
         goToSoftwareLicences()
-        runCurrent()
+        awaitIdle()
 
         onSoftwareLicences {
             assertLicenceIsVisible("AboutLibraries Core Library")

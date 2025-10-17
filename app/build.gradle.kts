@@ -15,7 +15,12 @@ plugins {
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val hasKeystore = if (keystorePropertiesFile.exists()) {
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
+    true
+} else {
+    false
+}
 
 android {
     namespace = "input.comprehensible"
@@ -35,11 +40,13 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            storePassword = keystoreProperties["storePassword"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            keyAlias = keystoreProperties["keyAlias"] as String
-            storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+        if (hasKeystore) {
+            create("release") {
+                storePassword = keystoreProperties["storePassword"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+            }
         }
     }
 
@@ -50,7 +57,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (hasKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
