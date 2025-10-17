@@ -1,3 +1,4 @@
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -5,6 +6,12 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+}
+
+apply(plugin = "org.jetbrains.kotlinx.kover")
+
+configure<KoverProjectExtension> {
+    useJacoco()
 }
 
 android {

@@ -1,3 +1,4 @@
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
@@ -11,6 +12,12 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.roborazzi)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
+}
+
+apply(plugin = "org.jetbrains.kotlinx.kover")
+
+configure<KoverProjectExtension> {
+    useJacoco()
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")

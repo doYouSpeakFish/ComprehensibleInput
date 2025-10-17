@@ -1,6 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 import io.gitlab.arturbosch.detekt.Detekt
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
@@ -15,6 +17,7 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
 }
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -35,6 +38,10 @@ detekt {
 
 tasks.withType<Detekt>().configureEach {
     baseline.set(file("$rootDir/config/detekt/baseline.xml"))
+}
+
+configure<KoverProjectExtension> {
+    useJacoco()
 }
 
 subprojects {
