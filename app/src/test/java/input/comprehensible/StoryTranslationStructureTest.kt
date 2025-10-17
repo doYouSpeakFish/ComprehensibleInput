@@ -45,55 +45,182 @@ class StoryTranslationStructureTest {
                 path.fileName.toString() to parseStructure(path)
             }
 
-            val referenceEntry = structures.entries.first()
-            val referenceStructure = referenceEntry.value
-
-            structures.forEach { (translation, structure) ->
-                if (structure.size != referenceStructure.size) {
-                    failures += buildString {
-                        append("Story '")
-                        append(storyDir.fileName)
-                        append("' translation '")
-                        append(translation)
-                        append("' has ")
-                        append(structure.size)
-                        append(" content items but expected ")
-                        append(referenceStructure.size)
-                        append(" as in '")
-                        append(referenceEntry.key)
-                        append("'.")
-                    }
-                    return@forEach
-                }
-
-                structure.forEachIndexed { index, item ->
-                    val referenceItem = referenceStructure[index]
-                    if (item.type != referenceItem.type) {
-                        failures += "Story '${storyDir.fileName}' translation '$translation' content index $index type ${item.type} differs from ${referenceItem.type} in '${referenceEntry.key}'."
-                        return@forEachIndexed
-                    }
-
-                    when (item.type) {
-                        ContentType.IMAGE -> {
-                            if (item.imagePath != referenceItem.imagePath) {
-                                failures += "Story '${storyDir.fileName}' translation '$translation' image at index $index uses '${item.imagePath}' but expected '${referenceItem.imagePath}' from '${referenceEntry.key}'."
-                            }
-                        }
-
-                        ContentType.PARAGRAPH -> {
-                            if (item.sentenceCount != referenceItem.sentenceCount) {
-                                failures += "Story '${storyDir.fileName}' translation '$translation' paragraph at index $index has ${item.sentenceCount} sentences but expected ${referenceItem.sentenceCount} as in '${referenceEntry.key}'."
-                            }
-                        }
-                    }
-                }
-            }
+            failures += validateStoryTranslations(storyDir, structures)
         }
 
         if (failures.isNotEmpty()) {
             fail(failures.joinToString(separator = "\n"))
         }
     }
+
+    private fun validateStoryTranslations(
+        storyDir: Path,
+        structures: Map<String, List<ContentDescriptor>>
+    ): List<String> {
+        if (structures.isEmpty()) {
+            return emptyList()
+        }
+
+        val referenceEntry = structures.entries.first()
+        return structures.flatMap { (translation, structure) ->
+            collectTranslationFailures(
+                storyDir = storyDir,
+                translation = translation,
+                structure = structure,
+                referenceEntry = referenceEntry,
+            )
+        }
+    }
+
+    private fun collectTranslationFailures(
+        storyDir: Path,
+        translation: String,
+        structure: List<ContentDescriptor>,
+        referenceEntry: Map.Entry<String, List<ContentDescriptor>>
+    ): List<String> {
+        val referenceStructure = referenceEntry.value
+        val context = StoryTranslationContext(
+            storyDir = storyDir,
+            translation = translation,
+            referenceKey = referenceEntry.key,
+            referenceStructureSize = referenceStructure.size,
+        )
+        val failures = mutableListOf<String>()
+
+        if (structure.size != referenceStructure.size) {
+            failures += sizeMismatchMessage(
+                context = context,
+                structureSize = structure.size,
+            )
+            return failures
+        }
+
+        structure.forEachIndexed { index, item ->
+            val referenceItem = referenceStructure[index]
+            if (item.type != referenceItem.type) {
+                failures += typeMismatchMessage(
+                    context = context,
+                    index = index,
+                    actualType = item.type,
+                    referenceType = referenceItem.type,
+                )
+                return@forEachIndexed
+            }
+
+            when (item.type) {
+                ContentType.IMAGE -> {
+                    if (item.imagePath != referenceItem.imagePath) {
+                        failures += imagePathMismatchMessage(
+                            context = context,
+                            index = index,
+                            actualPath = item.imagePath,
+                            referencePath = referenceItem.imagePath,
+                        )
+                    }
+                }
+
+                ContentType.PARAGRAPH -> {
+                    if (item.sentenceCount != referenceItem.sentenceCount) {
+                        failures += sentenceCountMismatchMessage(
+                            context = context,
+                            index = index,
+                            actualCount = item.sentenceCount,
+                            referenceCount = referenceItem.sentenceCount,
+                        )
+                    }
+                }
+            }
+        }
+
+        return failures
+    }
+
+    private fun sizeMismatchMessage(
+        context: StoryTranslationContext,
+        structureSize: Int,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' has ")
+        append(structureSize)
+        append(" content items but expected ")
+        append(context.referenceStructureSize)
+        append(" as in '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private fun typeMismatchMessage(
+        context: StoryTranslationContext,
+        index: Int,
+        actualType: ContentType,
+        referenceType: ContentType,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' content index ")
+        append(index)
+        append(" type ")
+        append(actualType)
+        append(" differs from ")
+        append(referenceType)
+        append(" in '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private fun imagePathMismatchMessage(
+        context: StoryTranslationContext,
+        index: Int,
+        actualPath: String?,
+        referencePath: String?,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' image at index ")
+        append(index)
+        append(" uses '")
+        append(actualPath)
+        append("' but expected '")
+        append(referencePath)
+        append("' from '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private fun sentenceCountMismatchMessage(
+        context: StoryTranslationContext,
+        index: Int,
+        actualCount: Int?,
+        referenceCount: Int?,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' paragraph at index ")
+        append(index)
+        append(" has ")
+        append(actualCount)
+        append(" sentences but expected ")
+        append(referenceCount)
+        append(" as in '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private data class StoryTranslationContext(
+        val storyDir: Path,
+        val translation: String,
+        val referenceKey: String,
+        val referenceStructureSize: Int,
+    )
 
     private fun parseStructure(path: Path): List<ContentDescriptor> {
         val element = json.parseToJsonElement(path.readText())
@@ -146,3 +273,4 @@ class StoryTranslationStructureTest {
         PARAGRAPH
     }
 }
+

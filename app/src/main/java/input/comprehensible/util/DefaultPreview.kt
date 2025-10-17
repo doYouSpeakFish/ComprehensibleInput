@@ -9,4 +9,5 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 @PreviewScreenSizes
 @PreviewLightDark
 @Preview(showBackground = true)
-annotation class DefaultPreview()
+annotation class DefaultPreview
+

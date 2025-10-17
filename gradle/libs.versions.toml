@@ -23,6 +23,8 @@ adaptiveAndroid = "1.1.0"
 dataStore = "1.1.7"
 room = "2.8.1"
 icons = "1.7.8"
+detekt = "1.23.7"
+composeRules = "0.4.27"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,6 +65,8 @@ androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", nam
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
@@ -76,3 +80,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.3" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
