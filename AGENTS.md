@@ -12,3 +12,4 @@
 
 ## Testing
 - Invoke `./gradlew :app:testDebugUnitTest --tests "input.comprehensible.*" --console=plain` to execute the unit test suite used in CI.
+- Run `./gradlew detekt` before sending changes to ensure the codebase passes static analysis.

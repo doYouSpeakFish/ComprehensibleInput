@@ -1,0 +1,38 @@
+build:
+  maxIssues: 0
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+complexity:
+  LongParameterList:
+    ignoreDefaultParameters: true
+    ignoreAnnotated:
+      - Composable
+  LongMethod:
+    threshold: 100
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated:
+      - Composable
+  MatchingDeclarationName:
+    active: false
+
+style:
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreAnnotated:
+      - Composable
+      - Preview
+  UnusedPrivateMember:
+    ignoreAnnotated:
+      - Preview
+  UnusedPrivateProperty:
+    ignoreAnnotated:
+      - Preview
+  MaxLineLength:
+    maxLineLength: 140
+  ReturnCount:
+    max: 3
