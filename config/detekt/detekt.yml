@@ -29,9 +29,11 @@ style:
   UnusedPrivateMember:
     ignoreAnnotated:
       - Preview
+      - DefaultPreview
   UnusedPrivateProperty:
     ignoreAnnotated:
       - Preview
+      - DefaultPreview
   MaxLineLength:
     maxLineLength: 140
   ReturnCount:
