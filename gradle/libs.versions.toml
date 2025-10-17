@@ -23,6 +23,7 @@ adaptiveAndroid = "1.1.0"
 dataStore = "1.1.7"
 room = "2.8.1"
 icons = "1.7.8"
+firebase-bom = "33.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,6 +64,8 @@ androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", nam
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]

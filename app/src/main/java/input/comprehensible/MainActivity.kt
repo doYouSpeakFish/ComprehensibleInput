@@ -4,12 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import dagger.hilt.android.AndroidEntryPoint
+import input.comprehensible.analytics.AnalyticsLogger
+import input.comprehensible.analytics.LocalAnalyticsLogger
 import input.comprehensible.ui.ComprehensibleInputApp
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -19,7 +27,9 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            ComprehensibleInputApp()
+            CompositionLocalProvider(LocalAnalyticsLogger provides analyticsLogger) {
+                ComprehensibleInputApp()
+            }
         }
     }
 }

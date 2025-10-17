@@ -104,6 +104,8 @@ dependencies {
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.dataStore)
     implementation(libs.bundles.androidx.room)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
