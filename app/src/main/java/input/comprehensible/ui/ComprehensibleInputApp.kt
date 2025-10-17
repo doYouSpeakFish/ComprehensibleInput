@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import input.comprehensible.analytics.LocalAnalyticsLogger
+import input.comprehensible.analytics.logScreenView
 import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.settingsNavGraph
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -47,9 +48,7 @@ private fun DestinationChangeLogger(navController: NavHostController) {
     DisposableEffect(navController, analyticsLogger) {
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
             val route = destination.route ?: return@OnDestinationChangedListener
-            analyticsLogger.logEvent("navigation_destination_changed") {
-                putString("route", route)
-            }
+            analyticsLogger.logScreenView(route)
         }
 
         navController.addOnDestinationChangedListener(listener)
