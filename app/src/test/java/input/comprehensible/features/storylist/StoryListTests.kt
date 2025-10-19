@@ -7,6 +7,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
+import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.features.story.onStoryReader
 import input.comprehensible.runTest
@@ -33,6 +34,9 @@ class StoryListTests {
 
     @Inject
     lateinit var storiesData: StoriesTestData
+
+    @Inject
+    lateinit var fakeStoriesLocalDataSource: FakeStoriesLocalDataSource
 
     @OptIn(ExperimentalRoborazziApi::class)
     @Test
@@ -174,6 +178,96 @@ class StoryListTests {
             awaitIdle()
             // THEN translations are shown in Spanish
             assertStoryTextIsVisible(stories.first().paragraphs.first().spanishSentences)
+        }
+    }
+
+    @Test
+    fun `changing the translation language keeps learning separate`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            assertLearningLanguageIs("de")
+            assertTranslationLanguageIs("en")
+
+            setTranslationLanguage("de")
+            awaitIdle()
+
+            assertLearningLanguageIs("en")
+            assertTranslationLanguageIs("de")
+
+            selectStory(stories.first(), learningLanguage = "en")
+            awaitIdle()
+        }
+
+        val firstParagraph = stories.first().paragraphs.first()
+        onStoryReader {
+            assertStoryTitleIsShown(stories.first().englishTitle)
+            assertStoryTextIsVisible(firstParagraph.englishSentences)
+
+            tapOnSentence(firstParagraph.englishSentences.first())
+            awaitIdle()
+
+            assertStoryTextIsVisible(firstParagraph.germanSentences)
+        }
+    }
+
+    @Test
+    fun `changing the learning language keeps translations separate`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            setTranslationLanguage("es")
+            awaitIdle()
+
+            setLearningLanguage("es")
+            awaitIdle()
+
+            assertLearningLanguageIs("es")
+            assertTranslationLanguageIs("de")
+
+            selectStory(stories.first(), learningLanguage = "es")
+            awaitIdle()
+        }
+
+        val firstParagraph = stories.first().paragraphs.first()
+        onStoryReader {
+            assertStoryTitleIsShown(stories.first().spanishTitle)
+            assertStoryTextIsVisible(firstParagraph.spanishSentences)
+
+            tapOnSentence(firstParagraph.spanishSentences.first())
+            awaitIdle()
+
+            assertStoryTextIsVisible(firstParagraph.germanSentences)
+        }
+    }
+
+    @Test
+    fun `stories without translations are hidden from the list`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories.take(2)
+        storiesData.setLocalStories(stories)
+        fakeStoriesLocalDataSource.stories = fakeStoriesLocalDataSource.stories
+            .mapValues { (language, storyData) ->
+                if (language == "en") {
+                    storyData.filterNot { it.id == stories.first().id }
+                } else {
+                    storyData
+                }
+            }
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            assertStoryIsNotVisible(stories.first())
+            assertStoryTitleIsVisible(stories.last().germanTitle)
         }
     }
 }
