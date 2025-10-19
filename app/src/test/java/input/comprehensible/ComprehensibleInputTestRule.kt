@@ -3,6 +3,8 @@ package input.comprehensible
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.github.takahirom.roborazzi.RoborazziOptions
+import com.github.takahirom.roborazzi.RoborazziRule
 import comprehensible.test.TestActivity
 import dagger.Module
 import dagger.Provides
@@ -32,6 +34,16 @@ class ComprehensibleInputTestRule(private val testInstance: Any) : TestRule {
     lateinit var hiltAndroidRule: HiltAndroidRule
         private set
 
+    private val roborazziRule = RoborazziRule(
+        options = RoborazziRule.Options(
+            roborazziOptions = RoborazziOptions(
+                compareOptions = RoborazziOptions.CompareOptions(
+                    changeThreshold = 0.01f,
+                ),
+            ),
+        ),
+    )
+
     override fun apply(base: Statement, description: Description): Statement {
 
         val testSetupStatement = object : Statement() {
@@ -49,7 +61,7 @@ class ComprehensibleInputTestRule(private val testInstance: Any) : TestRule {
         hiltAndroidRule = HiltAndroidRule(testInstance)
         val hiltRuleStatement = hiltAndroidRule.apply(composeRuleStatement, description)
 
-        return hiltRuleStatement
+        return roborazziRule.apply(hiltRuleStatement, description)
     }
 }
 
