@@ -11,5 +11,8 @@
     ```
 
 ## Testing
-- Invoke `./gradlew :app:testDebugUnitTest --tests "input.comprehensible.*" --console=plain` to execute the unit test suite used in CI.
+- Invoke `./gradlew :app:testDebugUnitTest --tests "input.comprehensible.*" --console=plain` to execute the integration test suite used in CI. Tests should be written so non-programmers can read them comfortably: prefer descriptive test names, use `GIVEN/WHEN/THEN` comments, and avoid referencing internal implementation details such as view models or data sources.
 - Run `./gradlew detekt` before sending changes to ensure the codebase passes static analysis.
+- Run `./gradlew koverXmlReport --console=plain` to verify that the coverage report stays healthy.
+- New production code must either reach 100% line coverage or be explicitly excluded from coverage **only** when it represents a boundary that is faked in tests (for example, a platform API wrapper). Any excluded code that contains meaningful logic must have that logic extracted into a class that is, or becomes, unit tested.
+- Unit tests are only acceptable for the extracted logic mentioned above; all other behavior should be covered through user-facing integration tests.

@@ -74,4 +74,15 @@ class StoriesTestData @Inject constructor(
             "es" to spanishStories,
         )
     }
+
+    fun hideTranslationForStory(languageCode: String, story: TestStory) {
+        storiesLocalDataSource.stories = storiesLocalDataSource.stories
+            .mapValues { (language, storyData) ->
+                if (language == languageCode) {
+                    storyData.filterNot { it.id == story.id }
+                } else {
+                    storyData
+                }
+            }
+    }
 }
