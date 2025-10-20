@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import input.comprehensible.R
 import input.comprehensible.ui.components.topbar.SettingsTopBar
@@ -28,7 +30,11 @@ internal fun SoftwareLicences(
         }
     ) { paddingValues ->
         Column(Modifier.padding(paddingValues)) {
-            LibrariesContainer(Modifier.fillMaxSize())
+            val libraries by produceLibraries(R.raw.aboutlibraries)
+            LibrariesContainer(
+                modifier = Modifier.fillMaxSize(),
+                libraries = libraries,
+            )
         }
     }
 }
