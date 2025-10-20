@@ -1,0 +1,85 @@
+{
+  "id": "5",
+  "title": "Dia da Magia",
+  "content": [
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Certa vez, numa manhã completamente normal, algo incrível aconteceu: a magia de repente se tornou real!",
+        "As pessoas na rua mal conseguiam acreditar no que estava acontecendo.",
+        "Eles viram crianças flutuando no ar e cachorros que falavam!"
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Quatro crianças e um cachorro segurando varinhas mágicas brilhantes. As crianças estão sorrindo e três delas estão flutuando no ar.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Numa pequena aldeia, o dia começou como qualquer outro.",
+        "Mas então as pessoas começaram a lançar feitiços.",
+        "Um menino transformou sua maçã em ouro e uma mulher fez crescer flores em sua mão."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Um menino estende uma maçã dourada para uma menina que tem flores no cabelo.",
+      "path": "2"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Os cientistas ficaram confusos, mas entusiasmados.",
+        "Eles sempre pensaram que a magia só existia nos contos de fadas.",
+        "Agora eles tinham a oportunidade de estudar o impossível."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Cientistas em jalecos e óculos olhando para uma bola de cristal brilhante.",
+      "path": "3"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Mas nem tudo foi perfeito.",
+        "Algumas pessoas usaram a magia para pregar peças e isso causou problemas.",
+        "Carros voaram pelo ar e alguns prédios mudaram de cor!"
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Carros e ônibus voando pelo ar. Os edifícios ao fundo são muito coloridos.",
+      "path": "4"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Então, tão repentinamente quanto a magia surgiu, ela desapareceu novamente.",
+        "No dia seguinte, tudo voltou ao normal.",
+        "As pessoas falaram muito sobre o dia mágico, mas ninguém sabia por que isso aconteceu ou se aconteceria novamente."
+      ]
+    },
+    {
+      "type": "image",
+      "contentDescription": "Um grupo de pessoas olhando maravilhadas para o céu noturno.",
+      "path": "5"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Aquele dia nos mostrou que a vida é cheia de surpresas.",
+        "Às vezes acontecem coisas que nunca poderíamos ter imaginado.",
+        "E talvez, apenas talvez, a magia esteja em algum lugar, esperando o momento certo para se tornar realidade novamente."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "O fim"
+      ]
+    }
+  ]
+}

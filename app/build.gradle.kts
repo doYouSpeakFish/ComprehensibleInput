@@ -10,12 +10,56 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.ksp)
     alias(libs.plugins.roborazzi)
+    alias(libs.plugins.kover)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                packages(
+                    "input.comprehensible.data.stories.sources",
+                    "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.di",
+                    "hilt_aggregated_deps",
+                    "dagger.hilt.internal.aggregatedroot.codegen",
+                )
+                classes(
+                    "input.comprehensible.App",
+                    "input.comprehensible.MainActivity",
+                    "input.comprehensible.data.AppDb",
+                    "input.comprehensible.BuildConfig",
+                    "input.comprehensible.*.BuildConfig",
+                    "comprehensible.test.BuildConfig",
+                    "input.comprehensible.ComposableSingletons*",
+                    "input.comprehensible.data.AppDb_Impl",
+                    "input.comprehensible.data.languages.LanguagesDao_Impl",
+                    "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.AppDb_Impl*",
+                    "input.comprehensible.*.ComposableSingletons*",
+                    "input.comprehensible.*.*_Factory",
+                    "input.comprehensible.*.*_Provide*",
+                    "input.comprehensible.*.*_HiltModules*",
+                    "input.comprehensible.Hilt_*",
+                    "input.comprehensible.*.Hilt_*",
+                )
+                annotatedBy(
+                    "input.comprehensible.util.DefaultPreview",
+                    "androidx.compose.ui.tooling.preview.Preview",
+                    "dagger.Module",
+                )
+            }
+        }
+    }
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val hasKeystore = keystorePropertiesFile.exists()
+if (hasKeystore) {
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
+}
 
 android {
     namespace = "input.comprehensible"
@@ -35,11 +79,13 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            storePassword = keystoreProperties["storePassword"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            keyAlias = keystoreProperties["keyAlias"] as String
-            storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+        if (hasKeystore) {
+            create("release") {
+                storePassword = keystoreProperties["storePassword"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+            }
         }
     }
 
@@ -50,7 +96,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (hasKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {

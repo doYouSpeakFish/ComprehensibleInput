@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">ComprehensibleInput</string>
+    <string name="navigate_up">Navigasi ke atas</string>
+    <string name="settings_button_description">Pengaturan</string>
+    <string name="settings_screen_title">Pengaturan</string>
+    <string name="settings_item_software_licences">Lisensi perangkat lunak</string>
+    <string name="software_licences_screen_title">Lisensi perangkat lunak</string>
+    <string name="stories_screen_title">Cerita</string>
+    <string name="language_selector_en_content_description">Pilih bahasa Inggris</string>
+    <string name="language_selector_de_content_description">Pilih bahasa Jerman</string>
+    <string name="language_selector_es_content_description">Pilih bahasa Spanyol</string>
+    <string name="language_selector_fr_content_description">Pilih bahasa Prancis</string>
+    <string name="language_selector_pt_content_description">Pilih bahasa Portugis</string>
+    <string name="language_selector_id_content_description">Pilih bahasa Indonesia</string>
+    <string name="language_selector_en_language_name">Inggris</string>
+    <string name="language_selector_de_language_name">Jerman</string>
+    <string name="language_selector_es_language_name">Spanyol</string>
+    <string name="language_selector_fr_language_name">Prancis</string>
+    <string name="language_selector_pt_language_name">Portugis</string>
+    <string name="language_selector_id_language_name">Indonesia</string>
+    <string name="language_selector_select_learning_language_content_description">Pilih bahasa untuk dipelajari. Saat ini belajar %1$s</string>
+    <string name="language_selector_select_translation_language_content_description">Pilih bahasa untuk terjemahan. Saat ini menerjemahkan ke %1$s</string>
+    <string name="top_bar_language_picker_translations_label">Terjemahan</string>
+    <string name="top_bar_language_picker_learning_label">Pembelajaran</string>
+    <string-array name="story_reader_tap_to_translate_explainer">
+        <item>Ketuk kalimat apa pun untuk menerjemahkannya</item>
+        <item>Yah, hampir semua kalimat</item>
+        <item>Kamu juga bisa mengetuk judulnya</item>
+        <item>Serius, berhenti mengetuk kalimat ini</item>
+        <item>Kalimat ini tidak akan diterjemahkan</item>
+        <item>Apa yang kamu inginkan dariku?!</item>
+        <item>Baiklah, aku telah menonaktifkan terjemahan</item>
+        <item>Cuma bercanda, aku tidak bisa melakukan itu</item>
+        <item>Aku hanyalah sebuah kalimat dalam kotak</item>
+        <item>Peringatan terakhir</item>
+        <item />
+        <item>Kamu menemukanku lagi!</item>
+        <item>Aku menyerah</item>
+        <item>Kamu menang</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
+</resources>
