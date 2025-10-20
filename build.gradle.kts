@@ -1,8 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 import io.gitlab.arturbosch.detekt.Detekt
-import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
@@ -40,19 +38,34 @@ tasks.withType<Detekt>().configureEach {
     baseline.set(file("$rootDir/config/detekt/baseline.xml"))
 }
 
-configure<KoverProjectExtension> {
-    useJacoco()
+kover {
     reports {
         filters {
             excludes {
                 packages(
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.di",
+                    "hilt_aggregated_deps",
                 )
                 classes(
                     "input.comprehensible.App",
                     "input.comprehensible.MainActivity",
                     "input.comprehensible.data.AppDb",
+                    "input.comprehensible.BuildConfig",
+                    "input.comprehensible.*.BuildConfig",
+                    "comprehensible.test.BuildConfig",
+                    "input.comprehensible.ComposableSingletons*",
+                    "input.comprehensible.data.AppDb_Impl",
+                    "input.comprehensible.data.languages.LanguagesDao_Impl",
+                    "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.AppDb_Impl*",
+                    "input.comprehensible.*.ComposableSingletons*",
+                    "input.comprehensible.*.*_Factory",
+                    "input.comprehensible.*.*_Provide*",
+                    "input.comprehensible.*.*_HiltModules*",
+                    "input.comprehensible.Hilt_*",
+                    "input.comprehensible.*.Hilt_*",
                 )
                 annotatedBy(
                     "input.comprehensible.util.DefaultPreview",
