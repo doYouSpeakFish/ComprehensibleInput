@@ -1,9 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 import io.gitlab.arturbosch.detekt.Detekt
-import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.withType
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -18,16 +14,16 @@ plugins {
     alias(libs.plugins.kover)
 }
 
-val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+//val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
-    detektPlugins(libs.findLibrary("detekt-formatting").get())
-    detektPlugins(libs.findLibrary("detekt-compose-rules").get())
+    detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.compose.rules)
     kover(project(":app"))
 }
 
 detekt {
-    toolVersion = libs.findVersion("detekt").get().requiredVersion
+    toolVersion = libs.versions.detekt.get()
     buildUponDefaultConfig = true
     autoCorrect = false
     config.setFrom(files("$rootDir/config/detekt/detekt.yml"))

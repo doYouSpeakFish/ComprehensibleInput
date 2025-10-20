@@ -18,8 +18,8 @@ import javax.inject.Inject
  */
 @OptIn(ExperimentalSerializationApi::class)
 class DefaultStoriesLocalDataSource @Inject constructor(
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    @ApplicationContext private val context: Context,
+    @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @param:ApplicationContext private val context: Context,
 ) : StoriesLocalDataSource {
     override suspend fun getStory(
         id: String,

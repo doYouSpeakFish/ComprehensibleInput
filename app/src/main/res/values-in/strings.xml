@@ -5,7 +5,6 @@
     <string name="settings_screen_title">Pengaturan</string>
     <string name="settings_item_software_licences">Lisensi perangkat lunak</string>
     <string name="software_licences_screen_title">Lisensi perangkat lunak</string>
-    <string name="stories_screen_title">Cerita</string>
     <string name="language_selector_en_content_description">Pilih bahasa Inggris</string>
     <string name="language_selector_de_content_description">Pilih bahasa Jerman</string>
     <string name="language_selector_es_content_description">Pilih bahasa Spanyol</string>
