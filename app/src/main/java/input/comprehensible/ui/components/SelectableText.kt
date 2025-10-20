@@ -1,6 +1,7 @@
 package input.comprehensible.ui.components
 
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -11,11 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.withStyle
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
@@ -43,11 +46,21 @@ fun SelectableText(
         span = span,
         defaultStyle = style,
     )
-    ClickableText(
-        modifier = modifier,
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+    BasicText(
+        modifier = modifier.pointerInput(annotatedText, onTextClicked) {
+            detectTapGestures { offset ->
+                textLayoutResult?.let { layoutResult ->
+                    val characterIndex = layoutResult.getOffsetForPosition(offset)
+                    onTextClicked(characterIndex)
+                }
+            }
+        },
         text = annotatedText,
-        onClick = onTextClicked,
         style = style,
+        onTextLayout = { layoutResult ->
+            textLayoutResult = layoutResult
+        }
     )
 }
 
