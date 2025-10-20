@@ -10,6 +10,13 @@ import androidx.compose.ui.test.performScrollTo
 import input.comprehensible.ComprehensibleInputTestScope
 
 class SoftwareLicencesRobot(private val composeTestRule: ComposeTestRule) {
+    fun assertSoftwareLicencesTitleIsVisible() {
+        composeTestRule
+            .onAllNodesWithText("Software licences")
+            .onFirst()
+            .assertIsDisplayed()
+    }
+
     @OptIn(ExperimentalTestApi::class)
     fun assertLicenceIsVisible(softwareLicence: String) {
         composeTestRule.waitUntilAtLeastOneExists(hasText(softwareLicence))

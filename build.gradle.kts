@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
 }
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -22,6 +23,7 @@ val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 dependencies {
     detektPlugins(libs.findLibrary("detekt-formatting").get())
     detektPlugins(libs.findLibrary("detekt-compose-rules").get())
+    kover(project(":app"))
 }
 
 detekt {
@@ -35,6 +37,46 @@ detekt {
 
 tasks.withType<Detekt>().configureEach {
     baseline.set(file("$rootDir/config/detekt/baseline.xml"))
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                packages(
+                    "input.comprehensible.data.stories.sources",
+                    "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.di",
+                    "hilt_aggregated_deps",
+                    "dagger.hilt.internal.aggregatedroot.codegen",
+                )
+                classes(
+                    "input.comprehensible.App",
+                    "input.comprehensible.MainActivity",
+                    "input.comprehensible.data.AppDb",
+                    "input.comprehensible.BuildConfig",
+                    "input.comprehensible.*.BuildConfig",
+                    "comprehensible.test.BuildConfig",
+                    "input.comprehensible.ComposableSingletons*",
+                    "input.comprehensible.data.AppDb_Impl",
+                    "input.comprehensible.data.languages.LanguagesDao_Impl",
+                    "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.AppDb_Impl*",
+                    "input.comprehensible.*.ComposableSingletons*",
+                    "input.comprehensible.*.*_Factory",
+                    "input.comprehensible.*.*_Provide*",
+                    "input.comprehensible.*.*_HiltModules*",
+                    "input.comprehensible.Hilt_*",
+                    "input.comprehensible.*.Hilt_*",
+                )
+                annotatedBy(
+                    "input.comprehensible.util.DefaultPreview",
+                    "androidx.compose.ui.tooling.preview.Preview",
+                    "dagger.Module",
+                )
+            }
+        }
+    }
 }
 
 subprojects {

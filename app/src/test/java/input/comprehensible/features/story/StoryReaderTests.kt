@@ -2,8 +2,6 @@ package input.comprehensible.features.story
 
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
-import com.github.takahirom.roborazzi.RoborazziOptions
-import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureScreenRoboImage
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
@@ -33,17 +31,6 @@ class StoryReaderTests {
 
     @get:Rule
     val testRule = ComprehensibleInputTestRule(this)
-
-    @get:Rule
-    val roborazziRule = RoborazziRule(
-        options = RoborazziRule.Options(
-            roborazziOptions = RoborazziOptions(
-                compareOptions = RoborazziOptions.CompareOptions(
-                    changeThreshold = 0.01f,
-                ),
-            ),
-        ),
-    )
 
     @Inject
     lateinit var storiesData: StoriesTestData

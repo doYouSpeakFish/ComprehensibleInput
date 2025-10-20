@@ -176,4 +176,108 @@ class StoryListTests {
             assertStoryTextIsVisible(stories.first().paragraphs.first().spanishSentences)
         }
     }
+
+    @Test
+    fun `changing the translation language keeps learning separate`() = testRule.runTest {
+        // GIVEN a story available in German, English, and Spanish
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        // AND the story list is shown
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // THEN the default learning and translation languages are shown
+            assertLearningLanguageIs("de")
+            assertTranslationLanguageIs("en")
+
+            // WHEN the translation language is changed to German
+            setTranslationLanguage("de")
+            awaitIdle()
+
+            // THEN the learning language switches to English and translations stay in German
+            assertLearningLanguageIs("en")
+            assertTranslationLanguageIs("de")
+
+            // AND the reader opens the first story in English
+            selectStory(stories.first(), learningLanguage = "en")
+            awaitIdle()
+        }
+
+        val firstParagraph = stories.first().paragraphs.first()
+        onStoryReader {
+            // THEN the story is displayed in English
+            assertStoryTitleIsShown(stories.first().englishTitle)
+            assertStoryTextIsVisible(firstParagraph.englishSentences)
+
+            // WHEN the reader requests a translation
+            tapOnSentence(firstParagraph.englishSentences.first())
+            awaitIdle()
+
+            // THEN the translation is shown in German
+            assertStoryTextIsVisible(firstParagraph.germanSentences)
+        }
+    }
+
+    @Test
+    fun `changing the learning language keeps translations separate`() = testRule.runTest {
+        // GIVEN a story available in German, English, and Spanish
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        // AND the story list is shown
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // AND the translation language is set to Spanish
+            setTranslationLanguage("es")
+            awaitIdle()
+
+            // WHEN the learning language is changed to Spanish
+            setLearningLanguage("es")
+            awaitIdle()
+
+            // THEN translations stay in German while learning Spanish
+            assertLearningLanguageIs("es")
+            assertTranslationLanguageIs("de")
+
+            // AND the reader opens the first story in Spanish
+            selectStory(stories.first(), learningLanguage = "es")
+            awaitIdle()
+        }
+
+        val firstParagraph = stories.first().paragraphs.first()
+        onStoryReader {
+            // THEN the story is displayed in Spanish
+            assertStoryTitleIsShown(stories.first().spanishTitle)
+            assertStoryTextIsVisible(firstParagraph.spanishSentences)
+
+            // WHEN the reader requests a translation
+            tapOnSentence(firstParagraph.spanishSentences.first())
+            awaitIdle()
+
+            // THEN the translation is shown in German
+            assertStoryTextIsVisible(firstParagraph.germanSentences)
+        }
+    }
+
+    @Test
+    fun `stories without translations are hidden from the list`() = testRule.runTest {
+        // GIVEN two stories in the library
+        val stories = SampleStoriesData.listOf100Stories.take(2)
+        storiesData.setLocalStories(stories)
+        // AND the first story is missing an English translation
+        storiesData.hideTranslationForStory("en", stories.first())
+
+        // WHEN the reader opens the story list
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // THEN the story without a translation is hidden
+            assertStoryIsNotVisible(stories.first())
+            // AND the translated story remains available
+            assertStoryTitleIsVisible(stories.last().germanTitle)
+        }
+    }
 }
