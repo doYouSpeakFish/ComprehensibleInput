@@ -54,6 +54,10 @@ configure<KoverProjectExtension> {
                     "input.comprehensible.MainActivity",
                     "input.comprehensible.data.AppDb",
                 )
+                annotatedBy(
+                    "input.comprehensible.util.DefaultPreview",
+                    "androidx.compose.ui.tooling.preview.Preview",
+                )
             }
         }
     }

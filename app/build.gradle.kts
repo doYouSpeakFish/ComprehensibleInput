@@ -18,6 +18,25 @@ apply(plugin = "org.jetbrains.kotlinx.kover")
 
 configure<KoverProjectExtension> {
     useJacoco()
+    reports {
+        filters {
+            excludes {
+                packages(
+                    "input.comprehensible.data.stories.sources",
+                    "input.comprehensible.data.languages.sources",
+                )
+                classes(
+                    "input.comprehensible.App",
+                    "input.comprehensible.MainActivity",
+                    "input.comprehensible.data.AppDb",
+                )
+                annotatedBy(
+                    "input.comprehensible.util.DefaultPreview",
+                    "androidx.compose.ui.tooling.preview.Preview",
+                )
+            }
+        }
+    }
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
