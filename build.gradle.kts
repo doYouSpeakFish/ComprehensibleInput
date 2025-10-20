@@ -23,6 +23,7 @@ val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 dependencies {
     detektPlugins(libs.findLibrary("detekt-formatting").get())
     detektPlugins(libs.findLibrary("detekt-compose-rules").get())
+    kover(project(":app"))
 }
 
 detekt {
@@ -47,6 +48,7 @@ kover {
                     "input.comprehensible.data.languages.sources",
                     "input.comprehensible.di",
                     "hilt_aggregated_deps",
+                    "dagger.hilt.internal.aggregatedroot.codegen",
                 )
                 classes(
                     "input.comprehensible.App",
@@ -70,6 +72,7 @@ kover {
                 annotatedBy(
                     "input.comprehensible.util.DefaultPreview",
                     "androidx.compose.ui.tooling.preview.Preview",
+                    "dagger.Module",
                 )
             }
         }

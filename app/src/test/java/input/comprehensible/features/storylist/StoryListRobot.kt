@@ -58,6 +58,12 @@ class StoryListRobot(
             .assertExists()
     }
 
+    fun openSettings() {
+        composeTestRule
+            .onNodeWithContentDescription("Settings")
+            .performClick()
+    }
+
     fun assertLearningLanguageIs(languageCode: String) {
         composeTestRule
             .onNodeWithContentDescription(learningLanguageContentDescription(languageCode))
