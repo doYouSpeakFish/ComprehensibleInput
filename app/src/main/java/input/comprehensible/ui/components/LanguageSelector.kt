@@ -251,9 +251,9 @@ private fun LanguageToggleButton(
 @DefaultPreview
 @Composable
 private fun LanguageSelectorPreview() {
-    var languageSelection by remember { mutableStateOf(LanguageSelection.ENGLISH) }
-    var isMenuShown by remember { mutableStateOf(false) }
     ComprehensibleInputTheme {
+        var languageSelection by remember { mutableStateOf(LanguageSelection.ENGLISH) }
+        var isMenuShown by remember { mutableStateOf(false) }
         Surface(Modifier.fillMaxSize()) {
             LanguageSelector(
                 title = "Learning",
