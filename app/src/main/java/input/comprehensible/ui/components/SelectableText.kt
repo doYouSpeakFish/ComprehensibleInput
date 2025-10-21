@@ -12,14 +12,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import kotlin.math.max
-import kotlin.math.min
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
@@ -79,33 +76,13 @@ private fun rememberHighlightedText(
     text: String,
     selectedText: TextRange?,
     span: SpanStyle,
-): AnnotatedString {
-    val highlightedRange = remember(text, selectedText) {
-        selectedText?.let { selection ->
-            sanitizeSelection(selection, text)
+) = remember(text, selectedText, span) {
+    buildAnnotatedString {
+        append(text)
+        selectedText?.let { range ->
+            addStyle(span, range.min, range.max)
         }
     }
-    return remember(text, highlightedRange, span) {
-        buildAnnotatedString {
-            append(text)
-            highlightedRange?.let { range ->
-                addStyle(span, range.start, range.end)
-            }
-        }
-    }
-}
-
-private fun sanitizeSelection(selection: TextRange, text: String): TextRange? {
-    if (text.isEmpty()) return null
-    val start = selection.start.coerceIn(0, text.length)
-    val end = selection.end.coerceIn(0, text.length)
-    if (start == end) return null
-    val coercedStart = min(start, end)
-    var coercedEnd = max(start, end)
-    while (coercedEnd > coercedStart && text[coercedEnd - 1].isWhitespace()) {
-        coercedEnd--
-    }
-    return if (coercedEnd == coercedStart) null else TextRange(coercedStart, coercedEnd)
 }
 
 @DefaultPreview
