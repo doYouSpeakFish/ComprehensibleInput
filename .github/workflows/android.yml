@@ -10,6 +10,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: write
 
     steps:
     - uses: actions/checkout@v4
@@ -34,11 +38,28 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Run Android lint
+      run: ./gradlew lint
+
+    - name: Run Detekt
+      run: ./gradlew detekt
+
+    - name: Assemble with Gradle
+      run: ./gradlew assemble
 
     - name: Run unit tests
       run: ./gradlew testDebugUnitTest
+
+    - name: Generate Kover XML report
+      run: ./gradlew koverXmlReport
+
+    - name: Add coverage report to PR
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: mi-kas/kover-report@v1
+      with:
+        path: ${{ github.workspace }}/build/reports/kover/report.xml
+        title: Code Coverage
+        update-comment: true
 
     - name: Upload screenshot diff artifact
       uses: actions/upload-artifact@v4
