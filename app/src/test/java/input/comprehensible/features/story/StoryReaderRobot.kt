@@ -7,16 +7,21 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
-import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.waitUntilAtLeastOneExists
 import input.comprehensible.ComprehensibleInputTestScope
 import input.comprehensible.data.sample.TestStoryPart
 
-class StoryReaderRobot(private val composeTestRule: ComposeTestRule) {
+class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
 
     fun assertStoryTitleIsShown(title: String) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
@@ -38,6 +43,29 @@ class StoryReaderRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule
             .onNodeWithContentDescription(image.contentDescription)
             .assertIsDisplayed()
+    }
+
+    fun assertLoadingIndicatorIsShown() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("story_reader_loading"))
+        composeTestRule
+            .onNodeWithTag("story_reader_loading")
+            .assertIsDisplayed()
+    }
+
+    fun assertErrorDialogIsShown() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("story_reader_error_dialog"))
+        composeTestRule
+            .onNodeWithTag("story_reader_error_dialog")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Unable to load story")
+            .assertIsDisplayed()
+    }
+
+    fun dismissErrorDialog() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
     }
 
     fun tapOnSentence(sentence: String) {

@@ -8,6 +8,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
+import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -45,6 +46,22 @@ class StoryReaderTests {
 
         onStoryReader {
             captureScreenRoboImage("screenshots/story-reader-screen.png")
+        }
+    }
+
+    @Test
+    fun `story reader error screenshot`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.hideTranslationForStory(languageCode = "en", story = story)
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertErrorDialogIsShown()
+            captureScreenRoboImage("screenshots/story-reader-error.png")
         }
     }
 
@@ -194,6 +211,86 @@ class StoryReaderTests {
         onStoryReader {
             // THEN the midpoint of the story is shown
             assertStoryTextIsVisible(sentence = sentence)
+        }
+    }
+
+    @Test
+    fun `story shows loading indicator while story loads`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        storiesData.delayStoryLoads(delayMillis = 1_000L)
+
+        // WHEN the story reader is opened
+        goToStoryReader(stories.first().id)
+
+        onStoryReader {
+            // THEN a loading indicator is displayed
+            assertLoadingIndicatorIsShown()
+        }
+    }
+
+    @Test
+    fun `story shows error when learning story is missing`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.hideStoryForLanguage(languageCode = "de", story = story)
+
+        // GIVEN the user is reading in German with English translations
+        goToStoryList()
+        awaitIdle()
+        onStoryList {
+            setLearningLanguage("de")
+            setTranslationLanguage("en")
+        }
+
+        // WHEN the story reader is opened
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // THEN the error dialog is shown and can be dismissed
+            assertErrorDialogIsShown()
+            dismissErrorDialog()
+        }
+        awaitIdle()
+
+        onStoryList {
+            assertLearningLanguageIs("de")
+        }
+    }
+
+    @Test
+    fun `story shows error when translation is missing`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.hideTranslationForStory(languageCode = "en", story = story)
+
+        // GIVEN a story with a missing translation
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // THEN the error dialog is shown
+            assertErrorDialogIsShown()
+        }
+    }
+
+    @Test
+    fun `story shows error when translation sentences mismatch`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.mismatchTranslationForStory(languageCode = "en", story = story)
+
+        // GIVEN a story with mismatched translation content
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // THEN the error dialog is shown
+            assertErrorDialogIsShown()
         }
     }
 }

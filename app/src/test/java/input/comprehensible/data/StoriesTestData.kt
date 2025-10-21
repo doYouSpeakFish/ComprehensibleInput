@@ -76,10 +76,57 @@ class StoriesTestData @Inject constructor(
     }
 
     fun hideTranslationForStory(languageCode: String, story: TestStory) {
+        removeStoryForLanguage(languageCode = languageCode, story = story)
+    }
+
+    fun hideStoryForLanguage(languageCode: String, story: TestStory) {
+        removeStoryForLanguage(languageCode = languageCode, story = story)
+    }
+
+    fun delayStoryLoads(delayMillis: Long) {
+        storiesLocalDataSource.storyLoadDelayMillis = delayMillis
+    }
+
+    private fun removeStoryForLanguage(languageCode: String, story: TestStory) {
         storiesLocalDataSource.stories = storiesLocalDataSource.stories
             .mapValues { (language, storyData) ->
                 if (language == languageCode) {
                     storyData.filterNot { it.id == story.id }
+                } else {
+                    storyData
+                }
+            }
+    }
+
+    fun mismatchTranslationForStory(languageCode: String, story: TestStory) {
+        storiesLocalDataSource.stories = storiesLocalDataSource.stories
+            .mapValues { (language, storyData) ->
+                if (language == languageCode) {
+                    storyData.map { storyDataItem ->
+                        if (storyDataItem.id != story.id) {
+                            return@map storyDataItem
+                        }
+
+                        val firstParagraphIndex = storyDataItem.content.indexOfFirst {
+                            it is StoryElementData.ParagraphData
+                        }
+                        if (firstParagraphIndex == -1) {
+                            return@map storyDataItem
+                        }
+
+                        storyDataItem.copy(
+                            content = storyDataItem.content.mapIndexed { index, element ->
+                                if (index != firstParagraphIndex) {
+                                    return@mapIndexed element
+                                }
+
+                                val paragraph = element as StoryElementData.ParagraphData
+                                paragraph.copy(
+                                    sentences = paragraph.sentences.dropLast(1)
+                                )
+                            }
+                        )
+                    }
                 } else {
                     storyData
                 }

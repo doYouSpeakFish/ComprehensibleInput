@@ -12,6 +12,11 @@ sealed interface StoryReaderUiState {
     data object Loading : StoryReaderUiState
 
     /**
+     * The UI state when the story fails to load.
+     */
+    data object Error : StoryReaderUiState
+
+    /**
      * The UI state when the story is loaded.
      */
     data class Loaded(
