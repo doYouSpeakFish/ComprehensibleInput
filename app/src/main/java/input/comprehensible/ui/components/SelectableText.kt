@@ -88,14 +88,13 @@ private fun rememberHighlightedText(
 @DefaultPreview
 @Composable
 private fun TextHighlightPreview() {
-    val sentences = List(10) { "This is a sentence!" }
-    val text = sentences.joinToString(" ")
-    val sentenceRangeIndex = sentences
-        .runningFold(0) { acc, sentence -> acc + sentence.length + 1 }
-        .zipWithNext { a, b -> TextRange(a, b) }
-    var selectedText: TextRange? by remember { mutableStateOf(TextRange(0, 19)) }
-
     ComprehensibleInputTheme {
+        val sentences = List(10) { "This is a sentence!" }
+        val text = sentences.joinToString(" ")
+        val sentenceRangeIndex = sentences
+            .runningFold(0) { acc, sentence -> acc + sentence.length + 1 }
+            .zipWithNext { a, b -> TextRange(a, b) }
+        var selectedText: TextRange? by remember { mutableStateOf(TextRange(0, 19)) }
         Surface {
             SelectableText(
                 text = text,
