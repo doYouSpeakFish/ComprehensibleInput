@@ -8,10 +8,8 @@ import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
-import input.comprehensible.runTest
 import input.comprehensible.features.storylist.onStoryList
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceTimeBy
+import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,7 +27,7 @@ import javax.inject.Inject
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@OptIn(ExperimentalRoborazziApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalRoborazziApi::class)
 class StoryReaderTests {
 
     @get:Rule
@@ -222,21 +220,13 @@ class StoryReaderTests {
         storiesData.setLocalStories(stories)
         storiesData.delayStoryLoads(delayMillis = 1_000L)
 
-        try {
-            // WHEN the story reader is opened
-            goToStoryReader(stories.first().id)
+        // WHEN the story reader is opened
+        goToStoryReader(stories.first().id)
 
-            onStoryReader {
-                // THEN a loading indicator is displayed
-                assertLoadingIndicatorIsShown()
-            }
-
-            testScope.advanceTimeBy(1_000L)
-        } finally {
-            storiesData.resetStoryLoadDelay()
+        onStoryReader {
+            // THEN a loading indicator is displayed
+            assertLoadingIndicatorIsShown()
         }
-
-        awaitIdle()
     }
 
     @Test

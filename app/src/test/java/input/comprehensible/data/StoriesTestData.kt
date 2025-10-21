@@ -87,10 +87,6 @@ class StoriesTestData @Inject constructor(
         storiesLocalDataSource.storyLoadDelayMillis = delayMillis
     }
 
-    fun resetStoryLoadDelay() {
-        storiesLocalDataSource.storyLoadDelayMillis = 0L
-    }
-
     private fun removeStoryForLanguage(languageCode: String, story: TestStory) {
         storiesLocalDataSource.stories = storiesLocalDataSource.stories
             .mapValues { (language, storyData) ->
@@ -126,9 +122,7 @@ class StoriesTestData @Inject constructor(
 
                                 val paragraph = element as StoryElementData.ParagraphData
                                 paragraph.copy(
-                                    sentences = paragraph.sentences
-                                        .dropLast(1)
-                                        .ifEmpty { emptyList() }
+                                    sentences = paragraph.sentences.dropLast(1)
                                 )
                             }
                         )

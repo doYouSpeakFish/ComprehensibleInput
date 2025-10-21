@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 /**
@@ -44,7 +43,6 @@ class StoryReaderViewModel @Inject constructor(
         }
         .onStart {
             emit(StoryLoadState.Loading)
-            yield()
         }
         .distinctUntilChanged()
 
