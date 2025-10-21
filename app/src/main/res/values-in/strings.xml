@@ -38,4 +38,8 @@
         <item>Kamu menang</item>
         <item>Rydych chi wedi tapio digon!</item>
     </string-array>
+    <string name="story_reader_error_dialog_title">Tidak dapat memuat cerita</string>
+    <string name="story_reader_error_dialog_message">Kami tidak dapat membuka cerita ini. Silakan coba lagi nanti.</string>
+    <string name="story_reader_error_dialog_button">Oke</string>
+    <string name="story_reader_error_dialog_content_description">Ilustrasi robot sedih</string>
 </resources>
