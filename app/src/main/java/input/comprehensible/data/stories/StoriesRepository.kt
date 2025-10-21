@@ -67,7 +67,7 @@ class StoriesRepository @Inject constructor(
         id: String,
         learningLanguage: String,
         translationsLanguage: String
-    ): Story? {
+    ): StoryResult {
         val storyInfo = storiesInfoLocalDataSource.getStory(id)
             ?: StoryEntity(id = id, position = 0).also {
                 // First time story opened. Insert info into db so this story can be tracked
@@ -78,14 +78,14 @@ class StoriesRepository @Inject constructor(
             language = learningLanguage
         ) ?: run {
             Timber.e("Story $id not found for language $learningLanguage")
-            return null
+            return StoryResult.Failure.StoryMissing(language = learningLanguage)
         }
         val translatedStoryData = storiesLocalDataSource.getStory(
             id = id,
             language = translationsLanguage
         ) ?: run {
             Timber.e("Translation $translationsLanguage not found for story $id")
-            return null
+            return StoryResult.Failure.TranslationMissing(language = translationsLanguage)
         }
         return storyData.toStory(
             id = id,
@@ -94,6 +94,11 @@ class StoriesRepository @Inject constructor(
             translationsLanguage = translationsLanguage,
             position = storyInfo.position,
         )
+            ?.let { StoryResult.Success(it) }
+            ?: StoryResult.Failure.ContentMismatch(
+                learningLanguage = learningLanguage,
+                translationsLanguage = translationsLanguage,
+            )
     }
 
     suspend fun updateStoryPosition(id: String, position: Int) {
@@ -161,5 +166,18 @@ class StoriesRepository @Inject constructor(
                 )
             )
         }
+    }
+}
+
+sealed interface StoryResult {
+    data class Success(val story: Story) : StoryResult
+
+    sealed interface Failure : StoryResult {
+        data class StoryMissing(val language: String) : Failure
+        data class TranslationMissing(val language: String) : Failure
+        data class ContentMismatch(
+            val learningLanguage: String,
+            val translationsLanguage: String,
+        ) : Failure
     }
 }

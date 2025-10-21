@@ -235,7 +235,9 @@ private fun TranslateExplainer(
 private fun StoryReaderErrorDialog(onDismissRequest: () -> Unit) {
     BasicAlertDialog(onDismissRequest = onDismissRequest) {
         Surface(
-            modifier = Modifier.testTag("story_reader_error_dialog"),
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .testTag("story_reader_error_dialog"),
             shape = RoundedCornerShape(24.dp),
             border = BorderStroke(1.dp, Color.Black),
             tonalElevation = 6.dp,

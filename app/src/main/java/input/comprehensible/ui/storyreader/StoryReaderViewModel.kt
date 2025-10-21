@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
+import input.comprehensible.data.stories.StoryResult
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
@@ -46,16 +47,26 @@ class StoryReaderViewModel @Inject constructor(
                 flowOf(StoryLoadState.Loading)
             } else {
                 getStoryUseCase(id = id)
-                    .onEach {
-                        if (it == null) {
-                            Timber.e("Story with id $id not found")
+                    .onEach { result ->
+                        if (result is StoryResult.Failure) {
+                            Timber.e(
+                                when (result) {
+                                    is StoryResult.Failure.StoryMissing ->
+                                        "Story with id $id not found for ${result.language}"
+
+                                    is StoryResult.Failure.TranslationMissing ->
+                                        "Translation ${result.language} not found for story $id"
+
+                                    is StoryResult.Failure.ContentMismatch ->
+                                        "Story $id has mismatched content for ${result.learningLanguage} and ${result.translationsLanguage}"
+                                }
+                            )
                         }
                     }
-                    .map { story ->
-                        if (story == null) {
-                            StoryLoadState.Error
-                        } else {
-                            StoryLoadState.Loaded(story)
+                    .map { result ->
+                        when (result) {
+                            is StoryResult.Success -> StoryLoadState.Loaded(result.story)
+                            is StoryResult.Failure -> StoryLoadState.Error
                         }
                     }
                     .onStart { emit(StoryLoadState.Loading) }
