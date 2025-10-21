@@ -28,7 +28,9 @@ fun ComprehensibleInputApp(
             startDestination = StoryListRoute,
         ) {
             settingsNavGraph(navController)
-            storyReader()
+            storyReader(
+                onErrorDismissed = { navController.popBackStack() }
+            )
             storyList(
                 onStorySelected = { navController.navigate(StoryReaderRoute(storyId = it)) },
                 onSettingsClick = { navController.navigate(SettingsRoute) },

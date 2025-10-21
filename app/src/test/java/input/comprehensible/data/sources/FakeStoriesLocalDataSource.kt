@@ -16,7 +16,7 @@ class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource 
     var stories = mapOf<String, List<StoryData>>()
 
     override suspend fun getStory(id: String, language: String): StoryData? =
-        stories[language]?.first { it.id == id }
+        stories[language]?.firstOrNull { it.id == id }
 
     override suspend fun getStories(learningLanguage: String): List<StoryData> =
         stories[learningLanguage] ?: emptyList()

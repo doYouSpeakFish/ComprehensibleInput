@@ -9,6 +9,7 @@ import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.runTest
+import input.comprehensible.features.storylist.onStoryList
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,6 +46,22 @@ class StoryReaderTests {
 
         onStoryReader {
             captureScreenRoboImage("screenshots/story-reader-screen.png")
+        }
+    }
+
+    @Test
+    fun `story reader error screenshot`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.hideTranslationForStory(languageCode = "en", story = story)
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertErrorDialogIsShown()
+            captureScreenRoboImage("screenshots/story-reader-error.png")
         }
     }
 
@@ -194,6 +211,64 @@ class StoryReaderTests {
         onStoryReader {
             // THEN the midpoint of the story is shown
             assertStoryTextIsVisible(sentence = sentence)
+        }
+    }
+
+    @Test
+    fun `story shows error when learning story is missing`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.hideStoryForLanguage(languageCode = "de", story = story)
+
+        goToStoryList()
+        awaitIdle()
+        onStoryList {
+            setLearningLanguage("de")
+            setTranslationLanguage("en")
+        }
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertErrorDialogIsShown()
+            dismissErrorDialog()
+        }
+        awaitIdle()
+
+        onStoryList {
+            assertLearningLanguageIs("de")
+        }
+    }
+
+    @Test
+    fun `story shows error when translation is missing`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.hideTranslationForStory(languageCode = "en", story = story)
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertErrorDialogIsShown()
+        }
+    }
+
+    @Test
+    fun `story shows error when translation sentences mismatch`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.mismatchTranslationForStory(languageCode = "en", story = story)
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertErrorDialogIsShown()
         }
     }
 }

@@ -14,9 +14,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,46 +39,60 @@ class StoryReaderViewModel @Inject constructor(
         "Story opened without an explicit story ID"
     }
 
-    private val story: Flow<Story?> = savedStateHandle
+    private val storyLoadState: Flow<StoryLoadState> = savedStateHandle
         .getStateFlow<String?>("storyId", null)
-        .transformLatest { id ->
-            id ?: return@transformLatest emit(null)
-            val story = getStoryUseCase(id = id)
-                .onEach {
-                    if (it == null) {
-                        Timber.e("Story with id $id not found")
+        .flatMapLatest { id ->
+            if (id == null) {
+                flowOf(StoryLoadState.Loading)
+            } else {
+                getStoryUseCase(id = id)
+                    .onEach {
+                        if (it == null) {
+                            Timber.e("Story with id $id not found")
+                        }
                     }
-                }
-            emitAll(story)
+                    .map { story ->
+                        if (story == null) {
+                            StoryLoadState.Error
+                        } else {
+                            StoryLoadState.Loaded(story)
+                        }
+                    }
+                    .onStart { emit(StoryLoadState.Loading) }
+            }
         }
+        .distinctUntilChanged()
 
     private val selectedText = MutableStateFlow<SelectedText?>(null)
 
     val state = combine(
-        story,
+        storyLoadState,
         selectedText,
-    ) { story, selectedText ->
-        if (story == null) {
-            StoryReaderUiState.Loading
-        } else {
-            val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
-            StoryReaderUiState.Loaded(
-                title = if (selectedText is SelectedText.Title && selectedText.isTranslated) {
-                    story.translatedTitle
-                } else {
-                    story.title
-                },
-                isTitleHighlighted = selectedText is SelectedText.Title,
-                content = story.content
-                    .mapIndexed { i, storyElement ->
-                        storyElement.toStoryContentPartUiState(
-                            paragraphIndex = i,
-                            selectedSentenceIndex = selectedSentence?.takeIf { it.paragraphIndex == i }?.selectedSentenceIndex,
-                            areTranslationsEnabled = selectedSentence?.isTranslated == true,
-                        )
+    ) { storyLoadState, selectedText ->
+        when (storyLoadState) {
+            StoryLoadState.Loading -> StoryReaderUiState.Loading
+            StoryLoadState.Error -> StoryReaderUiState.Error
+            is StoryLoadState.Loaded -> {
+                val story = storyLoadState.story
+                val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
+                StoryReaderUiState.Loaded(
+                    title = if (selectedText is SelectedText.Title && selectedText.isTranslated) {
+                        story.translatedTitle
+                    } else {
+                        story.title
                     },
-                storyPosition = story.currentStoryElementIndex,
-            )
+                    isTitleHighlighted = selectedText is SelectedText.Title,
+                    content = story.content
+                        .mapIndexed { i, storyElement ->
+                            storyElement.toStoryContentPartUiState(
+                                paragraphIndex = i,
+                                selectedSentenceIndex = selectedSentence?.takeIf { it.paragraphIndex == i }?.selectedSentenceIndex,
+                                areTranslationsEnabled = selectedSentence?.isTranslated == true,
+                            )
+                        },
+                    storyPosition = story.currentStoryElementIndex,
+                )
+            }
         }
     }
 
@@ -176,6 +193,12 @@ class StoryReaderViewModel @Inject constructor(
             )
         }
     }
+}
+
+private sealed interface StoryLoadState {
+    data object Loading : StoryLoadState
+    data object Error : StoryLoadState
+    data class Loaded(val story: Story) : StoryLoadState
 }
 
 private sealed interface SelectedText {

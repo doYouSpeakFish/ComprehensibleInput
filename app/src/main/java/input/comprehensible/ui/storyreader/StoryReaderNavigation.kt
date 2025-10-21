@@ -18,13 +18,18 @@ data class StoryReaderRoute(
 /**
  * Add the story reader screen to the navigation graph.
  */
-fun NavGraphBuilder.storyReader() {
+fun NavGraphBuilder.storyReader(
+    onErrorDismissed: () -> Unit,
+) {
     composable<StoryReaderRoute>(
         enterTransition = defaultEnterTransition,
         exitTransition = defaultExitTransition,
         popEnterTransition = defaultPopEnterTransition,
         popExitTransition = defaultPopExitTransition,
     ) {
-        StoryReader(Modifier.fillMaxSize())
+        StoryReader(
+            modifier = Modifier.fillMaxSize(),
+            onErrorDismissed = onErrorDismissed,
+        )
     }
 }

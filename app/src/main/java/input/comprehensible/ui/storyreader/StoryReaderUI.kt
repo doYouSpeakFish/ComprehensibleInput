@@ -2,7 +2,10 @@ package input.comprehensible.ui.storyreader
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,13 +14,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,9 +38,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
@@ -38,6 +55,7 @@ import input.comprehensible.ui.components.SelectableText
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
+import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -48,7 +66,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun StoryReader(
     modifier: Modifier = Modifier,
-    viewModel: StoryReaderViewModel = hiltViewModel()
+    viewModel: StoryReaderViewModel = hiltViewModel(),
+    onErrorDismissed: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
     StoryReader(
@@ -56,6 +75,7 @@ fun StoryReader(
         onTitleClicked = viewModel::onTitleSelected,
         onStoryPartVisible = viewModel::onStoryLocationUpdated,
         state = state,
+        onErrorDismissed = onErrorDismissed,
     )
 }
 
@@ -65,6 +85,7 @@ private fun StoryReader(
     onTitleClicked: () -> Unit,
     onStoryPartVisible: (index: Int) -> Unit,
     state: StoryReaderUiState,
+    onErrorDismissed: () -> Unit,
 ) {
     Scaffold(modifier) { paddingValues ->
         Box(
@@ -81,6 +102,12 @@ private fun StoryReader(
                     onTitleClicked = onTitleClicked,
                     onStoryPartVisible = onStoryPartVisible,
                 )
+
+                StoryReaderUiState.Error -> Unit
+            }
+
+            if (state is StoryReaderUiState.Error) {
+                StoryReaderErrorDialog(onDismissRequest = onErrorDismissed)
             }
         }
     }
@@ -203,6 +230,50 @@ private fun TranslateExplainer(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun StoryReaderErrorDialog(onDismissRequest: () -> Unit) {
+    BasicAlertDialog(onDismissRequest = onDismissRequest) {
+        Surface(
+            modifier = Modifier.testTag("story_reader_error_dialog"),
+            shape = RoundedCornerShape(24.dp),
+            border = BorderStroke(1.dp, Color.Black),
+            tonalElevation = 6.dp,
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp, vertical = 32.dp)
+                    .widthIn(min = 280.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.sad_robot),
+                    contentDescription = stringResource(R.string.story_reader_error_dialog_content_description),
+                    modifier = Modifier
+                        .size(96.dp)
+                        .border(width = 1.dp, color = backgroundDark, shape = CircleShape)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
+                Text(
+                    text = stringResource(id = R.string.story_reader_error_dialog_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = stringResource(id = R.string.story_reader_error_dialog_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                )
+                Button(onClick = onDismissRequest) {
+                    Text(text = stringResource(id = R.string.story_reader_error_dialog_button))
+                }
+            }
+        }
+    }
+}
+
 @DefaultPreview
 @Composable
 fun StoryReaderPreview() {
@@ -221,7 +292,8 @@ fun StoryReaderPreview() {
                     )
                 ),
                 storyPosition = 0,
-            )
+            ),
+            onErrorDismissed = {},
         )
     }
 }
@@ -244,7 +316,21 @@ fun StoryReaderTranslationPreview() {
                     )
                 ),
                 storyPosition = 0,
-            )
+            ),
+            onErrorDismissed = {},
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun StoryReaderErrorPreview() {
+    ComprehensibleInputTheme {
+        StoryReader(
+            onTitleClicked = {},
+            onStoryPartVisible = {},
+            state = StoryReaderUiState.Error,
+            onErrorDismissed = {},
         )
     }
 }

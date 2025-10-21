@@ -38,4 +38,8 @@
         <item>You win</item>
         <item>Rydych chi wedi tapio digon!</item>
     </string-array>
+    <string name="story_reader_error_dialog_title">Unable to load story</string>
+    <string name="story_reader_error_dialog_message">We couldn\'t open this story. Please try again later.</string>
+    <string name="story_reader_error_dialog_button">OK</string>
+    <string name="story_reader_error_dialog_content_description">Illustration of a sad robot</string>
 </resources>
