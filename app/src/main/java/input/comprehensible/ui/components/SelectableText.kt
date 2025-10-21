@@ -2,6 +2,7 @@ package input.comprehensible.ui.components
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -12,11 +13,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
@@ -41,6 +44,7 @@ fun SelectableText(
         text = text,
         selectedText = selectedText,
         span = span,
+        defaultStyle = style,
     )
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     BasicText(
@@ -76,11 +80,39 @@ private fun rememberHighlightedText(
     text: String,
     selectedText: TextRange?,
     span: SpanStyle,
-) = remember(text, selectedText, span) {
-    buildAnnotatedString {
-        append(text)
-        selectedText?.let { range ->
-            addStyle(span, range.min, range.max)
+    defaultStyle: TextStyle,
+): AnnotatedString {
+    val defaultSpanStyle = defaultStyle.toSpanStyle().copy(
+        background = Color.Transparent,
+        color = LocalContentColor.current,
+    )
+    return remember(text, selectedText) {
+        buildAnnotatedString {
+            val selectionStartIndex = selectedText?.start?.coerceAtLeast(0)
+            val selectionEndIndex = selectedText?.end?.coerceAtMost(text.length)
+            withStyle(defaultSpanStyle) {
+                append(
+                    text.substring(
+                        startIndex = 0,
+                        endIndex = selectionStartIndex ?: text.lastIndex
+                    )
+                )
+            }
+            withStyle(span) {
+                append(
+                    text.substring(
+                        startIndex = selectionStartIndex ?: text.lastIndex,
+                        endIndex = selectionEndIndex ?: text.lastIndex,
+                    )
+                )
+            }
+            withStyle(defaultSpanStyle) {
+                append(
+                    text.substring(
+                        startIndex = selectionEndIndex ?: text.lastIndex
+                    )
+                )
+            }
         }
     }
 }
