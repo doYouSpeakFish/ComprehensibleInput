@@ -38,4 +38,8 @@
         <item>Ganas</item>
         <item>Rydych chi wedi tapio digon!</item>
     </string-array>
+    <string name="story_reader_error_dialog_title">No se puede cargar la historia</string>
+    <string name="story_reader_error_dialog_message">No pudimos abrir esta historia. Inténtalo de nuevo más tarde.</string>
+    <string name="story_reader_error_dialog_button">Aceptar</string>
+    <string name="story_reader_error_dialog_content_description">Ilustración de un robot triste</string>
 </resources>
