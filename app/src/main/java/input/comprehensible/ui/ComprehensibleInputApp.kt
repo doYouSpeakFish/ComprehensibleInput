@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.settingsNavGraph
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -19,7 +18,7 @@ import input.comprehensible.ui.theme.ComprehensibleInputTheme
  */
 @Composable
 fun ComprehensibleInputApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController
 ) {
     ComprehensibleInputTheme {
         NavHost(
