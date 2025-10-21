@@ -144,6 +144,7 @@ dependencies {
     implementation(libs.androidx.compose.icons)
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.coroutines)
     implementation(libs.timber)
     implementation(libs.serialization.json)

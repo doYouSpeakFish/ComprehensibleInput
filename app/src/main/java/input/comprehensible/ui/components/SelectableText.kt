@@ -2,7 +2,6 @@ package input.comprehensible.ui.components
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -15,11 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.withStyle
+import kotlin.math.max
+import kotlin.math.min
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
@@ -44,11 +44,10 @@ fun SelectableText(
         text = text,
         selectedText = selectedText,
         span = span,
-        defaultStyle = style,
     )
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     BasicText(
-        modifier = modifier.pointerInput(annotatedText, onTextClicked) {
+        modifier = modifier.pointerInput(text, onTextClicked) {
             detectTapGestures { offset ->
                 textLayoutResult?.let { layoutResult ->
                     val characterIndex = layoutResult.getOffsetForPosition(offset)
@@ -80,41 +79,33 @@ private fun rememberHighlightedText(
     text: String,
     selectedText: TextRange?,
     span: SpanStyle,
-    defaultStyle: TextStyle,
 ): AnnotatedString {
-    val defaultSpanStyle = defaultStyle.toSpanStyle().copy(
-        background = Color.Transparent,
-        color = LocalContentColor.current,
-    )
-    return remember(text, selectedText) {
+    val highlightedRange = remember(text, selectedText) {
+        selectedText?.let { selection ->
+            sanitizeSelection(selection, text)
+        }
+    }
+    return remember(text, highlightedRange, span) {
         buildAnnotatedString {
-            val selectionStartIndex = selectedText?.start?.coerceAtLeast(0)
-            val selectionEndIndex = selectedText?.end?.coerceAtMost(text.length)
-            withStyle(defaultSpanStyle) {
-                append(
-                    text.substring(
-                        startIndex = 0,
-                        endIndex = selectionStartIndex ?: text.lastIndex
-                    )
-                )
-            }
-            withStyle(span) {
-                append(
-                    text.substring(
-                        startIndex = selectionStartIndex ?: text.lastIndex,
-                        endIndex = selectionEndIndex ?: text.lastIndex,
-                    )
-                )
-            }
-            withStyle(defaultSpanStyle) {
-                append(
-                    text.substring(
-                        startIndex = selectionEndIndex ?: text.lastIndex
-                    )
-                )
+            append(text)
+            highlightedRange?.let { range ->
+                addStyle(span, range.start, range.end)
             }
         }
     }
+}
+
+private fun sanitizeSelection(selection: TextRange, text: String): TextRange? {
+    if (text.isEmpty()) return null
+    val start = selection.start.coerceIn(0, text.length)
+    val end = selection.end.coerceIn(0, text.length)
+    if (start == end) return null
+    val coercedStart = min(start, end)
+    var coercedEnd = max(start, end)
+    while (coercedEnd > coercedStart && text[coercedEnd - 1].isWhitespace()) {
+        coercedEnd--
+    }
+    return if (coercedEnd == coercedStart) null else TextRange(coercedStart, coercedEnd)
 }
 
 @DefaultPreview
@@ -141,12 +132,7 @@ private fun TextHighlightPreview() {
                     }
                     selectedText = sentenceRangeIndex[sentenceIndex].takeIf { selectedText != it }
                 },
-                selectedText = selectedText?.let {
-                    TextRange(
-                        start = it.start,
-                        end = it.end - 1, // Don't highlight space between sentences
-                    )
-                },
+                selectedText = selectedText,
             )
         }
     }
