@@ -76,10 +76,22 @@ class StoriesTestData @Inject constructor(
     }
 
     fun hideTranslationForStory(languageCode: String, story: TestStory) {
-        hideStoryForLanguage(languageCode = languageCode, story = story)
+        removeStoryForLanguage(languageCode = languageCode, story = story)
     }
 
     fun hideStoryForLanguage(languageCode: String, story: TestStory) {
+        removeStoryForLanguage(languageCode = languageCode, story = story)
+    }
+
+    fun delayStoryLoads(delayMillis: Long) {
+        storiesLocalDataSource.storyLoadDelayMillis = delayMillis
+    }
+
+    fun resetStoryLoadDelay() {
+        storiesLocalDataSource.storyLoadDelayMillis = 0L
+    }
+
+    private fun removeStoryForLanguage(languageCode: String, story: TestStory) {
         storiesLocalDataSource.stories = storiesLocalDataSource.stories
             .mapValues { (language, storyData) ->
                 if (language == languageCode) {
@@ -95,24 +107,31 @@ class StoriesTestData @Inject constructor(
             .mapValues { (language, storyData) ->
                 if (language == languageCode) {
                     storyData.map { storyDataItem ->
-                        if (storyDataItem.id == story.id) {
-                            var hasUpdatedParagraph = false
-                            storyDataItem.copy(
-                                content = storyDataItem.content.map { element ->
-                                    if (!hasUpdatedParagraph && element is StoryElementData.ParagraphData) {
-                                        hasUpdatedParagraph = true
-                                        element.copy(
-                                            sentences = element.sentences.dropLast(1)
-                                                .ifEmpty { emptyList() }
-                                        )
-                                    } else {
-                                        element
-                                    }
-                                }
-                            )
-                        } else {
-                            storyDataItem
+                        if (storyDataItem.id != story.id) {
+                            return@map storyDataItem
                         }
+
+                        val firstParagraphIndex = storyDataItem.content.indexOfFirst {
+                            it is StoryElementData.ParagraphData
+                        }
+                        if (firstParagraphIndex == -1) {
+                            return@map storyDataItem
+                        }
+
+                        storyDataItem.copy(
+                            content = storyDataItem.content.mapIndexed { index, element ->
+                                if (index != firstParagraphIndex) {
+                                    return@mapIndexed element
+                                }
+
+                                val paragraph = element as StoryElementData.ParagraphData
+                                paragraph.copy(
+                                    sentences = paragraph.sentences
+                                        .dropLast(1)
+                                        .ifEmpty { emptyList() }
+                                )
+                            }
+                        )
                     }
                 } else {
                     storyData

@@ -11,25 +11,20 @@ import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.usecases.GetStoryUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 /**
  * A view model for providing the data for a story to the UI.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class StoryReaderViewModel @Inject constructor(
     private val storiesRepository: StoriesRepository,
@@ -40,37 +35,16 @@ class StoryReaderViewModel @Inject constructor(
         "Story opened without an explicit story ID"
     }
 
-    private val storyLoadState: Flow<StoryLoadState> = savedStateHandle
-        .getStateFlow<String?>("storyId", null)
-        .flatMapLatest { id ->
-            if (id == null) {
-                flowOf(StoryLoadState.Loading)
-            } else {
-                getStoryUseCase(id = id)
-                    .onEach { result ->
-                        if (result is StoryResult.Failure) {
-                            Timber.e(
-                                when (result) {
-                                    is StoryResult.Failure.StoryMissing ->
-                                        "Story with id $id not found for ${result.language}"
-
-                                    is StoryResult.Failure.TranslationMissing ->
-                                        "Translation ${result.language} not found for story $id"
-
-                                    is StoryResult.Failure.ContentMismatch ->
-                                        "Story $id has mismatched content for ${result.learningLanguage} and ${result.translationsLanguage}"
-                                }
-                            )
-                        }
-                    }
-                    .map { result ->
-                        when (result) {
-                            is StoryResult.Success -> StoryLoadState.Loaded(result.story)
-                            is StoryResult.Failure -> StoryLoadState.Error
-                        }
-                    }
-                    .onStart { emit(StoryLoadState.Loading) }
+    private val storyLoadState: Flow<StoryLoadState> = getStoryUseCase(id = id)
+        .map { result ->
+            when (result) {
+                is StoryResult.Success -> StoryLoadState.Loaded(result.story)
+                is StoryResult.Failure -> StoryLoadState.Error
             }
+        }
+        .onStart {
+            emit(StoryLoadState.Loading)
+            yield()
         }
         .distinctUntilChanged()
 

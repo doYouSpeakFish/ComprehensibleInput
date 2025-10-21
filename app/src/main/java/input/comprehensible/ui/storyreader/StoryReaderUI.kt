@@ -95,7 +95,11 @@ private fun StoryReader(
         ) {
             when (state) {
                 is StoryReaderUiState.Loading ->
-                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    CircularProgressIndicator(
+                        Modifier
+                            .align(Alignment.Center)
+                            .testTag("story_reader_loading")
+                    )
 
                 is StoryReaderUiState.Loaded -> StoryContent(
                     state = state,

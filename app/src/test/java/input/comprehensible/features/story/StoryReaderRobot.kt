@@ -45,6 +45,13 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             .assertIsDisplayed()
     }
 
+    fun assertLoadingIndicatorIsShown() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("story_reader_loading"))
+        composeTestRule
+            .onNodeWithTag("story_reader_loading")
+            .assertIsDisplayed()
+    }
+
     fun assertErrorDialogIsShown() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("story_reader_error_dialog"))
         composeTestRule

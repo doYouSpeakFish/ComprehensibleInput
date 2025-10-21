@@ -10,6 +10,8 @@ import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.runTest
 import input.comprehensible.features.storylist.onStoryList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,7 +29,7 @@ import javax.inject.Inject
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@OptIn(ExperimentalRoborazziApi::class)
+@OptIn(ExperimentalRoborazziApi::class, ExperimentalCoroutinesApi::class)
 class StoryReaderTests {
 
     @get:Rule
@@ -215,12 +217,36 @@ class StoryReaderTests {
     }
 
     @Test
+    fun `story shows loading indicator while story loads`() = testRule.runTest {
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        storiesData.delayStoryLoads(delayMillis = 1_000L)
+
+        try {
+            // WHEN the story reader is opened
+            goToStoryReader(stories.first().id)
+
+            onStoryReader {
+                // THEN a loading indicator is displayed
+                assertLoadingIndicatorIsShown()
+            }
+
+            testScope.advanceTimeBy(1_000L)
+        } finally {
+            storiesData.resetStoryLoadDelay()
+        }
+
+        awaitIdle()
+    }
+
+    @Test
     fun `story shows error when learning story is missing`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
         storiesData.setLocalStories(stories)
         val story = stories.first()
         storiesData.hideStoryForLanguage(languageCode = "de", story = story)
 
+        // GIVEN the user is reading in German with English translations
         goToStoryList()
         awaitIdle()
         onStoryList {
@@ -228,10 +254,12 @@ class StoryReaderTests {
             setTranslationLanguage("en")
         }
 
+        // WHEN the story reader is opened
         goToStoryReader(story.id)
         awaitIdle()
 
         onStoryReader {
+            // THEN the error dialog is shown and can be dismissed
             assertErrorDialogIsShown()
             dismissErrorDialog()
         }
@@ -249,10 +277,12 @@ class StoryReaderTests {
         val story = stories.first()
         storiesData.hideTranslationForStory(languageCode = "en", story = story)
 
+        // GIVEN a story with a missing translation
         goToStoryReader(story.id)
         awaitIdle()
 
         onStoryReader {
+            // THEN the error dialog is shown
             assertErrorDialogIsShown()
         }
     }
@@ -264,10 +294,12 @@ class StoryReaderTests {
         val story = stories.first()
         storiesData.mismatchTranslationForStory(languageCode = "en", story = story)
 
+        // GIVEN a story with mismatched translation content
         goToStoryReader(story.id)
         awaitIdle()
 
         onStoryReader {
+            // THEN the error dialog is shown
             assertErrorDialogIsShown()
         }
     }
