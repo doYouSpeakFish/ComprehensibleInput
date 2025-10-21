@@ -1,6 +1,5 @@
 package input.comprehensible.ui.storylist
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.core.graphics.createBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
@@ -237,7 +237,7 @@ fun StoryListScreenPreview() {
                         id = "$it",
                         title = "Title $it",
                         subtitle = "Translated Title $it",
-                        featuredImage = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
+                        featuredImage = createBitmap(100, 100),
                         featuredImageContentDescription = "Content description $it",
                     )
                 },

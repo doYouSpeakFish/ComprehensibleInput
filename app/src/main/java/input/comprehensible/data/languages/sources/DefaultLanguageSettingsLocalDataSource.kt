@@ -22,7 +22,7 @@ private val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
  */
 @Singleton
 class DefaultLanguageSettingsLocalDataSource @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
 ) : LanguageSettingsLocalDataSource {
 
     override val learningLanguage = context.dataStore.data

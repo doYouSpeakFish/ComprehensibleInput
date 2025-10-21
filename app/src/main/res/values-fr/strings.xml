@@ -5,7 +5,6 @@
     <string name="settings_screen_title">Paramètres</string>
     <string name="settings_item_software_licences">Licences des logiciels</string>
     <string name="software_licences_screen_title">Licences des logiciels</string>
-    <string name="stories_screen_title">Histoires</string>
     <string name="language_selector_en_content_description">Sélectionner l\'anglais</string>
     <string name="language_selector_de_content_description">Sélectionner l\'allemand</string>
     <string name="language_selector_es_content_description">Sélectionner l\'espagnol</string>
