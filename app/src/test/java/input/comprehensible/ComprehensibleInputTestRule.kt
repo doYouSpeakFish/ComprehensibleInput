@@ -24,8 +24,22 @@ import javax.inject.Singleton
 
 private val standardTestDispatcher = StandardTestDispatcher()
 
+enum class ThemeMode(
+    val isDarkTheme: Boolean,
+    val screenshotSuffix: String,
+    private val displayName: String,
+) {
+    Light(isDarkTheme = false, screenshotSuffix = "light", displayName = "light"),
+    Dark(isDarkTheme = true, screenshotSuffix = "dark", displayName = "dark");
+
+    override fun toString(): String = displayName
+}
+
 @OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)
-class ComprehensibleInputTestRule(private val testInstance: Any) : TestRule {
+class ComprehensibleInputTestRule(
+    private val testInstance: Any,
+    val themeMode: ThemeMode = ThemeMode.Light,
+) : TestRule {
     val testDispatcher = standardTestDispatcher
 
     lateinit var composeRule: ComposeContentTestRule

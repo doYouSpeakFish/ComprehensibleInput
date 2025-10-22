@@ -2,19 +2,20 @@ package input.comprehensible.features.softwarelicences
 
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
-import com.github.takahirom.roborazzi.captureScreenRoboImage
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
+import input.comprehensible.ThemeMode
+import input.comprehensible.captureScreenWithTheme
 import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(ParameterizedRobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(
     manifest = Config.NONE,
@@ -23,9 +24,9 @@ import org.robolectric.annotation.GraphicsMode
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-class SoftwareLicencesTest {
+class SoftwareLicencesTest(private val themeMode: ThemeMode) {
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this)
+    val testRule = ComprehensibleInputTestRule(this, themeMode)
 
     @Test
     fun `about libraries software licence is shown in the list`() = testRule.runTest {
@@ -44,7 +45,13 @@ class SoftwareLicencesTest {
         awaitIdle()
 
         onSoftwareLicences {
-            captureScreenRoboImage("screenshots/software-licences-screen.png")
+            themeMode.captureScreenWithTheme("software-licences-screen")
         }
+    }
+
+    companion object {
+        @JvmStatic
+        @ParameterizedRobolectricTestRunner.Parameters(name = "theme = {0}")
+        fun parameters() = ThemeMode.entries.map { arrayOf(it) }
     }
 }

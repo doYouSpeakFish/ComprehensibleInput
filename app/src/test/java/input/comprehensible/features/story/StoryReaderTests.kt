@@ -2,10 +2,11 @@ package input.comprehensible.features.story
 
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
-import com.github.takahirom.roborazzi.captureScreenRoboImage
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
+import input.comprehensible.ThemeMode
+import input.comprehensible.captureScreenWithTheme
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.features.storylist.onStoryList
@@ -13,12 +14,12 @@ import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import javax.inject.Inject
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(ParameterizedRobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(
     manifest = Config.NONE,
@@ -28,10 +29,10 @@ import javax.inject.Inject
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @OptIn(ExperimentalRoborazziApi::class)
-class StoryReaderTests {
+class StoryReaderTests(private val themeMode: ThemeMode) {
 
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this)
+    val testRule = ComprehensibleInputTestRule(this, themeMode)
 
     @Inject
     lateinit var storiesData: StoriesTestData
@@ -45,7 +46,7 @@ class StoryReaderTests {
         awaitIdle()
 
         onStoryReader {
-            captureScreenRoboImage("screenshots/story-reader-screen.png")
+            themeMode.captureScreenWithTheme("story-reader-screen")
         }
     }
 
@@ -61,7 +62,7 @@ class StoryReaderTests {
 
         onStoryReader {
             assertErrorDialogIsShown()
-            captureScreenRoboImage("screenshots/story-reader-error.png")
+            themeMode.captureScreenWithTheme("story-reader-error")
         }
     }
 
@@ -120,7 +121,7 @@ class StoryReaderTests {
             awaitIdle()
 
             // THEN the sentence is shown in English
-            captureScreenRoboImage("screenshots/german_sentence_to_english.png")
+            themeMode.captureScreenWithTheme("german_sentence_to_english")
         }
     }
 
@@ -141,7 +142,7 @@ class StoryReaderTests {
             awaitIdle()
 
             // THEN the sentence is shown in German
-            captureScreenRoboImage("screenshots/english_sentence_to_german.png")
+            themeMode.captureScreenWithTheme("english_sentence_to_german")
         }
     }
 
@@ -159,7 +160,7 @@ class StoryReaderTests {
             awaitIdle()
 
             // THEN the title is shown in English
-            captureScreenRoboImage("screenshots/german_title_to_english.png")
+            themeMode.captureScreenWithTheme("german_title_to_english")
         }
     }
 
@@ -180,7 +181,7 @@ class StoryReaderTests {
             awaitIdle()
 
             // THEN the title is shown in German
-            captureScreenRoboImage("screenshots/english_title_to_german.png")
+            themeMode.captureScreenWithTheme("english_title_to_german")
         }
     }
 
@@ -292,5 +293,11 @@ class StoryReaderTests {
             // THEN the error dialog is shown
             assertErrorDialogIsShown()
         }
+    }
+
+    companion object {
+        @JvmStatic
+        @ParameterizedRobolectricTestRunner.Parameters(name = "theme = {0}")
+        fun parameters() = ThemeMode.entries.map { arrayOf(it) }
     }
 }
