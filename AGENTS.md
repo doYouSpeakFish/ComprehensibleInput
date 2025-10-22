@@ -16,3 +16,7 @@
 - Run `./gradlew koverXmlReport --console=plain` to verify that the coverage report stays healthy.
 - New production code must either reach 100% line coverage or be explicitly excluded from coverage **only** when it represents a boundary that is faked in tests (for example, a platform API wrapper). Any excluded code that contains meaningful logic must have that logic extracted into a class that is, or becomes, unit tested.
 - Unit tests are only acceptable for the extracted logic mentioned above; all other behavior should be covered through user-facing integration tests.
+
+## Repository-managed Git hooks
+- The repository relies on the script in `.githooks/pre-commit` to prevent the `Codex` Git user from committing screenshot updates under `app/screenshots/` while leaving other contributors unaffected. This keeps screenshot regeneration workflows intact for humans but avoids Codex-only PRs that would otherwise fail because updated binary assets cannot be uploaded.
+- Always configure Git to use the repository-managed hooks directory by running `git config core.hooksPath .githooks` (or by setting the equivalent in your global config). Without this setting the safeguard will not run.

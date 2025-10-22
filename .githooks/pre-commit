@@ -12,7 +12,10 @@ fi
 
 if git diff --cached --name-only -- app/screenshots | grep -q .; then
   echo "Codex commits may not modify app/screenshots. Reverting staged changes in app/screenshots/."
-  git restore --staged --worktree --source=HEAD -- app/screenshots 2>/dev/null || true
+  git restore --staged -- app/screenshots 2>/dev/null || true
+  if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    git restore --worktree --source=HEAD -- app/screenshots 2>/dev/null || true
+  fi
   git clean -fd -- app/screenshots >/dev/null 2>&1 || true
 fi
 
