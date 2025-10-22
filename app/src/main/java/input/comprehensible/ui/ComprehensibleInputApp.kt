@@ -1,6 +1,5 @@
 package input.comprehensible.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +19,7 @@ import input.comprehensible.ui.theme.ComprehensibleInputTheme
 @Composable
 fun ComprehensibleInputApp(
     navController: NavHostController,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean,
 ) {
     ComprehensibleInputTheme(darkTheme = darkTheme) {
         NavHost(

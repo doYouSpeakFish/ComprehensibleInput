@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import input.comprehensible.ui.ComprehensibleInputApp
@@ -20,7 +21,10 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            ComprehensibleInputApp(navController = rememberNavController())
+            ComprehensibleInputApp(
+                navController = rememberNavController(),
+                darkTheme = isSystemInDarkTheme()
+            )
         }
     }
 }
