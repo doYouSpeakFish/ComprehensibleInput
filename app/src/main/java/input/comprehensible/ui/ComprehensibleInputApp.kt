@@ -18,9 +18,10 @@ import input.comprehensible.ui.theme.ComprehensibleInputTheme
  */
 @Composable
 fun ComprehensibleInputApp(
-    navController: NavHostController
+    navController: NavHostController,
+    darkTheme: Boolean,
 ) {
-    ComprehensibleInputTheme {
+    ComprehensibleInputTheme(darkTheme = darkTheme) {
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,

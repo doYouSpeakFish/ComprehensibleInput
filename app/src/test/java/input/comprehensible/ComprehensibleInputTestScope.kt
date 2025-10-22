@@ -15,7 +15,8 @@ import kotlinx.coroutines.test.runCurrent
 @OptIn(ExperimentalCoroutinesApi::class)
 class ComprehensibleInputTestScope(
     val composeRule: ComposeContentTestRule,
-    val testScope: TestScope
+    val testScope: TestScope,
+    private val darkTheme: Boolean,
 ) {
     private var isAppUiLaunched = false
     private lateinit var navController: TestNavHostController
@@ -25,7 +26,10 @@ class ComprehensibleInputTestScope(
             composeRule.setContent {
                 navController = TestNavHostController(LocalContext.current)
                 navController.navigatorProvider.addNavigator(ComposeNavigator())
-                ComprehensibleInputApp(navController = navController)
+                ComprehensibleInputApp(
+                    navController = navController,
+                    darkTheme = darkTheme,
+                )
             }
             testScope.runCurrent()
             isAppUiLaunched = true
@@ -66,6 +70,7 @@ fun ComprehensibleInputTestRule.runTest(
 ) = kotlinx.coroutines.test.runTest {
     ComprehensibleInputTestScope(
         composeRule = composeRule,
-        testScope = this
+        testScope = this,
+        darkTheme = themeMode.isDarkTheme,
     ).block()
 }

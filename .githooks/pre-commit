@@ -12,6 +12,11 @@ fi
 
 if git diff --cached --name-only -- app/screenshots | grep -q .; then
   echo "Codex commits may not modify app/screenshots. Reverting staged changes in app/screenshots/."
+  echo "Note that this means tests will fail if run after commiting."
+  echo "Run tests before commiting to avoid this issue."
+  echo "Tests may need to be run twice, so missing screenshots are created on the first run."
+  echo "Be sure to check that UI changes resulting in test failures are expected and not accidental."
+
   git restore --staged -- app/screenshots 2>/dev/null || true
   if git rev-parse --verify HEAD >/dev/null 2>&1; then
     git restore --worktree --source=HEAD -- app/screenshots 2>/dev/null || true
