@@ -1,0 +1,543 @@
+{
+  "id": "9",
+  "title": "Petualangan Pita Bercak",
+  "content": [
+    {
+      "type": "image",
+      "contentDescription": "Gambar menunjukkan profil Sherlock Holmes dengan pipa, di sebelahnya ada ular kuning-oranye dengan bintik-bintik hitam dengan latar belakang putih.",
+      "path": "1"
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Saat saya meninjau catatan saya dari banyak kasus yang saya selidiki bersama teman saya Sherlock Holmes selama delapan tahun terakhir, saya menemukan bahwa ada beberapa yang tragis, ada yang lucu, dan banyak yang sekadar aneh, namun tidak ada yang biasa.",
+        "Holmes lebih suka menyelidiki hal-hal yang tidak biasa atau bahkan fantastis.",
+        "Dari semua kasus ini, tidak ada yang lebih luar biasa daripada kasus yang melibatkan keluarga Roylott kuno di Stoke Moran di Surrey.",
+        "Peristiwa itu terjadi pada awal masa ketika kami hidup bersama sebagai bujangan di Baker Street.",
+        "Saya mungkin akan menulisnya lebih awal, tetapi saya berjanji akan merahasiakannya.",
+        "Janji itu baru berakhir bulan lalu ketika wanita yang terlibat meninggal secara tak terduga.",
+        "Tentang kematian Dr.Grimesby Roylott, rumor aneh telah tersebar yang membuat ceritanya tampak lebih buruk dari sebelumnya.",
+        "Itu sebabnya menurut saya adalah tepat untuk melaporkan fakta sekarang."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Saat itu awal April 1883 ketika suatu pagi saya bangun dan melihat Sherlock Holmes berdiri di samping tempat tidur saya, sudah berpakaian lengkap.",
+        "Holmes biasanya bangun terlambat, jadi aku mengedipkan mata padanya karena terkejut dan mungkin sedikit jengkel, karena aku sudah menentukan waktu.“Aku minta maaf karena membangunkanmu, Watson,” katanya, “tapi semua orang akan terbangun pagi ini.",
+        "Nyonya Hudson membangunkan saya, dan sekarang saya membangunkan Anda.”\"Ada apa?\"saya bertanya.“Api?”“Tidak,” jawabnya, “seorang klien.",
+        "Seorang wanita muda datang dengan penuh kegembiraan dan bersikeras untuk berbicara dengan saya.",
+        "Dia sedang menunggu di ruang tamu.",
+        "Jika seorang remaja putri berkeliaran di London pada jam seperti ini dan membangunkan orang, itu pasti ada sesuatu yang penting.",
+        "Jika kasusnya menarik, saya tahu Anda pasti ingin melanjutkannya dari awal.",
+        "Itu sebabnya saya pikir saya harus memberi Anda kesempatan.”“Sahabatku, aku tidak akan melewatkannya demi dunia,” jawabku.",
+        "Saya senang mengikuti investigasi Holmes dan mengagumi kesimpulan cepatnya, yang tampak seperti inspirasi namun selalu logis.",
+        "Aku segera berpakaian dan pergi ke ruang tamu bersamanya."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Seorang wanita berpakaian hitam dengan kerudung tebal duduk di dekat jendela.",
+        "Dia berdiri saat kami masuk.\"Selamat pagi, Nyonya,\" sapa Holmes dengan riang.“Nama saya Sherlock Holmes.",
+        "Ini adalah teman baik dan kolega saya, Dr. Watson.",
+        "Anda dapat berbicara sebebas-bebasnya di hadapannya seperti halnya Anda dapat berbicara di hadapan saya.",
+        "Saya senang Ny. Hudson menyalakan apinya.",
+        "Silakan mendekat dan saya akan membawakan secangkir kopi panas untuk Anda karena saya dapat melihat Anda gemetar.”“Bukan hawa dingin yang membuatku menggigil,” jawabnya pelan sambil mendekat.Lalu bagaimana?“Itu adalah rasa takut, Mr. Holmes.",
+        "Ini mengerikan.”Dia mengangkat kerudungnya.",
+        "Wajahnya cekung dan kelabu, dengan mata gelisah seperti mata binatang buruan.",
+        "Dia tampak berusia sekitar tiga puluh tahun, tetapi rambutnya sudah beruban dan ekspresinya lelah dan letih.",
+        "Holmes memandangnya sebentar dengan tatapannya yang luas.",
+        "Dia berbicara dengan lembut dan menepuk lengannya.“Anda tidak boleh takut,” katanya.“Saya yakin kami akan segera menyelesaikan masalah ini.",
+        "Saya melihat Anda datang dengan kereta api pagi ini.”“Jadi, kamu mengenalku?”dia bertanya dengan kaget.“Tidak, tapi saya melihat bagian kedua dari tiket pulang pergi di telapak tangan kiri Anda.",
+        "Anda pasti berangkat lebih awal dan masih harus berjalan jauh dengan kereta anjing melewati jalan berlumpur sebelum Anda mencapai stasiun.”Wanita itu melompat dan menatap teman saya.",
+        "Holmes tersenyum.“Bukan rahasia lagi, Nyonya,” katanya.“Lengan kiri mantelmu terkena tujuh cipratan lumpur segar.",
+        "Hanya kereta dorong anjing yang mengeluarkan lumpur seperti ini, dan hanya jika Anda duduk di sisi kiri pengemudi.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Apa pun alasan Anda, Anda benar sekali,” katanya.“Saya berangkat sebelum pukul enam, tiba di Leatherhead pada pukul dua puluh lewat dan naik kereta pertama ke Waterloo.",
+        "Pak, saya tidak sanggup lagi menanggung beban ini.",
+        "Aku akan jadi gila jika dia melanjutkan.",
+        "Aku tidak punya siapa-siapa untuk dituju—tidak ada seorang pun kecuali satu orang yang peduli padaku, dan hanya sedikit yang bisa dia lakukan.",
+        "Saya pernah mendengar tentang Anda, Tuan Holmes.",
+        "Nyonya Farintosh, yang pernah Anda bantu, memberi saya alamat Anda.",
+        "Oh, Tuan, apakah Anda pikir Anda bisa membantu saya juga dan memberikan pencerahan dalam kegelapan yang mengelilingi saya?",
+        "Saya tidak dapat membayar Anda saat ini, tetapi dalam satu bulan atau enam minggu saya akan menikah dan memiliki penghasilan sendiri, dan Anda akan berterima kasih kepada saya.”Holmes membuka buku kasus kecil dari mejanya dan melihat ke dalam.“Farintosh,” katanya.“Ah ya, saya ingat kasusnya; itu tentang tiara opal.",
+        "Itu terjadi sebelum masamu, Watson.",
+        "Yang bisa saya katakan, Nyonya, adalah saya akan mencurahkan perhatian yang sama pada kasus Anda seperti yang saya lakukan pada kasus teman Anda.",
+        "Saya tidak bekerja demi uang; tetapi Anda dapat menanggung biaya yang saya keluarkan jika itu cocok untuk Anda.",
+        "Sekarang tolong beri tahu kami apa pun yang dapat membantu kami membentuk opini.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "\"Oh!\"katanya.“Ketakutan saya tidak jelas, dan kecurigaan saya didasarkan pada hal-hal kecil yang mungkin tampak sepele bagi orang lain.",
+        "Bahkan orang yang berhak saya harapkan bantuan dan nasihatnya menganggap apa yang saya katakan seperti imajinasi seorang wanita yang gugup.",
+        "Dia tidak mengatakannya, tapi aku menyadarinya dari jawaban-jawabannya yang meyakinkan dan tatapannya yang mengalihkan perhatian.",
+        "Namun saya pernah mendengar bahwa Anda dapat melihat jauh ke dalam kejahatan hati manusia.",
+        "Mungkin Anda bisa menasihati saya bagaimana hidup di tengah bahaya yang mengelilingi saya.”“Saya mendengarkan,” kata Holmes.“Nama saya Helen Stoner.",
+        "Saya tinggal bersama ayah tiri saya, orang terakhir yang selamat dari salah satu keluarga Saxon tertua di Inggris, keluarga Roylott dari Stoke Moran di perbatasan barat Surrey.”Holmes mengangguk.“Saya kenal dengan nama itu,” katanya.“Keluarga itu pernah menjadi salah satu yang terkaya di Inggris.",
+        "Perkebunan ini meluas hingga Berkshire di utara dan Hampshire di barat.",
+        "Namun, pada abad terakhir, empat ahli waris boros dan tidak bermoral, dan kehancuran keluarga diselesaikan oleh seorang penjudi pada masa pemerintahan.",
+        "Tidak ada yang tersisa kecuali beberapa hektar tanah dan sebuah rumah berusia dua ratus tahun yang terlilit hutang.",
+        "Tuan tanah terakhir menjalani kehidupan yang menyedihkan di sana.",
+        "Putra satu-satunya, ayah tiri saya, menyadari bahwa dia harus mengubah jalan hidupnya.",
+        "Dia meminjam uang dari seorang kerabat, belajar kedokteran dan pergi ke Kalkuta.",
+        "Di sana ia membangun praktik besar melalui keterampilan dan karakternya.",
+        "Karena marah atas pembobolan rumahnya, dia memukuli kepala pelayan setempat sampai mati dan lolos dari hukuman mati.",
+        "Dia menjalani hukuman penjara yang lama dan kemudian kembali ke Inggris dengan perasaan yang pahit dan kecewa.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Ketika Dr. Roylott berada di India, dia menikah dengan ibu saya, Ny. Stoner, janda muda Mayor Jenderal Stoner dari Artileri Benggala.",
+        "Adikku Julia dan aku adalah saudara kembar dan saat itu baru berusia dua tahun.",
+        "Ibu saya mempunyai banyak uang – tidak kurang dari seribu pound setahun – dan dia mewariskan pendapatan ini kepada Dr. Roylott, selama kami tinggal bersamanya, dengan syarat bahwa masing-masing dari kami harus menerima pensiun tahunan jika kami menikah.",
+        "Tak lama setelah kami kembali ke Inggris, ibu saya tewas dalam kecelakaan kereta api dekat Crewe delapan tahun lalu.",
+        "Dr Roylott kemudian berhenti praktek kedokteran di London dan membawa kami untuk tinggal di rumah keluarga lama di Stoke Moran.",
+        "Uang peninggalan ibu saya mencukupi kebutuhan kami, dan sepertinya tidak ada halangan bagi kebahagiaan kami.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Tetapi pada masa ini ayah tiri kami berubah drastis.",
+        "Alih-alih berteman dengan para tetangga, yang pada awalnya senang melihat Roylott kembali ke rumah lamanya, dia malah mengurung diri di dalam dan jarang keluar, dan hanya berdebat sengit dengan siapa pun yang berpapasan dengannya.",
+        "Temperamen yang panas, hampir seperti kegilaan, terjadi dalam keluarga, dan pada ayah tiri saya, hal ini diperburuk oleh lamanya dia tinggal di daerah tropis.",
+        "Serangkaian perkelahian yang memalukan terjadi; dua di antaranya berakhir di pengadilan.",
+        "Akhirnya dia menjadi teror di desa dan orang-orang lari ketika mereka melihatnya datang karena dia adalah orang yang sangat kuat dan tidak bisa mengendalikan diri ketika dia marah.",
+        "Minggu lalu dia melemparkan pandai besi itu ke sungai dari atas pagar, dan satu-satunya cara agar aku terhindar dari skandal lain adalah dengan membayar semua uang yang bisa kukumpulkan.",
+        "Dia tidak punya teman kecuali para gipsi pengembara.",
+        "Dia membiarkan mereka berkemah di tanah kami dan terkadang mendaki bersama mereka selama berminggu-minggu.",
+        "Dia juga menyukai binatang India, yang dikirimkan kepadanya oleh seorang kenalan.",
+        "Dia saat ini memiliki seekor cheetah dan seekor babon yang berkeliaran dengan bebas di propertinya dan hampir sama ditakuti oleh penduduk desa seperti dia.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Anda dapat membayangkan bahwa saya dan saudara perempuan saya Julia hanya mempunyai sedikit kebahagiaan dalam hidup kami.",
+        "Tidak ada pembantu yang mau tinggal bersama kami, jadi kami harus melakukan semua pekerjaan di rumah sendiri.",
+        "Dia baru berusia tiga puluh tahun ketika dia meninggal, namun rambutnya sudah mulai memutih, seperti milikku.”“Jadi, adikmu sudah meninggal?”tanya Holmes.“Dia meninggal dua tahun lalu dan inilah kematiannya yang ingin saya bicarakan dengan Anda.",
+        "Cara hidup kami, kami hanya mempunyai sedikit kesempatan untuk mengenal orang-orang seusia dan status kami.",
+        "Kami mempunyai seorang bibi - saudara perempuan ibu saya yang belum menikah, Nona Honoria Westphail - yang tinggal di dekat Harrow.",
+        "Kadang-kadang kami diizinkan mengunjunginya.",
+        "Julia berada di sana saat Natal dua tahun lalu dan bertemu dengan pensiunan mayor Angkatan Laut dan bertunangan dengannya.",
+        "Ayah tiri saya mengetahui tentang pertunangan tersebut ketika dia kembali dan tidak menentang pernikahan tersebut; tetapi dalam waktu dua minggu setelah tanggal pernikahan yang ditentukan, peristiwa mengerikan terjadi yang membuatku kehilangan satu-satunya temanku.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Holmes tadi bersandar dan memejamkan mata, tapi sekarang dia membuka matanya dan menatap tamu kami.“Harap spesifik secara detail,” katanya.“Itu mudah bagiku,” jawabnya, “karena setiap kejadian di masa mengerikan itu tersimpan dalam ingatanku.",
+        "Rumah besar itu, seperti yang saya katakan, sudah sangat tua, dan sekarang hanya satu sayap yang berpenghuni.",
+        "Kamar tidur di sayap ini berada di lantai dasar dan ruang tamu berada di sayap tengah.",
+        "Dari kamar tidur ini, yang pertama adalah kamar Dr. Roylott, yang kedua milik saudara perempuan saya, dan yang ketiga milik saya.",
+        "Tidak ada pintu penghubung di antara mereka, tapi semuanya terbuka ke koridor yang sama.",
+        "Sudahkah aku menjelaskannya?”“Sempurna,” kata Holmes.“Jendela ketiga kamar menghadap ke halaman.",
+        "Pada malam yang fatal itu, Dr. Roylott pergi ke kamarnya lebih awal, meskipun kami tahu dia belum tidur karena saudara perempuan saya mengeluh tentang bau cerutu India yang menyengat yang dia hisap.",
+        "Dia meninggalkan kamarnya dan mendatangi kamar saya, tempat kami menghabiskan waktu membicarakan tentang pernikahannya yang akan datang.",
+        "Pada pukul sebelas dia bangun untuk pergi, tetapi dia berhenti di depan pintu dan melihat ke belakang. 'Katakan padaku, Helen,' katanya, 'pernahkah kamu mendengar seseorang bersiul di malam hari?' 'Tidak pernah,' jawabku. 'Kamu tidak bisa bersiul saat tidur?' 'Tentu saja tidak.",
+        "Tapi kenapa?' 'Karena beberapa malam terakhir sekitar jam tiga pagi saya selalu mendengar suara peluit yang pelan dan jelas.",
+        "Aku tertidur lelap dan dia membangunkanku.",
+        "Saya tidak tahu dari mana asalnya - mungkin kamar sebelah, mungkin halaman rumput.",
+        "Saya pikir saya akan bertanya apakah Anda mendengarnya.' 'Tidak, aku tidak melakukannya.",
+        "Pastilah orang-orang gipsi yang ada di hutan itu.”“Sangat mungkin.",
+        "Namun, jika suaranya terjadi di halaman, saya terkejut Anda tidak mendengarnya.' 'Oh, tapi tidurku lebih nyenyak daripada kamu.' 'Yah, itu tidak terlalu penting.' Dia tersenyum padaku, menutup pintu dan beberapa saat kemudian aku mendengarnya memutar kunci di lubangnya.'"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Apakah kamu selalu mengunci diri di malam hari?”tanya Holmes.“Selalu,” jawabnya.\"Dan kenapa?\"“Saya sebutkan bahwa dokter memelihara seekor cheetah dan babon.",
+        "Kami tidak merasa aman jika pintu kami tidak dikunci.”“Benar sekali.",
+        "Silakan lanjutkan.”“Saya tidak bisa tidur malam itu.",
+        "Samar-samar aku punya firasat bahwa sesuatu yang buruk akan terjadi.",
+        "Saya dan saudara perempuan saya adalah saudara kembar, dan Anda tahu betapa eratnya ikatan saudara kembar.",
+        "Itu adalah malam yang liar.",
+        "Angin menderu-deru di luar dan hujan mengguyur jendela.",
+        "Tiba-tiba, di tengah kebisingan badai, terdengar jeritan liar seorang wanita yang ketakutan.",
+        "Aku tahu itu adalah adikku.",
+        "Saya melompat dari tempat tidur, melemparkan syal ke sekeliling tubuh saya dan berlari ke koridor.",
+        "Saat aku membuka pintu, sepertinya aku mendengar peluit samar seperti yang digambarkan kakakku, dan beberapa saat kemudian terdengar suara logam, seperti ada benda berat yang jatuh.",
+        "Saat aku berjalan menyusuri lorong, pintu kamar kakakku tidak terkunci dan perlahan terbuka.",
+        "Aku menatapnya dengan ngeri, tidak tahu apa yang akan terjadi.",
+        "Di bawah cahaya lampu di koridor aku melihat adikku muncul.",
+        "Wajahnya pucat pasi karena ketakutan, tangannya meraba-raba dalam kegelapan, dan seluruh tubuhnya bergoyang seperti orang mabuk.",
+        "Saya berlari ke arahnya dan memeluknya, tetapi lututnya lemas dan dia terjatuh ke tanah.",
+        "Dia menggeliat kesakitan dan anggota tubuhnya bergerak-gerak.",
+        "Pada mulanya saya pikir dia tidak mengenali saya, namun ketika saya mencondongkan tubuh ke arahnya dia tiba-tiba berteriak, 'Ya Tuhan!",
+        "Helen!",
+        "Itu adalah rekamannya!",
+        "Pita berbintik-bintik!' Dia mulai mengatakan sesuatu yang lain dan menunjuk ke arah ruang dokter, tetapi kejang lain datang padanya dan membuat kata-katanya tercekat.",
+        "Saya berlari keluar, memanggil ayah tiri saya dan menemukannya keluar dari kamarnya dengan gaun tidurnya.",
+        "Ketika dia mencapai adikku, dia tidak sadarkan diri.",
+        "Dia menuangkan brendi ke tenggorokannya dan memanggil dokter dari desa, tapi semua usahanya sia-sia.",
+        "Dia perlahan tenggelam dan mati tanpa sadar kembali.",
+        "Itu adalah akhir yang mengerikan dari adik perempuanku tercinta.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "\"Tunggu sebentar,\" kata Holmes.“Apakah kamu yakin mendengar peluit dan suara logam itu?",
+        "Bisakah kamu bersumpah demi itu?”“Petugas koroner daerah juga menanyakan hal itu kepada saya,” katanya.“Saya mempunyai kesan yang kuat ketika mendengarnya, namun saya mungkin salah dalam mendengar suara badai dan derit sebuah rumah tua.”“Apakah adikmu sudah berpakaian?”“Tidak, dia mengenakan gaun tidurnya.",
+        "Tunggul korek api yang hangus ditemukan di tangan kanannya, dan sekotak korek api ditemukan di tangan kirinya.”“Ini menunjukkan dia menyalakan lampu dan melihat sekeliling saat alarm berbunyi.",
+        "Ini penting.",
+        "Kesimpulan apa yang didapat petugas koroner?”“Dia menyelidiki kasus ini dengan hati-hati karena tindakan Dr Roylott terkenal di daerah tersebut, namun dia tidak menemukan penyebab kematiannya.",
+        "Kesaksian saya menunjukkan bahwa pintunya dikunci dari dalam, jendela-jendelanya ditutup dengan penutup jendela kuno dengan jeruji besi dan diamankan setiap malam.",
+        "Dindingnya kokoh, dan lantainya diperiksa secara menyeluruh dengan hasil yang sama.",
+        "Cerobongnya lebar tapi terhalang empat baut besar.",
+        "Oleh karena itu, dapat dipastikan bahwa saudara perempuan saya benar-benar sendirian ketika dia meninggal.",
+        "Selain itu, tidak ada tanda-tanda kekerasan pada dirinya.”Bagaimana dengan racun? “Para dokter mengujinya tetapi tidak menemukan apa pun.”“Menurutmu bagaimana adikmu meninggal?”\"Saya pikir dia meninggal karena ketakutan dan syok, meski saya tidak bisa membayangkan apa yang membuatnya takut.\"“Apakah ada orang gipsi di perkebunan pada saat itu?”“Ya, hampir selalu ada beberapa di sana.”“Dan apa pendapatmu ketika kamu menyebut pita—pita berbintik-bintik?”“Kadang-kadang saya pikir itu hanyalah pembicaraan liar tentang delirium; terkadang merujuk pada sekelompok orang - mungkin orang gipsi di perkebunan.",
+        "Saya tidak tahu apakah syal polkadot yang banyak dipakai di kepala memberi kesan ‘berbintik’.”Holmes menggelengkan kepalanya.“Ini adalah hal yang mendalam,” katanya.“Silakan lanjutkan ceritamu.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Dua tahun telah berlalu sejak saat itu, dan hingga saat ini hidup saya terasa lebih sepi dari sebelumnya.",
+        "Namun, sebulan yang lalu, seorang teman baik saya selama bertahun-tahun meminta saya untuk menikah dengannya.",
+        "Namanya Percy Armitage, putra kedua Tuan Armitage dari Crane Water, dekat Reading.",
+        "Ayah tiriku tidak menentang persatuan itu dan kami seharusnya menikah pada musim semi.",
+        "Dua hari yang lalu beberapa perbaikan dimulai di sayap barat rumah dan dinding kamar tidur saya dibobol.",
+        "Saya harus pindah ke kamar tempat saudara perempuan saya meninggal dan tidur di ranjang yang sama.",
+        "Bayangkan kengerian saya saat saya terbangun tadi malam memikirkan nasib buruknya dan tiba-tiba mendengar peluit samar yang menandakan kematiannya.",
+        "Saya melompat dan menyalakan lampu, tetapi tidak ada apa pun yang terlihat di ruangan itu.",
+        "Aku terlalu terguncang untuk kembali tidur jadi aku berpakaian dan segera setelah hari terang aku turun ke bawah, menyewa kereta anjing dari Crown Inn di seberang dan pergi ke Leatherhead.",
+        "Dari sana saya datang ke London pagi ini hanya untuk menemui Anda dan meminta nasihat Anda.”“Anda bertindak bijaksana,” kata Holmes. “Tapi apakah kamu sudah memberitahuku semuanya?”“Ya, semuanya.”“Nona Stoner, Anda tidak melakukannya.",
+        "Kamu melindungi ayah tirimu.”“Kenapa, apa maksudmu?”Holmes mendorong kembali tali di pergelangan tangannya.",
+        "Ada lima bintik hitam - sidik jari empat jari dan ibu jari. “Anda diperlakukan dengan buruk,” kata Holmes.",
+        "Wanita itu tersipu malu dan menutupi pergelangan tangannya yang terluka. “Dia pria yang keras,” katanya. “Mungkin dia tidak mengetahui kekuatannya sendiri.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Terjadi keheningan yang lama.",
+        "Holmes meletakkan dagunya di atas tangan dan menatap ke dalam api.“Ini masalah yang sangat serius,” katanya akhirnya.“Ada ribuan detail yang ingin saya ketahui sebelum kita memutuskan apa yang harus dilakukan.",
+        "Namun kita tidak boleh kehilangan satu menit pun.",
+        "Jika kita datang ke Stoke Moran hari ini, bisakah kita melihat kamarnya tanpa diketahui ayah tirimu?”“Untungnya, dia bilang dia harus pergi ke kota hari ini untuk urusan penting.",
+        "Dia mungkin akan pergi sepanjang hari dan tidak akan ada apa pun yang mengganggu Anda.",
+        "Kami sekarang punya pembantu rumah tangga, tapi dia sudah tua dan berpikiran sederhana dan saya bisa dengan mudah menyingkirkannya.”\"Bagus sekali.",
+        "Anda tidak keberatan dengan perjalanan ini, Watson?”“Tidak ada sama sekali,” kataku.“Kalau begitu kita berdua akan datang.",
+        "Apa yang akan kamu lakukan sendiri?”“Ada satu atau dua hal yang harus kulakukan sekarang karena aku berada di kota.",
+        "Tapi aku akan kembali dengan kereta pukul dua belas, jadi aku akan berada di sana ketika kamu tiba.”“Anda bisa menunggu kedatangan kami pada sore hari.",
+        "Ada beberapa hal kecil yang harus aku lakukan sendiri.",
+        "Apakah kamu tidak ingin menunggu dan sarapan?”“Tidak, aku harus pergi.",
+        "Hatiku sudah lebih ringan sekarang setelah aku memberitahumu kekhawatiranku.",
+        "Saya berharap dapat bertemu Anda lagi sore ini.”Dia membiarkan cadar menutupi wajahnya dan meninggalkan ruangan."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Apa pendapatmu tentang semua ini, Watson?”tanya Holmes setelah dia pergi.“Bagiku, ini adalah masalah yang sangat kelam dan tidak menyenangkan,” jawabku.“Cukup gelap dan cukup tidak menyenangkan,” katanya.“Namun, jika wanita itu benar dan lantai serta dindingnya kokoh dan pintu, jendela, dan cerobong asap tidak dapat digunakan, maka saudara perempuannya pasti sendirian ketika dia menemui akhir misteriusnya.”“Lalu bagaimana dengan siulan di malam hari dan kata-kata aneh dari wanita yang sekarat itu?”“Saya tidak mengetahuinya.”“Jika Anda menggabungkan gagasan peluit malam dengan kehadiran orang gipsi yang merupakan teman Dokter, fakta bahwa Dokter memiliki motif untuk mencegah pernikahan putri tirinya, penyebutan pita sekarat, dan akhirnya fakta bahwa Nona Stoner mendengar dentingan logam yang mungkin merupakan gerendel yang jatuh ke belakang, saya pikir ada alasan bagus untuk menutup misteri dengan cara ini. “Tetapi apa hubungannya orang gipsi dengan hal itu?”“Saya tidak bisa membayangkannya.",
+        "Saya melihat banyak keberatan terhadap teori semacam itu.” \"Saya juga.",
+        "Itu sebabnya kita akan ke Stoke Moran hari ini.",
+        "Saya ingin melihat apakah keberatan tersebut bersifat tegas atau dapat dijelaskan.”Dia tiba-tiba berhenti ketika pintu dibuka dan seorang pria bertubuh besar berdiri di dalam.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Pakaian pria itu merupakan perpaduan antara profesional dan pedesaan.",
+        "Dia mengenakan topi hitam, mantel rok panjang dan pelindung kaki tinggi serta memegang tanaman berkuda di tangannya.",
+        "Dia begitu tinggi hingga topinya menyentuh palang kusen pintu, dan bahunya yang lebar memenuhi palang tersebut.",
+        "Wajahnya yang besar dipenuhi kerutan, menguning karena sinar matahari dan ditandai dengan segala nafsu buruk.",
+        "Matanya yang dalam, merah, dan hidungnya yang tipis dan mancung membuatnya tampak seperti burung pemangsa tua yang galak.“Siapa di antara kalian yang Holmes?”dia bertanya.“Itu namaku,” kata temanku pelan.“Tapi kamu punya kelebihan dibandingkan aku.”“Saya Dr Grimesby Roylott dari Stoke Moran.”“Benar, Dokter,” kata Holmes ramah.\"Silakan duduk.\"“Saya tidak akan melakukan hal seperti itu.",
+        "Putri tiriku ada di sini.",
+        "Saya mengejarnya.",
+        "Apa yang dia katakan padamu?”“Cuacanya agak dingin sepanjang tahun ini,” kata Holmes.“Apa yang dia katakan padamu?”lelaki tua itu berteriak dengan marah.“Kudengar bunga crocusnya baik-baik saja,” lanjut Holmes dengan tenang.\"Hah!",
+        "Anda ingin mengalihkan perhatian saya,\" kata pengunjung kami sambil maju selangkah dan menggoyangkan tanaman tunggangannya.\"Saya kenal Anda, bajingan!",
+        "Saya pernah mendengar tentang Anda sebelumnya.",
+        "Anda adalah Holmes, orang yang sibuk!”Teman saya tersenyum.“Holmes, yang penasaran!”Senyumnya semakin lebar.“Holmes, birokrat Scotland Yard!”Holmes terkekeh.“Percakapan mereka sangat menghibur,” katanya.“Kalau keluar tolong tutup pintunya karena ada angin.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Saya akan pergi setelah saya mengatakan apa yang ingin saya katakan.",
+        "Jangan ikut campur dalam urusanku.",
+        "Saya tahu Nona Stoner ada di sini.",
+        "Saya mengejarnya!",
+        "Aku orang yang berbahaya untuk diajak main-main!",
+        "Lihat disini.\"Dia melangkah maju, meraih poker, dan membengkokkannya menjadi kurva dengan tangannya yang besar.“Pastikan kamu menjauh dari genggamanku,” geramnya, melemparkan poker yang bengkok itu ke dalam api, lalu berjalan keluar ruangan.“Sepertinya dia orang yang sangat menyenangkan,” kata Holmes sambil tertawa.“Aku tidak terlalu tinggi, tapi jika dia tetap tinggal, aku bisa menunjukkan kepadanya bahwa cengkeramanku tidak lebih lemah dari cengkeramannya.”Saat dia berbicara, dia memilih mengangkat poker baja itu dan meluruskannya dengan usaha yang tiba-tiba.“Bayangkan keberaniannya membingungkan saya dengan polisi kriminal resmi!",
+        "Kejadian ini membuat penyelidikan kami menjadi lebih menarik, dan saya harap klien kami tidak akan dirugikan jika dibiarkan begitu saja.",
+        "\"Sekarang, Watson, ayo kita pesan sarapan, lalu aku akan pergi ke Doctors' Commons untuk mencari informasi.\""
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Hampir pukul satu ketika Holmes kembali.",
+        "Dia memegang selembar kertas biru yang dipenuhi catatan dan angka.“Saya melihat surat wasiat istri almarhum,” ujarnya.“Untuk memahaminya, saya harus menghitung nilai investasi yang disebutkan di dalamnya saat ini.",
+        "Total pendapatan, yang hanya kurang dari seribu seratus pound pada saat kematian wanita tersebut, sekarang menjadi sekitar tujuh ratus lima puluh pound, karena jatuhnya harga pertanian.",
+        "Setiap anak perempuan, ketika dia menikah, dapat memperoleh penghasilan sebesar dua ratus lima puluh pound.",
+        "Jelas bahwa jika kedua gadis itu menikah, lelaki ini hanya mempunyai sedikit uang, dan bahkan pernikahan akan sangat mengurangi pendapatannya.",
+        "Kerja pagi saya tidak sia-sia karena menunjukkan bahwa dia mempunyai alasan yang sangat kuat untuk mencegah pernikahan.",
+        "Nah, Watson, ini terlalu serius untuk diragukan, apalagi lelaki tua itu tahu kita tertarik dengan urusannya.",
+        "Jika Anda sudah siap, kami akan memanggil taksi dan pergi ke Waterloo.",
+        "Saya akan berterima kasih jika Anda mau memasukkan pistol ke dalam saku Anda.",
+        "Nomor 2 Eley adalah argumen yang bagus untuk pria yang bisa membengkokkan poker baja menjadi simpul.",
+        "Menurutku, hanya itu dan sikat gigi saja yang kita perlukan.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Di Waterloo kami naik kereta ke Leatherhead, di mana kami menyewa kereta dari pub stasiun dan melakukan perjalanan empat atau lima mil melalui pedesaan Surrey yang indah.",
+        "Itu adalah hari yang sempurna, dengan matahari yang cerah dan sedikit awan di langit.",
+        "Pepohonan dan pagar tanaman baru saja menumbuhkan tunas hijau pertamanya, dan udara dipenuhi aroma tanah lembap yang menyenangkan.",
+        "Bagi saya, ini adalah kontras yang aneh antara janji manis musim semi dan tugas menakutkan yang kami jalani.",
+        "Holmes duduk di depan dengan tangan terlipat, topinya menutupi mata dan dagunya di dada, tenggelam dalam pikirannya.",
+        "Tiba-tiba dia menepuk pundakku dan menunjuk ke seberang padang rumput.“Lihat di sana!”katanya.",
+        "Sebuah taman dengan pepohonan tua menjulang lembut dan menebal menjadi rerimbunan di puncaknya.",
+        "Di antara pepohonan berdiri atap pelana kelabu dan atap tinggi sebuah rumah besar yang sangat tua.“Stoke Moran?”dia bertanya.“Iya pak, ini rumah Dr. Grimesby Roylott,” kata kusir.“Ada konstruksi yang sedang berlangsung,” kata Holmes.“Ke sanalah kita akan pergi.”“Di situlah letak desanya,” kata sang kusir sambil menunjuk sekelompok atap di sebelah kiri.“Tapi kalau mau ke rumah, lebih pendek naik tangga dan jalan tanah.",
+        "Itu wanita yang sedang berjalan.”\"Dan wanita itu adalah Nona Stoner,\" kata Holmes.“Ya, menurutku kita harus melakukan apa yang kamu sarankan.”Kami keluar, membayar ongkos dan menyaksikan kereta itu berangkat.“Menurutku yang terbaik,” kata Holmes ketika kami menaiki tangga, “dia menganggap kami arsitek atau punya bisnis.",
+        "Itu mungkin menghentikannya untuk bergosip.",
+        "Halo, Nona Stoner.",
+        "Anda tahu, kami menepati janji kami.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Klien kami bergegas menuju kami dengan wajah berseri-seri.“Aku sudah lama menunggumu,” serunya sambil menjabat tangan kami dengan hangat.“Semuanya berjalan dengan baik.",
+        "Dr. Roylott telah pergi ke kota dan kemungkinan besar tidak akan kembali sebelum malam.”“Kami merasa senang bertemu dengan dokter tersebut,” kata Holmes, dan dia menjelaskan secara singkat apa yang telah terjadi.",
+        "Nona Stoner memucat saat dia mendengarkan.Ya Tuhan!dia berteriak.“Jadi dia mengikutiku.”“Sepertinya begitu.”“Dia sangat licik sehingga saya tidak pernah tahu kapan saya akan aman darinya.",
+        "Apa yang akan dia katakan ketika dia kembali?”“Dia harus menjaga dirinya sendiri, karena dia mungkin akan menemukan seseorang yang lebih licik darinya.",
+        "Anda harus mengunci diri malam ini.",
+        "Jika dia melakukan kekerasan, kami akan membawamu ke bibimu di Harrow.",
+        "Sekarang kami perlu memanfaatkan waktu kami sebaik-baiknya, jadi tolong arahkan kami ke ruangan yang Anda ingin kami periksa.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Bangunannya terbuat dari batu berwarna abu-abu yang ditutupi lumut, dengan bagian tengah yang tinggi dan dua sayap melengkung seperti cakar kepiting.",
+        "Salah satu sayapnya mengalami pecahan jendela yang ditutup papan dan sebagian atapnya runtuh.",
+        "Bagian tengahnya sedikit lebih baik, tetapi blok sebelah kanan relatif modern, dan tirai di jendela serta asap dari cerobong asap menunjukkan bahwa keluarga tersebut tinggal di sini.",
+        "Perancah telah dipasang di dinding atap pelana dan tembok bata telah dibongkar, tetapi saat ini tidak ada pekerja di sana.",
+        "Holmes berjalan perlahan melintasi halaman yang ditumbuhi rumput, dengan cermat memeriksa bagian luar jendela.\"Ini,\" katanya, \"adalah ruangan tempat kamu biasa tidur; yang di tengah adalah kamar adikmu, dan yang di sebelah bangunan utama adalah kamar Dr. Roylott?\"\"Sama seperti.",
+        "Tapi aku tidur di tengah sekarang.”“Karena renovasi, saya mengerti.",
+        "Ngomong-ngomong, tampaknya tidak ada kebutuhan mendesak untuk perbaikan dinding atap pelana ini.”“Tidak ada satu pun.",
+        "Saya pikir itu hanya alasan untuk mengeluarkan saya dari kamar saya.”“Ah, itu membuka rahasia.",
+        "Di sisi lain sayap sempit ini terdapat koridor dari mana ketiga ruangan ini mengarah.",
+        "Ada jendela di sana, bukan?”“Ya, tapi yang sangat kecil.",
+        "Terlalu sempit bagi siapa pun untuk melewatinya.”“Karena kalian berdua mengunci pintu pada malam hari, kamar kalian tidak dapat dimasuki dari sisi ini.",
+        "Maukah Anda pergi ke kamar Anda dan mengunci jendelanya?”Nona Stoner melakukannya, dan Holmes mencoba segala cara untuk membuka toko dari luar, tetapi tidak berhasil.",
+        "Tidak ada celah untuk memasukkan pisau untuk mengangkat kaitnya.",
+        "Engselnya terbuat dari besi padat dan tertanam kuat di batu. \"Hmm!\"katanya sambil menggaruk dagunya.“Teori saya tentu mempunyai beberapa kesulitan.",
+        "Tidak ada yang bisa melewati toko-toko ini jika terkunci.",
+        "Baiklah, kita akan lihat apakah bagian dalamnya memberi kita petunjuk.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Sebuah pintu samping kecil mengarah ke koridor bercat putih tempat tiga kamar tidur terbuka.",
+        "Holmes menolak memeriksa kamar ketiga, jadi kami langsung masuk ke kamar kedua, kamar tempat Miss Stoner sekarang tidur dan tempat adik perempuannya meninggal.",
+        "Itu adalah ruangan kecil yang nyaman dengan langit-langit rendah dan perapian lebar seperti di rumah-rumah pedesaan kuno.",
+        "Ada lemari berlaci berwarna coklat di salah satu sudut, tempat tidur sempit dengan selimut putih di sudut lain, dan meja rias di sebelah kiri jendela.",
+        "Ini, dengan dua kursi anyaman kecil dan karpet persegi, membentuk keseluruhan perabotan.",
+        "Lantai dan panelnya terbuat dari kayu ek tua yang dimakan cacing, sehingga warnanya sudah berubah sehingga mungkin berasal dari bangunan aslinya.",
+        "Holmes menarik kursi ke sudut dan duduk diam, matanya bergerak ke sekeliling, mengamati setiap detail.“Kemana perginya kabel bel ini?”dia bertanya sambil menunjuk tali tebal yang tergantung di samping tempat tidur, rumbai di atas bantal.“Itu mengarah ke kamar pengurus rumah tangga.”“Kelihatannya lebih baru dibandingkan yang lain.”“Ya, itu dipasang beberapa tahun yang lalu.”“Adikmu yang memintanya?”“Tidak, aku belum pernah mendengar dia menggunakannya.",
+        "Kami sendiri selalu mendapatkan apa yang kami butuhkan.”“Sepertinya tidak perlu memasang lonceng yang begitu indah di sana.",
+        "Permisi sebentar sementara saya memeriksa lantai.”Dia menjatuhkan dirinya ke lantai dengan kaca pembesarnya dan merangkak maju mundur dengan cepat, memeriksa celah di antara papan.",
+        "Kemudian dia melakukan hal yang sama dengan dinding berpanel.",
+        "Akhirnya dia pergi ke tempat tidur dan menghabiskan beberapa waktu memandanginya dan dinding.",
+        "Dia mengambil kabel bel di tangannya dan menariknya dengan kuat."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Wah, itu tiruan,” katanya.“Bukankah itu berdering?”“Tidak, itu bahkan tidak diikatkan pada kawat.",
+        "Ini sangat menarik.",
+        "Anda bisa melihatnya terpasang pada pengait tepat di atas lubang ventilasi kecil.”“Sungguh tidak masuk akal!",
+        "Saya belum pernah menyadarinya sebelumnya.”“Sangat aneh!”gumam Holmes sambil menarik kabelnya.“Ada satu atau dua hal yang sangat aneh di ruangan ini.",
+        "Misalnya, betapa bodohnya seorang pembangun yang membuka lubang ventilasi ke ruangan lain padahal dia bisa membukanya ke luar dengan usaha yang sama!”“Ventilasi ini juga masih baru,” kata Nona Stoner.“Dibuat bersamaan dengan kabel bel?”“Ya, beberapa perubahan kecil dilakukan saat itu.”“Tampaknya ada perubahan yang sangat menarik - kabel bel palsu dan ventilasi yang tidak memberikan ventilasi.",
+        "Dengan izin Anda, Nona Stoner, sekarang kita akan melihat ke ruang dalam.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Kamar Dr.Grimesby Roylott lebih besar daripada kamar putri tirinya, tetapi perabotannya sama sederhananya.",
+        "Tempat tidur kemah, rak kayu kecil yang penuh dengan buku - kebanyakan buku khusus -, kursi di samping tempat tidur, satu lagi di dinding, meja bundar, dan brankas besi besar adalah bagian utamanya.",
+        "Holmes berjalan perlahan, memeriksa masing-masing dengan penuh minat.“Ada apa di sini?”dia bertanya sambil mengetuk brankas.“Surat-surat bisnis ayah tiriku.”\"Oh!",
+        "Lalu kamu melihat ke dalam?”“Hanya sekali, beberapa tahun lalu.",
+        "Saya ingat itu penuh dengan kertas.”“Seperti, tidak ada kucing di dalamnya?”\"TIDAK.",
+        "Ide yang aneh!”“Nah, lihat ini.”Dia mengambil semangkuk kecil susu yang ada di atasnya.“Kami tidak memelihara kucing.",
+        "Tapi ada cheetah dan babon.”“Ah ya, tentu saja!",
+        "Seekor cheetah adalah seekor kucing besar, namun semangkuk susu tidak cukup untuk memuaskannya.",
+        "Ada satu hal yang ingin saya tentukan.”Dia berjongkok di depan kursi kayu dan memeriksa kursi itu dengan sangat hati-hati.“Terima kasih.",
+        "Selesai,” katanya sambil berdiri dan meletakkan kaca pembesarnya.“Halo!",
+        "Ini sesuatu yang menarik!”Benda yang menarik perhatiannya adalah tali anjing kecil yang tergantung di sudut tempat tidur.",
+        "Talinya dililitkan pada dirinya sendiri dan diikat menjadi satu membentuk lingkaran."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Bagaimana pendapatmu tentang hal itu, Watson?”dia bertanya.“Itu cambuk biasa.",
+        "Tapi saya tidak tahu mengapa dia harus diikat.”“Itu tidak biasa, kan?",
+        "Sayangnya, ini adalah dunia yang jahat, dan ketika orang pintar mengalihkan pikirannya ke kejahatan, itu adalah hal terburuk.",
+        "Saya rasa saya sudah cukup melihatnya sekarang, Miss Stoner, dan dengan izin Anda, kami akan pergi ke halaman.”Saya belum pernah melihat wajah teman saya begitu serius atau dahinya begitu gelap seperti ketika kami meninggalkan tempat pemeriksaan.",
+        "Kami berjalan mondar-mandir di halaman beberapa kali, baik Nona Stoner maupun saya tidak ingin mengganggu pikirannya sampai dia berbicara.“Sangat penting, Miss Stoner,” katanya akhirnya, “agar Anda mengikuti saran saya dengan hati-hati.”“Saya pasti akan melakukannya.”“Hidupmu bisa bergantung padanya.”“Saya yakinkan Anda bahwa saya ada di tangan Anda.”“Pertama, aku dan temanku harus bermalam di kamarmu.”Nona Stoner dan saya menatapnya dengan takjub.“Ya, memang harus seperti itu.",
+        "Biar saya jelaskan.",
+        "Apakah itu penginapan desa di sana?”“Ya, itu Mahkotanya.”\"Sangat bagus.",
+        "Bisakah kamu melihat jendelamu dari sana?”\"Tentu saja.\"“Kamu harus tetap di kamarmu dan berpura-pura sakit kepala saat ayah tirimu kembali.",
+        "Kemudian, ketika Anda mendengar bahwa dia akan tidur, Anda harus membuka penutup jendela, membuka kaitnya, meletakkan lampu Anda di jendela sebagai sinyal, dan kemudian dengan diam-diam membawa semua yang Anda butuhkan ke dalam ruangan yang biasa Anda gunakan.",
+        "Saya yakin Anda bisa bermalam di sana meskipun ada perbaikan.”“Oh ya, mudah.”“Serahkan sisanya pada kami.”“Tapi apa yang akan kamu lakukan?”“Kami akan bermalam di kamar Anda dan menyelidiki penyebab kebisingan yang mengganggu Anda.”“Saya rasa, Mr. Holmes, Anda sudah mengambil keputusan,” kata Miss Stoner sambil menyentuh lengan bajunya.“Mungkin sudah.”“Kalau begitu, demi Tuhan, beri tahu aku apa penyebab kematian adikku.”“Saya lebih suka memiliki bukti yang lebih jelas sebelum saya berbicara.”“Setidaknya beri tahu saya apakah pemikiran saya benar dan apakah dia meninggal karena teror.”“Tidak, menurutku tidak.",
+        "Saya pikir ada penyebab yang lebih nyata.",
+        "Sekarang, Nona Stoner, kami harus meninggalkan Anda.",
+        "Jika Dr. Jika Roylott kembali dan melihat kita, perjalanan kita akan sia-sia.",
+        "Selamat tinggal, dan beranilah, karena jika Anda melakukan apa yang saya katakan, Anda dapat yakin bahwa kami akan segera mengusir bahaya yang mengancam Anda.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Sherlock Holmes dan saya tidak mengalami kesulitan dalam menyewa kamar tidur dan ruang duduk di Crown Inn.",
+        "Mereka berada di lantai paling atas dan dari jendela kami bisa melihat gerbang dan sayap Stoke Moran yang berpenghuni.",
+        "Saat senja kami melihat Dr.Grimesby Roylott lewat, sosoknya yang besar menjulang tinggi di atas sosok kecil anak laki-laki yang mengantarnya.",
+        "Anak laki-laki itu berjuang untuk membuka gerbang besi yang berat itu, dan kami mendengar raungan para dokter dan melihatnya mengayunkan tinjunya ke arah anak itu.",
+        "Kereta melaju dan beberapa menit kemudian kami melihat cahaya melalui pepohonan saat lampu menyala di salah satu ruang duduk.“Kau tahu, Watson,” kata Holmes saat kami duduk di malam yang gelap, “aku punya sedikit keberatan untuk mengajakmu bersamaku malam ini.",
+        "Ada bahaya.”“Bisakah saya membantu?”“Kehadiran Anda bisa sangat berharga.”“Kalau begitu aku pasti akan datang.”“Kamu baik sekali.”“Anda sedang berbicara tentang bahaya.",
+        "Anda jelas melihat lebih banyak di ruangan ini daripada saya.”“Tidak, tapi menurutku aku mungkin bisa menyimpulkan lebih banyak darinya.",
+        "Saya berasumsi Anda telah melihat semua yang saya lihat.”“Saya tidak melihat apa pun kecuali kabel belnya, dan saya tidak dapat menebak tujuannya.”“Kamu juga melihat lubang ventilasi?”“Ya, tapi menurutku bukan hal yang aneh jika ada celah kecil di antara dua ruangan.",
+        "Itu sangat kecil sehingga tikus hampir tidak bisa melewatinya.”“Saya tahu kita akan menemukan lubang ventilasi sebelum kita sampai di Stoke Moran.”“Holmes sayangku!”“Oh ya.",
+        "Anda ingat dia mengatakan saudara perempuannya bisa jadi adalah cerutu Dr. Smell Roylott.",
+        "Hal ini langsung mengisyaratkan bahwa harus ada hubungan antara kedua ruang tersebut.",
+        "Itu mungkin hanya masalah kecil, jika tidak maka akan diketahui selama pemeriksaan.",
+        "Saya menyimpulkan itu adalah lubang ventilasi.”“Tetapi apa bahayanya?”“Yah, setidaknya ada satu kebetulan yang aneh pada tanggal tersebut.",
+        "Sebuah lubang ventilasi dibuat, seutas tali digantung, dan seorang wanita yang tidur di ranjang itu meninggal.",
+        "Bukankah itu terasa aneh bagimu?”“Saya belum melihat hubungannya.”“Apakah kamu memperhatikan sesuatu yang istimewa tentang tempat tidur itu?”\"Tidak.\"“Itu melekat pada tanah.",
+        "Pernahkah Anda melihat tempat tidur yang dirusak?”“Saya tidak bisa mengatakan saya memilikinya.”“Wanita itu tidak bisa memindahkan tempat tidurnya.",
+        "Posisinya harus selalu sama dengan ventilasi dan kabelnya – atau karena tidak pernah dimaksudkan sebagai penarik lonceng, kami menyebutnya kabel.”“Holmes,” seruku, “kurasa aku mulai mengerti maksudmu.",
+        "Kita tepat pada waktunya untuk mencegah kejahatan yang halus dan mengerikan.”“Cukup halus dan cukup mengerikan.",
+        "Jika seorang dokter melakukan kesalahan, dia adalah penjahat yang paling buruk.",
+        "Dia memiliki keberanian dan pengetahuan.",
+        "Palmer dan Prita termasuk yang terbaik di bidangnya.",
+        "Orang ini masuk lebih dalam, tapi menurutku, Watson, kita bisa masuk lebih dalam lagi.",
+        "Tapi kita akan mengalami cukup banyak kengerian sebelum malam berakhir; “Mari kita merokok dengan tenang dan memikirkan sesuatu yang lebih menyenangkan selama beberapa jam.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Sekitar pukul sembilan, lampu di antara pepohonan padam dan segalanya menjadi gelap menuju mansion.",
+        "Dua jam berlalu dengan lambat, dan kemudian, tepat pada pukul sebelas, seberkas cahaya terang bersinar di depan kami.\"Itu isyarat kita,\" kata Holmes sambil melompat.“Itu datang dari jendela tengah.”Saat kami berjalan keluar, dia memberi tahu pemilik penginapan bahwa kami akan berkunjung ke rumah teman dan mungkin akan bermalam di sana.",
+        "Sesaat kemudian kami sudah berada di jalanan yang gelap, angin dingin bertiup menerpa wajah kami, dan cahaya kuning berkilauan menembus kegelapan di depan kami untuk membimbing kami.",
+        "Akses ke lokasi itu mudah karena ada celah yang belum diperbaiki di tembok lama.",
+        "Kami berjalan melewati pepohonan, sampai di halaman, menyeberanginya, dan hendak masuk melalui jendela ketika dari rumpun semak pohon salam, seekor makhluk jelek melompat ke halaman, membungkuk, lalu berlari cepat melintasi halaman menuju kegelapan.Ya Tuhan!bisikku.“Apakah kamu melihat itu?”Holmes sama terkejutnya denganku.",
+        "Tangannya meraih pergelangan tanganku, lalu dia tertawa pelan dan berbisik di telingaku.“Rumah tangganya menyenangkan,” gumamnya.“Itu babonnya.”Saya sudah lupa tentang hewan peliharaan Dokter yang aneh.",
+        "Ada juga seekor cheetah;mungkin suatu saat dia akan melompat ke bahu kita.",
+        "Saya merasa lebih nyaman berdiri di kamar tidur setelah mengikuti teladan Holmes dan melepas sepatu saya.",
+        "Holmes diam-diam menutup jendela, meletakkan lampu di atas meja dan melihat sekeliling.",
+        "Semuanya seperti yang kami lihat pada siang hari.",
+        "Kemudian dia merayap ke arahku dan berbisik dengan sangat pelan hingga aku hampir tidak bisa mendengar, “Suara sekecil apa pun akan merusak rencana kita.”Aku mengangguk untuk menunjukkan bahwa aku mengerti.“Kami harus duduk tanpa lampu.",
+        "Dia akan melihatnya melalui lubang ventilasi.”Saya mengangguk lagi.“Jangan tertidur; hidup Anda mungkin bergantung padanya.",
+        "Siapkan pistolmu kalau-kalau kami membutuhkannya.",
+        "Aku akan duduk di tempat tidur dan kamu di kursi.”Aku mengeluarkan pistolku dan menaruhnya di atas meja.",
+        "Holmes membawa tongkat panjang dan tipis, yang diletakkannya di atas tempat tidur.",
+        "Di sebelahnya ia meletakkan korek api dan lilin.",
+        "Lalu dia mematikan lampunya dan kami tetap berada dalam kegelapan."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Saya tidak akan pernah melupakan penjaga yang mengerikan itu.",
+        "Aku tidak dapat mendengar suara apa pun, bahkan helaan napas pun tidak, namun aku tahu bahwa temanku sedang duduk beberapa langkah jauhnya, dengan mata terbuka, sama tegangnya denganku.",
+        "Daun jendela tidak membiarkan cahaya masuk dan kami menunggu dalam kegelapan total.",
+        "Dari luar sesekali terdengar kicauan burung malam, dan suatu kali, tepat di luar jendela kami, terdengar suara lolongan panjang seperti kucing yang memberi tahu kami bahwa cheetah memang bebas.",
+        "Di kejauhan kami dapat mendengar bunyi jam menara gereja yang berdentang setiap seperempat jam.",
+        "Betapa lama rasanya seperempat jam itu!",
+        "Pukul dua belas telah tiba, pukul satu, dua, dan tiga, dan kami masih duduk di sana menunggu apa yang mungkin terjadi.",
+        "Tiba-tiba ada kilatan cahaya sekilas dari lubang ventilasi, yang langsung menghilang, namun disusul bau menyengat minyak terbakar dan logam panas.",
+        "Seseorang di ruangan sebelah telah menyalakan lampu gelap.",
+        "Saya mendengar gerakan lembut dan kemudian semuanya menjadi sunyi, meskipun baunya semakin kuat.",
+        "Saya duduk mendengarkan dengan penuh perhatian selama setengah jam.",
+        "Lalu tiba-tiba terdengar suara lain - suara mendesis yang sangat pelan, seperti uap yang keluar dari ketel.",
+        "Begitu kami mendengarnya, Holmes melompat turun dari tempat tidur, menyalakan korek api, dan memukul tali bel dengan tongkatnya dengan marah.“Kau melihatnya, Watson?”dia berteriak.“Apakah kamu melihatnya?”Tapi saya tidak melihat apa pun.",
+        "Saat Holmes menyalakan lampu, aku mendengar peluit pelan dan jelas, tapi sorot tajam di mataku yang lelah membuatku tidak bisa melihat apa yang dia pukul.",
+        "Namun, saya dapat melihat wajahnya pucat pasi dan penuh rasa ngeri dan jijik.",
+        "Dia telah berhenti memukul dan menatap lubang ventilasi ketika tiba-tiba jeritan paling mengerikan yang pernah saya dengar memecah kesunyian malam.",
+        "Jeritan itu semakin keras – jeritan kesakitan, ketakutan, dan kemarahan yang serak sekaligus.",
+        "Dikatakan bahwa di desa dan bahkan di pastoran yang jauh, jeritan ini membangunkan orang-orang dari tempat tidur mereka.",
+        "Hal ini membuat darah kami menjadi dingin, dan aku berdiri di sana menatap Holmes sampai gaung terakhirnya menghilang.“Apa maksudnya ini?”aku terkesiap.“Artinya semuanya sudah berakhir,” jawab Holmes.“Dan mungkin, jika mempertimbangkan semuanya, ini yang terbaik.",
+        "Ambil senjatamu dan kita akan pergi ke kamar Dr. Roylott.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Dengan ekspresi serius, dia menyalakan lampu dan membawa kami menyusuri koridor.",
+        "Dia mengetuk pintu dua kali tanpa mendapat jawaban.",
+        "Lalu dia memutar pegangannya dan masuk.",
+        "Aku mengikutinya, dengan pistol di tangan.",
+        "Pemandangan aneh muncul.",
+        "Di atas meja berdiri sebuah lampu gelap dengan penggesernya setengah terbuka, berkas cahayanya jatuh ke brankas besi yang pintunya terbuka.",
+        "Di sebelahnya, di atas kursi kayu, duduklah Dr.Grimesby Roylott dalam balutan gaun panjang berwarna abu-abu, pergelangan kaki telanjangnya terlihat, dan kakinya mengenakan sandal Turki dengan punggung terbuka berwarna merah.",
+        "Di pangkuannya tergeletak tongkat pendek dengan tali panjang yang kami perhatikan sepanjang hari.",
+        "Dagunya terangkat dan matanya menatap ke sudut langit-langit.",
+        "Di sekitar dahinya ada pita kuning aneh dengan bintik-bintik kecoklatan, sepertinya terikat erat di kepalanya.",
+        "Ketika kami masuk, dia tidak mengeluarkan suara atau gerakan.“Rekaman itu!",
+        "Pita berbintik-bintik!”bisik Holmes.",
+        "Saya melangkah maju.",
+        "Segera hiasan kepalanya yang aneh mulai bergerak, dan seekor ular menjijikkan dengan kepala lebar berbentuk berlian dan leher bengkak muncul dari rambutnya.“Itu ular kobra rawa!” seru Holmes.“Ular paling mematikan di India.",
+        "Dia meninggal dalam waktu sepuluh detik setelah digigit.",
+        "Kekerasan sebenarnya menimpa pelaku kekerasan, dan si perencana jatuh ke dalam lubang yang ia gali untuk orang lain.",
+        "“Mari kita kembalikan hewan ini ke tempat persembunyiannya lalu kita bisa menyelamatkan Nona Stoner dan memberitahu polisi daerah apa yang terjadi.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "Saat dia berbicara, dia dengan cepat menarik tali anjing itu dari pangkuan orang mati itu, melemparkan tali ke leher reptil itu, menariknya dari tempatnya dan, sambil memegangnya sejauh lengan, melemparkannya ke dalam brankas besi, yang dia kunci.",
+        "Inilah Fakta Sebenarnya Meninggalnya Dr Grimesby Roylott.",
+        "Tidak perlu memperpanjang cerita yang sudah panjang dengan menjelaskan bagaimana kami menyampaikan kabar tersebut kepada gadis yang ketakutan, bagaimana kami membawanya dengan kereta pagi ke bibinya di Harrow, atau bagaimana proses lambat dari penyelidikan resmi menyimpulkan bahwa dokter menemui nasibnya dengan bermain sembarangan dengan hewan peliharaan yang berbahaya.",
+        "Sedikit sekali yang masih harus kupelajari, kata Holmes padaku dalam perjalanan pulang keesokan harinya."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Saya,” katanya, “mendapatkan kesimpulan yang salah, dan ini menunjukkan, sobat Watson, betapa berbahayanya mengambil kesimpulan berdasarkan data yang tidak mencukupi.",
+        "Kehadiran para gipsi dan kata 'band', yang pastinya digunakan oleh gadis malang itu untuk menggambarkan apa yang dilihatnya dari sudut pandang pasangannya, sudah cukup untuk menempatkanku pada jalur yang salah.",
+        "Saya hanya dapat mengatakan bahwa saya segera mempertimbangkan kembali posisi saya ketika menjadi jelas bahwa apa pun yang mengancam penghuni ruangan tidak dapat datang dari jendela atau pintu.",
+        "Perhatian saya, seperti yang saya katakan, tertuju pada ventilasi dan kabel bel.",
+        "Penemuan bahwa tali itu adalah boneka dan tempat tidur diikat ke lantai langsung membuat saya curiga bahwa tali itu adalah jembatan bagi sesuatu untuk masuk melalui lubang dan sampai ke tempat tidur.",
+        "Ide tentang ular muncul di benak saya, dan ketika saya menggabungkannya dengan pengetahuan saya bahwa dokter tersebut memiliki hewan dari India, saya merasa berada di jalur yang benar.",
+        "Gagasan untuk menggunakan racun yang tidak dapat dideteksi oleh uji kimia apa pun akan muncul di benak orang yang cerdas dan kejam dengan pengalaman Timur.",
+        "Kecepatan kerja racun semacam itu juga akan menjadi keuntungan.",
+        "Dibutuhkan ahli patologi forensik yang sangat cerdik untuk memperhatikan dua tusukan kecil berwarna gelap yang ditinggalkan oleh gigi ular.",
+        "Lalu aku memikirkan tentang peluitnya.",
+        "Tentu saja, dia harus memanggil ular itu kembali sebelum siang hari menunjukkannya kepada korbannya.",
+        "Dia mungkin telah melatihnya untuk kembali saat dibutuhkan dengan susu yang kami lihat.",
+        "Dia akan mengirimnya melalui ventilasi pada waktu yang dia pilih, aman karena mengetahui bahwa dia akan merangkak ke bawah dan ke tempat tidur.",
+        "Dia mungkin menggigit penghuninya atau tidak;mungkin dia akan melarikan diri setiap malam selama seminggu;tapi cepat atau lambat dia akan menjadi korban.”"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "sentences": [
+        "“Saya telah sampai pada kesimpulan ini sebelum kami memasuki kamarnya.",
+        "Pemeriksaan terhadap kursinya menunjukkan kepada saya bahwa dia telah berdiri di atasnya, yang diperlukan untuk mencapai lubang ventilasi.",
+        "Melihat brankas, semangkuk susu dan cambuk yang diikatkan pada jerat akhirnya menghilangkan semua keraguan.",
+        "Dentang logam yang didengar Nona Stoner jelas disebabkan oleh ayah tirinya yang dengan cepat menutup brankas berisi hewan mengerikan itu.",
+        "Begitu saya sadar, Anda pasti tahu langkah apa yang saya ambil untuk membuktikannya.",
+        "Saya mendengar hewan itu mendesis, dan saya yakin Anda juga mendengarnya, dan saya segera menyalakan lampu dan menyerangnya.”“Hasilnya kau mendorongnya kembali melalui lubang ventilasi,” kataku.“Dan benda itu menimpa tuannya di sisi lain,” jawabnya.“Beberapa pukulan tongkat saya mengenainya dan membuat marahnya sehingga menyerang orang pertama yang dilihatnya.",
+        "Dengan cara ini saya secara tidak langsung bertanggung jawab atas kematian Dr. Grimesby Roylott dan saya tidak bisa mengatakan bahwa hal itu akan sangat membebani hati nurani saya.”"
+      ]
+    }
+  ]
+}
