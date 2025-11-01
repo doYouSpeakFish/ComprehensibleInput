@@ -166,11 +166,7 @@ private fun StoryListItem(
                 modifier = Modifier.testTag("story-image-${story.id}"),
                 image = story.featuredImage.asImageBitmap(),
             )
-            Box {
-                // Add empty title with max lines to force every card to have the same height
-                StoryTitle(title = "\n", subtitle = "\n")
-                StoryTitle(title = story.title, subtitle = story.subtitle)
-            }
+            StoryTitle(title = story.title, subtitle = story.subtitle)
         }
     }
 }
@@ -200,26 +196,36 @@ private fun StoryTitle(
     title: String,
     subtitle: String,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    @Composable
+    fun Title(
+        title: String,
+        subtitle: String,
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+    Box(modifier = modifier) {
+        // Add empty title with max line height to force every title to have the same height
+        Title(title = "\n", subtitle = "\n")
+        Title(title = title, subtitle = subtitle)
     }
 }
 
