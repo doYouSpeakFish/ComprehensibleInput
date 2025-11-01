@@ -40,20 +40,28 @@ class StoriesRepository @Inject constructor(
             }
         }
         return StoriesList(
-            stories = storiesWithTranslations.map { (story, translation) ->
-                val featuredImage = story
-                    .content
-                    .filterIsInstance<StoryElementData.ImageData>()
-                    .first()
+            stories = storiesWithTranslations.mapNotNull { (story, translation) ->
+                val hasStartPart = story.parts.any { it.id == story.startPartId }
+                if (!hasStartPart) {
+                    Timber.e(
+                        "Story ${story.id} is missing a part for startPartId ${story.startPartId}"
+                    )
+                    return@mapNotNull null
+                }
+                val featuredImage = storiesLocalDataSource.loadStoryImage(
+                    storyId = story.id,
+                    path = story.featuredImagePath,
+                ) ?: run {
+                    Timber.e(
+                        "Story ${story.id} is missing an image with path ${story.featuredImagePath}"
+                    )
+                    return@mapNotNull null
+                }
                 StoriesList.StoriesItem(
                     id = story.id,
                     title = story.title,
                     titleTranslated = translation.title,
-                    featuredImage = storiesLocalDataSource.loadStoryImage(
-                        storyId = story.id,
-                        path = featuredImage.path,
-                    ),
-                    featuredImageContentDescription = featuredImage.contentDescription,
+                    featuredImage = featuredImage,
                 )
             }
         )
@@ -114,22 +122,55 @@ class StoriesRepository @Inject constructor(
         translationsLanguage: String,
         position: Int,
     ): Story? {
-        return Story(
-            id = id,
-            title = title,
-            translatedTitle = translation.title,
-            content = content
-                .zip(translation.content)
-                .map { (storyElementData, translation) ->
-                    storyElementData.toStoryElement(
-                        storyId = id,
-                        translation = translation,
-                        learningLanguage = learningLanguage,
-                        translationsLanguage = translationsLanguage,
-                    ) ?: return null
-                },
-            currentStoryElementIndex = position,
-        )
+        val learningPart = parts.firstOrNull { it.id == startPartId }
+        val translationPart = translation.parts.firstOrNull { it.id == startPartId }
+        if (learningPart == null || translationPart == null) {
+            if (learningPart == null) {
+                Timber.e("Story $id is missing part with id $startPartId")
+            }
+            if (translationPart == null) {
+                Timber.e("Story $id translation is missing part with id $startPartId")
+            }
+            return null
+        }
+
+        var hasMismatch = false
+        if (learningPart.content.size != translationPart.content.size) {
+            Timber.e(
+                "Story $id content could not be fully matched between $learningLanguage and $translationsLanguage"
+            )
+            hasMismatch = true
+        }
+
+        val storyElements = mutableListOf<StoryElement>()
+        if (!hasMismatch) {
+            val zippedContent = learningPart.content.zip(translationPart.content)
+            loop@ for ((storyElementData, translationElement) in zippedContent) {
+                val storyElement = storyElementData.toStoryElement(
+                    storyId = id,
+                    translation = translationElement,
+                    learningLanguage = learningLanguage,
+                    translationsLanguage = translationsLanguage,
+                )
+                if (storyElement == null) {
+                    hasMismatch = true
+                    break@loop
+                }
+                storyElements += storyElement
+            }
+        }
+
+        return if (hasMismatch) {
+            null
+        } else {
+            Story(
+                id = id,
+                title = title,
+                translatedTitle = translation.title,
+                content = storyElements,
+                currentStoryElementIndex = position,
+            )
+        }
     }
 
     private suspend fun StoryElementData.toStoryElement(
@@ -140,31 +181,39 @@ class StoriesRepository @Inject constructor(
     ): StoryElement? {
         return when (this) {
             is StoryElementData.ParagraphData -> {
-                (translation as? StoryElementData.ParagraphData)
-                    ?: run {
-                        Timber.e("No matching translation found for paragraph in story $storyId")
-                        return null
-                    }
-                if (sentences.size != translation.sentences.size) {
+                val translationParagraph = translation as? StoryElementData.ParagraphData
+                if (translationParagraph == null) {
+                    Timber.e("No matching translation found for paragraph in story $storyId")
+                    null
+                } else if (sentences.size != translationParagraph.sentences.size) {
                     Timber.e(
                         "Mismatched number of sentences in story $storyId for languages " +
                                 "$learningLanguage and $translationsLanguage"
                     )
-                    return null
+                    null
+                } else {
+                    StoryElement.Paragraph(
+                        sentences = sentences,
+                        sentencesTranslations = translationParagraph.sentences
+                    )
                 }
-                StoryElement.Paragraph(
-                    sentences = sentences,
-                    sentencesTranslations = translation.sentences
-                )
             }
 
-            is StoryElementData.ImageData -> StoryElement.Image(
-                contentDescription = contentDescription,
-                bitmap = storiesLocalDataSource.loadStoryImage(
+            is StoryElementData.ImageData -> {
+                val bitmap = storiesLocalDataSource.loadStoryImage(
                     storyId = storyId,
                     path = path,
                 )
-            )
+                if (bitmap == null) {
+                    Timber.e("Image $path missing for story $storyId")
+                    null
+                } else {
+                    StoryElement.Image(
+                        contentDescription = contentDescription,
+                        bitmap = bitmap,
+                    )
+                }
+            }
         }
     }
 }

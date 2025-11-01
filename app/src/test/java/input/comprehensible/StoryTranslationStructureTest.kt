@@ -2,6 +2,7 @@ package input.comprehensible
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.Assert.assertTrue
@@ -40,11 +41,11 @@ class StoryTranslationStructureTest {
                 continue
             }
 
-            val structures = translations.associate { path ->
-                path.fileName.toString() to parseStructure(path)
-            }
+        val structures = translations.associate { path ->
+            path.fileName.toString() to parseStructure(path)
+        }
 
-            failures += validateStoryTranslations(storyDir, structures)
+        failures += validateStoryTranslations(storyDir, structures)
         }
 
         if (failures.isNotEmpty()) {
@@ -54,7 +55,7 @@ class StoryTranslationStructureTest {
 
     private fun validateStoryTranslations(
         storyDir: Path,
-        structures: Map<String, List<ContentDescriptor>>
+        structures: Map<String, StoryDescriptor>
     ): List<String> {
         if (structures.isEmpty()) {
             return emptyList()
@@ -74,28 +75,36 @@ class StoryTranslationStructureTest {
     private fun collectTranslationFailures(
         storyDir: Path,
         translation: String,
-        structure: List<ContentDescriptor>,
-        referenceEntry: Map.Entry<String, List<ContentDescriptor>>
+        structure: StoryDescriptor,
+        referenceEntry: Map.Entry<String, StoryDescriptor>
     ): List<String> {
         val referenceStructure = referenceEntry.value
         val context = StoryTranslationContext(
             storyDir = storyDir,
             translation = translation,
             referenceKey = referenceEntry.key,
-            referenceStructureSize = referenceStructure.size,
+            referenceStructureSize = referenceStructure.content.size,
         )
         val failures = mutableListOf<String>()
 
-        if (structure.size != referenceStructure.size) {
+        if (structure.featuredImagePath != referenceStructure.featuredImagePath) {
+            failures += featuredImageMismatchMessage(
+                context = context,
+                actualPath = structure.featuredImagePath,
+                referencePath = referenceStructure.featuredImagePath,
+            )
+        }
+
+        if (structure.content.size != referenceStructure.content.size) {
             failures += sizeMismatchMessage(
                 context = context,
-                structureSize = structure.size,
+                structureSize = structure.content.size,
             )
             return failures
         }
 
-        structure.forEachIndexed { index, item ->
-            val referenceItem = referenceStructure[index]
+        structure.content.forEachIndexed { index, item ->
+            val referenceItem = referenceStructure.content[index]
             if (item.type != referenceItem.type) {
                 failures += typeMismatchMessage(
                     context = context,
@@ -214,6 +223,24 @@ class StoryTranslationStructureTest {
         append("'.")
     }
 
+    private fun featuredImageMismatchMessage(
+        context: StoryTranslationContext,
+        actualPath: String,
+        referencePath: String,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' featured image '")
+        append(actualPath)
+        append("' differs from '")
+        append(referencePath)
+        append("' in '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
     private data class StoryTranslationContext(
         val storyDir: Path,
         val translation: String,
@@ -221,32 +248,76 @@ class StoryTranslationStructureTest {
         val referenceStructureSize: Int,
     )
 
-    private fun parseStructure(path: Path): List<ContentDescriptor> {
-        val element = json.parseToJsonElement(path.readText())
-        val content = element.jsonObject["content"] ?: error("Story file '$path' is missing a 'content' array")
-        if (content !is JsonArray) {
-            error("Story file '$path' has a non-array 'content' element")
+    private fun parseStructure(path: Path): StoryDescriptor {
+        val element = json.parseToJsonElement(path.readText()).jsonObject
+        val startPartId = element.requireString(key = "startPartId", path = path)
+        val featuredImagePath = element.requireString(key = "featuredImagePath", path = path)
+        val partsArray = element.requireArray(key = "parts", path = path)
+        val partObject = partsArray.findPartObject(startPartId = startPartId, path = path)
+        val content = partObject.requireContentArray(path = path, partId = startPartId)
+
+        val descriptors = content.mapIndexed { index, item ->
+            item.jsonObject.toContentDescriptor(path = path, index = index)
         }
 
-        return content.mapIndexed { index, item ->
-            val obj = item.jsonObject
-            val type = obj["type"]?.jsonPrimitive?.content ?: error("Content item $index in '$path' is missing a 'type'")
-            when (type) {
-                "image" -> {
-                    val imagePath = obj["path"]?.jsonPrimitive?.content
-                        ?: error("Image item $index in '$path' is missing a 'path'")
-                    ContentDescriptor(ContentType.IMAGE, imagePath = imagePath)
-                }
+        val containsFeaturedImage = descriptors.any { it.imagePath == featuredImagePath }
+        if (!containsFeaturedImage) {
+            error(
+                "Story file '$path' featuredImagePath '$featuredImagePath' does not match any image in part '$startPartId'"
+            )
+        }
 
-                "paragraph" -> {
-                    val sentencesElement = obj["sentences"] ?: error("Paragraph item $index in '$path' is missing 'sentences'")
-                    val sentencesArray = sentencesElement as? JsonArray
-                        ?: error("Paragraph item $index in '$path' has non-array 'sentences'")
-                    ContentDescriptor(ContentType.PARAGRAPH, sentenceCount = sentencesArray.size)
-                }
+        return StoryDescriptor(
+            featuredImagePath = featuredImagePath,
+            content = descriptors,
+        )
+    }
 
-                else -> error("Unsupported content type '$type' in '$path'")
+    private fun JsonObject.requireString(key: String, path: Path): String {
+        return this[key]?.jsonPrimitive?.content
+            ?: error("Story file '$path' is missing a '$key'")
+    }
+
+    private fun JsonObject.requireArray(key: String, path: Path): JsonArray {
+        val element = this[key] ?: error("Story file '$path' is missing a '$key' array")
+        return element as? JsonArray
+            ?: error("Story file '$path' has a non-array '$key' element")
+    }
+
+    private fun JsonArray.findPartObject(startPartId: String, path: Path): JsonObject {
+        return map { it.jsonObject }
+            .firstOrNull { part ->
+                part["id"]?.jsonPrimitive?.content == startPartId
             }
+            ?: error("Story file '$path' does not have a part matching startPartId '$startPartId'")
+    }
+
+    private fun JsonObject.requireContentArray(path: Path, partId: String): JsonArray {
+        val contentElement = this["content"]
+            ?: error("Story file '$path' is missing a 'content' array in part '$partId'")
+        return contentElement as? JsonArray
+            ?: error("Story file '$path' has a non-array 'content' element in part '$partId'")
+    }
+
+    private fun JsonObject.toContentDescriptor(path: Path, index: Int): ContentDescriptor {
+        val type = this["type"]?.jsonPrimitive?.content
+            ?: error("Content item $index in '$path' is missing a 'type'")
+        return when (type) {
+            "image" -> {
+                val imagePath = this["path"]?.jsonPrimitive?.content
+                    ?: error("Image item $index in '$path' is missing a 'path'")
+                ContentDescriptor(ContentType.IMAGE, imagePath = imagePath)
+            }
+
+            "paragraph" -> {
+                val sentencesElement = this["sentences"]
+                    ?: error("Paragraph item $index in '$path' is missing 'sentences'")
+                val sentencesArray = sentencesElement as? JsonArray
+                    ?: error("Paragraph item $index in '$path' has non-array 'sentences'")
+                ContentDescriptor(ContentType.PARAGRAPH, sentenceCount = sentencesArray.size)
+            }
+
+            else -> error("Unsupported content type '$type' in '$path'")
         }
     }
 
@@ -260,6 +331,11 @@ class StoryTranslationStructureTest {
         return candidates.firstOrNull { Files.exists(it) }
             ?: error("Could not locate the stories directory. Looked in: ${candidates.joinToString()}")
     }
+
+    private data class StoryDescriptor(
+        val featuredImagePath: String,
+        val content: List<ContentDescriptor>,
+    )
 
     private data class ContentDescriptor(
         val type: ContentType,

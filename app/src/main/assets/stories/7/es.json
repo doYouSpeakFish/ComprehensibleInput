@@ -1,103 +1,111 @@
 {
   "id": "7",
   "title": "Susurros de Fantasmas y Latidos del Corazón",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Marco corrió bajo la lluvia.",
-        "Un relámpago iluminó el cielo oscuro y un trueno retumbó.",
-        "Llegó a una casa grande y vieja.",
-        "Parecía un castillo, grande y un poco espeluznante.",
-        "Aysha lo estaba esperando en la luz de la entrada."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Una gran casa de estilo gótico. Hay relámpagos en el fondo.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ella sonrió y saludó con la mano.",
-        "\"¡Entra! Es solo una tormenta.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Pero Marco sabía que no era solo la tormenta.",
-        "Había fantasmas en esta casa.",
-        "Los había oído y, a veces, por la noche, los había visto.",
-        "A Marco no le gustaban los fantasmas.",
-        "Pero le gustaba mucho Aysha."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Una mujer saluda y sonríe en la entrada de una gran casa de estilo gótico. En el fondo, se ve una figura oscura y fantasmal.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Entraron juntos a la cocina.",
-        "La casa crujía.",
-        "Aysha hizo té y hablaron de cosas normales: trabajo, libros, música.",
-        "Marco trató de olvidar a los fantasmas."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "De repente escucharon un ruido arriba.",
-        "Aysha se rió.",
-        "\"Oh, eso es solo la casa.",
-        "Es vieja.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Marco la miró.",
-        "¿Cómo podía no tener miedo?",
-        "Aysha vio su preocupación y tomó su mano.",
-        "\"Te acostumbras.",
-        "Los fantasmas no hacen nada.",
-        "Son parte de la casa.\""
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Un hombre y una mujer se sientan a la mesa y beben té. La mujer parece relajada. En el fondo, se ve una figura oscura y sombría, como si los estuviera observando.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Marco quería ser valiente.",
-        "\"Está bien,\" dijo y bebió su té.",
-        "Pero en el fondo de su corazón, sentía que algo estaba mal.",
-        "Aun así, estaba enamorado.",
-        "Y por Aysha, aceptaría a los fantasmas, lo espeluznante, incluso su miedo."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Llegó la noche y se fueron a la cama.",
-        "En la habitación oscura, algo desconocido susurraba.",
-        "Marco apretó fuerte la mano de Aysha.",
-        "Se quedaría.",
-        "Por amor.",
-        "Pero se preguntaba si el amor sería suficiente para vencer a las sombras."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Un hombre y una mujer en la cama. El hombre parece estar susurrando algo a la mujer. En el fondo, una figura fantasmal imita al hombre, como si se burlara de él.",
-      "path": "4"
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marco corrió bajo la lluvia.",
+            "Un relámpago iluminó el cielo oscuro y un trueno retumbó.",
+            "Llegó a una casa grande y vieja.",
+            "Parecía un castillo, grande y un poco espeluznante.",
+            "Aysha lo estaba esperando en la luz de la entrada."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Una gran casa de estilo gótico. Hay relámpagos en el fondo.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ella sonrió y saludó con la mano.",
+            "\"¡Entra! Es solo una tormenta.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pero Marco sabía que no era solo la tormenta.",
+            "Había fantasmas en esta casa.",
+            "Los había oído y, a veces, por la noche, los había visto.",
+            "A Marco no le gustaban los fantasmas.",
+            "Pero le gustaba mucho Aysha."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Una mujer saluda y sonríe en la entrada de una gran casa de estilo gótico. En el fondo, se ve una figura oscura y fantasmal.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Entraron juntos a la cocina.",
+            "La casa crujía.",
+            "Aysha hizo té y hablaron de cosas normales: trabajo, libros, música.",
+            "Marco trató de olvidar a los fantasmas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De repente escucharon un ruido arriba.",
+            "Aysha se rió.",
+            "\"Oh, eso es solo la casa.",
+            "Es vieja.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marco la miró.",
+            "¿Cómo podía no tener miedo?",
+            "Aysha vio su preocupación y tomó su mano.",
+            "\"Te acostumbras.",
+            "Los fantasmas no hacen nada.",
+            "Son parte de la casa.\""
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Un hombre y una mujer se sientan a la mesa y beben té. La mujer parece relajada. En el fondo, se ve una figura oscura y sombría, como si los estuviera observando.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marco quería ser valiente.",
+            "\"Está bien,\" dijo y bebió su té.",
+            "Pero en el fondo de su corazón, sentía que algo estaba mal.",
+            "Aun así, estaba enamorado.",
+            "Y por Aysha, aceptaría a los fantasmas, lo espeluznante, incluso su miedo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Llegó la noche y se fueron a la cama.",
+            "En la habitación oscura, algo desconocido susurraba.",
+            "Marco apretó fuerte la mano de Aysha.",
+            "Se quedaría.",
+            "Por amor.",
+            "Pero se preguntaba si el amor sería suficiente para vencer a las sombras."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Un hombre y una mujer en la cama. El hombre parece estar susurrando algo a la mujer. En el fondo, una figura fantasmal imita al hombre, como si se burlara de él.",
+          "path": "4"
+        }
+      ],
+      "choices": []
     }
   ]
 }

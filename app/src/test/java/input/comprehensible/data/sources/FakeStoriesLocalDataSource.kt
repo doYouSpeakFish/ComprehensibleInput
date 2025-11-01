@@ -27,7 +27,7 @@ class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource 
     override suspend fun getStories(learningLanguage: String): List<StoryData> =
         stories[learningLanguage] ?: emptyList()
 
-    override suspend fun loadStoryImage(storyId: String, path: String): Bitmap =
+    override suspend fun loadStoryImage(storyId: String, path: String): Bitmap? =
         Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
 }
 

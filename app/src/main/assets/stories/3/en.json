@@ -1,110 +1,118 @@
 {
   "id": "3",
   "title": "The Empty Carnival",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Once upon a time, there was a small town in Germany known for its colorful and lively carnival.",
-        "Every year, people came from all over to enjoy the festive activities and cheerful music."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "An empty street with colorful garlands and decorations hanging above.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "But this year was different.",
-        "When Anna, a young woman who lived nearby, arrived at the fairground, everything was strangely quiet.",
-        "\"Where are all the people?\" she wondered.",
-        "The streets were empty, no music played, no children laughed."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "A girl stands at the entrance of a fairground, looking around confused. In the background, a deserted carousel is visible.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Anna walked through the alleys and saw the decorated stalls, but there were no vendors, no glittering lights, no balloons.",
-        "It was as if the carnival had never started."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Fair stalls with colorful decorations, but no people around. An atmosphere of emptiness and silence in the air.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Suddenly she heard a faint sound.",
-        "\"Hello?\" she called.",
-        "No answer.",
-        "She followed the sound and found a small, frightened dog hiding under a bench."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "A dog hides under a bench, looking scared.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"What are you doing here all alone?\" Anna asked the dog.",
-        "The dog looked at her with big eyes, as if to say: \"I don't know either.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Anna decided to accompany the dog, and together they looked for clues.",
-        "They found a poster that said: \"Carnival postponed! New dates to follow soon.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Anna now understood why no one was there.",
-        "The carnival had been postponed, but she hadn't known about it.",
-        "She smiled at the dog and said: \"Well, it looks like we have the whole place to ourselves.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "And so, Anna and the little dog spent the day together at the empty fairground, playing among the colorful stalls and enjoying the unexpected peace."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "A girl throws a ball for a dog to catch, in front of empty fair stalls. The dog looks happy and playful.",
-      "path": "5"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "As it got dark, Anna took the dog home and promised to visit him again the next day.",
-        "Maybe the carnival would soon open for everyone, but for today it was their little secret - the secret of the empty carnival."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "A girl walks away from an empty fairground, followed by a dog. The sun sets in the background.",
-      "path": "6"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "And the moral of the story?",
-        "Sometimes, when things don't go as we expect, we find joy in the most unusual moments and friendships in the most unexpected places."
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Once upon a time, there was a small town in Germany known for its colorful and lively carnival.",
+            "Every year, people came from all over to enjoy the festive activities and cheerful music."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "An empty street with colorful garlands and decorations hanging above.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "But this year was different.",
+            "When Anna, a young woman who lived nearby, arrived at the fairground, everything was strangely quiet.",
+            "\"Where are all the people?\" she wondered.",
+            "The streets were empty, no music played, no children laughed."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "A girl stands at the entrance of a fairground, looking around confused. In the background, a deserted carousel is visible.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Anna walked through the alleys and saw the decorated stalls, but there were no vendors, no glittering lights, no balloons.",
+            "It was as if the carnival had never started."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Fair stalls with colorful decorations, but no people around. An atmosphere of emptiness and silence in the air.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suddenly she heard a faint sound.",
+            "\"Hello?\" she called.",
+            "No answer.",
+            "She followed the sound and found a small, frightened dog hiding under a bench."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "A dog hides under a bench, looking scared.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"What are you doing here all alone?\" Anna asked the dog.",
+            "The dog looked at her with big eyes, as if to say: \"I don't know either.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Anna decided to accompany the dog, and together they looked for clues.",
+            "They found a poster that said: \"Carnival postponed! New dates to follow soon.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Anna now understood why no one was there.",
+            "The carnival had been postponed, but she hadn't known about it.",
+            "She smiled at the dog and said: \"Well, it looks like we have the whole place to ourselves.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "And so, Anna and the little dog spent the day together at the empty fairground, playing among the colorful stalls and enjoying the unexpected peace."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "A girl throws a ball for a dog to catch, in front of empty fair stalls. The dog looks happy and playful.",
+          "path": "5"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "As it got dark, Anna took the dog home and promised to visit him again the next day.",
+            "Maybe the carnival would soon open for everyone, but for today it was their little secret - the secret of the empty carnival."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "A girl walks away from an empty fairground, followed by a dog. The sun sets in the background.",
+          "path": "6"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "And the moral of the story?",
+            "Sometimes, when things don't go as we expect, we find joy in the most unusual moments and friendships in the most unexpected places."
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

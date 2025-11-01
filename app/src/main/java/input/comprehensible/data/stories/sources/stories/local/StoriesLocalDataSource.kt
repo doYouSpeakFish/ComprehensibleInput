@@ -26,7 +26,7 @@ interface StoriesLocalDataSource {
     /**
      * Loads an image from the assets folder.
      */
-    suspend fun loadStoryImage(storyId: String, path: String): Bitmap
+    suspend fun loadStoryImage(storyId: String, path: String): Bitmap?
 }
 
 
@@ -37,7 +37,22 @@ interface StoriesLocalDataSource {
 data class StoryData(
     val id: String,
     val title: String,
+    val startPartId: String,
+    val featuredImagePath: String,
+    val parts: List<StoryPartData>,
+)
+
+@Serializable
+data class StoryPartData(
+    val id: String,
     val content: List<StoryElementData>,
+    val choices: List<StoryChoiceData> = emptyList(),
+)
+
+@Serializable
+data class StoryChoiceData(
+    val text: String,
+    val targetPartId: String,
 )
 
 /**

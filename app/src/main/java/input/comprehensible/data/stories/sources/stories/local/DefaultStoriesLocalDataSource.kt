@@ -48,10 +48,16 @@ class DefaultStoriesLocalDataSource @Inject constructor(
     override suspend fun loadStoryImage(
         storyId: String,
         path: String
-    ): Bitmap = withContext(dispatcher) {
-        context
-            .assets
-            .open("stories/$storyId/$path")
-            .use { BitmapFactory.decodeStream(it) }
+    ): Bitmap? = withContext(dispatcher) {
+        runCatching {
+            context
+                .assets
+                .open("stories/$storyId/$path")
+                .use { BitmapFactory.decodeStream(it) }
+        }
+            .onFailure {
+                Timber.e(it, "Failed to load image $path for story $storyId")
+            }
+            .getOrNull()
     }
 }

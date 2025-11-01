@@ -1,90 +1,98 @@
 {
   "id": "4",
   "title": "Viking Kecil di Berlin",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Dahulu kala, ada sebuah desa kecil Viking, tidak lebih besar dari mainan, yang berlayar melintasi waktu dan tiba-tiba mendarat di jantung kota Berlin.",
-        "Bayangkan keterkejutan mereka ketika mereka menambatkan kapal kayu mereka di tepi sungai Spree dan mendapati diri mereka dikelilingi oleh bangunan-bangunan raksasa dan gerbong-gerbong bercahaya - atau kita menyebutnya, mobil."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Beberapa Viking kecil di perahu dayung Viking di Spree di Berlin.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Pada awalnya, para Viking kecil itu sangat bingung.",
-        "“Sihir macam apa ini?” tanya sang pemimpin sambil menunjuk lampu pejalan kaki yang berkedip-kedip.",
-        "“Dan kenapa tembok itu bergerak dengan sendirinya?” tambahnya saat kereta bawah tanah melaju melewati mereka."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Tiga orang Viking kecil berdiri dan menunjuk dengan bingung ke lampu lalu lintas.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Namun Viking dikenal karena kemampuan beradaptasi dan semangat eksplorasinya.",
-        "Mereka memutuskan untuk menjelajahi dunia baru ini.",
-        "Mereka menaiki sepeda, yang bagi mereka tampak seperti kapal perang raksasa, dan berangkat untuk menemukan lebih banyak hal."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Seekor Viking mungil mengendarai sepeda melewati lalu lintas Berlin, sementara dua orang lainnya berjalan di samping pedal.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Perhentian pertama mereka adalah Alexanderplatz yang terkenal, tempat mereka berbaur dengan orang banyak.",
-        "Orang-orang hampir tidak memperhatikan mereka, perhatian mereka teralihkan oleh ponsel dan hiruk pikuk kota.",
-        "Bangsa Viking terpesona dengan banyaknya warung makan.",
-        "\"Pesta yang luar biasa!\" seru mereka sambil mencoba sepotong döner yang ukurannya hampir sebesar mereka."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Seorang Viking kecil berjalan dengan tusuk sate döner di tangannya, tampak sangat puas.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Setelah kenyang, para Viking melanjutkan perjalanan.",
-        "Mereka melewati tempat yang sepertinya penuh dengan harta karun – pasar elektronik.",
-        "Mereka kagum pada layar yang berkilauan dan perangkat aneh, yang mereka anggap sebagai benda ajaib."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Tiga orang Viking kecil menatap dengan takjub pada tablet di toko elektronik.",
-      "path": "5"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Pada akhirnya, para Viking kecil itu kelelahan namun bahagia.",
-        "Mereka telah belajar banyak tentang dunia modern dan memutuskan menjadikan Berlin sebagai rumah baru mereka.",
-        "Setiap hari, mereka akan menjalani petualangan baru, tetapi untuk hari ini, cukup tidur di bawah langit berbintang di samping Spree yang mereka kenal."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Viking kecil berdiri berdampingan di perahu panjang mereka, memandangi sungai dan cakrawala Berlin di malam hari.",
-      "path": "6"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Akhir"
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dahulu kala, ada sebuah desa kecil Viking, tidak lebih besar dari mainan, yang berlayar melintasi waktu dan tiba-tiba mendarat di jantung kota Berlin.",
+            "Bayangkan keterkejutan mereka ketika mereka menambatkan kapal kayu mereka di tepi sungai Spree dan mendapati diri mereka dikelilingi oleh bangunan-bangunan raksasa dan gerbong-gerbong bercahaya - atau kita menyebutnya, mobil."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Beberapa Viking kecil di perahu dayung Viking di Spree di Berlin.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pada awalnya, para Viking kecil itu sangat bingung.",
+            "“Sihir macam apa ini?” tanya sang pemimpin sambil menunjuk lampu pejalan kaki yang berkedip-kedip.",
+            "“Dan kenapa tembok itu bergerak dengan sendirinya?” tambahnya saat kereta bawah tanah melaju melewati mereka."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Tiga orang Viking kecil berdiri dan menunjuk dengan bingung ke lampu lalu lintas.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Namun Viking dikenal karena kemampuan beradaptasi dan semangat eksplorasinya.",
+            "Mereka memutuskan untuk menjelajahi dunia baru ini.",
+            "Mereka menaiki sepeda, yang bagi mereka tampak seperti kapal perang raksasa, dan berangkat untuk menemukan lebih banyak hal."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Seekor Viking mungil mengendarai sepeda melewati lalu lintas Berlin, sementara dua orang lainnya berjalan di samping pedal.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Perhentian pertama mereka adalah Alexanderplatz yang terkenal, tempat mereka berbaur dengan orang banyak.",
+            "Orang-orang hampir tidak memperhatikan mereka, perhatian mereka teralihkan oleh ponsel dan hiruk pikuk kota.",
+            "Bangsa Viking terpesona dengan banyaknya warung makan.",
+            "\"Pesta yang luar biasa!\" seru mereka sambil mencoba sepotong döner yang ukurannya hampir sebesar mereka."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Seorang Viking kecil berjalan dengan tusuk sate döner di tangannya, tampak sangat puas.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Setelah kenyang, para Viking melanjutkan perjalanan.",
+            "Mereka melewati tempat yang sepertinya penuh dengan harta karun – pasar elektronik.",
+            "Mereka kagum pada layar yang berkilauan dan perangkat aneh, yang mereka anggap sebagai benda ajaib."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Tiga orang Viking kecil menatap dengan takjub pada tablet di toko elektronik.",
+          "path": "5"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pada akhirnya, para Viking kecil itu kelelahan namun bahagia.",
+            "Mereka telah belajar banyak tentang dunia modern dan memutuskan menjadikan Berlin sebagai rumah baru mereka.",
+            "Setiap hari, mereka akan menjalani petualangan baru, tetapi untuk hari ini, cukup tidur di bawah langit berbintang di samping Spree yang mereka kenal."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Viking kecil berdiri berdampingan di perahu panjang mereka, memandangi sungai dan cakrawala Berlin di malam hari.",
+          "path": "6"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Akhir"
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

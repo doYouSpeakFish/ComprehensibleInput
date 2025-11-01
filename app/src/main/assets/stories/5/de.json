@@ -1,85 +1,93 @@
 {
   "id": "5",
   "title": "Tag der Magie",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Einmal, an einem ganz normalen Morgen, geschah etwas Unglaubliches: Magie wurde plötzlich real!",
-        "Die Leute auf der Straße konnten kaum glauben, was passierte.",
-        "Sie sahen Kinder, die in der Luft schwebten, und Hunde, die sprechen konnten!"
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Vier Kinder und ein Hund, die funkelnde Zauberstäbe halten. Die Kinder lächeln und drei von ihnen schweben in der Luft.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "In einem kleinen Dorf begann der Tag wie jeder andere.",
-        "Aber dann fingen die Leute an, Zauber zu wirken.",
-        "Ein Junge verwandelte seinen Apfel in Gold, und eine Frau ließ Blumen aus ihrer Hand wachsen."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein Junge hält ein goldenes Apfel einem Mädchen entgegen, das Blumen im Haar hat.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Die Wissenschaftler waren verwirrt aber aufgeregt.",
-        "Sie hatten immer gedacht, dass Magie nur in Märchen existierte.",
-        "Jetzt hatten sie die Chance, das Unmögliche zu erforschen."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Wissenschaftler in Laborkitteln und mit Brillen, die eine leuchtende Kristallkugel betrachten.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Aber nicht alles war perfekt.",
-        "Einige Leute benutzten die Magie, um Streiche zu spielen, und das verursachte Probleme.",
-        "Autos flogen durch die Luft, und manche Gebäude änderten ihre Farben!"
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Autos und Busse fliegen durch die Luft. Die Gebäude im Hintergrund sind sehr bunt.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Dann, genau so plötzlich, wie die Magie gekommen war, verschwand sie wieder.",
-        "Am nächsten Tag war alles wieder normal.",
-        "Die Menschen sprachen noch lange über den magischen Tag, aber niemand wusste, warum es passiert war oder ob es jemals wieder passieren würde."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Eine Gruppe von Menschen schaut staunend in den Nachthimmel.",
-      "path": "5"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Dieser Tag zeigte uns, dass das Leben voller Überraschungen ist.",
-        "Manchmal geschehen Dinge, die wir uns nie hätten vorstellen können.",
-        "Und vielleicht, nur vielleicht, ist Magie irgendwo da draußen, wartend auf den richtigen Moment, um wieder Wirklichkeit zu werden."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ende"
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Einmal, an einem ganz normalen Morgen, geschah etwas Unglaubliches: Magie wurde plötzlich real!",
+            "Die Leute auf der Straße konnten kaum glauben, was passierte.",
+            "Sie sahen Kinder, die in der Luft schwebten, und Hunde, die sprechen konnten!"
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Vier Kinder und ein Hund, die funkelnde Zauberstäbe halten. Die Kinder lächeln und drei von ihnen schweben in der Luft.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In einem kleinen Dorf begann der Tag wie jeder andere.",
+            "Aber dann fingen die Leute an, Zauber zu wirken.",
+            "Ein Junge verwandelte seinen Apfel in Gold, und eine Frau ließ Blumen aus ihrer Hand wachsen."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein Junge hält ein goldenes Apfel einem Mädchen entgegen, das Blumen im Haar hat.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Die Wissenschaftler waren verwirrt aber aufgeregt.",
+            "Sie hatten immer gedacht, dass Magie nur in Märchen existierte.",
+            "Jetzt hatten sie die Chance, das Unmögliche zu erforschen."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Wissenschaftler in Laborkitteln und mit Brillen, die eine leuchtende Kristallkugel betrachten.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Aber nicht alles war perfekt.",
+            "Einige Leute benutzten die Magie, um Streiche zu spielen, und das verursachte Probleme.",
+            "Autos flogen durch die Luft, und manche Gebäude änderten ihre Farben!"
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Autos und Busse fliegen durch die Luft. Die Gebäude im Hintergrund sind sehr bunt.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dann, genau so plötzlich, wie die Magie gekommen war, verschwand sie wieder.",
+            "Am nächsten Tag war alles wieder normal.",
+            "Die Menschen sprachen noch lange über den magischen Tag, aber niemand wusste, warum es passiert war oder ob es jemals wieder passieren würde."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Eine Gruppe von Menschen schaut staunend in den Nachthimmel.",
+          "path": "5"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dieser Tag zeigte uns, dass das Leben voller Überraschungen ist.",
+            "Manchmal geschehen Dinge, die wir uns nie hätten vorstellen können.",
+            "Und vielleicht, nur vielleicht, ist Magie irgendwo da draußen, wartend auf den richtigen Moment, um wieder Wirklichkeit zu werden."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ende"
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

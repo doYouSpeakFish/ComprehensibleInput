@@ -1,111 +1,119 @@
 {
   "id": "1",
   "title": "Bain de Guérison Secret",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "image",
-      "contentDescription": "Une image d'une source naturelle. Au premier plan, il y a une cascade qui coule de la source. Des rochers couverts de mousse sont visibles en arrière-plan, derrière la vapeur dans l'air, illuminée par la lumière du soleil filtrant à travers la canopée des arbres au-dessus.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria vit dans un petit village.",
-        "Chaque matin, elle va se promener dans la forêt à côté de chez elle.",
-        "Elle aime la paix et l'air frais."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Un jour, elle entend le bruit de l'eau qui coule.",
-        "Elle suit le son et découvre une source.",
-        "L'eau est chaude."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "« Un bain de guérison ! » pense-t-elle.",
-        "Un bain de guérison est un bassin d'eau naturel avec de l'eau chaude.",
-        "Beaucoup de gens croient que cette eau a des pouvoirs de guérison."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria a une idée.",
-        "Elle pourrait venir ici et se détendre.",
-        "Peut-être pourrait-elle même inviter ses amis."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Mais ensuite, elle voit quelque chose au fond du bain de guérison.",
-        "C'est un petit objet brillant.",
-        "Maria le ramasse.",
-        "C'est une vieille pièce de monnaie."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Soudain, elle entend une voix derrière elle : « C'est ma pièce ! »",
-        "Maria se retourne et voit une vieille femme.",
-        "La femme a l'air amical, mais ses yeux sont tristes."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "« Ce bain de guérison appartient à ma famille », dit la vieille femme.",
-        "« J'ai perdu cette pièce ici il y a de nombreuses années. »"
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria se sent mal.",
-        "Elle rend la pièce à la femme et s'excuse."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "La vieille femme sourit.",
-        "« C'est bon », dit-elle.",
-        "« Mais ce bain de guérison a un secret.",
-        "Il ne peut être vu que par ceux qui ont le cœur pur. »"
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria est surprise.",
-        "Elle remercie la femme et quitte le bain de guérison."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Le lendemain, Maria amène ses amis dans la forêt.",
-        "Mais ils ne trouvent pas le bain de guérison.",
-        "Il a disparu."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria sourit.",
-        "Elle sait maintenant que certaines choses dans la vie ne sont destinées qu'à elle."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "La fin."
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "image",
+          "contentDescription": "Une image d'une source naturelle. Au premier plan, il y a une cascade qui coule de la source. Des rochers couverts de mousse sont visibles en arrière-plan, derrière la vapeur dans l'air, illuminée par la lumière du soleil filtrant à travers la canopée des arbres au-dessus.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria vit dans un petit village.",
+            "Chaque matin, elle va se promener dans la forêt à côté de chez elle.",
+            "Elle aime la paix et l'air frais."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Un jour, elle entend le bruit de l'eau qui coule.",
+            "Elle suit le son et découvre une source.",
+            "L'eau est chaude."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "« Un bain de guérison ! » pense-t-elle.",
+            "Un bain de guérison est un bassin d'eau naturel avec de l'eau chaude.",
+            "Beaucoup de gens croient que cette eau a des pouvoirs de guérison."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria a une idée.",
+            "Elle pourrait venir ici et se détendre.",
+            "Peut-être pourrait-elle même inviter ses amis."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mais ensuite, elle voit quelque chose au fond du bain de guérison.",
+            "C'est un petit objet brillant.",
+            "Maria le ramasse.",
+            "C'est une vieille pièce de monnaie."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soudain, elle entend une voix derrière elle : « C'est ma pièce ! »",
+            "Maria se retourne et voit une vieille femme.",
+            "La femme a l'air amical, mais ses yeux sont tristes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "« Ce bain de guérison appartient à ma famille », dit la vieille femme.",
+            "« J'ai perdu cette pièce ici il y a de nombreuses années. »"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria se sent mal.",
+            "Elle rend la pièce à la femme et s'excuse."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "La vieille femme sourit.",
+            "« C'est bon », dit-elle.",
+            "« Mais ce bain de guérison a un secret.",
+            "Il ne peut être vu que par ceux qui ont le cœur pur. »"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria est surprise.",
+            "Elle remercie la femme et quitte le bain de guérison."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Le lendemain, Maria amène ses amis dans la forêt.",
+            "Mais ils ne trouvent pas le bain de guérison.",
+            "Il a disparu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria sourit.",
+            "Elle sait maintenant que certaines choses dans la vie ne sont destinées qu'à elle."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "La fin."
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

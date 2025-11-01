@@ -32,7 +32,6 @@ class StoryListViewModel @Inject constructor(
                     title = story.title,
                     subtitle = story.titleTranslated,
                     featuredImage = story.featuredImage,
-                    featuredImageContentDescription = story.featuredImageContentDescription,
                 )
             },
             learningLanguage = LanguageSelection.entries

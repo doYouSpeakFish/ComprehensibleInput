@@ -20,7 +20,6 @@ data class StoryListUiState(
         val title: String,
         val subtitle: String,
         val featuredImage: Bitmap,
-        val featuredImageContentDescription: String,
     )
 
     companion object {

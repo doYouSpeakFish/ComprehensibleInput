@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -162,8 +163,8 @@ private fun StoryListItem(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FeatureImage(
+                modifier = Modifier.testTag("story-image-${story.id}"),
                 image = story.featuredImage.asImageBitmap(),
-                contentDescription = story.featuredImageContentDescription
             )
             Box {
                 // Add empty title with max lines to force every card to have the same height
@@ -178,7 +179,7 @@ private fun StoryListItem(
 private fun FeatureImage(
     modifier: Modifier = Modifier,
     image: ImageBitmap,
-    contentDescription: String,
+    contentDescription: String? = null,
 ) {
     Box(modifier, propagateMinConstraints = true) {
         Image(
@@ -238,7 +239,6 @@ fun StoryListScreenPreview() {
                         title = "Title $it",
                         subtitle = "Translated Title $it",
                         featuredImage = createBitmap(100, 100),
-                        featuredImageContentDescription = "Content description $it",
                     )
                 },
                 learningLanguage = LanguageSelection.GERMAN,
