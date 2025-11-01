@@ -27,17 +27,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.core.graphics.createBitmap
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
+import input.comprehensible.extensions.isCompact
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -121,7 +121,7 @@ private fun StoryListScaffold(
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
 ) {
-    val columns = if (windowSizeClass.windowWidthSizeClass == COMPACT) 2 else 4
+    val columns = if (windowSizeClass.isCompact) 2 else 4
     Scaffold(
         modifier = modifier,
         topBar = {
