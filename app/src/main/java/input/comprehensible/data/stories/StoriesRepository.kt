@@ -41,27 +41,14 @@ class StoriesRepository @Inject constructor(
         }
         return StoriesList(
             stories = storiesWithTranslations.mapNotNull { (story, translation) ->
-                val hasStartPart = story.parts.any { it.id == story.startPartId }
-                if (!hasStartPart) {
-                    Timber.e(
-                        "Story ${story.id} is missing a part for startPartId ${story.startPartId}"
-                    )
-                    return@mapNotNull null
-                }
-                val featuredImage = storiesLocalDataSource.loadStoryImage(
-                    storyId = story.id,
-                    path = story.featuredImagePath,
-                ) ?: run {
-                    Timber.e(
-                        "Story ${story.id} is missing an image with path ${story.featuredImagePath}"
-                    )
-                    return@mapNotNull null
-                }
                 StoriesList.StoriesItem(
                     id = story.id,
                     title = story.title,
                     titleTranslated = translation.title,
-                    featuredImage = featuredImage,
+                    featuredImage = storiesLocalDataSource.loadStoryImage(
+                        storyId = story.id,
+                        path = story.featuredImagePath,
+                    ) ?: return@mapNotNull null,
                 )
             }
         )
@@ -123,54 +110,42 @@ class StoriesRepository @Inject constructor(
         position: Int,
     ): Story? {
         val learningPart = parts.firstOrNull { it.id == startPartId }
-        val translationPart = translation.parts.firstOrNull { it.id == startPartId }
-        if (learningPart == null || translationPart == null) {
-            if (learningPart == null) {
+            ?: run {
                 Timber.e("Story $id is missing part with id $startPartId")
+                return null
             }
-            if (translationPart == null) {
-                Timber.e("Story $id translation is missing part with id $startPartId")
-            }
-            return null
-        }
 
-        var hasMismatch = false
+        val translationPart = translation.parts.firstOrNull { it.id == startPartId }
+            ?: run {
+                Timber.e("Story $id translation is missing part with id $startPartId")
+                return null
+            }
+
         if (learningPart.content.size != translationPart.content.size) {
             Timber.e(
                 "Story $id content could not be fully matched between $learningLanguage and $translationsLanguage"
             )
-            hasMismatch = true
+            return null
         }
 
-        val storyElements = mutableListOf<StoryElement>()
-        if (!hasMismatch) {
-            val zippedContent = learningPart.content.zip(translationPart.content)
-            loop@ for ((storyElementData, translationElement) in zippedContent) {
-                val storyElement = storyElementData.toStoryElement(
+        val storyElements = learningPart.content
+            .zip(translationPart.content)
+            .map { (storyElementData, translationElement) ->
+                storyElementData.toStoryElement(
                     storyId = id,
                     translation = translationElement,
                     learningLanguage = learningLanguage,
                     translationsLanguage = translationsLanguage,
-                )
-                if (storyElement == null) {
-                    hasMismatch = true
-                    break@loop
-                }
-                storyElements += storyElement
+                ) ?: return null
             }
-        }
 
-        return if (hasMismatch) {
-            null
-        } else {
-            Story(
-                id = id,
-                title = title,
-                translatedTitle = translation.title,
-                content = storyElements,
-                currentStoryElementIndex = position,
-            )
-        }
+        return Story(
+            id = id,
+            title = title,
+            translatedTitle = translation.title,
+            content = storyElements,
+            currentStoryElementIndex = position,
+        )
     }
 
     private suspend fun StoryElementData.toStoryElement(
@@ -181,43 +156,56 @@ class StoriesRepository @Inject constructor(
     ): StoryElement? {
         return when (this) {
             is StoryElementData.ParagraphData -> {
-                val translationParagraph = translation as? StoryElementData.ParagraphData
-                if (translationParagraph == null) {
+                val translationParagraph = translation as? StoryElementData.ParagraphData ?: run {
                     Timber.e("No matching translation found for paragraph in story $storyId")
-                    null
-                } else if (sentences.size != translationParagraph.sentences.size) {
-                    Timber.e(
-                        "Mismatched number of sentences in story $storyId for languages " +
-                                "$learningLanguage and $translationsLanguage"
-                    )
-                    null
-                } else {
-                    StoryElement.Paragraph(
-                        sentences = sentences,
-                        sentencesTranslations = translationParagraph.sentences
-                    )
+                    return null
                 }
+                this.toStoryElement(
+                    storyId = storyId,
+                    translationParagraph = translationParagraph,
+                    learningLanguage = learningLanguage,
+                    translationsLanguage = translationsLanguage
+                )
             }
 
             is StoryElementData.ImageData -> {
-                val bitmap = storiesLocalDataSource.loadStoryImage(
-                    storyId = storyId,
-                    path = path,
-                )
-                if (bitmap == null) {
-                    Timber.e("Image $path missing for story $storyId")
-                    null
-                } else {
-                    StoryElement.Image(
-                        contentDescription = contentDescription,
-                        bitmap = bitmap,
-                    )
-                }
+                this.toStoryElement(storyId = storyId)
             }
         }
     }
-}
 
+    private fun StoryElementData.ParagraphData.toStoryElement(
+        storyId: String,
+        translationParagraph: StoryElementData.ParagraphData,
+        learningLanguage: String,
+        translationsLanguage: String,
+    ): StoryElement.Paragraph? {
+        if (sentences.size != translationParagraph.sentences.size) {
+            Timber.e(
+                "Mismatched number of sentences in story $storyId for languages " +
+                        "$learningLanguage and $translationsLanguage"
+            )
+            return null
+        }
+        return StoryElement.Paragraph(
+            sentences = sentences,
+            sentencesTranslations = translationParagraph.sentences
+        )
+    }
+
+    private suspend fun StoryElementData.ImageData.toStoryElement(
+        storyId: String,
+    ): StoryElement.Image? {
+        return StoryElement.Image(
+            contentDescription = contentDescription,
+            bitmap = storiesLocalDataSource.loadStoryImage(
+                storyId = storyId,
+                path = path,
+            ) ?: return null,
+        )
+    }
+
+}
 sealed interface StoryResult {
     data class Success(val story: Story) : StoryResult
 

@@ -37,4 +37,4 @@ style:
   MaxLineLength:
     maxLineLength: 140
   ReturnCount:
-    max: 3
+    active: false
