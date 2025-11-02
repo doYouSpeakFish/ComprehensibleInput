@@ -2,7 +2,7 @@ package input.comprehensible.usecases
 
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesRepository
-import input.comprehensible.data.stories.model.StoriesList
+import input.comprehensible.data.stories.model.StoriesListResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -20,7 +20,7 @@ class GetStoriesListUseCase @Inject constructor(
      * Gets the list of stories.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(): Flow<StoriesList> = combine(
+    operator fun invoke(): Flow<StoriesListResult> = combine(
         languageSettingsRepository.learningLanguage,
         languageSettingsRepository.translationsLanguage,
     ) { learningLanguage, translationsLanguage ->

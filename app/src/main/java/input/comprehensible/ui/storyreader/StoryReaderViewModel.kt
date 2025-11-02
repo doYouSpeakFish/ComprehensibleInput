@@ -38,7 +38,7 @@ class StoryReaderViewModel @Inject constructor(
         .map { result ->
             when (result) {
                 is StoryResult.Success -> StoryLoadState.Loaded(result.story)
-                is StoryResult.Failure -> StoryLoadState.Error
+                StoryResult.Error -> StoryLoadState.Error
             }
         }
         .onStart {

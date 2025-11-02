@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.ui.components.LanguageSelection
+import input.comprehensible.data.stories.model.StoriesListResult
 import input.comprehensible.usecases.GetStoriesListUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -24,16 +25,21 @@ class StoryListViewModel @Inject constructor(
         getStoriesListUseCase(),
         languageSettingsRepository.learningLanguage,
         languageSettingsRepository.translationsLanguage,
-    ) { storiesList, learningLanguage, translationsLanguage ->
-        StoryListUiState(
-            stories = storiesList.stories.map { story ->
+    ) { storiesResult, learningLanguage, translationsLanguage ->
+        val stories = when (storiesResult) {
+            is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
                 StoryListUiState.StoryListItem(
                     id = story.id,
                     title = story.title,
                     subtitle = story.titleTranslated,
                     featuredImage = story.featuredImage,
                 )
-            },
+            }
+
+            StoriesListResult.Error -> emptyList()
+        }
+        StoryListUiState(
+            stories = stories,
             learningLanguage = LanguageSelection.entries
                 .firstOrNull { it.languageCode == learningLanguage },
             translationLanguage = LanguageSelection.entries
