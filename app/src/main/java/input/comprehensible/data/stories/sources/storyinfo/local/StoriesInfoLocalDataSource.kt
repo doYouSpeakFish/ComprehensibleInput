@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
 @Dao
@@ -24,7 +25,7 @@ interface StoriesInfoLocalDataSource {
             LIMIT 1
         """
     )
-    suspend fun getStory(id: String): StoryEntity?
+    fun getStory(id: String): Flow<StoryEntity?>
 
     @Update
     suspend fun updateStory(story: StoryEntity)
