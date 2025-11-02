@@ -8,6 +8,9 @@ import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,10 +24,10 @@ class StoriesRepository @Inject constructor(
     private val storiesInfoLocalDataSource: StoriesInfoLocalDataSource,
 ) {
 
-    suspend fun storiesList(
+    fun storiesList(
         learningLanguage: String,
         translationsLanguage: String,
-    ): StoriesList {
+    ): Flow<StoriesList> = flow {
         val stories = storiesLocalDataSource
             .getStories(learningLanguage = learningLanguage)
             .sortedByDescending { it.id }
@@ -39,18 +42,20 @@ class StoriesRepository @Inject constructor(
                 }
             }
         }
-        return StoriesList(
-            stories = storiesWithTranslations.mapNotNull { (story, translation) ->
-                StoriesList.StoriesItem(
-                    id = story.id,
-                    title = story.title,
-                    titleTranslated = translation.title,
-                    featuredImage = storiesLocalDataSource.loadStoryImage(
-                        storyId = story.id,
-                        path = story.featuredImagePath,
-                    ) ?: return@mapNotNull null,
-                )
-            }
+        emit(
+            StoriesList(
+                stories = storiesWithTranslations.mapNotNull { (story, translation) ->
+                    StoriesList.StoriesItem(
+                        id = story.id,
+                        title = story.title,
+                        titleTranslated = translation.title,
+                        featuredImage = storiesLocalDataSource.loadStoryImage(
+                            storyId = story.id,
+                            path = story.featuredImagePath,
+                        ) ?: return@mapNotNull null,
+                    )
+                }
+            )
         )
     }
 
@@ -58,43 +63,44 @@ class StoriesRepository @Inject constructor(
      * Gets a story in the given [learningLanguage] with translations in the given
      * [translationsLanguage].
      */
-    suspend fun getStory(
+    fun getStory(
         id: String,
         learningLanguage: String,
         translationsLanguage: String
-    ): StoryResult {
-        val storyInfo = storiesInfoLocalDataSource.getStory(id)
-            ?: StoryEntity(id = id, position = 0).also {
+    ): Flow<StoryResult> = storiesInfoLocalDataSource
+        .getStory(id)
+        .map { storyInfoEntity ->
+            val storyInfo = storyInfoEntity ?: StoryEntity(id = id, position = 0).also {
                 // First time story opened. Insert info into db so this story can be tracked
                 storiesInfoLocalDataSource.insertStory(story = it)
             }
-        val storyData = storiesLocalDataSource.getStory(
-            id = id,
-            language = learningLanguage
-        ) ?: run {
-            Timber.e("Story $id not found for language $learningLanguage")
-            return StoryResult.Failure.StoryMissing(language = learningLanguage)
-        }
-        val translatedStoryData = storiesLocalDataSource.getStory(
-            id = id,
-            language = translationsLanguage
-        ) ?: run {
-            Timber.e("Translation $translationsLanguage not found for story $id")
-            return StoryResult.Failure.TranslationMissing(language = translationsLanguage)
-        }
-        return storyData.toStory(
-            id = id,
-            translation = translatedStoryData,
-            learningLanguage = learningLanguage,
-            translationsLanguage = translationsLanguage,
-            position = storyInfo.position,
-        )
-            ?.let { StoryResult.Success(it) }
-            ?: StoryResult.Failure.ContentMismatch(
+            val storyData = storiesLocalDataSource.getStory(
+                id = id,
+                language = learningLanguage
+            ) ?: run {
+                Timber.e("Story $id not found for language $learningLanguage")
+                return@map StoryResult.Failure.StoryMissing(language = learningLanguage)
+            }
+            val translatedStoryData = storiesLocalDataSource.getStory(
+                id = id,
+                language = translationsLanguage
+            ) ?: run {
+                Timber.e("Translation $translationsLanguage not found for story $id")
+                return@map StoryResult.Failure.TranslationMissing(language = translationsLanguage)
+            }
+            storyData.toStory(
+                id = id,
+                translation = translatedStoryData,
                 learningLanguage = learningLanguage,
                 translationsLanguage = translationsLanguage,
+                position = storyInfo.position,
             )
-    }
+                ?.let { StoryResult.Success(it) }
+                ?: StoryResult.Failure.ContentMismatch(
+                    learningLanguage = learningLanguage,
+                    translationsLanguage = translationsLanguage,
+                )
+        }
 
     suspend fun updateStoryPosition(id: String, position: Int) {
         storiesInfoLocalDataSource.updateStory(
