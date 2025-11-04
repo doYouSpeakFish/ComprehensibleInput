@@ -1,17 +1,17 @@
 package input.comprehensible.data.stories
 
 import input.comprehensible.data.stories.model.StoriesList
-import input.comprehensible.data.stories.model.StoriesListResult
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
+import input.comprehensible.data.stories.sources.storyinfo.local.getOrCreateStory
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,60 +26,44 @@ class StoriesRepository @Inject constructor(
     private val storiesInfoLocalDataSource: StoriesInfoLocalDataSource,
 ) {
 
-    fun storiesList(
+    fun getStories(
         learningLanguage: String,
         translationsLanguage: String,
-    ): Flow<StoriesListResult> = flow {
-        runCatching {
-            val stories = storiesLocalDataSource
-                .getStories(learningLanguage = learningLanguage)
-                .sortedByDescending { it.id }
-            val translations = storiesLocalDataSource
-                .getStories(learningLanguage = translationsLanguage)
-                .associateBy { it.id }
+    ): Flow<StoriesListResult> =
+        combine<List<StoryData>, Map<String, StoryData>, StoriesListResult>(
+            getStoriesSorted(learningLanguage),
+            getTranslations(translationsLanguage),
+        ) { stories, translations ->
             val storiesWithTranslations = buildList {
                 stories.forEach { story ->
                     val translation = translations[story.id]
-                    if (translation != null) {
-                        add(story to translation)
-                    }
+                    if (translation != null) add(story to translation)
                 }
             }
-            StoriesList(
-                stories = storiesWithTranslations.mapNotNull { (story, translation) ->
-                    val featuredImage = storiesLocalDataSource.loadStoryImage(
-                        storyId = story.id,
-                        path = story.featuredImagePath,
-                    ) ?: run {
-                        Timber.e(
-                            "Failed to load featured image for story %s using path %s",
-                            story.id,
-                            story.featuredImagePath,
-                        )
-                        return@mapNotNull null
-                    }
-                    StoriesList.StoriesItem(
-                        id = story.id,
-                        title = story.title,
-                        titleTranslated = translation.title,
-                        featuredImage = featuredImage,
-                    )
+            val storyListItems = storiesWithTranslations.mapNotNull { (story, translation) ->
+                val featuredImage = storiesLocalDataSource.loadStoryImage(
+                    storyId = story.id,
+                    path = story.featuredImagePath,
+                ) ?: run {
+                    Timber.e("Failed to load story ${story.id} in list because of missing feature image")
+                    return@mapNotNull null
                 }
-            )
-        }.fold(
-            onSuccess = { storiesList ->
-                emit(StoriesListResult.Success(storiesList))
-            },
-            onFailure = { throwable ->
-                Timber.e(
-                    throwable,
-                    "Failed to load stories list for learning language %s and translations language %s",
-                    learningLanguage,
-                    translationsLanguage,
+                StoriesList.StoriesItem(
+                    id = story.id,
+                    title = story.title,
+                    titleTranslated = translation.title,
+                    featuredImage = featuredImage,
                 )
-                emit(StoriesListResult.Error)
             }
-        )
+            StoriesListResult.Success(StoriesList(stories = storyListItems))
+        }.catch { throwable ->
+            Timber.e(
+                throwable,
+                "Failed to load stories list for learning language %s and translations language %s",
+                learningLanguage,
+                translationsLanguage,
+            )
+            emit(StoriesListResult.Error)
     }
 
     /**
@@ -91,48 +75,39 @@ class StoriesRepository @Inject constructor(
         learningLanguage: String,
         translationsLanguage: String
     ): Flow<StoryResult> = storiesInfoLocalDataSource
-        .getStory(id)
-        .map { storyInfoEntity ->
-            runCatching {
-                val storyInfo = storyInfoEntity ?: StoryEntity(id = id, position = 0).also {
-                    // First time story opened. Insert info into db so this story can be tracked
-                    storiesInfoLocalDataSource.insertStory(story = it)
-                }
-                val storyData = storiesLocalDataSource.getStory(
-                    id = id,
-                    language = learningLanguage
-                ) ?: run {
-                    Timber.e("Story $id not found for language $learningLanguage")
-                    return@runCatching StoryResult.Error
-                }
-                val translatedStoryData = storiesLocalDataSource.getStory(
-                    id = id,
-                    language = translationsLanguage
-                ) ?: run {
-                    Timber.e("Translation $translationsLanguage not found for story $id")
-                    return@runCatching StoryResult.Error
-                }
-                val story = storyData.toStory(
-                    id = id,
-                    translation = translatedStoryData,
-                    learningLanguage = learningLanguage,
-                    translationsLanguage = translationsLanguage,
-                    position = storyInfo.position,
-                ) ?: return@runCatching StoryResult.Error
-                StoryResult.Success(story)
-            }.getOrElse { throwable ->
-                if (throwable is CancellationException) {
-                    throw throwable
-                }
-                Timber.e(
-                    throwable,
-                    "Failed to load story %s for learning language %s and translations language %s",
-                    id,
-                    learningLanguage,
-                    translationsLanguage,
-                )
-                StoryResult.Error
+        .getOrCreateStory(id)
+        .map { storyInfo ->
+            val storyData = storiesLocalDataSource.getStory(
+                id = id,
+                language = learningLanguage
+            ) ?: run {
+                Timber.e("Story $id not found for language $learningLanguage")
+                return@map StoryResult.Error
             }
+            val translatedStoryData = storiesLocalDataSource.getStory(
+                id = id,
+                language = translationsLanguage
+            ) ?: run {
+                Timber.e("Translation $translationsLanguage not found for story $id")
+                return@map StoryResult.Error
+            }
+            val story = storyData.toStory(
+                id = id,
+                translation = translatedStoryData,
+                learningLanguage = learningLanguage,
+                translationsLanguage = translationsLanguage,
+                position = storyInfo.position,
+            ) ?: return@map StoryResult.Error
+            StoryResult.Success(story)
+        }.catch { throwable ->
+            Timber.e(
+                throwable,
+                "Failed to load story %s for learning language %s and translations language %s",
+                id,
+                learningLanguage,
+                translationsLanguage,
+            )
+            StoryResult.Error
         }
 
     suspend fun updateStoryPosition(id: String, position: Int) {
@@ -140,6 +115,22 @@ class StoriesRepository @Inject constructor(
             story = StoryEntity(id = id, position = position)
         )
     }
+
+    private fun getStoriesSorted(
+        language: String
+    ): Flow<List<StoryData>> = storiesLocalDataSource
+        .getStories(learningLanguage = language)
+        .map { stories ->
+            stories.sortedByDescending { it.id }
+        }
+
+    private fun getTranslations(
+        language: String
+    ): Flow<Map<String, StoryData>> = storiesLocalDataSource
+        .getStories(learningLanguage = language)
+        .map { stories ->
+            stories.associateBy { it.id }
+        }
 
     private suspend fun StoryData.toStory(
         id: String,
@@ -251,8 +242,13 @@ class StoriesRepository @Inject constructor(
             bitmap = bitmap,
         )
     }
-
 }
+
+sealed interface StoriesListResult {
+    data class Success(val storiesList: StoriesList) : StoriesListResult
+    object Error : StoriesListResult
+}
+
 sealed interface StoryResult {
     data class Success(val story: Story) : StoryResult
     object Error : StoryResult

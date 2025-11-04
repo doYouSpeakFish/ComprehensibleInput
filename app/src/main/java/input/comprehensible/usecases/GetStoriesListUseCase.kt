@@ -1,8 +1,8 @@
 package input.comprehensible.usecases
 
 import input.comprehensible.data.languages.LanguageSettingsRepository
+import input.comprehensible.data.stories.StoriesListResult
 import input.comprehensible.data.stories.StoriesRepository
-import input.comprehensible.data.stories.model.StoriesListResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -26,7 +26,7 @@ class GetStoriesListUseCase @Inject constructor(
     ) { learningLanguage, translationsLanguage ->
         learningLanguage to translationsLanguage
     }.flatMapLatest { (learningLanguage, translationsLanguage) ->
-        storiesRepository.storiesList(
+        storiesRepository.getStories(
             learningLanguage = learningLanguage,
             translationsLanguage = translationsLanguage,
         )
