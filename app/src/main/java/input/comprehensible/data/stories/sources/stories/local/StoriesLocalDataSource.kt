@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import javax.inject.Singleton
@@ -21,7 +22,7 @@ interface StoriesLocalDataSource {
     /**
      * Gets a list of stories from the local data source.
      */
-    suspend fun getStories(learningLanguage: String): List<StoryData>
+    fun getStories(learningLanguage: String): Flow<List<StoryData>>
 
     /**
      * Loads an image from the assets folder.

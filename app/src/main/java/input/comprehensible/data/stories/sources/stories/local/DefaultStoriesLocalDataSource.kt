@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import input.comprehensible.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -34,16 +37,17 @@ class DefaultStoriesLocalDataSource @Inject constructor(
             .getOrNull()
     }
 
-    override suspend fun getStories(
+    override fun getStories(
         learningLanguage: String
-    ): List<StoryData> = withContext(dispatcher) {
-        context.assets
+    ): Flow<List<StoryData>> = flow {
+        val stories = context.assets
             .list("stories")
             .orEmpty()
             .mapNotNull { storyId ->
                 getStory(id = storyId, language = learningLanguage)
             }
-    }
+        emit(stories)
+    }.flowOn(dispatcher)
 
     override suspend fun loadStoryImage(
         storyId: String,

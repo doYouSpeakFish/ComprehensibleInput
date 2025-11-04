@@ -18,8 +18,3 @@ data class StoriesList(
         val featuredImage: Bitmap,
     )
 }
-
-sealed interface StoriesListResult {
-    data class Success(val storiesList: StoriesList) : StoriesListResult
-    object Error : StoriesListResult
-}
