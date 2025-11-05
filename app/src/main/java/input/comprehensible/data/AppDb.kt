@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,9 +15,32 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import javax.inject.Singleton
 
-@Database(entities = [StoryEntity::class], version = 1, exportSchema = false)
+@Database(entities = [StoryEntity::class], version = 2, exportSchema = false)
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
+}
+
+private val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+                CREATE TABLE IF NOT EXISTS StoryEntity_new (
+                    id TEXT NOT NULL,
+                    positionPartId TEXT NOT NULL DEFAULT '',
+                    positionElementIndex INTEGER NOT NULL DEFAULT 0,
+                    PRIMARY KEY(id)
+                )
+            """.trimIndent()
+        )
+        db.execSQL(
+            """
+                INSERT INTO StoryEntity_new (id, positionElementIndex)
+                SELECT id, position FROM StoryEntity
+            """.trimIndent()
+        )
+        db.execSQL("DROP TABLE StoryEntity")
+        db.execSQL("ALTER TABLE StoryEntity_new RENAME TO StoryEntity")
+    }
 }
 
 @Module
@@ -28,5 +53,6 @@ class DatabaseModule {
             context = context,
             klass = AppDb::class.java,
             name = "app-db"
-        ).build()
+        ).addMigrations(MIGRATION_1_2)
+            .build()
 }

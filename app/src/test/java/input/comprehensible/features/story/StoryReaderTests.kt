@@ -6,9 +6,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
-import input.comprehensible.captureScreenWithTheme
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
+import input.comprehensible.data.sample.TestStoryPart
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
 import org.junit.Rule
@@ -46,7 +46,9 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            themeMode.captureScreenWithTheme("story-reader-screen")
+            assertStoryTitleIsShown(stories.first().germanTitle)
+            assertStoryTextIsVisible(stories.first().paragraphs.first().germanSentences)
+            assertImageIsShown(stories.first().images.first())
         }
     }
 
@@ -62,7 +64,6 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
 
         onStoryReader {
             assertErrorDialogIsShown()
-            themeMode.captureScreenWithTheme("story-reader-error")
         }
     }
 
@@ -116,12 +117,14 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            // WHEN the user taps on a German sentence
-            tapOnSentence(sentence = stories.first().paragraphs.first().germanSentences.first())
+            val paragraph = stories.first().paragraphs.first()
+            val germanSentence = paragraph.germanSentences.first()
+            val englishSentence = paragraph.englishSentences.first()
+
+            tapOnSentence(sentence = germanSentence)
             awaitIdle()
 
-            // THEN the sentence is shown in English
-            themeMode.captureScreenWithTheme("german_sentence_to_english")
+            assertStoryTextIsVisible(sentence = englishSentence)
         }
     }
 
@@ -134,15 +137,16 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            // WHEN the user taps on a German sentence
-            tapOnSentence(sentence = stories.first().paragraphs.first().germanSentences.first())
+            val paragraph = stories.first().paragraphs.first()
+            val germanSentence = paragraph.germanSentences.first()
+            val englishSentence = paragraph.englishSentences.first()
+
+            tapOnSentence(sentence = germanSentence)
             awaitIdle()
-            // WHEN the user taps on an English sentence
-            tapOnSentence(sentence = stories.first().paragraphs.first().englishSentences.first())
+            tapOnSentence(sentence = englishSentence)
             awaitIdle()
 
-            // THEN the sentence is shown in German
-            themeMode.captureScreenWithTheme("english_sentence_to_german")
+            assertStoryTextIsVisible(sentence = germanSentence)
         }
     }
 
@@ -155,12 +159,10 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            // WHEN the user taps on the title
             tapOnSentence(sentence = stories.first().germanTitle)
             awaitIdle()
 
-            // THEN the title is shown in English
-            themeMode.captureScreenWithTheme("german_title_to_english")
+            assertStoryTitleIsShown(stories.first().englishTitle)
         }
     }
 
@@ -173,15 +175,12 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            // WHEN the user taps on the title
             tapOnSentence(sentence = stories.first().germanTitle)
             awaitIdle()
-            // WHEN the user taps on the title
             tapOnSentence(sentence = stories.first().englishTitle)
             awaitIdle()
 
-            // THEN the title is shown in German
-            themeMode.captureScreenWithTheme("english_title_to_german")
+            assertStoryTitleIsShown(stories.first().germanTitle)
         }
     }
 
@@ -212,6 +211,54 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         onStoryReader {
             // THEN the midpoint of the story is shown
             assertStoryTextIsVisible(sentence = sentence)
+        }
+    }
+
+    @Test
+    fun `the chosen path is remembered`() = testRule.runTest {
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
+        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
+        val returnChoiceText = story.parts.first().choices.last().textByLanguage.getValue("de")
+        val newPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
+            .germanSentences.first()
+
+        // GIVEN a story with a decision point
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // WHEN the first part is shown
+            assertStoryTextIsVisible(startSentence)
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsShown(returnChoiceText)
+
+            // WHEN the reader chooses to keep the key
+            chooseStoryOption(keepChoiceText)
+            awaitIdle()
+
+            // THEN the story shows the chosen path
+            skipToSentence(newPathSentence)
+            assertStoryTextExists(newPathSentence)
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsNotShown(returnChoiceText)
+        }
+
+        // AND the story is closed
+        navigateBack()
+        awaitIdle()
+
+        // WHEN the story is opened again
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsNotShown(returnChoiceText)
+            skipToSentence(newPathSentence)
+            assertStoryTextExists(newPathSentence)
         }
     }
 

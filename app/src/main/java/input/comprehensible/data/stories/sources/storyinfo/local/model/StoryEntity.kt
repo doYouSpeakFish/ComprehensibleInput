@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class StoryEntity(
     @PrimaryKey val id: String,
-    val position: Int = 0,
+    val positionPartId: String = "",
+    val positionElementIndex: Int = 0,
 )

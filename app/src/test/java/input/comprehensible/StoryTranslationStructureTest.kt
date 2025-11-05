@@ -41,11 +41,18 @@ class StoryTranslationStructureTest {
                 continue
             }
 
-        val structures = translations.associate { path ->
-            path.fileName.toString() to parseStructure(path)
-        }
+            val structures = translations.associate { path ->
+                path.fileName.toString() to parseStory(path)
+            }
 
-        failures += validateStoryTranslations(storyDir, structures)
+            failures += validateStructureConsistency(storyDir, structures)
+
+            val referenceEntry = structures.entries.first()
+            failures += validateStoryGraph(
+                storyDir = storyDir,
+                translation = referenceEntry.key,
+                story = referenceEntry.value,
+            )
         }
 
         if (failures.isNotEmpty()) {
@@ -53,89 +60,260 @@ class StoryTranslationStructureTest {
         }
     }
 
-    private fun validateStoryTranslations(
+    private fun validateStructureConsistency(
         storyDir: Path,
-        structures: Map<String, StoryDescriptor>
+        structures: Map<String, StoryDescriptor>,
     ): List<String> {
         if (structures.isEmpty()) {
             return emptyList()
         }
 
         val referenceEntry = structures.entries.first()
+        val reference = referenceEntry.value
+
         return structures.flatMap { (translation, structure) ->
-            collectTranslationFailures(
+            val context = StoryTranslationContext(
                 storyDir = storyDir,
                 translation = translation,
-                structure = structure,
-                referenceEntry = referenceEntry,
+                referenceKey = referenceEntry.key,
             )
+
+            buildList {
+                addAll(checkStartPart(context, structure, reference))
+                addAll(checkFeaturedImage(context, structure, reference))
+
+                val partKeyResult = checkPartKeys(context, structure, reference)
+                addAll(partKeyResult.failures)
+                if (!partKeyResult.matches) {
+                    return@flatMap this
+                }
+
+                addAll(checkPartContent(context, structure, reference))
+                addAll(checkChoices(context, structure, reference))
+            }
         }
     }
 
-    private fun collectTranslationFailures(
-        storyDir: Path,
-        translation: String,
+    private fun checkStartPart(
+        context: StoryTranslationContext,
         structure: StoryDescriptor,
-        referenceEntry: Map.Entry<String, StoryDescriptor>
+        reference: StoryDescriptor,
     ): List<String> {
-        val referenceStructure = referenceEntry.value
-        val context = StoryTranslationContext(
-            storyDir = storyDir,
-            translation = translation,
-            referenceKey = referenceEntry.key,
-            referenceStructureSize = referenceStructure.content.size,
-        )
-        val failures = mutableListOf<String>()
+        if (structure.startPartId == reference.startPartId) {
+            return emptyList()
+        }
 
-        if (structure.featuredImagePath != referenceStructure.featuredImagePath) {
-            failures += featuredImageMismatchMessage(
+        return listOf(
+            context.storyMessage(
+                "starts at part '${structure.startPartId}' but expected '${reference.startPartId}' as in '${context.referenceKey}'."
+            )
+        )
+    }
+
+    private fun checkFeaturedImage(
+        context: StoryTranslationContext,
+        structure: StoryDescriptor,
+        reference: StoryDescriptor,
+    ): List<String> {
+        if (structure.featuredImagePath == reference.featuredImagePath) {
+            return emptyList()
+        }
+
+        return listOf(
+            featuredImageMismatchMessage(
                 context = context,
                 actualPath = structure.featuredImagePath,
-                referencePath = referenceStructure.featuredImagePath,
+                referencePath = reference.featuredImagePath,
             )
+        )
+    }
+
+    private fun checkPartKeys(
+        context: StoryTranslationContext,
+        structure: StoryDescriptor,
+        reference: StoryDescriptor,
+    ): PartKeyCheckResult {
+        if (structure.parts.keys == reference.parts.keys) {
+            return PartKeyCheckResult(matches = true, failures = emptyList())
         }
 
-        if (structure.content.size != referenceStructure.content.size) {
-            failures += sizeMismatchMessage(
-                context = context,
-                structureSize = structure.content.size,
-            )
-            return failures
+        val missing = (reference.parts.keys - structure.parts.keys).sorted()
+        val extra = (structure.parts.keys - reference.parts.keys).sorted()
+
+        val failures = buildList {
+            if (missing.isNotEmpty()) {
+                add(
+                    context.storyMessage(
+                        "is missing parts: ${missing.joinToString()}."
+                    )
+                )
+            }
+            if (extra.isNotEmpty()) {
+                add(
+                    context.storyMessage(
+                        "has unexpected parts: ${extra.joinToString()}."
+                    )
+                )
+            }
         }
 
-        structure.content.forEachIndexed { index, item ->
-            val referenceItem = referenceStructure.content[index]
-            if (item.type != referenceItem.type) {
-                failures += typeMismatchMessage(
+        return PartKeyCheckResult(matches = false, failures = failures)
+    }
+
+    private data class PartKeyCheckResult(
+        val matches: Boolean,
+        val failures: List<String>,
+    )
+
+    private fun StoryTranslationContext.storyMessage(content: String): String {
+        return storyMessage(storyDir, translation, content)
+    }
+
+    private fun StoryTranslationContext.partMessage(partId: String, content: String): String {
+        return storyMessage("part '$partId' $content")
+    }
+
+    private fun storyMessage(storyDir: Path, translation: String, content: String): String {
+        return "Story '${storyDir.fileName}' translation '$translation' $content"
+    }
+
+    private fun checkPartContent(
+        context: StoryTranslationContext,
+        structure: StoryDescriptor,
+        reference: StoryDescriptor,
+    ): List<String> {
+        val failures = mutableListOf<String>()
+
+        structure.parts.keys.sorted().forEach { partId ->
+            val part = structure.parts.getValue(partId)
+            val referencePart = reference.parts.getValue(partId)
+
+            if (part.content.size != referencePart.content.size) {
+                failures += sizeMismatchMessage(
                     context = context,
+                    partId = partId,
+                    structureSize = part.content.size,
+                    referenceSize = referencePart.content.size,
+                )
+                return@forEach
+            }
+
+            part.content.forEachIndexed { index, item ->
+                val referenceItem = referencePart.content[index]
+                failures += compareContentItem(
+                    context = context,
+                    partId = partId,
+                    index = index,
+                    item = item,
+                    referenceItem = referenceItem,
+                )
+            }
+        }
+
+        return failures
+    }
+
+    private fun compareContentItem(
+        context: StoryTranslationContext,
+        partId: String,
+        index: Int,
+        item: ContentDescriptor,
+        referenceItem: ContentDescriptor,
+    ): List<String> {
+        if (item.type != referenceItem.type) {
+            return listOf(
+                typeMismatchMessage(
+                    context = context,
+                    partId = partId,
                     index = index,
                     actualType = item.type,
                     referenceType = referenceItem.type,
                 )
-                return@forEachIndexed
+            )
+        }
+
+        return when (item.type) {
+            ContentType.IMAGE -> compareImageItem(context, partId, index, item, referenceItem)
+            ContentType.PARAGRAPH -> compareParagraphItem(context, partId, index, item, referenceItem)
+        }
+    }
+
+    private fun compareImageItem(
+        context: StoryTranslationContext,
+        partId: String,
+        index: Int,
+        item: ContentDescriptor,
+        referenceItem: ContentDescriptor,
+    ): List<String> {
+        if (item.imagePath == referenceItem.imagePath) {
+            return emptyList()
+        }
+
+        return listOf(
+            imagePathMismatchMessage(
+                context = context,
+                partId = partId,
+                index = index,
+                actualPath = item.imagePath,
+                referencePath = referenceItem.imagePath,
+            )
+        )
+    }
+
+    private fun compareParagraphItem(
+        context: StoryTranslationContext,
+        partId: String,
+        index: Int,
+        item: ContentDescriptor,
+        referenceItem: ContentDescriptor,
+    ): List<String> {
+        if (item.sentenceCount == referenceItem.sentenceCount) {
+            return emptyList()
+        }
+
+        return listOf(
+            sentenceCountMismatchMessage(
+                context = context,
+                partId = partId,
+                index = index,
+                actualCount = item.sentenceCount,
+                referenceCount = referenceItem.sentenceCount,
+            )
+        )
+    }
+
+    private fun checkChoices(
+        context: StoryTranslationContext,
+        structure: StoryDescriptor,
+        reference: StoryDescriptor,
+    ): List<String> {
+        val failures = mutableListOf<String>()
+
+        structure.parts.keys.sorted().forEach { partId ->
+            val part = structure.parts.getValue(partId)
+            val referencePart = reference.parts.getValue(partId)
+
+            if (part.choices.size != referencePart.choices.size) {
+                failures += context.partMessage(
+                    partId = partId,
+                    content = "has ${part.choices.size} choices but expected ${referencePart.choices.size} as in '${context.referenceKey}'."
+                )
+                return@forEach
             }
 
-            when (item.type) {
-                ContentType.IMAGE -> {
-                    if (item.imagePath != referenceItem.imagePath) {
-                        failures += imagePathMismatchMessage(
-                            context = context,
-                            index = index,
-                            actualPath = item.imagePath,
-                            referencePath = referenceItem.imagePath,
-                        )
+            part.choices.forEachIndexed { index, choice ->
+                val referenceChoice = referencePart.choices[index]
+                if (choice.targetPartId != referenceChoice.targetPartId) {
+                    val message = buildString {
+                        append("choice $index targets '")
+                        append(choice.targetPartId)
+                        append("' but expected '")
+                        append(referenceChoice.targetPartId)
+                        append("' as in '")
+                        append(context.referenceKey)
+                        append("'.")
                     }
-                }
-
-                ContentType.PARAGRAPH -> {
-                    if (item.sentenceCount != referenceItem.sentenceCount) {
-                        failures += sentenceCountMismatchMessage(
-                            context = context,
-                            index = index,
-                            actualCount = item.sentenceCount,
-                            referenceCount = referenceItem.sentenceCount,
-                        )
-                    }
+                    failures += context.partMessage(partId = partId, content = message)
                 }
             }
         }
@@ -143,84 +321,69 @@ class StoryTranslationStructureTest {
         return failures
     }
 
-    private fun sizeMismatchMessage(
-        context: StoryTranslationContext,
-        structureSize: Int,
-    ) = buildString {
-        append("Story '")
-        append(context.storyDir.fileName)
-        append("' translation '")
-        append(context.translation)
-        append("' has ")
-        append(structureSize)
-        append(" content items but expected ")
-        append(context.referenceStructureSize)
-        append(" as in '")
-        append(context.referenceKey)
-        append("'.")
-    }
+    private fun validateStoryGraph(
+        storyDir: Path,
+        translation: String,
+        story: StoryDescriptor,
+    ): List<String> {
+        val failures = mutableListOf<String>()
+        val visited = mutableSetOf<String>()
+        val visiting = mutableSetOf<String>()
 
-    private fun typeMismatchMessage(
-        context: StoryTranslationContext,
-        index: Int,
-        actualType: ContentType,
-        referenceType: ContentType,
-    ) = buildString {
-        append("Story '")
-        append(context.storyDir.fileName)
-        append("' translation '")
-        append(context.translation)
-        append("' content index ")
-        append(index)
-        append(" type ")
-        append(actualType)
-        append(" differs from ")
-        append(referenceType)
-        append(" in '")
-        append(context.referenceKey)
-        append("'.")
-    }
+        fun dfs(partId: String) {
+            val part = story.parts[partId]
+            if (part == null) {
+                  failures += storyMessage(
+                      storyDir = storyDir,
+                      translation = translation,
+                      content = "references missing part '$partId'.",
+                  )
+                return
+            }
+            if (!visited.add(partId)) {
+                  failures += storyMessage(
+                      storyDir = storyDir,
+                      translation = translation,
+                      content = "part '$partId' can be reached through more than one path.",
+                  )
+                return
+            }
+            visiting.add(partId)
+            part.choices.forEach { choice ->
+                val targetId = choice.targetPartId
+                if (!story.parts.containsKey(targetId)) {
+                  failures += storyMessage(
+                      storyDir = storyDir,
+                      translation = translation,
+                      content = "part '$partId' has a choice targeting unknown part '$targetId'.",
+                  )
+                    return@forEach
+                }
+                if (visiting.contains(targetId)) {
+                  failures += storyMessage(
+                      storyDir = storyDir,
+                      translation = translation,
+                      content = "part '$partId' choice to '$targetId' creates a loop.",
+                  )
+                    return@forEach
+                }
+                dfs(targetId)
+            }
+            visiting.remove(partId)
+        }
 
-    private fun imagePathMismatchMessage(
-        context: StoryTranslationContext,
-        index: Int,
-        actualPath: String?,
-        referencePath: String?,
-    ) = buildString {
-        append("Story '")
-        append(context.storyDir.fileName)
-        append("' translation '")
-        append(context.translation)
-        append("' image at index ")
-        append(index)
-        append(" uses '")
-        append(actualPath)
-        append("' but expected '")
-        append(referencePath)
-        append("' from '")
-        append(context.referenceKey)
-        append("'.")
-    }
+        dfs(story.startPartId)
 
-    private fun sentenceCountMismatchMessage(
-        context: StoryTranslationContext,
-        index: Int,
-        actualCount: Int?,
-        referenceCount: Int?,
-    ) = buildString {
-        append("Story '")
-        append(context.storyDir.fileName)
-        append("' translation '")
-        append(context.translation)
-        append("' paragraph at index ")
-        append(index)
-        append(" has ")
-        append(actualCount)
-        append(" sentences but expected ")
-        append(referenceCount)
-        append(" as in '")
-        append(context.referenceKey)
-        append("'.")
+        val unreachable = story.parts.keys - visited
+        if (unreachable.isNotEmpty()) {
+              failures += storyMessage(
+                  storyDir = storyDir,
+                  translation = translation,
+                  content = "has unreachable parts: ${unreachable.sorted().joinToString()}.",
+              )
+        }
+
+        return failures
     }
 
     private fun featuredImageMismatchMessage(
@@ -241,55 +404,172 @@ class StoryTranslationStructureTest {
         append("'.")
     }
 
-    private data class StoryTranslationContext(
-        val storyDir: Path,
-        val translation: String,
-        val referenceKey: String,
-        val referenceStructureSize: Int,
-    )
+    private fun sizeMismatchMessage(
+        context: StoryTranslationContext,
+        partId: String,
+        structureSize: Int,
+        referenceSize: Int,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' part '")
+        append(partId)
+        append("' has ")
+        append(structureSize)
+        append(" content items but expected ")
+        append(referenceSize)
+        append(" as in '")
+        append(context.referenceKey)
+        append("'.")
+    }
 
-    private fun parseStructure(path: Path): StoryDescriptor {
+    private fun typeMismatchMessage(
+        context: StoryTranslationContext,
+        partId: String,
+        index: Int,
+        actualType: ContentType,
+        referenceType: ContentType,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' part '")
+        append(partId)
+        append("' content index ")
+        append(index)
+        append(" type ")
+        append(actualType)
+        append(" differs from ")
+        append(referenceType)
+        append(" in '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private fun imagePathMismatchMessage(
+        context: StoryTranslationContext,
+        partId: String,
+        index: Int,
+        actualPath: String?,
+        referencePath: String?,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' part '")
+        append(partId)
+        append("' image at index ")
+        append(index)
+        append(" uses '")
+        append(actualPath)
+        append("' but expected '")
+        append(referencePath)
+        append("' from '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private fun sentenceCountMismatchMessage(
+        context: StoryTranslationContext,
+        partId: String,
+        index: Int,
+        actualCount: Int?,
+        referenceCount: Int?,
+    ) = buildString {
+        append("Story '")
+        append(context.storyDir.fileName)
+        append("' translation '")
+        append(context.translation)
+        append("' part '")
+        append(partId)
+        append("' paragraph at index ")
+        append(index)
+        append(" has ")
+        append(actualCount)
+        append(" sentences but expected ")
+        append(referenceCount)
+        append(" as in '")
+        append(context.referenceKey)
+        append("'.")
+    }
+
+    private fun parseStory(path: Path): StoryDescriptor {
         val element = json.parseToJsonElement(path.readText()).jsonObject
         val startPartId = element.requireString(key = "startPartId", path = path)
         val featuredImagePath = element.requireString(key = "featuredImagePath", path = path)
         val partsArray = element.requireArray(key = "parts", path = path)
-        val partObject = partsArray.findPartObject(startPartId = startPartId, path = path)
-        val content = partObject.requireContentArray(path = path, partId = startPartId)
 
-        val descriptors = content.mapIndexed { index, item ->
-            item.jsonObject.toContentDescriptor(path = path, index = index)
-        }
-
-        val containsFeaturedImage = descriptors.any { it.imagePath == featuredImagePath }
-        if (!containsFeaturedImage) {
-            error(
-                "Story file '$path' featuredImagePath '$featuredImagePath' does not match any image in part '$startPartId'"
+        val parts = partsArray.map { partElement ->
+            val partObject = partElement.jsonObject
+            val partId = partObject.requireString(key = "id", path = path, context = "part")
+            val contentArray = partObject.requireContentArray(path = path, partId = partId)
+            val contentDescriptors = contentArray.mapIndexed { index, item ->
+                item.jsonObject.toContentDescriptor(path = path, partId = partId, index = index)
+            }
+            val choicesArray = partObject["choices"] as? JsonArray ?: JsonArray(emptyList())
+            val choices = choicesArray.mapIndexed { index, choiceElement ->
+                val choiceObject = choiceElement.jsonObject
+                val targetId = choiceObject.requireString(key = "targetPartId", path = path, context = "choice $index in part '$partId'")
+                val text = choiceObject.requireString(key = "text", path = path, context = "choice $index in part '$partId'")
+                ChoiceDescriptor(
+                    text = text,
+                    targetPartId = targetId,
+                )
+            }
+            StoryPartDescriptor(
+                id = partId,
+                content = contentDescriptors,
+                choices = choices,
             )
         }
 
+        val duplicateParts = parts.groupBy { it.id }.filterValues { it.size > 1 }.keys
+        if (duplicateParts.isNotEmpty()) {
+            error("Story file '$path' has duplicate part ids: ${duplicateParts.sorted().joinToString()}")
+        }
+
+        val partsById = parts.associateBy { it.id }
+
+        if (featuredImagePath.isNotBlank()) {
+            val containsFeaturedImage = partsById.values.any { part ->
+                part.content.any { it.imagePath == featuredImagePath }
+            }
+            if (!containsFeaturedImage) {
+                error("Story file '$path' featuredImagePath '$featuredImagePath' does not match any image in the story")
+            }
+        }
+
+        if (!partsById.containsKey(startPartId)) {
+            error("Story file '$path' startPartId '$startPartId' does not match any part")
+        }
+
         return StoryDescriptor(
+            startPartId = startPartId,
             featuredImagePath = featuredImagePath,
-            content = descriptors,
+            parts = partsById,
         )
     }
 
-    private fun JsonObject.requireString(key: String, path: Path): String {
-        return this[key]?.jsonPrimitive?.content
-            ?: error("Story file '$path' is missing a '$key'")
+    private fun JsonObject.requireString(key: String, path: Path, context: String? = null): String {
+        val value = this[key]?.jsonPrimitive?.content
+        if (value != null) {
+            return value
+        }
+        if (context != null) {
+            error("Story file '$path' $context is missing a '$key'")
+        } else {
+            error("Story file '$path' is missing a '$key'")
+        }
     }
 
     private fun JsonObject.requireArray(key: String, path: Path): JsonArray {
         val element = this[key] ?: error("Story file '$path' is missing a '$key' array")
         return element as? JsonArray
             ?: error("Story file '$path' has a non-array '$key' element")
-    }
-
-    private fun JsonArray.findPartObject(startPartId: String, path: Path): JsonObject {
-        return map { it.jsonObject }
-            .firstOrNull { part ->
-                part["id"]?.jsonPrimitive?.content == startPartId
-            }
-            ?: error("Story file '$path' does not have a part matching startPartId '$startPartId'")
     }
 
     private fun JsonObject.requireContentArray(path: Path, partId: String): JsonArray {
@@ -299,25 +579,29 @@ class StoryTranslationStructureTest {
             ?: error("Story file '$path' has a non-array 'content' element in part '$partId'")
     }
 
-    private fun JsonObject.toContentDescriptor(path: Path, index: Int): ContentDescriptor {
+    private fun JsonObject.toContentDescriptor(
+        path: Path,
+        partId: String,
+        index: Int,
+    ): ContentDescriptor {
         val type = this["type"]?.jsonPrimitive?.content
-            ?: error("Content item $index in '$path' is missing a 'type'")
+            ?: error("Content item $index in part '$partId' of '$path' is missing a 'type'")
         return when (type) {
             "image" -> {
                 val imagePath = this["path"]?.jsonPrimitive?.content
-                    ?: error("Image item $index in '$path' is missing a 'path'")
+                    ?: error("Image item $index in part '$partId' of '$path' is missing a 'path'")
                 ContentDescriptor(ContentType.IMAGE, imagePath = imagePath)
             }
 
             "paragraph" -> {
                 val sentencesElement = this["sentences"]
-                    ?: error("Paragraph item $index in '$path' is missing 'sentences'")
+                    ?: error("Paragraph item $index in part '$partId' of '$path' is missing 'sentences'")
                 val sentencesArray = sentencesElement as? JsonArray
-                    ?: error("Paragraph item $index in '$path' has non-array 'sentences'")
+                    ?: error("Paragraph item $index in part '$partId' of '$path' has non-array 'sentences'")
                 ContentDescriptor(ContentType.PARAGRAPH, sentenceCount = sentencesArray.size)
             }
 
-            else -> error("Unsupported content type '$type' in '$path'")
+            else -> error("Unsupported content type '$type' in part '$partId' of '$path'")
         }
     }
 
@@ -333,19 +617,36 @@ class StoryTranslationStructureTest {
     }
 
     private data class StoryDescriptor(
+        val startPartId: String,
         val featuredImagePath: String,
+        val parts: Map<String, StoryPartDescriptor>,
+    )
+
+    private data class StoryPartDescriptor(
+        val id: String,
         val content: List<ContentDescriptor>,
+        val choices: List<ChoiceDescriptor>,
+    )
+
+    private data class ChoiceDescriptor(
+        val text: String,
+        val targetPartId: String,
     )
 
     private data class ContentDescriptor(
         val type: ContentType,
         val sentenceCount: Int? = null,
-        val imagePath: String? = null
+        val imagePath: String? = null,
     )
 
     private enum class ContentType {
         IMAGE,
         PARAGRAPH
     }
-}
 
+    private data class StoryTranslationContext(
+        val storyDir: Path,
+        val translation: String,
+        val referenceKey: String,
+    )
+}

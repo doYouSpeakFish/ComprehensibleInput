@@ -2,10 +2,14 @@ package input.comprehensible.data.stories
 
 import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
+import input.comprehensible.data.stories.model.StoryChoice
+import input.comprehensible.data.stories.model.StoryChoiceOption
 import input.comprehensible.data.stories.model.StoryElement
+import input.comprehensible.data.stories.model.StoryPart
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
+import input.comprehensible.data.stories.sources.stories.local.StoryPartData
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.getOrCreateStory
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
@@ -96,7 +100,7 @@ class StoriesRepository @Inject constructor(
                 translation = translatedStoryData,
                 learningLanguage = learningLanguage,
                 translationsLanguage = translationsLanguage,
-                position = storyInfo.position,
+                storyInfo = storyInfo,
             ) ?: return@map StoryResult.Error
             StoryResult.Success(story)
         }.catch { throwable ->
@@ -110,9 +114,13 @@ class StoriesRepository @Inject constructor(
             StoryResult.Error
         }
 
-    suspend fun updateStoryPosition(id: String, position: Int) {
+    suspend fun updateStoryPosition(id: String, partId: String, elementIndex: Int) {
         storiesInfoLocalDataSource.updateStory(
-            story = StoryEntity(id = id, position = position)
+            story = StoryEntity(
+                id = id,
+                positionPartId = partId,
+                positionElementIndex = elementIndex,
+            )
         )
     }
 
@@ -137,44 +145,94 @@ class StoriesRepository @Inject constructor(
         translation: StoryData,
         learningLanguage: String,
         translationsLanguage: String,
-        position: Int,
+        storyInfo: StoryEntity,
     ): Story? {
-        val learningPart = parts.firstOrNull { it.id == startPartId }
-            ?: run {
-                Timber.e("Story $id is missing part with id $startPartId")
-                return null
-            }
+        val learningParts = parts.associateBy { it.id }
+        val translationParts = translation.parts.associateBy { it.id }
 
-        val translationPart = translation.parts.firstOrNull { it.id == startPartId }
-            ?: run {
-                Timber.e("Story $id translation is missing part with id $startPartId")
-                return null
-            }
+        val targetPartId = storyInfo.positionPartId
+            .takeIf { it.isNotBlank() && learningParts.containsKey(it) }
+            ?: startPartId
 
-        if (learningPart.content.size != translationPart.content.size) {
-            Timber.e(
-                "Story $id content could not be fully matched between $learningLanguage and $translationsLanguage"
-            )
+        val path = buildPartPath(
+            startPartId = startPartId,
+            targetPartId = targetPartId,
+            parts = learningParts,
+        ) ?: run {
+            Timber.e("Story %s could not resolve path to part %s", id, targetPartId)
             return null
         }
 
-        val storyElements = learningPart.content
-            .zip(translationPart.content)
-            .map { (storyElementData, translationElement) ->
-                storyElementData.toStoryElement(
+        val languageLabel = "$learningLanguage/$translationsLanguage"
+
+        val storyParts = mutableListOf<StoryPart>()
+        path.forEachIndexed { index, partId ->
+            val learningPart = learningParts[partId] ?: run {
+                Timber.e("Story %s is missing part with id %s", id, partId)
+                return null
+            }
+            val translationPart = translationParts[partId] ?: run {
+                Timber.e("Story %s translation is missing part with id %s", id, partId)
+                return null
+            }
+            if (learningPart.content.size != translationPart.content.size) {
+                Timber.e(
+                    "Story %s content could not be fully matched between %s and %s for part %s",
+                    id,
+                    learningLanguage,
+                    translationsLanguage,
+                    partId,
+                )
+                return null
+            }
+
+            val elements = learningPart.content
+                .zip(translationPart.content)
+                .map { (storyElementData, translationElement) ->
+                    storyElementData.toStoryElement(
+                        storyId = id,
+                        translation = translationElement,
+                        learningLanguage = learningLanguage,
+                        translationsLanguage = translationsLanguage,
+                    ) ?: return null
+                }
+
+            val choice = if (learningPart.choices.isEmpty()) {
+                null
+            } else {
+                val choiceContext = StoryChoiceContext(
                     storyId = id,
-                    translation = translationElement,
-                    learningLanguage = learningLanguage,
-                    translationsLanguage = translationsLanguage,
+                    partId = partId,
+                    nextPartId = path.getOrNull(index + 1),
+                    languageLabel = languageLabel,
+                )
+                buildStoryChoice(
+                    context = choiceContext,
+                    learningPart = learningPart,
+                    translationPart = translationPart,
                 ) ?: return null
             }
+
+            storyParts += StoryPart(
+                id = partId,
+                elements = elements,
+                choice = choice,
+            )
+        }
+
+        val currentPartId = path.last()
+        val currentPart = storyParts.lastOrNull() ?: return null
+        val maxElementIndex = currentPart.elements.size
+        val currentElementIndex = storyInfo.positionElementIndex
+            .coerceIn(0, maxElementIndex)
 
         return Story(
             id = id,
             title = title,
             translatedTitle = translation.title,
-            content = storyElements,
-            currentStoryElementIndex = position,
+            parts = storyParts,
+            currentPartId = currentPartId,
+            currentElementIndex = currentElementIndex,
         )
     }
 
@@ -253,3 +311,86 @@ sealed interface StoryResult {
     data class Success(val story: Story) : StoryResult
     object Error : StoryResult
 }
+
+private fun buildPartPath(
+    startPartId: String,
+    targetPartId: String,
+    parts: Map<String, StoryPartData>,
+): List<String>? {
+    val path = mutableListOf<String>()
+    val visiting = mutableSetOf<String>()
+
+    fun dfs(current: String): Boolean {
+        val part = parts[current] ?: return false
+        path += current
+        if (current == targetPartId) {
+            return true
+        }
+        visiting += current
+        part.choices.forEach { choice ->
+            val next = choice.targetPartId
+            if (visiting.contains(next)) {
+                return@forEach
+            }
+            if (dfs(next)) {
+                return true
+            }
+        }
+        visiting -= current
+        path.removeAt(path.lastIndex)
+        return false
+    }
+
+    return if (dfs(startPartId)) path.toList() else null
+}
+
+private fun buildStoryChoice(
+    context: StoryChoiceContext,
+    learningPart: StoryPartData,
+    translationPart: StoryPartData,
+): StoryChoice? {
+    if (translationPart.choices.size != learningPart.choices.size) {
+        Timber.e(
+            "Mismatched number of choices in story %s (%s) in part %s",
+            context.storyId,
+            context.languageLabel,
+            context.partId,
+        )
+        return null
+    }
+    val translationChoicesByTarget = translationPart.choices.associateBy { it.targetPartId }
+    val options = mutableListOf<StoryChoiceOption>()
+    learningPart.choices.forEach { choice ->
+        val translationChoice = translationChoicesByTarget[choice.targetPartId] ?: run {
+            Timber.e("No matching translation found for choice in story %s part %s", context.storyId, context.partId)
+            return null
+        }
+        options += StoryChoiceOption(
+            text = choice.text,
+            translatedText = translationChoice.text,
+            targetPartId = choice.targetPartId,
+        )
+    }
+
+    return if (context.nextPartId != null) {
+        val chosenOption = options.firstOrNull { it.targetPartId == context.nextPartId } ?: run {
+            Timber.e(
+                "Story %s part %s is missing choice leading to part %s",
+                context.storyId,
+                context.partId,
+                context.nextPartId,
+            )
+            return null
+        }
+        StoryChoice.Chosen(chosenOption)
+    } else {
+        StoryChoice.Available(options)
+    }
+}
+
+private data class StoryChoiceContext(
+    val storyId: String,
+    val partId: String,
+    val nextPartId: String?,
+    val languageLabel: String,
+)

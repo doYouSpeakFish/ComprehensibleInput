@@ -40,7 +40,7 @@ fun StoriesInfoLocalDataSource.getOrCreateStory(
 ): Flow<StoryEntity> = getStory(id)
     .onEach { storyEntity ->
         if (storyEntity == null) {
-            insertStory(StoryEntity(id = id, position = 0))
+            insertStory(StoryEntity(id = id))
         }
     }
     .filterNotNull()

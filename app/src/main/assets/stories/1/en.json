@@ -1,11 +1,11 @@
 {
   "id": "1",
   "title": "Secret Healing Bath",
-  "startPartId": "main",
+  "startPartId": "start",
   "featuredImagePath": "1",
   "parts": [
     {
-      "id": "main",
+      "id": "start",
       "content": [
         {
           "type": "image",
@@ -67,49 +67,66 @@
             "“This healing bath belongs to my family,” says the old woman.",
             "“I lost this coin here many years ago.”"
           ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "Maria keeps the coin.",
+          "targetPartId": "keep_coin"
         },
+        {
+          "text": "Maria gives the coin back.",
+          "targetPartId": "return_coin"
+        }
+      ]
+    },
+    {
+      "id": "keep_coin",
+      "content": [
         {
           "type": "paragraph",
           "sentences": [
-            "Maria feels bad.",
-            "She gives the coin back to the woman and apologizes."
+            "Maria closes her hand around the coin.",
+            "She slips it into her pocket and stays quiet.",
+            "When she looks up, the old woman is gone."
           ]
         },
         {
           "type": "paragraph",
           "sentences": [
-            "The old woman smiles.",
-            "“It's alright,” she says.",
-            "“But this healing bath has a secret.",
-            "It can only be seen by those who are pure of heart.”"
+            "The next day the spring is silent.",
+            "The water is cold and the steam has vanished.",
+            "Maria realizes the healing bath no longer trusts her."
+          ]
+        }
+      ],
+      "choices": []
+    },
+    {
+      "id": "return_coin",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria feels bad and gives the coin back.",
+            "She apologizes to the old woman.",
+            "The woman smiles and says the healing bath has a secret."
           ]
         },
         {
           "type": "paragraph",
           "sentences": [
-            "Maria is surprised.",
-            "She thanks the woman and leaves the healing bath."
+            "Only kind hearts can see the spring.",
+            "Maria promises to keep the place safe.",
+            "The old woman disappears between the trees."
           ]
         },
         {
           "type": "paragraph",
           "sentences": [
-            "The next day Maria brings her friends to the forest.",
-            "But they can't find the healing bath.",
-            "It has disappeared."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria smiles.",
-            "She now knows that some things in life are meant only for her."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "The end."
+            "The next day Maria returns with her friends.",
+            "They cannot find the healing bath.",
+            "Maria smiles, knowing it will welcome her when she visits alone."
           ]
         }
       ],

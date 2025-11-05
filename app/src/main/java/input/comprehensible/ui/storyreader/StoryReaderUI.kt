@@ -83,7 +83,7 @@ fun StoryReader(
 private fun StoryReader(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
-    onStoryPartVisible: (index: Int) -> Unit,
+    onStoryPartVisible: (partId: String, elementIndex: Int) -> Unit,
     state: StoryReaderUiState,
     onErrorDismissed: () -> Unit,
 ) {
@@ -121,26 +121,38 @@ private fun StoryReader(
 private fun StoryContent(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
-    onStoryPartVisible: (index: Int) -> Unit,
+    onStoryPartVisible: (partId: String, elementIndex: Int) -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
     val isExplainerShownAtStart = timesExplainerTapped < 11
     val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = if (state.storyPosition == 0 ) {
+        initialFirstVisibleItemIndex = if (state.content.isEmpty() || state.initialContentIndex == 0) {
             0
         } else {
-            state.storyPosition + 1 // Accounts for header
+            state.initialContentIndex + 1 // Accounts for header
         }
     )
-    LaunchedEffect(Unit) {
+    LaunchedEffect(state.currentPartId, state.initialContentIndex) {
+        if (state.content.isEmpty() || state.initialContentIndex == 0) {
+            return@LaunchedEffect
+        }
+        val targetIndex = (state.initialContentIndex + 1).coerceAtLeast(0)
+        if (listState.firstVisibleItemIndex != targetIndex) {
+            listState.scrollToItem(targetIndex)
+        }
+    }
+    LaunchedEffect(state.content) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .conflate()
             .distinctUntilChanged()
             .collect { currentItemIndex ->
-                val currentStoryPart = (currentItemIndex - 1) // Don't count header item
-                    .coerceAtLeast(0)
-                onStoryPartVisible(currentStoryPart)
+                val contentIndex = (currentItemIndex - 1).coerceAtLeast(0)
+                val item = state.content.getOrNull(contentIndex)
+                    ?: state.content.lastOrNull()
+                if (item != null) {
+                    onStoryPartVisible(item.partId, item.elementIndexInPart)
+                }
             }
     }
     Box(modifier) {
@@ -168,9 +180,9 @@ private fun StoryContent(
                     }
                 }
             }
-            items(state.content) {
+            items(state.content) { item ->
                 StoryContentPart(
-                    state = it,
+                    state = item.content,
                 )
             }
             if (!isExplainerShownAtStart) {
@@ -286,18 +298,23 @@ fun StoryReaderPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
-            onStoryPartVisible = {},
+            onStoryPartVisible = { _, _ -> },
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = false,
                 content = listOf(
-                    StoryContentPartUiState.Paragraph(
-                        paragraph = "Content",
-                        onClick = {},
-                        selectedTextRange = null
+                    StoryContentItemUiState(
+                        partId = "part",
+                        elementIndexInPart = 0,
+                        content = StoryContentPartUiState.Paragraph(
+                            paragraph = "Content",
+                            onClick = {},
+                            selectedTextRange = null
+                        )
                     )
                 ),
-                storyPosition = 0,
+                currentPartId = "part",
+                initialContentIndex = 0,
             ),
             onErrorDismissed = {},
         )
@@ -310,18 +327,23 @@ fun StoryReaderTranslationPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
-            onStoryPartVisible = {},
+            onStoryPartVisible = { _, _ -> },
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = true,
                 content = listOf(
-                    StoryContentPartUiState.Paragraph(
-                        paragraph = "Content",
-                        onClick = {},
-                        selectedTextRange = null
+                    StoryContentItemUiState(
+                        partId = "part",
+                        elementIndexInPart = 0,
+                        content = StoryContentPartUiState.Paragraph(
+                            paragraph = "Content",
+                            onClick = {},
+                            selectedTextRange = null
+                        )
                     )
                 ),
-                storyPosition = 0,
+                currentPartId = "part",
+                initialContentIndex = 0,
             ),
             onErrorDismissed = {},
         )
@@ -334,7 +356,7 @@ fun StoryReaderErrorPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
-            onStoryPartVisible = {},
+            onStoryPartVisible = { _, _ -> },
             state = StoryReaderUiState.Error,
             onErrorDismissed = {},
         )

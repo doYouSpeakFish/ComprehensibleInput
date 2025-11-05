@@ -14,6 +14,8 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
@@ -37,6 +39,24 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
         composeTestRule
             .onNodeWithText(text = sentence, substring = true)
             .assertIsDisplayed()
+    }
+
+    fun assertStoryTextExists(sentence: String) {
+        composeTestRule
+            .onAllNodesWithText(sentence, substring = true, useUnmergedTree = true)
+            .assertCountEquals(1)
+    }
+
+    fun assertChoiceIsShown(text: String) {
+        composeTestRule
+            .onNodeWithText(text)
+            .assertIsDisplayed()
+    }
+
+    fun assertChoiceIsNotShown(text: String) {
+        composeTestRule
+            .onAllNodesWithText(text, useUnmergedTree = true)
+            .assertCountEquals(0)
     }
 
     fun assertImageIsShown(image: TestStoryPart.Image) {
@@ -76,14 +96,29 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             }
     }
 
+    fun chooseStoryOption(text: String) {
+        composeTestRule
+            .onNodeWithText(text)
+            .performClick()
+    }
+
     suspend fun skipToSentence(sentence: String) {
-        var i = 0
+        val scrollNode = composeTestRule.onNode(hasScrollAction())
+        var index = 0
         while (!isSentenceDisplayed(sentence)) {
-            composeTestRule
-                .onNode(hasScrollAction())
-                .performScrollToIndex(i)
+            try {
+                scrollNode.performScrollToIndex(index)
+            } catch (_: IllegalArgumentException) {
+                break
+            }
             composeTestRule.awaitIdle()
-            i++
+            index++
+        }
+        check(isSentenceDisplayed(sentence)) {
+            val nodeCount = composeTestRule
+                .onAllNodesWithText(sentence, substring = true, useUnmergedTree = true)
+                .fetchSemanticsNodes().size
+            "Sentence '$sentence' not found in story content (foundNodes=$nodeCount)"
         }
     }
 
