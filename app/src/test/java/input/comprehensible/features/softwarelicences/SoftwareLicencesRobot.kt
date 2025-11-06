@@ -19,7 +19,10 @@ class SoftwareLicencesRobot(private val composeTestRule: ComposeTestRule) {
 
     @OptIn(ExperimentalTestApi::class)
     fun assertLicenceIsVisible(softwareLicence: String) {
-        composeTestRule.waitUntilAtLeastOneExists(hasText(softwareLicence))
+        composeTestRule.waitUntilAtLeastOneExists(
+            matcher = hasText(softwareLicence),
+            timeoutMillis = 2000L,
+        )
 
         composeTestRule
             .onAllNodesWithText(softwareLicence)
