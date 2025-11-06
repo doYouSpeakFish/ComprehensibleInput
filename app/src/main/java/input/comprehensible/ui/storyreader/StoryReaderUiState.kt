@@ -25,5 +25,18 @@ sealed interface StoryReaderUiState {
         val content: List<StoryContentPartUiState>,
         val currentPartId: String,
         val initialContentIndex: Int,
+        val selectedText: SelectedText?,
     ) : StoryReaderUiState
+
+    sealed interface SelectedText {
+        data class Title(
+            val isTranslated: Boolean,
+        ) : SelectedText
+
+        data class SentenceInParagraph(
+            val paragraphIndex: Int,
+            val selectedSentenceIndex: Int,
+            val isTranslated: Boolean,
+        ) : SelectedText
+    }
 }

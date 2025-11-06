@@ -1,6 +1,5 @@
 package input.comprehensible.ui.storyreader
 
-import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +11,7 @@ import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.usecases.GetStoryUseCase
+import input.comprehensible.ui.storyreader.StoryReaderUiState.SelectedText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,11 +49,11 @@ class StoryReaderViewModel @Inject constructor(
         }
         .distinctUntilChanged()
 
-    private val selectedText = MutableStateFlow<SelectedText?>(null)
+    private val selectedTextState = MutableStateFlow<SelectedText?>(null)
 
     val state = combine(
         storyLoadState,
-        selectedText,
+        selectedTextState,
     ) { storyLoadState, selectedText ->
         when (storyLoadState) {
             StoryLoadState.Loading -> StoryReaderUiState.Loading
@@ -72,6 +72,7 @@ class StoryReaderViewModel @Inject constructor(
                     content = content,
                     currentPartId = story.currentPartId,
                     initialContentIndex = story.storyPosition,
+                    selectedText = selectedText,
                 )
             }
         }
@@ -85,7 +86,7 @@ class StoryReaderViewModel @Inject constructor(
      * Toggles whether translations are enabled for the title.
      */
     fun onTitleSelected() {
-        selectedText.update { selectedText ->
+        selectedTextState.update { selectedText ->
             if (selectedText is SelectedText.Title) {
                 selectedText.copy(isTranslated = !selectedText.isTranslated)
             } else {
@@ -117,103 +118,70 @@ class StoryReaderViewModel @Inject constructor(
     }
 
     private fun Story.toContentItems(selectedSentence: SelectedText.SentenceInParagraph?): List<StoryContentPartUiState> {
-        val items = mutableListOf<StoryContentPartUiState>()
-        var paragraphCounter = 0
+        var paragraphIndex = 0
+        return buildList {
+            parts.forEach { part ->
+                part.elements.forEach { element ->
+                    when (element) {
+                        is StoryElement.Paragraph -> {
+                            val currentIndex = paragraphIndex++
+                            add(element.toParagraphUiState(currentIndex, selectedSentence))
+                        }
 
-        parts.forEach { part ->
-            part.elements.forEachIndexed { elementIndex, element ->
-                when (element) {
-                    is StoryElement.Paragraph -> {
-                        val paragraphIndex = paragraphCounter++
-                        val selectedForParagraph = selectedSentence?.takeIf { it.paragraphIndex == paragraphIndex }
-                        items += element.toStoryContentPartUiState(
-                            paragraphIndex = paragraphIndex,
-                            selectedSentenceIndex = selectedForParagraph?.selectedSentenceIndex,
-                            areTranslationsEnabled = selectedForParagraph?.isTranslated == true,
-                        )
-                    }
-
-                    is StoryElement.Image -> {
-
-                        items += StoryContentPartUiState.Image(
-                            contentDescription = element.contentDescription,
-                            bitmap = element.bitmap,
+                        is StoryElement.Image -> add(
+                            StoryContentPartUiState.Image(
+                                contentDescription = element.contentDescription,
+                                bitmap = element.bitmap,
+                            )
                         )
                     }
                 }
-            }
 
-            when (val choice = part.choice) {
-                is StoryChoice.Available -> {
-                      val options = choice.options.map { option ->
-                          StoryContentPartUiState.Choices.Option(
-                              text = option.text,
-                              onClick = { onChoiceSelected(option.targetPartId) },
-                          )
-                    }
-                    items += StoryContentPartUiState.Choices(options = options)
+                when (val choice = part.choice) {
+                    is StoryChoice.Available -> add(
+                        StoryContentPartUiState.Choices(
+                            options = choice.options.map { option ->
+                                StoryContentPartUiState.Choices.Option(
+                                    text = option.text,
+                                    onClick = { onChoiceSelected(option.targetPartId) },
+                                )
+                            }
+                        )
+                    )
+
+                    is StoryChoice.Chosen -> add(
+                        StoryContentPartUiState.ChosenChoice(text = choice.option.text)
+                    )
+
+                    null -> Unit
                 }
-
-                is StoryChoice.Chosen -> {
-                    items += StoryContentPartUiState.ChosenChoice(text = choice.option.text)
-                }
-
-                null -> Unit
             }
         }
-
-        return items
     }
 
-    private fun StoryElement.toStoryContentPartUiState(
+    private fun StoryElement.Paragraph.toParagraphUiState(
         paragraphIndex: Int,
-        selectedSentenceIndex: Int?,
-        areTranslationsEnabled: Boolean,
-    ) = when (this) {
-        is StoryElement.Paragraph -> this.toStoryContentPartUiState(
-            paragraphIndex = paragraphIndex,
-            selectedSentenceIndex = selectedSentenceIndex,
-            areTranslationsEnabled = areTranslationsEnabled,
-        )
-
-        is StoryElement.Image -> StoryContentPartUiState.Image(
-            contentDescription = contentDescription,
-            bitmap = bitmap
-        )
-    }
-
-    private fun StoryElement.Paragraph.toStoryContentPartUiState(
-        paragraphIndex: Int,
-        selectedSentenceIndex: Int?,
-        areTranslationsEnabled: Boolean,
+        selectedSentence: SelectedText.SentenceInParagraph?,
     ): StoryContentPartUiState.Paragraph {
-        val combinedSentences = List(sentences.size) { i ->
-            if (i == selectedSentenceIndex && areTranslationsEnabled) {
-                sentencesTranslations[i]
+        val selectedForParagraph = selectedSentence?.takeIf { it.paragraphIndex == paragraphIndex }
+        val sentencesForDisplay = sentences.mapIndexed { index, sentence ->
+            val shouldTranslate = selectedForParagraph?.isTranslated == true &&
+                selectedForParagraph.selectedSentenceIndex == index
+            if (shouldTranslate) {
+                sentencesTranslations[index]
             } else {
-                sentences[i]
+                sentence
             }
         }
-        val sentencesIndex = combinedSentences
-            .runningFold(0) { acc, sentence -> acc + sentence.length + 1 }
-            .zipWithNext { a, b -> TextRange(a, b) }
         return StoryContentPartUiState.Paragraph(
-            paragraph = combinedSentences.joinToString(separator = " "),
-            onClick = { characterIndex ->
+            sentences = sentencesForDisplay,
+            selectedSentenceIndex = selectedForParagraph?.selectedSentenceIndex,
+            onClick = { sentenceIndex ->
                 onSentenceSelected(
                     paragraphIndex = paragraphIndex,
-                    sentenceIndex = sentencesIndex.indexOfFirst { characterIndex in it },
+                    sentenceIndex = sentenceIndex,
                 )
             },
-            selectedTextRange = if (selectedSentenceIndex != null) {
-                val selectedSentenceRange = sentencesIndex[selectedSentenceIndex]
-                TextRange(
-                    start = selectedSentenceRange.start,
-                    end = selectedSentenceRange.end - 1, // Don't highlight space between sentences
-                )
-            } else {
-                null
-            }
         )
     }
 
@@ -221,12 +189,12 @@ class StoryReaderViewModel @Inject constructor(
         paragraphIndex: Int,
         sentenceIndex: Int,
     ) {
-        selectedText.update { selectedText ->
+        selectedTextState.update { selectedText ->
             val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
             val sameParagraph = selectedSentence?.paragraphIndex == paragraphIndex
             val sameSentence = selectedSentence?.selectedSentenceIndex == sentenceIndex
             if (sameParagraph && sameSentence) {
-                return@update selectedSentence.copy(isTranslated = !selectedText.isTranslated)
+                return@update selectedSentence.copy(isTranslated = !selectedSentence.isTranslated)
             }
 
             SelectedText.SentenceInParagraph(
@@ -244,14 +212,3 @@ private sealed interface StoryLoadState {
     data class Loaded(val story: Story) : StoryLoadState
 }
 
-private sealed interface SelectedText {
-    data class Title(
-        val isTranslated: Boolean,
-    ) : SelectedText
-
-    data class SentenceInParagraph(
-        val paragraphIndex: Int,
-        val selectedSentenceIndex: Int,
-        val isTranslated: Boolean,
-    ) : SelectedText
-}

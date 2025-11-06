@@ -1,8 +1,6 @@
 package input.comprehensible.ui.components.storycontent.part
 
 import android.graphics.Bitmap
-import androidx.compose.ui.text.TextRange
-
 /**
  * Represents the UI state of a story content part.
  */
@@ -11,9 +9,9 @@ sealed interface StoryContentPartUiState {
      * Represents a paragraph content part.
      */
     data class Paragraph(
-        val paragraph: String,
-        val onClick: (characterIndex: Int) -> Unit,
-        val selectedTextRange: TextRange?
+        val sentences: List<String>,
+        val selectedSentenceIndex: Int?,
+        val onClick: (sentenceIndex: Int) -> Unit,
     ) : StoryContentPartUiState
 
     /**

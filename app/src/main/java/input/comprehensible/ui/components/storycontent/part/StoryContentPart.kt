@@ -8,17 +8,26 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Button
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.LinkInteractionListener
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import input.comprehensible.ui.components.SelectableText
 
 /**
  * A composable for displaying a part of a stories main content.
@@ -41,11 +50,51 @@ private fun Paragraph(
     state: StoryContentPartUiState.Paragraph
 ) {
     Box(modifier) {
-        SelectableText(
+        val textStyle = MaterialTheme.typography.bodyLarge
+        val defaultSpanStyle = SpanStyle(
+            background = Color.Transparent,
+            color = LocalContentColor.current,
+        )
+        val colorScheme = MaterialTheme.colorScheme
+        val highlightedSpanStyle = remember(colorScheme.background, colorScheme.onBackground) {
+            SpanStyle(
+                color = colorScheme.background,
+                background = colorScheme.onBackground,
+            )
+        }
+        val annotatedText = remember(state, highlightedSpanStyle, defaultSpanStyle) {
+            buildAnnotatedString {
+                state.sentences.forEachIndexed { index, sentence ->
+                    withLink(
+                        link = LinkAnnotation.Clickable(
+                            tag = "sentence-$index",
+                            linkInteractionListener = LinkInteractionListener {
+                                state.onClick(index)
+                            }
+                        )
+                    ) {
+                        withStyle(
+                            if (index == state.selectedSentenceIndex) {
+                                highlightedSpanStyle
+                            } else {
+                                defaultSpanStyle
+                            }
+                        ) {
+                            append(sentence)
+                        }
+                    }
+                    if (index != state.sentences.lastIndex) {
+                        withStyle(defaultSpanStyle) {
+                            append(" ")
+                        }
+                    }
+                }
+            }
+        }
+        BasicText(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = state.paragraph,
-            onTextClicked = state.onClick,
-            selectedText = state.selectedTextRange,
+            text = annotatedText,
+            style = textStyle,
         )
     }
 }

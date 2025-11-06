@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -23,12 +24,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,13 +48,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
-import input.comprehensible.ui.components.SelectableText
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -191,16 +192,29 @@ private fun Title(
     title: String,
     isTitleHighlighted: Boolean,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Column(modifier) {
-        SelectableText(
-            text = title,
-            onTextClicked = { onTitleClicked() },
-            selectedText = TextRange(
-                start = 0,
-                end = title.length,
-            ).takeIf { isTitleHighlighted },
-            style = MaterialTheme.typography.headlineLarge,
-        )
+        TextButton(
+            onClick = onTitleClicked,
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = if (isTitleHighlighted) {
+                    colorScheme.onBackground
+                } else {
+                    Color.Transparent
+                },
+                contentColor = if (isTitleHighlighted) {
+                    colorScheme.background
+                } else {
+                    colorScheme.onBackground
+                }
+            ),
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineLarge,
+            )
+        }
     }
 }
 
@@ -290,13 +304,14 @@ fun StoryReaderPreview() {
                 isTitleHighlighted = false,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
-                        paragraph = "Content",
+                        sentences = listOf("Content"),
+                        selectedSentenceIndex = null,
                         onClick = {},
-                        selectedTextRange = null
                     ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
+                selectedText = null,
             ),
             onErrorDismissed = {},
         )
@@ -315,13 +330,14 @@ fun StoryReaderTranslationPreview() {
                 isTitleHighlighted = true,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
-                        paragraph = "Content",
+                        sentences = listOf("Content"),
+                        selectedSentenceIndex = 0,
                         onClick = {},
-                        selectedTextRange = null
                     ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
+                selectedText = StoryReaderUiState.SelectedText.Title(isTranslated = true),
             ),
             onErrorDismissed = {},
         )
