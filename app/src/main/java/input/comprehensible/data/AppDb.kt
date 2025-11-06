@@ -26,15 +26,15 @@ private val MIGRATION_1_2 = object : Migration(1, 2) {
             """
                 CREATE TABLE IF NOT EXISTS StoryEntity_new (
                     id TEXT NOT NULL,
-                    positionPartId TEXT NOT NULL DEFAULT '',
-                    positionElementIndex INTEGER NOT NULL DEFAULT 0,
+                    partId TEXT DEFAULT NULL,
+                    position INTEGER NOT NULL DEFAULT 0,
                     PRIMARY KEY(id)
                 )
             """.trimIndent()
         )
         db.execSQL(
             """
-                INSERT INTO StoryEntity_new (id, positionElementIndex)
+                INSERT INTO StoryEntity_new (id, storyPosition)
                 SELECT id, position FROM StoryEntity
             """.trimIndent()
         )

@@ -14,10 +14,12 @@ import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiSt
 import input.comprehensible.usecases.GetStoryUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,8 +50,6 @@ class StoryReaderViewModel @Inject constructor(
         .distinctUntilChanged()
 
     private val selectedText = MutableStateFlow<SelectedText?>(null)
-    private val pendingChoicePartId = MutableStateFlow<String?>(null)
-    private val latestStory = MutableStateFlow<Story?>(null)
 
     val state = combine(
         storyLoadState,
@@ -60,10 +60,6 @@ class StoryReaderViewModel @Inject constructor(
             StoryLoadState.Error -> StoryReaderUiState.Error
             is StoryLoadState.Loaded -> {
                 val story = storyLoadState.story
-                latestStory.value = story
-                if (pendingChoicePartId.value == story.currentPartId) {
-                    pendingChoicePartId.value = null
-                }
                 val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
                 val content = story.toContentItems(selectedSentence)
                 StoryReaderUiState.Loaded(
@@ -75,14 +71,15 @@ class StoryReaderViewModel @Inject constructor(
                     isTitleHighlighted = selectedText is SelectedText.Title,
                     content = content,
                     currentPartId = story.currentPartId,
-                    initialContentIndex = content.findInitialContentIndex(
-                        partId = story.currentPartId,
-                        elementIndex = story.currentElementIndex,
-                    ),
+                    initialContentIndex = story.storyPosition,
                 )
             }
         }
-    }
+    }.stateIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = StoryReaderUiState.Loading
+    )
 
     /**
      * Toggles whether translations are enabled for the title.
@@ -101,54 +98,26 @@ class StoryReaderViewModel @Inject constructor(
      * Persists the current story location, so if the story is closed, it can be resumed from this
      * point.
      */
-    fun onStoryLocationUpdated(partId: String, elementIndex: Int) {
+    fun onStoryLocationUpdated(elementIndex: Int) {
         viewModelScope.launch {
-            val pendingChoice = pendingChoicePartId.value
-            if (pendingChoice != null && pendingChoice != partId) {
-                return@launch
-            }
-            val story = latestStory.value ?: return@launch
-            val partOrder = story.parts.map { it.id }
-            val currentIndex = partOrder.indexOf(story.currentPartId).takeIf { it >= 0 } ?: 0
-            val newIndex = partOrder.indexOf(partId)
-            if (newIndex == -1) {
-                return@launch
-            }
-            if (pendingChoice == partId) {
-                pendingChoicePartId.value = null
-            }
-            val shouldAdvancePart = newIndex >= currentIndex
-            val partIdToPersist = if (shouldAdvancePart) {
-                partId
-            } else {
-                story.currentPartId
-            }
-            val elementIndexToPersist = if (!shouldAdvancePart) {
-                story.currentElementIndex
-            } else {
-                elementIndex
-            }
             storiesRepository.updateStoryPosition(
                 id = id,
-                partId = partIdToPersist,
-                elementIndex = elementIndexToPersist,
+                storyPosition = elementIndex,
             )
         }
     }
 
     fun onChoiceSelected(targetPartId: String) {
         viewModelScope.launch {
-            pendingChoicePartId.value = targetPartId
-            storiesRepository.updateStoryPosition(
+            storiesRepository.updateStoryPart(
                 id = id,
                 partId = targetPartId,
-                elementIndex = 0,
             )
         }
     }
 
-    private fun Story.toContentItems(selectedSentence: SelectedText.SentenceInParagraph?): List<StoryContentItemUiState> {
-        val items = mutableListOf<StoryContentItemUiState>()
+    private fun Story.toContentItems(selectedSentence: SelectedText.SentenceInParagraph?): List<StoryContentPartUiState> {
+        val items = mutableListOf<StoryContentPartUiState>()
         var paragraphCounter = 0
 
         parts.forEach { part ->
@@ -157,26 +126,18 @@ class StoryReaderViewModel @Inject constructor(
                     is StoryElement.Paragraph -> {
                         val paragraphIndex = paragraphCounter++
                         val selectedForParagraph = selectedSentence?.takeIf { it.paragraphIndex == paragraphIndex }
-                        val paragraphUiState = element.toStoryContentPartUiState(
+                        items += element.toStoryContentPartUiState(
                             paragraphIndex = paragraphIndex,
                             selectedSentenceIndex = selectedForParagraph?.selectedSentenceIndex,
                             areTranslationsEnabled = selectedForParagraph?.isTranslated == true,
                         )
-                        items += StoryContentItemUiState(
-                            partId = part.id,
-                            elementIndexInPart = elementIndex,
-                            content = paragraphUiState,
-                        )
                     }
 
                     is StoryElement.Image -> {
-                        items += StoryContentItemUiState(
-                            partId = part.id,
-                            elementIndexInPart = elementIndex,
-                            content = StoryContentPartUiState.Image(
-                                contentDescription = element.contentDescription,
-                                bitmap = element.bitmap,
-                            ),
+
+                        items += StoryContentPartUiState.Image(
+                            contentDescription = element.contentDescription,
+                            bitmap = element.bitmap,
                         )
                     }
                 }
@@ -190,19 +151,11 @@ class StoryReaderViewModel @Inject constructor(
                               onClick = { onChoiceSelected(option.targetPartId) },
                           )
                     }
-                    items += StoryContentItemUiState(
-                        partId = part.id,
-                        elementIndexInPart = part.elements.size,
-                        content = StoryContentPartUiState.Choices(options = options),
-                    )
+                    items += StoryContentPartUiState.Choices(options = options)
                 }
 
                 is StoryChoice.Chosen -> {
-                    items += StoryContentItemUiState(
-                        partId = part.id,
-                        elementIndexInPart = part.elements.size,
-                        content = StoryContentPartUiState.ChosenChoice(text = choice.option.text),
-                    )
+                    items += StoryContentPartUiState.ChosenChoice(text = choice.option.text)
                 }
 
                 null -> Unit
@@ -210,23 +163,6 @@ class StoryReaderViewModel @Inject constructor(
         }
 
         return items
-    }
-
-    private fun List<StoryContentItemUiState>.findInitialContentIndex(
-        partId: String,
-        elementIndex: Int,
-    ): Int {
-        val exactMatch = indexOfFirst { item ->
-            item.partId == partId && item.elementIndexInPart == elementIndex
-        }
-        if (exactMatch >= 0) {
-            return exactMatch
-        }
-        val partMatch = indexOfFirst { item -> item.partId == partId }
-        if (partMatch >= 0) {
-            return partMatch
-        }
-        return 0
     }
 
     private fun StoryElement.toStoryContentPartUiState(

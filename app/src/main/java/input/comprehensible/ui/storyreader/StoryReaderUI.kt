@@ -39,6 +39,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -48,7 +49,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
 import input.comprehensible.ui.components.SelectableText
@@ -83,7 +83,7 @@ fun StoryReader(
 private fun StoryReader(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
-    onStoryPartVisible: (partId: String, elementIndex: Int) -> Unit,
+    onStoryPartVisible: (elementIndex: Int) -> Unit,
     state: StoryReaderUiState,
     onErrorDismissed: () -> Unit,
 ) {
@@ -121,7 +121,7 @@ private fun StoryReader(
 private fun StoryContent(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
-    onStoryPartVisible: (partId: String, elementIndex: Int) -> Unit,
+    onStoryPartVisible: (elementIndex: Int) -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
@@ -133,26 +133,12 @@ private fun StoryContent(
             state.initialContentIndex + 1 // Accounts for header
         }
     )
-    LaunchedEffect(state.currentPartId, state.initialContentIndex) {
-        if (state.content.isEmpty() || state.initialContentIndex == 0) {
-            return@LaunchedEffect
-        }
-        val targetIndex = (state.initialContentIndex + 1).coerceAtLeast(0)
-        if (listState.firstVisibleItemIndex != targetIndex) {
-            listState.scrollToItem(targetIndex)
-        }
-    }
-    LaunchedEffect(state.content) {
+    LaunchedEffect(Unit) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .conflate()
             .distinctUntilChanged()
             .collect { currentItemIndex ->
-                val contentIndex = (currentItemIndex - 1).coerceAtLeast(0)
-                val item = state.content.getOrNull(contentIndex)
-                    ?: state.content.lastOrNull()
-                if (item != null) {
-                    onStoryPartVisible(item.partId, item.elementIndexInPart)
-                }
+                onStoryPartVisible((currentItemIndex - 1).coerceAtLeast(0))
             }
     }
     Box(modifier) {
@@ -182,7 +168,7 @@ private fun StoryContent(
             }
             items(state.content) { item ->
                 StoryContentPart(
-                    state = item.content,
+                    state = item,
                 )
             }
             if (!isExplainerShownAtStart) {
@@ -298,20 +284,16 @@ fun StoryReaderPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
-            onStoryPartVisible = { _, _ -> },
+            onStoryPartVisible = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = false,
                 content = listOf(
-                    StoryContentItemUiState(
-                        partId = "part",
-                        elementIndexInPart = 0,
-                        content = StoryContentPartUiState.Paragraph(
-                            paragraph = "Content",
-                            onClick = {},
-                            selectedTextRange = null
-                        )
-                    )
+                    StoryContentPartUiState.Paragraph(
+                        paragraph = "Content",
+                        onClick = {},
+                        selectedTextRange = null
+                    ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
@@ -327,20 +309,16 @@ fun StoryReaderTranslationPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
-            onStoryPartVisible = { _, _ -> },
+            onStoryPartVisible = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
                 isTitleHighlighted = true,
                 content = listOf(
-                    StoryContentItemUiState(
-                        partId = "part",
-                        elementIndexInPart = 0,
-                        content = StoryContentPartUiState.Paragraph(
-                            paragraph = "Content",
-                            onClick = {},
-                            selectedTextRange = null
-                        )
-                    )
+                    StoryContentPartUiState.Paragraph(
+                        paragraph = "Content",
+                        onClick = {},
+                        selectedTextRange = null
+                    ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
@@ -356,7 +334,7 @@ fun StoryReaderErrorPreview() {
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
-            onStoryPartVisible = { _, _ -> },
+            onStoryPartVisible = {},
             state = StoryReaderUiState.Error,
             onErrorDismissed = {},
         )

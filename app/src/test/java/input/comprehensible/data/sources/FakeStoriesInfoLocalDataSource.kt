@@ -24,8 +24,20 @@ class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDat
 
     override fun getStory(id: String): Flow<StoryEntity?> = stories.map { it[id] }
 
-    override suspend fun updateStory(story: StoryEntity) {
-        stories.update { current -> current + (story.id to story) }
+    override suspend fun updateStory(id: String, position: Int) {
+        stories.update { current ->
+            val oldStoryInfo = current.getValue(id)
+            val newStoryInto = oldStoryInfo.copy(position = position)
+            current + (id to newStoryInto)
+        }
+    }
+
+    override suspend fun updateStory(id: String, partId: String) {
+        stories.update { current ->
+            val oldStoryInfo = current.getValue(id)
+            val newStoryInto = oldStoryInfo.copy(partId = partId)
+            current + (id to newStoryInto)
+        }
     }
 }
 

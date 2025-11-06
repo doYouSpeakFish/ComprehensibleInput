@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
-import androidx.room.Update
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,8 +30,23 @@ interface StoriesInfoLocalDataSource {
     )
     fun getStory(id: String): Flow<StoryEntity?>
 
-    @Update
-    suspend fun updateStory(story: StoryEntity)
+    @Query(
+        """
+            UPDATE StoryEntity
+            SET position = :position 
+            WHERE id = :id
+        """
+    )
+    suspend fun updateStory(id: String, position: Int)
+
+    @Query(
+        """
+            UPDATE StoryEntity
+            SET partId = :partId 
+            WHERE id = :id
+        """
+    )
+    suspend fun updateStory(id: String, partId: String)
 }
 
 fun StoriesInfoLocalDataSource.getOrCreateStory(

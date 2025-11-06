@@ -114,13 +114,17 @@ class StoriesRepository @Inject constructor(
             StoryResult.Error
         }
 
-    suspend fun updateStoryPosition(id: String, partId: String, elementIndex: Int) {
+    suspend fun updateStoryPosition(id: String, storyPosition: Int) {
         storiesInfoLocalDataSource.updateStory(
-            story = StoryEntity(
-                id = id,
-                positionPartId = partId,
-                positionElementIndex = elementIndex,
-            )
+            id = id,
+            position = storyPosition
+        )
+    }
+
+    suspend fun updateStoryPart(id: String, partId: String) {
+        storiesInfoLocalDataSource.updateStory(
+            id = id,
+            partId = partId
         )
     }
 
@@ -150,18 +154,14 @@ class StoriesRepository @Inject constructor(
         val learningParts = parts.associateBy { it.id }
         val translationParts = translation.parts.associateBy { it.id }
 
-        val targetPartId = storyInfo.positionPartId
-            .takeIf { it.isNotBlank() && learningParts.containsKey(it) }
-            ?: startPartId
-
-        val path = buildPartPath(
-            startPartId = startPartId,
-            targetPartId = targetPartId,
-            parts = learningParts,
-        ) ?: run {
-            Timber.e("Story %s could not resolve path to part %s", id, targetPartId)
-            return null
-        }
+        val path = buildList {
+            var nextPartId: String? = storyInfo.partId
+            while (nextPartId != null) {
+                add(nextPartId)
+                nextPartId = partParents[nextPartId]
+            }
+            if (!contains(startPartId)) add(startPartId)
+        }.reversed()
 
         val languageLabel = "$learningLanguage/$translationsLanguage"
 
@@ -220,19 +220,13 @@ class StoriesRepository @Inject constructor(
             )
         }
 
-        val currentPartId = path.last()
-        val currentPart = storyParts.lastOrNull() ?: return null
-        val maxElementIndex = currentPart.elements.size
-        val currentElementIndex = storyInfo.positionElementIndex
-            .coerceIn(0, maxElementIndex)
-
         return Story(
             id = id,
             title = title,
             translatedTitle = translation.title,
             parts = storyParts,
-            currentPartId = currentPartId,
-            currentElementIndex = currentElementIndex,
+            currentPartId = path.last(),
+            storyPosition = storyInfo.position,
         )
     }
 
@@ -310,38 +304,6 @@ sealed interface StoriesListResult {
 sealed interface StoryResult {
     data class Success(val story: Story) : StoryResult
     object Error : StoryResult
-}
-
-private fun buildPartPath(
-    startPartId: String,
-    targetPartId: String,
-    parts: Map<String, StoryPartData>,
-): List<String>? {
-    val path = mutableListOf<String>()
-    val visiting = mutableSetOf<String>()
-
-    fun dfs(current: String): Boolean {
-        val part = parts[current] ?: return false
-        path += current
-        if (current == targetPartId) {
-            return true
-        }
-        visiting += current
-        part.choices.forEach { choice ->
-            val next = choice.targetPartId
-            if (visiting.contains(next)) {
-                return@forEach
-            }
-            if (dfs(next)) {
-                return true
-            }
-        }
-        visiting -= current
-        path.removeAt(path.lastIndex)
-        return false
-    }
-
-    return if (dfs(startPartId)) path.toList() else null
 }
 
 private fun buildStoryChoice(
