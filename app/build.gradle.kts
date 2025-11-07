@@ -119,14 +119,31 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets {
+        val schemaDir = file("$projectDir/schemas")
+        getByName("test") {
+            assets.srcDir(schemaDir)
+        }
+        getByName("androidTest") {
+            assets.srcDir(schemaDir)
+        }
+    }
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.systemProperties["robolectric.offline"] = "true"
+                it.systemProperties["robolectric.dependency.dir"] =
+                    System.getProperty("user.home") + "/.m2/robolectric"
             }
         }
     }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
 }
 
 dependencies {
@@ -166,6 +183,8 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.androidx.test.core)
 
     kspTest(libs.hilt.compiler)
 

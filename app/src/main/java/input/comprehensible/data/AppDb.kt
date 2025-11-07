@@ -15,12 +15,12 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import javax.inject.Singleton
 
-@Database(entities = [StoryEntity::class], version = 2, exportSchema = false)
+@Database(entities = [StoryEntity::class], version = 2, exportSchema = true)
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
 }
 
-private val MIGRATION_1_2 = object : Migration(1, 2) {
+internal val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(
             """
@@ -34,8 +34,8 @@ private val MIGRATION_1_2 = object : Migration(1, 2) {
         )
         db.execSQL(
             """
-                INSERT INTO StoryEntity_new (id, storyPosition)
-                SELECT id, position FROM StoryEntity
+                INSERT INTO StoryEntity_new (id, position)
+                SELECT id, storyPosition FROM StoryEntity
             """.trimIndent()
         )
         db.execSQL("DROP TABLE StoryEntity")
