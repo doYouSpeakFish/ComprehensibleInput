@@ -84,3 +84,4 @@ ksp = { id = "com.google.devtools.ksp", version = "2.3.2" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+room = { id = "androidx.room", version.ref = "room" }

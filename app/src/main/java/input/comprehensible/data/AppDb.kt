@@ -13,7 +13,7 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import javax.inject.Singleton
 
-@Database(entities = [StoryEntity::class], version = 1, exportSchema = false)
+@Database(entities = [StoryEntity::class], version = 1)
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
 }

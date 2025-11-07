@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
+    alias(libs.plugins.room) apply false
 }
 
 //val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
