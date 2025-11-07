@@ -37,5 +37,11 @@ sealed interface StoryReaderUiState {
             val selectedSentenceIndex: Int,
             val isTranslated: Boolean,
         ) : SelectedText
+
+        data class ChoiceOption(
+            val choiceIndex: Int,
+            val optionIndex: Int,
+            val isTranslated: Boolean,
+        ) : SelectedText
     }
 }

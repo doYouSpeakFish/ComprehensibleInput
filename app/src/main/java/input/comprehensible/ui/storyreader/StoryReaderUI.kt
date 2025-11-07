@@ -77,6 +77,7 @@ fun StoryReader(
         onTitleClicked = viewModel::onTitleSelected,
         onStoryPartVisible = viewModel::onStoryLocationUpdated,
         onSentenceSelected = viewModel::onSentenceSelected,
+        onChoiceTextSelected = viewModel::onChoiceTextSelected,
         onErrorDismissed = onErrorDismissed,
         state = state,
     )
@@ -88,6 +89,7 @@ private fun StoryReader(
     onTitleClicked: () -> Unit,
     onStoryPartVisible: (elementIndex: Int) -> Unit,
     onSentenceSelected: (paragraph: Int, sentence: Int) -> Unit,
+    onChoiceTextSelected: (choiceIndex: Int, optionIndex: Int) -> Unit,
     onErrorDismissed: () -> Unit,
     state: StoryReaderUiState,
 ) {
@@ -110,6 +112,7 @@ private fun StoryReader(
                     onTitleClicked = onTitleClicked,
                     onStoryPartVisible = onStoryPartVisible,
                     onSentenceSelected = onSentenceSelected,
+                    onChoiceTextSelected = onChoiceTextSelected,
                 )
 
                 StoryReaderUiState.Error -> Unit
@@ -128,6 +131,7 @@ private fun StoryContent(
     onTitleClicked: () -> Unit,
     onStoryPartVisible: (elementIndex: Int) -> Unit,
     onSentenceSelected: (paragraph: Int, sentence: Int) -> Unit,
+    onChoiceTextSelected: (choiceIndex: Int, optionIndex: Int) -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
@@ -173,16 +177,30 @@ private fun StoryContent(
                 }
             }
             itemsIndexed(state.content) { paragraphIndex, item ->
-                val selectedText =
+                val selectedSentence =
                     state.selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph
+                val selectedChoice =
+                    state.selectedText as? StoryReaderUiState.SelectedText.ChoiceOption
+                val sentenceSelectionIndex = selectedSentence?.selectedSentenceIndex
+                    ?.takeIf { paragraphIndex == selectedSentence.paragraphIndex }
+                val choiceSelectionIndex = selectedChoice?.optionIndex
+                    ?.takeIf { paragraphIndex == selectedChoice.choiceIndex }
+                val isSelectionTranslated = when {
+                    sentenceSelectionIndex != null -> selectedSentence?.isTranslated == true
+                    choiceSelectionIndex != null -> selectedChoice?.isTranslated == true
+                    else -> false
+                }
                 StoryContentPart(
                     state = item,
-                    selectedSentenceIndex = selectedText?.selectedSentenceIndex
-                        ?.takeIf { paragraphIndex == selectedText.paragraphIndex },
-                    isSelectionTranslated = selectedText?.isTranslated == true,
+                    selectedSentenceIndex = sentenceSelectionIndex,
+                    selectedChoiceIndex = choiceSelectionIndex,
+                    isSelectionTranslated = isSelectionTranslated,
                     onSentenceSelected = { sentenceIndex ->
                         onSentenceSelected(paragraphIndex, sentenceIndex)
-                    }
+                    },
+                    onChoiceTextSelected = { optionIndex ->
+                        onChoiceTextSelected(paragraphIndex, optionIndex)
+                    },
                 )
             }
             if (!isExplainerShownAtStart) {
@@ -314,6 +332,7 @@ fun StoryReaderPreview() {
             onTitleClicked = {},
             onStoryPartVisible = {},
             onSentenceSelected = { _, _ -> },
+            onChoiceTextSelected = { _, _ -> },
             onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
@@ -321,6 +340,16 @@ fun StoryReaderPreview() {
                     StoryContentPartUiState.Paragraph(
                         sentences = listOf("Content"),
                         translatedSentences = listOf("Contenido"),
+                    ),
+                    StoryContentPartUiState.Choices(
+                        options = listOf(
+                            StoryContentPartUiState.Choices.Option(
+                                id = "option-1",
+                                text = "Sie behält den Schlüssel.",
+                                translatedText = "She keeps the key.",
+                                onClick = {},
+                            ),
+                        ),
                     ),
                 ),
                 currentPartId = "part",
@@ -339,6 +368,7 @@ fun StoryReaderTranslationPreview() {
             onTitleClicked = {},
             onStoryPartVisible = {},
             onSentenceSelected = { _, _ -> },
+            onChoiceTextSelected = { _, _ -> },
             onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
@@ -346,6 +376,16 @@ fun StoryReaderTranslationPreview() {
                     StoryContentPartUiState.Paragraph(
                         sentences = listOf("Content"),
                         translatedSentences = listOf("Contenido"),
+                    ),
+                    StoryContentPartUiState.Choices(
+                        options = listOf(
+                            StoryContentPartUiState.Choices.Option(
+                                id = "option-1",
+                                text = "Sie behält den Schlüssel.",
+                                translatedText = "She keeps the key.",
+                                onClick = {},
+                            ),
+                        ),
                     ),
                 ),
                 currentPartId = "part",
@@ -364,6 +404,7 @@ fun StoryReaderErrorPreview() {
             onTitleClicked = {},
             onStoryPartVisible = {},
             onSentenceSelected = { _, _ -> },
+            onChoiceTextSelected = { _, _ -> },
             onErrorDismissed = {},
             state = StoryReaderUiState.Error,
         )

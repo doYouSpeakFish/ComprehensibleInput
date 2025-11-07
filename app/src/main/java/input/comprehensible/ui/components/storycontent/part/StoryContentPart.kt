@@ -1,15 +1,19 @@
 package input.comprehensible.ui.components.storycontent.part
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,16 +22,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.LinkInteractionListener
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import input.comprehensible.R
 
 /**
  * A composable for displaying a part of a stories main content.
@@ -35,9 +45,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun StoryContentPart(
     modifier: Modifier = Modifier,
-    selectedSentenceIndex: Int?,
-    isSelectionTranslated: Boolean,
-    onSentenceSelected: (Int) -> Unit,
+    selectedSentenceIndex: Int? = null,
+    selectedChoiceIndex: Int? = null,
+    isSelectionTranslated: Boolean = false,
+    onSentenceSelected: (Int) -> Unit = {},
+    onChoiceTextSelected: (Int) -> Unit = {},
     state: StoryContentPartUiState,
 ) {
     Box(modifier) {
@@ -49,7 +61,12 @@ fun StoryContentPart(
                 state = state,
             )
             is StoryContentPartUiState.Image -> StoryImage(state = state)
-            is StoryContentPartUiState.Choices -> StoryChoices(state = state)
+            is StoryContentPartUiState.Choices -> StoryChoices(
+                state = state,
+                selectedOptionIndex = selectedChoiceIndex,
+                isSelectionTranslated = isSelectionTranslated,
+                onOptionTextSelected = onChoiceTextSelected,
+            )
             is StoryContentPartUiState.ChosenChoice -> StoryChosenChoice(state = state)
         }
     }
@@ -168,17 +185,52 @@ private fun StoryImage(
 private fun StoryChoices(
     modifier: Modifier = Modifier,
     state: StoryContentPartUiState.Choices,
+    selectedOptionIndex: Int?,
+    isSelectionTranslated: Boolean,
+    onOptionTextSelected: (Int) -> Unit,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+    val defaultTextColor = LocalContentColor.current
     Column(
         modifier = modifier.padding(bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        state.options.forEach { option ->
-            Button(
+        state.options.forEachIndexed { index, option ->
+            val isSelected = selectedOptionIndex == index
+            val textColor = if (isSelected) colorScheme.background else defaultTextColor
+            val backgroundColor = if (isSelected) colorScheme.onBackground else Color.Transparent
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = option.onClick,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(option.text)
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(backgroundColor)
+                        .clickable { onOptionTextSelected(index) }
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
+                    text = if (isSelected && isSelectionTranslated) {
+                        option.translatedText
+                    } else {
+                        option.text
+                    },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = textColor,
+                )
+                Button(
+                    modifier = Modifier
+                        .semantics { contentDescription = option.text }
+                        .testTag("story_choice_button_${option.id}"),
+                    onClick = option.onClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.onBackground,
+                        contentColor = colorScheme.background,
+                    ),
+                ) {
+                    Text(text = stringResource(id = R.string.story_reader_choice_select_button))
+                }
             }
         }
     }

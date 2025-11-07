@@ -42,4 +42,5 @@
     <string name="story_reader_error_dialog_message">Wir konnten diese Geschichte nicht öffnen. Bitte versuchen Sie es später noch einmal.</string>
     <string name="story_reader_error_dialog_button">OK</string>
     <string name="story_reader_error_dialog_content_description">Illustration eines traurigen Roboters</string>
+    <string name="story_reader_choice_select_button">Auswählen</string>
 </resources>
