@@ -1,5 +1,6 @@
 package input.comprehensible.ui.components.storycontent.part
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -241,18 +242,20 @@ private fun StoryChosenChoice(
     modifier: Modifier = Modifier,
     state: StoryContentPartUiState.ChosenChoice,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = 2.dp,
+        color = colorScheme.background,
+        contentColor = colorScheme.onBackground,
+        border = BorderStroke(1.dp, colorScheme.onBackground),
     ) {
         Text(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 20.dp),
             text = state.text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
