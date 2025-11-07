@@ -134,7 +134,8 @@ roborazzi {
     @OptIn(ExperimentalRoborazziApi::class)
     generateComposePreviewRobolectricTests {
         enable = true
-        packages = listOf("input.comprehensible.ui")
+        packages = listOf("input.comprehensible")
+        includePrivatePreviews = true
         robolectricConfig = mapOf(
             "sdk" to "[34]",
             "qualifiers" to "\"w360dp-h640dp-mdpi\"",
