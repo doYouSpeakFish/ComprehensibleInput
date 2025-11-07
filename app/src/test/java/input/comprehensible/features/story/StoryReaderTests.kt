@@ -197,6 +197,61 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `the chosen choice can be switched from German to English`() = testRule.runTest {
+        // GIVEN a German story with a chosen path
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            val choice = story.parts.first().choices.first()
+            val germanChoice = choice.textByLanguage.getValue("de")
+            val englishChoice = choice.textByLanguage.getValue("en")
+
+            chooseStoryOption(germanChoice)
+            awaitIdle()
+
+            waitForChoiceText(germanChoice)
+            tapOnChosenChoiceText(germanChoice)
+            awaitIdle()
+
+            waitForChoiceText(englishChoice)
+            assertChoiceIsShown(englishChoice)
+        }
+    }
+
+    @Test
+    fun `the chosen choice can be switched from English to German`() = testRule.runTest {
+        // GIVEN a German story with a chosen path
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            val choice = story.parts.first().choices.first()
+            val germanChoice = choice.textByLanguage.getValue("de")
+            val englishChoice = choice.textByLanguage.getValue("en")
+
+            chooseStoryOption(germanChoice)
+            awaitIdle()
+            waitForChoiceText(germanChoice)
+            tapOnChosenChoiceText(germanChoice)
+            awaitIdle()
+            waitForChoiceText(englishChoice)
+
+            tapOnChosenChoiceText(englishChoice)
+            awaitIdle()
+
+            waitForChoiceText(germanChoice)
+            assertChoiceIsShown(germanChoice)
+        }
+    }
+
+    @Test
     fun `the title can be switched from German to English`() = testRule.runTest {
         // GIVEN a German story is open
         val stories = SampleStoriesData.listOf100Stories

@@ -49,8 +49,10 @@ fun StoryContentPart(
     selectedSentenceIndex: Int? = null,
     selectedChoiceIndex: Int? = null,
     isSelectionTranslated: Boolean = false,
+    isChosenChoiceTranslated: Boolean = false,
     onSentenceSelected: (Int) -> Unit = {},
     onChoiceTextSelected: (Int) -> Unit = {},
+    onChosenChoiceSelected: () -> Unit = {},
     state: StoryContentPartUiState,
 ) {
     Box(modifier) {
@@ -68,7 +70,11 @@ fun StoryContentPart(
                 isSelectionTranslated = isSelectionTranslated,
                 onOptionTextSelected = onChoiceTextSelected,
             )
-            is StoryContentPartUiState.ChosenChoice -> StoryChosenChoice(state = state)
+            is StoryContentPartUiState.ChosenChoice -> StoryChosenChoice(
+                state = state,
+                isTranslated = isChosenChoiceTranslated,
+                onChosenChoiceSelected = onChosenChoiceSelected,
+            )
         }
     }
 }
@@ -241,20 +247,38 @@ private fun StoryChoices(
 private fun StoryChosenChoice(
     modifier: Modifier = Modifier,
     state: StoryContentPartUiState.ChosenChoice,
+    isTranslated: Boolean,
+    onChosenChoiceSelected: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    val backgroundColor = if (isTranslated) {
+        colorScheme.onBackground
+    } else {
+        colorScheme.background
+    }
+    val contentColor = if (isTranslated) {
+        colorScheme.background
+    } else {
+        colorScheme.onBackground
+    }
+    val borderColor = if (isTranslated) {
+        colorScheme.background
+    } else {
+        colorScheme.onBackground
+    }
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        color = colorScheme.background,
-        contentColor = colorScheme.onBackground,
-        border = BorderStroke(1.dp, colorScheme.onBackground),
+        color = backgroundColor,
+        contentColor = contentColor,
+        border = BorderStroke(1.dp, borderColor),
+        onClick = onChosenChoiceSelected,
     ) {
         Text(
             modifier = Modifier.padding(vertical = 16.dp, horizontal = 20.dp),
-            text = state.text,
+            text = if (isTranslated) state.translatedText else state.text,
             style = MaterialTheme.typography.bodyLarge,
         )
     }

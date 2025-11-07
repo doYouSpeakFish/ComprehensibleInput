@@ -143,6 +143,29 @@ class StoryReaderViewModel @Inject constructor(
     }
 
     /**
+     * Handles the selection of a chosen story choice so it can be translated.
+     *
+     * If the same choice is selected again, it toggles its translated state.
+     * Otherwise, it selects the choice and shows its translation.
+     *
+     * @param choiceIndex The index of the choice within the story content list.
+     */
+    fun onChosenChoiceSelected(choiceIndex: Int) {
+        selectedTextState.update { selectedText ->
+            val selectedChoice = selectedText as? SelectedText.ChosenChoice
+            val sameChoice = selectedChoice?.choiceIndex == choiceIndex
+            if (sameChoice) {
+                return@update selectedChoice.copy(isTranslated = !selectedChoice.isTranslated)
+            }
+
+            SelectedText.ChosenChoice(
+                choiceIndex = choiceIndex,
+                isTranslated = true,
+            )
+        }
+    }
+
+    /**
      * Persists the current story location, so if the story is closed, it can be resumed from this
      * point.
      */
@@ -219,4 +242,7 @@ private fun StoryChoice.Available.toChoicesUiState(
 )
 
 private fun StoryChoice.Chosen.toChoiceUiState() =
-    StoryContentPartUiState.ChosenChoice(text = option.text)
+    StoryContentPartUiState.ChosenChoice(
+        text = option.text,
+        translatedText = option.translatedText,
+    )

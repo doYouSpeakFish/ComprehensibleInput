@@ -115,6 +115,10 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             .performClick()
     }
 
+    fun tapOnChosenChoiceText(text: String) {
+        tapOnChoiceText(text)
+    }
+
     suspend fun skipToSentence(sentence: String) {
         val scrollNode = composeTestRule.onNode(hasScrollAction())
         var index = 0

@@ -38,5 +38,8 @@ sealed interface StoryContentPartUiState {
     /**
      * Represents a previously selected choice.
      */
-    data class ChosenChoice(val text: String) : StoryContentPartUiState
+    data class ChosenChoice(
+        val text: String,
+        val translatedText: String,
+    ) : StoryContentPartUiState
 }
