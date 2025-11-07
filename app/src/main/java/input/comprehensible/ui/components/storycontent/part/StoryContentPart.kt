@@ -28,7 +28,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import input.comprehensible.ui.storyreader.StoryReaderUiState
 
 /**
  * A composable for displaying a part of a stories main content.
@@ -36,14 +35,18 @@ import input.comprehensible.ui.storyreader.StoryReaderUiState
 @Composable
 fun StoryContentPart(
     modifier: Modifier = Modifier,
+    selectedSentenceIndex: Int?,
+    isSelectionTranslated: Boolean,
+    onSentenceSelected: (Int) -> Unit,
     state: StoryContentPartUiState,
-    selectedText: StoryReaderUiState.SelectedText? = null,
 ) {
     Box(modifier) {
         when (state) {
             is StoryContentPartUiState.Paragraph -> Paragraph(
+                selectedSentenceIndex = selectedSentenceIndex,
+                isSelectionTranslated = isSelectionTranslated,
+                onSentenceSelected = onSentenceSelected,
                 state = state,
-                selectedText = selectedText,
             )
             is StoryContentPartUiState.Image -> StoryImage(state = state)
             is StoryContentPartUiState.Choices -> StoryChoices(state = state)
@@ -55,8 +58,10 @@ fun StoryContentPart(
 @Composable
 private fun Paragraph(
     modifier: Modifier = Modifier,
+    selectedSentenceIndex: Int?,
+    isSelectionTranslated: Boolean,
+    onSentenceSelected: (Int) -> Unit,
     state: StoryContentPartUiState.Paragraph,
-    selectedText: StoryReaderUiState.SelectedText?,
 ) {
     Box(modifier) {
         val textStyle = MaterialTheme.typography.bodyLarge
@@ -71,55 +76,68 @@ private fun Paragraph(
                 background = colorScheme.onBackground,
             )
         }
-        val selectedSentence = (selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph)
-            ?.takeIf { it.paragraphIndex == state.paragraphIndex }
-        val annotatedText = remember(
-            state.paragraphIndex,
-            state.sentences,
-            state.translatedSentences,
-            highlightedSpanStyle,
-            defaultSpanStyle,
-            selectedSentence,
-        ) {
-            buildAnnotatedString {
-                state.sentences.forEachIndexed { index, sentence ->
-                    val isSelected = selectedSentence?.selectedSentenceIndex == index
-                    val textToDisplay = if (isSelected && selectedSentence.isTranslated) {
-                        state.translatedSentences.getOrNull(index) ?: sentence
-                    } else {
-                        sentence
+        val textContent = rememberParagraphText(
+            sentences = state.sentences,
+            translatedSentences = state.translatedSentences,
+            onSentenceSelected = onSentenceSelected,
+            selectedSentenceIndex = selectedSentenceIndex,
+            isSelectionTranslated = isSelectionTranslated,
+            highlightedSpanStyle = highlightedSpanStyle,
+            defaultSpanStyle = defaultSpanStyle,
+        )
+        BasicText(
+            modifier = Modifier.padding(bottom = 16.dp),
+            text = textContent,
+            style = textStyle,
+        )
+    }
+}
+
+@Composable
+private fun rememberParagraphText(
+    sentences: List<String>,
+    translatedSentences: List<String>,
+    onSentenceSelected: (Int) -> Unit,
+    selectedSentenceIndex: Int?,
+    isSelectionTranslated: Boolean,
+    highlightedSpanStyle: SpanStyle,
+    defaultSpanStyle: SpanStyle,
+) = remember(
+    sentences,
+    translatedSentences,
+    highlightedSpanStyle,
+    defaultSpanStyle,
+    selectedSentenceIndex,
+    isSelectionTranslated,
+) {
+    buildAnnotatedString {
+        sentences.forEachIndexed { index, sentence ->
+            val isSelected = selectedSentenceIndex == index
+            val textToDisplay = if (isSelected && isSelectionTranslated) {
+                translatedSentences.getOrNull(index) ?: sentence
+            } else {
+                sentence
+            }
+            withLink(
+                link = LinkAnnotation.Clickable(
+                    tag = "sentence-$index",
+                    linkInteractionListener = LinkInteractionListener {
+                        onSentenceSelected(index)
                     }
-                    withLink(
-                        link = LinkAnnotation.Clickable(
-                            tag = "sentence-$index",
-                            linkInteractionListener = LinkInteractionListener {
-                                state.onClick(index)
-                            }
-                        )
-                    ) {
-                        withStyle(
-                            if (isSelected) {
-                                highlightedSpanStyle
-                            } else {
-                                defaultSpanStyle
-                            }
-                        ) {
-                            append(textToDisplay)
-                        }
-                    }
-                    if (index != state.sentences.lastIndex) {
-                        withStyle(defaultSpanStyle) {
-                            append(" ")
-                        }
-                    }
+                )
+            ) {
+                withStyle(
+                    if (isSelected) highlightedSpanStyle else defaultSpanStyle
+                ) {
+                    append(textToDisplay)
+                }
+            }
+            if (index != sentences.lastIndex) {
+                withStyle(defaultSpanStyle) {
+                    append(" ")
                 }
             }
         }
-        BasicText(
-            modifier = Modifier.padding(bottom = 16.dp),
-            text = annotatedText,
-            style = textStyle,
-        )
     }
 }
 

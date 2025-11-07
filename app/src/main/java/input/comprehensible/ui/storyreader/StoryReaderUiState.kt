@@ -21,7 +21,6 @@ sealed interface StoryReaderUiState {
      */
     data class Loaded(
         val title: String,
-        val isTitleHighlighted: Boolean,
         val content: List<StoryContentPartUiState>,
         val currentPartId: String,
         val initialContentIndex: Int,

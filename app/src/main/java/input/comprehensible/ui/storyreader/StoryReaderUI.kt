@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -75,8 +76,9 @@ fun StoryReader(
         modifier = modifier,
         onTitleClicked = viewModel::onTitleSelected,
         onStoryPartVisible = viewModel::onStoryLocationUpdated,
-        state = state,
+        onSentenceSelected = viewModel::onSentenceSelected,
         onErrorDismissed = onErrorDismissed,
+        state = state,
     )
 }
 
@@ -85,8 +87,9 @@ private fun StoryReader(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
     onStoryPartVisible: (elementIndex: Int) -> Unit,
-    state: StoryReaderUiState,
+    onSentenceSelected: (paragraph: Int, sentence: Int) -> Unit,
     onErrorDismissed: () -> Unit,
+    state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
         Box(
@@ -106,6 +109,7 @@ private fun StoryReader(
                     state = state,
                     onTitleClicked = onTitleClicked,
                     onStoryPartVisible = onStoryPartVisible,
+                    onSentenceSelected = onSentenceSelected,
                 )
 
                 StoryReaderUiState.Error -> Unit
@@ -123,6 +127,7 @@ private fun StoryContent(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
     onStoryPartVisible: (elementIndex: Int) -> Unit,
+    onSentenceSelected: (paragraph: Int, sentence: Int) -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
@@ -155,7 +160,7 @@ private fun StoryContent(
                     Title(
                         onTitleClicked = onTitleClicked,
                         title = state.title,
-                        isTitleHighlighted = state.isTitleHighlighted,
+                        isTitleHighlighted = state.selectedText is StoryReaderUiState.SelectedText.Title,
                     )
                     Spacer(Modifier.height(8.dp))
                     AnimatedVisibility(isExplainerShownAtStart) {
@@ -167,10 +172,17 @@ private fun StoryContent(
                     }
                 }
             }
-            items(state.content) { item ->
+            itemsIndexed(state.content) { paragraphIndex, item ->
+                val selectedText =
+                    state.selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph
                 StoryContentPart(
                     state = item,
-                    selectedText = state.selectedText,
+                    selectedSentenceIndex = selectedText?.selectedSentenceIndex
+                        ?.takeIf { paragraphIndex == selectedText.paragraphIndex },
+                    isSelectionTranslated = selectedText?.isTranslated == true,
+                    onSentenceSelected = { sentenceIndex ->
+                        onSentenceSelected(paragraphIndex, sentenceIndex)
+                    }
                 )
             }
             if (!isExplainerShownAtStart) {
@@ -210,6 +222,7 @@ private fun Title(
                 }
             ),
             contentPadding = PaddingValues(0.dp),
+            shape = RectangleShape
         ) {
             Text(
                 text = title,
@@ -300,22 +313,20 @@ fun StoryReaderPreview() {
         StoryReader(
             onTitleClicked = {},
             onStoryPartVisible = {},
+            onSentenceSelected = { _, _ -> },
+            onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
-                isTitleHighlighted = false,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
-                        paragraphIndex = 0,
                         sentences = listOf("Content"),
                         translatedSentences = listOf("Contenido"),
-                        onClick = {},
                     ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
                 selectedText = null,
             ),
-            onErrorDismissed = {},
         )
     }
 }
@@ -327,22 +338,20 @@ fun StoryReaderTranslationPreview() {
         StoryReader(
             onTitleClicked = {},
             onStoryPartVisible = {},
+            onSentenceSelected = { _, _ -> },
+            onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
-                isTitleHighlighted = true,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
-                        paragraphIndex = 0,
                         sentences = listOf("Content"),
                         translatedSentences = listOf("Contenido"),
-                        onClick = {},
                     ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
                 selectedText = StoryReaderUiState.SelectedText.Title(isTranslated = true),
             ),
-            onErrorDismissed = {},
         )
     }
 }
@@ -354,8 +363,9 @@ fun StoryReaderErrorPreview() {
         StoryReader(
             onTitleClicked = {},
             onStoryPartVisible = {},
-            state = StoryReaderUiState.Error,
+            onSentenceSelected = { _, _ -> },
             onErrorDismissed = {},
+            state = StoryReaderUiState.Error,
         )
     }
 }
