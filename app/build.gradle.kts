@@ -1,3 +1,4 @@
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
@@ -129,6 +130,18 @@ android {
     }
 }
 
+roborazzi {
+    @OptIn(ExperimentalRoborazziApi::class)
+    generateComposePreviewRobolectricTests {
+        enable = true
+        packages = listOf("input.comprehensible.ui")
+        robolectricConfig = mapOf(
+            "sdk" to "[34]",
+            "qualifiers" to "\"w360dp-h640dp-mdpi\"",
+        )
+    }
+}
+
 dependencies {
     implementation(project(":test"))
     implementation(platform(libs.androidx.compose.bom))
@@ -166,6 +179,8 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit)
+    testImplementation(libs.roborazzi.compose.preview.scanner.support)
+    testImplementation(libs.composable.preview.scanner)
 
     kspTest(libs.hilt.compiler)
 
