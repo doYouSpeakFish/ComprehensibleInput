@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.kover)
+    alias(libs.plugins.room)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
@@ -126,6 +127,9 @@ android {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
             }
         }
+    }
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
