@@ -128,6 +128,9 @@ android {
             }
         }
     }
+    sourceSets {
+        getByName("test").assets.srcDir("$projectDir/schemas")
+    }
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -177,6 +180,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.androidx.test.core)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
