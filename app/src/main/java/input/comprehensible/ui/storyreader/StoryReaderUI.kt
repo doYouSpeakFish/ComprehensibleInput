@@ -170,6 +170,7 @@ private fun StoryContent(
             items(state.content) { item ->
                 StoryContentPart(
                     state = item,
+                    selectedText = state.selectedText,
                 )
             }
             if (!isExplainerShownAtStart) {
@@ -304,8 +305,9 @@ fun StoryReaderPreview() {
                 isTitleHighlighted = false,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
+                        paragraphIndex = 0,
                         sentences = listOf("Content"),
-                        selectedSentenceIndex = null,
+                        translatedSentences = listOf("Contenido"),
                         onClick = {},
                     ),
                 ),
@@ -330,8 +332,9 @@ fun StoryReaderTranslationPreview() {
                 isTitleHighlighted = true,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
+                        paragraphIndex = 0,
                         sentences = listOf("Content"),
-                        selectedSentenceIndex = 0,
+                        translatedSentences = listOf("Contenido"),
                         onClick = {},
                     ),
                 ),

@@ -9,8 +9,9 @@ sealed interface StoryContentPartUiState {
      * Represents a paragraph content part.
      */
     data class Paragraph(
+        val paragraphIndex: Int,
         val sentences: List<String>,
-        val selectedSentenceIndex: Int?,
+        val translatedSentences: List<String>,
         val onClick: (sentenceIndex: Int) -> Unit,
     ) : StoryContentPartUiState
 

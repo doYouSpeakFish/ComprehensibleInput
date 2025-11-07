@@ -60,8 +60,7 @@ class StoryReaderViewModel @Inject constructor(
             StoryLoadState.Error -> StoryReaderUiState.Error
             is StoryLoadState.Loaded -> {
                 val story = storyLoadState.story
-                val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
-                val content = story.toContentItems(selectedSentence)
+                val content = story.toContentItems()
                 StoryReaderUiState.Loaded(
                     title = if (selectedText is SelectedText.Title && selectedText.isTranslated) {
                         story.translatedTitle
@@ -117,7 +116,7 @@ class StoryReaderViewModel @Inject constructor(
         }
     }
 
-    private fun Story.toContentItems(selectedSentence: SelectedText.SentenceInParagraph?): List<StoryContentPartUiState> {
+    private fun Story.toContentItems(): List<StoryContentPartUiState> {
         var paragraphIndex = 0
         return buildList {
             parts.forEach { part ->
@@ -125,7 +124,7 @@ class StoryReaderViewModel @Inject constructor(
                     when (element) {
                         is StoryElement.Paragraph -> {
                             val currentIndex = paragraphIndex++
-                            add(element.toParagraphUiState(currentIndex, selectedSentence))
+                            add(element.toParagraphUiState(currentIndex))
                         }
 
                         is StoryElement.Image -> add(
@@ -161,21 +160,11 @@ class StoryReaderViewModel @Inject constructor(
 
     private fun StoryElement.Paragraph.toParagraphUiState(
         paragraphIndex: Int,
-        selectedSentence: SelectedText.SentenceInParagraph?,
     ): StoryContentPartUiState.Paragraph {
-        val selectedForParagraph = selectedSentence?.takeIf { it.paragraphIndex == paragraphIndex }
-        val sentencesForDisplay = sentences.mapIndexed { index, sentence ->
-            val shouldTranslate = selectedForParagraph?.isTranslated == true &&
-                selectedForParagraph.selectedSentenceIndex == index
-            if (shouldTranslate) {
-                sentencesTranslations[index]
-            } else {
-                sentence
-            }
-        }
         return StoryContentPartUiState.Paragraph(
-            sentences = sentencesForDisplay,
-            selectedSentenceIndex = selectedForParagraph?.selectedSentenceIndex,
+            paragraphIndex = paragraphIndex,
+            sentences = sentences,
+            translatedSentences = sentencesTranslations,
             onClick = { sentenceIndex ->
                 onSentenceSelected(
                     paragraphIndex = paragraphIndex,
