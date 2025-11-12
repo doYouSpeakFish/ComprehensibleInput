@@ -7,8 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
 import input.comprehensible.data.stories.StoryResult
 import input.comprehensible.data.stories.model.Story
-import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryElement
+import input.comprehensible.data.stories.model.StoryPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.storyreader.StoryReaderUiState.Error
 import input.comprehensible.ui.storyreader.StoryReaderUiState.Loaded
@@ -148,8 +148,9 @@ private fun Story.toContentItems(
         part.elements.forEach { element ->
             add(element.toStoryContentPartUiState())
         }
-        part.choice?.toStoryContentPartUiState(onChoiceSelected = onChoiceSelected)
-            ?.let(::add)
+        if (part.options.isNotEmpty()) {
+            add(part.toStoryChoiceUiState(onChoiceSelected = onChoiceSelected))
+        }
     }
 }
 
@@ -169,23 +170,14 @@ private fun StoryElement.Image.toImageUiState() = StoryContentPartUiState.Image(
     bitmap = bitmap,
 )
 
-private fun StoryChoice.toStoryContentPartUiState(
-    onChoiceSelected: (String) -> Unit,
-) = when (this) {
-    is StoryChoice.Available -> toChoicesUiState(onChoiceSelected = onChoiceSelected)
-    is StoryChoice.Chosen -> toChoiceUiState()
-}
-
-private fun StoryChoice.Available.toChoicesUiState(
+private fun StoryPart.toStoryChoiceUiState(
     onChoiceSelected: (String) -> Unit,
 ) = StoryContentPartUiState.Choices(
     options = options.map { option ->
         StoryContentPartUiState.Choices.Option(
             text = option.text,
+            isSelected = option.targetPartId == chosenOption?.targetPartId,
             onClick = { onChoiceSelected(option.targetPartId) },
         )
     }
 )
-
-private fun StoryChoice.Chosen.toChoiceUiState() =
-    StoryContentPartUiState.ChosenChoice(text = option.text)

@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,13 +21,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.LinkInteractionListener
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import input.comprehensible.R
 
 /**
  * A composable for displaying a part of a stories main content.
@@ -50,7 +53,6 @@ fun StoryContentPart(
             )
             is StoryContentPartUiState.Image -> StoryImage(state = state)
             is StoryContentPartUiState.Choices -> StoryChoices(state = state)
-            is StoryContentPartUiState.ChosenChoice -> StoryChosenChoice(state = state)
         }
     }
 }
@@ -177,30 +179,30 @@ private fun StoryChoices(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = option.onClick,
+                enabled = !option.isSelected,
+                colors = if (option.isSelected) {
+                    ButtonDefaults.buttonColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    ButtonDefaults.buttonColors()
+                }
             ) {
-                Text(option.text)
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = option.text,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = if (option.isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                    )
+                    if (option.isSelected) {
+                        Text(
+                            text = stringResource(id = R.string.story_reader_selected_choice),
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun StoryChosenChoice(
-    modifier: Modifier = Modifier,
-    state: StoryContentPartUiState.ChosenChoice,
-) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = 2.dp,
-    ) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = state.text,
-            style = MaterialTheme.typography.bodyMedium,
-        )
     }
 }

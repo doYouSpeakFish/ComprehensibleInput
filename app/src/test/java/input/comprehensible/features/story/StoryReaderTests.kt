@@ -240,10 +240,12 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             awaitIdle()
 
             // THEN the story shows the chosen path
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsDisabled(keepChoiceText)
+            assertChoiceIsShown(returnChoiceText)
+            assertChoiceIsEnabled(returnChoiceText)
             skipToSentence(newPathSentence)
             assertStoryTextExists(newPathSentence)
-            assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsNotShown(returnChoiceText)
         }
 
         // AND the story is closed
@@ -256,9 +258,61 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
 
         onStoryReader {
             assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsNotShown(returnChoiceText)
+            assertChoiceIsDisabled(keepChoiceText)
+            assertChoiceIsShown(returnChoiceText)
+            assertChoiceIsEnabled(returnChoiceText)
             skipToSentence(newPathSentence)
             assertStoryTextExists(newPathSentence)
+        }
+    }
+
+    @Test
+    fun `the chosen path can be changed`() = testRule.runTest {
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
+        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
+        val returnChoiceText = story.parts.first().choices.last().textByLanguage.getValue("de")
+        val keepPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
+            .germanSentences.first()
+        val returnPathSentence = (story.parts.first { it.id == "return_key" }.content.first() as TestStoryPart.Paragraph)
+            .germanSentences.first()
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertStoryTextIsVisible(startSentence)
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsShown(returnChoiceText)
+
+            chooseStoryOption(keepChoiceText)
+            awaitIdle()
+
+            assertChoiceIsDisabled(keepChoiceText)
+            assertChoiceIsEnabled(returnChoiceText)
+            skipToSentence(keepPathSentence)
+            assertStoryTextExists(keepPathSentence)
+        }
+
+        navigateBack()
+        awaitIdle()
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertChoiceIsDisabled(keepChoiceText)
+            assertChoiceIsEnabled(returnChoiceText)
+
+            chooseStoryOption(returnChoiceText)
+            awaitIdle()
+
+            assertChoiceIsEnabled(keepChoiceText)
+            assertChoiceIsDisabled(returnChoiceText)
+            skipToSentence(returnPathSentence)
+            assertStoryTextExists(returnPathSentence)
         }
     }
 

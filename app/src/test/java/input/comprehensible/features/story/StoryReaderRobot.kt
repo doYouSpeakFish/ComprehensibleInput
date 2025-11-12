@@ -5,6 +5,8 @@ package input.comprehensible.features.story
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
@@ -57,6 +59,18 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
         composeTestRule
             .onAllNodesWithText(text, useUnmergedTree = true)
             .assertCountEquals(0)
+    }
+
+    fun assertChoiceIsEnabled(text: String) {
+        composeTestRule
+            .onNodeWithText(text)
+            .assertIsEnabled()
+    }
+
+    fun assertChoiceIsDisabled(text: String) {
+        composeTestRule
+            .onNodeWithText(text)
+            .assertIsNotEnabled()
     }
 
     fun assertImageIsShown(image: TestStoryPart.Image) {

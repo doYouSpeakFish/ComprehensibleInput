@@ -29,12 +29,8 @@ sealed interface StoryContentPartUiState {
     ) : StoryContentPartUiState {
         data class Option(
             val text: String,
+            val isSelected: Boolean,
             val onClick: () -> Unit,
         )
     }
-
-    /**
-     * Represents a previously selected choice.
-     */
-    data class ChosenChoice(val text: String) : StoryContentPartUiState
 }

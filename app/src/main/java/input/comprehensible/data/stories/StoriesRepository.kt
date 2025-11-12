@@ -2,7 +2,6 @@ package input.comprehensible.data.stories
 
 import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
-import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryChoiceOption
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.model.StoryPart
@@ -197,8 +196,8 @@ class StoriesRepository @Inject constructor(
                     ) ?: return null
                 }
 
-            val choice = if (learningPart.choices.isEmpty()) {
-                null
+            val choiceSelection = if (learningPart.choices.isEmpty()) {
+                StoryChoiceSelection(options = emptyList(), chosenOption = null)
             } else {
                 val choiceContext = StoryChoiceContext(
                     storyId = id,
@@ -216,7 +215,8 @@ class StoriesRepository @Inject constructor(
             storyParts += StoryPart(
                 id = partId,
                 elements = elements,
-                choice = choice,
+                options = choiceSelection.options,
+                chosenOption = choiceSelection.chosenOption,
             )
         }
 
@@ -310,7 +310,7 @@ private fun buildStoryChoice(
     context: StoryChoiceContext,
     learningPart: StoryPartData,
     translationPart: StoryPartData,
-): StoryChoice? {
+): StoryChoiceSelection? {
     if (translationPart.choices.size != learningPart.choices.size) {
         Timber.e(
             "Mismatched number of choices in story %s (%s) in part %s",
@@ -334,21 +334,28 @@ private fun buildStoryChoice(
         )
     }
 
-    return if (context.nextPartId != null) {
-        val chosenOption = options.firstOrNull { it.targetPartId == context.nextPartId } ?: run {
+    val chosenOption = context.nextPartId?.let { nextPartId ->
+        options.firstOrNull { it.targetPartId == nextPartId } ?: run {
             Timber.e(
                 "Story %s part %s is missing choice leading to part %s",
                 context.storyId,
                 context.partId,
-                context.nextPartId,
+                nextPartId,
             )
             return null
         }
-        StoryChoice.Chosen(chosenOption)
-    } else {
-        StoryChoice.Available(options)
     }
+
+    return StoryChoiceSelection(
+        options = options,
+        chosenOption = chosenOption,
+    )
 }
+
+private data class StoryChoiceSelection(
+    val options: List<StoryChoiceOption>,
+    val chosenOption: StoryChoiceOption?,
+)
 
 private data class StoryChoiceContext(
     val storyId: String,

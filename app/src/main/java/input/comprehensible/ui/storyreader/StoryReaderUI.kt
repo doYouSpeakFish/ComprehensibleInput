@@ -322,6 +322,20 @@ fun StoryReaderPreview() {
                         sentences = listOf("Content"),
                         translatedSentences = listOf("Contenido"),
                     ),
+                    StoryContentPartUiState.Choices(
+                        options = listOf(
+                            StoryContentPartUiState.Choices.Option(
+                                text = "Option 1",
+                                isSelected = false,
+                                onClick = {},
+                            ),
+                            StoryContentPartUiState.Choices.Option(
+                                text = "Option 2",
+                                isSelected = true,
+                                onClick = {},
+                            ),
+                        ),
+                    ),
                 ),
                 currentPartId = "part",
                 initialContentIndex = 0,
@@ -346,6 +360,20 @@ fun StoryReaderTranslationPreview() {
                     StoryContentPartUiState.Paragraph(
                         sentences = listOf("Content"),
                         translatedSentences = listOf("Contenido"),
+                    ),
+                    StoryContentPartUiState.Choices(
+                        options = listOf(
+                            StoryContentPartUiState.Choices.Option(
+                                text = "Option 1",
+                                isSelected = false,
+                                onClick = {},
+                            ),
+                            StoryContentPartUiState.Choices.Option(
+                                text = "Option 2",
+                                isSelected = true,
+                                onClick = {},
+                            ),
+                        ),
                     ),
                 ),
                 currentPartId = "part",
