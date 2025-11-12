@@ -151,6 +151,107 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `the story choices can be switched from German to English`() = testRule.runTest {
+        // GIVEN a German story with choices is open
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            val germanChoice = story.parts.first().choices.first().textByLanguage.getValue("de")
+            val englishChoice = story.parts.first().choices.first().textByLanguage.getValue("en")
+
+            tapOnChoiceText(text = germanChoice)
+            awaitIdle()
+
+            waitForChoiceText(text = englishChoice)
+            assertChoiceIsShown(englishChoice)
+        }
+    }
+
+    @Test
+    fun `the story choices can be switched from English to German`() = testRule.runTest {
+        // GIVEN a German story with choices is open
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            val choice = story.parts.first().choices.first()
+            val germanChoice = choice.textByLanguage.getValue("de")
+            val englishChoice = choice.textByLanguage.getValue("en")
+
+            tapOnChoiceText(text = germanChoice)
+            awaitIdle()
+            waitForChoiceText(text = englishChoice)
+            tapOnChoiceText(text = englishChoice)
+            awaitIdle()
+
+            waitForChoiceText(text = germanChoice)
+            assertChoiceIsShown(germanChoice)
+        }
+    }
+
+    @Test
+    fun `the chosen choice can be switched from German to English`() = testRule.runTest {
+        // GIVEN a German story with a chosen path
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            val choice = story.parts.first().choices.first()
+            val germanChoice = choice.textByLanguage.getValue("de")
+            val englishChoice = choice.textByLanguage.getValue("en")
+
+            chooseStoryOption(germanChoice)
+            awaitIdle()
+
+            waitForChoiceText(germanChoice)
+            tapOnChosenChoiceText(germanChoice)
+            awaitIdle()
+
+            waitForChoiceText(englishChoice)
+            assertChoiceIsShown(englishChoice)
+        }
+    }
+
+    @Test
+    fun `the chosen choice can be switched from English to German`() = testRule.runTest {
+        // GIVEN a German story with a chosen path
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            val choice = story.parts.first().choices.first()
+            val germanChoice = choice.textByLanguage.getValue("de")
+            val englishChoice = choice.textByLanguage.getValue("en")
+
+            chooseStoryOption(germanChoice)
+            awaitIdle()
+            waitForChoiceText(germanChoice)
+            tapOnChosenChoiceText(germanChoice)
+            awaitIdle()
+            waitForChoiceText(englishChoice)
+
+            tapOnChosenChoiceText(englishChoice)
+            awaitIdle()
+
+            waitForChoiceText(germanChoice)
+            assertChoiceIsShown(germanChoice)
+        }
+    }
+
+    @Test
     fun `the title can be switched from German to English`() = testRule.runTest {
         // GIVEN a German story is open
         val stories = SampleStoriesData.listOf100Stories

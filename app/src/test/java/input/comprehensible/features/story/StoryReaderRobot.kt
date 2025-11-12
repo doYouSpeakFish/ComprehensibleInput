@@ -19,7 +19,6 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.waitUntilAtLeastOneExists
 import input.comprehensible.ComprehensibleInputTestScope
 import input.comprehensible.data.sample.TestStoryPart
 
@@ -49,8 +48,16 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
 
     fun assertChoiceIsShown(text: String) {
         composeTestRule
-            .onNodeWithText(text)
+            .onNodeWithText(text, substring = true, useUnmergedTree = true)
             .assertIsDisplayed()
+    }
+
+    fun waitForChoiceText(text: String) {
+        composeTestRule.waitUntil {
+            composeTestRule
+                .onAllNodesWithText(text, substring = true, useUnmergedTree = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
     }
 
     fun assertChoiceIsNotShown(text: String) {
@@ -98,8 +105,18 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
 
     fun chooseStoryOption(text: String) {
         composeTestRule
-            .onNodeWithText(text)
+            .onNodeWithContentDescription(text)
             .performClick()
+    }
+
+    fun tapOnChoiceText(text: String) {
+        composeTestRule
+            .onNodeWithText(text, substring = true, useUnmergedTree = true)
+            .performClick()
+    }
+
+    fun tapOnChosenChoiceText(text: String) {
+        tapOnChoiceText(text)
     }
 
     suspend fun skipToSentence(sentence: String) {
