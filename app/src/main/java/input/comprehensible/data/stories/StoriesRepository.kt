@@ -2,7 +2,6 @@ package input.comprehensible.data.stories
 
 import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
-import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryChoiceOption
 import input.comprehensible.data.stories.model.StoryElement
 import input.comprehensible.data.stories.model.StoryPart
@@ -197,8 +196,8 @@ class StoriesRepository @Inject constructor(
                     ) ?: return null
                 }
 
-            val choice = if (learningPart.choices.isEmpty()) {
-                null
+            val (options, chosenOption) = if (learningPart.choices.isEmpty()) {
+                emptyList<StoryChoiceOption>() to null
             } else {
                 val choiceContext = StoryChoiceContext(
                     storyId = id,
@@ -206,17 +205,19 @@ class StoriesRepository @Inject constructor(
                     nextPartId = path.getOrNull(index + 1),
                     languageLabel = languageLabel,
                 )
-                buildStoryChoice(
+                val choiceState = buildStoryChoiceState(
                     context = choiceContext,
                     learningPart = learningPart,
                     translationPart = translationPart,
                 ) ?: return null
+                choiceState.options to choiceState.chosenOption
             }
 
             storyParts += StoryPart(
                 id = partId,
                 elements = elements,
-                choice = choice,
+                options = options,
+                chosenOption = chosenOption,
             )
         }
 
@@ -306,11 +307,11 @@ sealed interface StoryResult {
     object Error : StoryResult
 }
 
-private fun buildStoryChoice(
+private fun buildStoryChoiceState(
     context: StoryChoiceContext,
     learningPart: StoryPartData,
     translationPart: StoryPartData,
-): StoryChoice? {
+): StoryChoiceState? {
     if (translationPart.choices.size != learningPart.choices.size) {
         Timber.e(
             "Mismatched number of choices in story %s (%s) in part %s",
@@ -334,7 +335,7 @@ private fun buildStoryChoice(
         )
     }
 
-    return if (context.nextPartId != null) {
+    val chosenOption = if (context.nextPartId != null) {
         val chosenOption = options.firstOrNull { it.targetPartId == context.nextPartId } ?: run {
             Timber.e(
                 "Story %s part %s is missing choice leading to part %s",
@@ -344,10 +345,15 @@ private fun buildStoryChoice(
             )
             return null
         }
-        StoryChoice.Chosen(chosenOption)
+        chosenOption
     } else {
-        StoryChoice.Available(options)
+        null
     }
+
+    return StoryChoiceState(
+        options = options,
+        chosenOption = chosenOption,
+    )
 }
 
 private data class StoryChoiceContext(
@@ -355,4 +361,9 @@ private data class StoryChoiceContext(
     val partId: String,
     val nextPartId: String?,
     val languageLabel: String,
+)
+
+private data class StoryChoiceState(
+    val options: List<StoryChoiceOption>,
+    val chosenOption: StoryChoiceOption?,
 )

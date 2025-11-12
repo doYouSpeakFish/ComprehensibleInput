@@ -214,7 +214,7 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             awaitIdle()
 
             waitForChoiceText(germanChoice)
-            tapOnChosenChoiceText(germanChoice)
+            tapOnChoiceText(text = germanChoice)
             awaitIdle()
 
             waitForChoiceText(englishChoice)
@@ -239,11 +239,11 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             chooseStoryOption(germanChoice)
             awaitIdle()
             waitForChoiceText(germanChoice)
-            tapOnChosenChoiceText(germanChoice)
+            tapOnChoiceText(text = germanChoice)
             awaitIdle()
             waitForChoiceText(englishChoice)
 
-            tapOnChosenChoiceText(englishChoice)
+            tapOnChoiceText(text = englishChoice)
             awaitIdle()
 
             waitForChoiceText(germanChoice)
@@ -344,7 +344,7 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             skipToSentence(newPathSentence)
             assertStoryTextExists(newPathSentence)
             assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsNotShown(returnChoiceText)
+            assertChoiceIsShown(returnChoiceText)
         }
 
         // AND the story is closed
@@ -357,9 +357,44 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
 
         onStoryReader {
             assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsNotShown(returnChoiceText)
+            assertChoiceIsShown(returnChoiceText)
             skipToSentence(newPathSentence)
             assertStoryTextExists(newPathSentence)
+        }
+    }
+
+    @Test
+    fun `the story choice can be changed after selection`() = testRule.runTest {
+        val story = SampleStoriesData.chooseYourOwnAdventureStory
+        storiesData.setLocalStories(listOf(story))
+
+        val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
+        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
+        val returnChoiceText = story.parts.first().choices.last().textByLanguage.getValue("de")
+        val keepPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
+            .germanSentences.first()
+        val returnPathSentence = (story.parts.first { it.id == "return_key" }.content.first() as TestStoryPart.Paragraph)
+            .germanSentences.first()
+
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            assertStoryTextIsVisible(startSentence)
+            chooseStoryOption(keepChoiceText)
+            awaitIdle()
+
+            skipToSentence(keepPathSentence)
+            assertStoryTextExists(keepPathSentence)
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsShown(returnChoiceText)
+
+            chooseStoryOption(returnChoiceText)
+            awaitIdle()
+
+            skipToSentence(returnPathSentence)
+            assertStoryTextExists(returnPathSentence)
+            assertStoryTextIsNotVisible(keepPathSentence)
         }
     }
 

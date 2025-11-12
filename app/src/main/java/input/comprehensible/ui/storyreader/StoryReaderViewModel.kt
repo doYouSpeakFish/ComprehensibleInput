@@ -7,8 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
 import input.comprehensible.data.stories.StoryResult
 import input.comprehensible.data.stories.model.Story
-import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryElement
+import input.comprehensible.data.stories.model.StoryPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.storyreader.StoryReaderUiState.Error
 import input.comprehensible.ui.storyreader.StoryReaderUiState.Loaded
@@ -143,29 +143,6 @@ class StoryReaderViewModel @Inject constructor(
     }
 
     /**
-     * Handles the selection of a chosen story choice so it can be translated.
-     *
-     * If the same choice is selected again, it toggles its translated state.
-     * Otherwise, it selects the choice and shows its translation.
-     *
-     * @param choiceIndex The index of the choice within the story content list.
-     */
-    fun onChosenChoiceSelected(choiceIndex: Int) {
-        selectedTextState.update { selectedText ->
-            val selectedChoice = selectedText as? SelectedText.ChosenChoice
-            val sameChoice = selectedChoice?.choiceIndex == choiceIndex
-            if (sameChoice) {
-                return@update selectedChoice.copy(isTranslated = !selectedChoice.isTranslated)
-            }
-
-            SelectedText.ChosenChoice(
-                choiceIndex = choiceIndex,
-                isTranslated = true,
-            )
-        }
-    }
-
-    /**
      * Persists the current story location, so if the story is closed, it can be resumed from this
      * point.
      */
@@ -200,8 +177,9 @@ private fun Story.toContentItems(
         part.elements.forEach { element ->
             add(element.toStoryContentPartUiState())
         }
-        part.choice?.toStoryContentPartUiState(onChoiceSelected = onChoiceSelected)
-            ?.let(::add)
+        if (part.options.isNotEmpty()) {
+            add(part.toStoryContentPartUiState(onChoiceSelected = onChoiceSelected))
+        }
     }
 }
 
@@ -221,16 +199,10 @@ private fun StoryElement.Image.toImageUiState() = StoryContentPartUiState.Image(
     bitmap = bitmap,
 )
 
-private fun StoryChoice.toStoryContentPartUiState(
-    onChoiceSelected: (String) -> Unit,
-) = when (this) {
-    is StoryChoice.Available -> toChoicesUiState(onChoiceSelected = onChoiceSelected)
-    is StoryChoice.Chosen -> toChoiceUiState()
-}
-
-private fun StoryChoice.Available.toChoicesUiState(
+private fun StoryPart.toStoryContentPartUiState(
     onChoiceSelected: (String) -> Unit,
 ) = StoryContentPartUiState.Choices(
+    chosenOptionId = chosenOption?.targetPartId,
     options = options.map { option ->
         StoryContentPartUiState.Choices.Option(
             id = option.targetPartId,
@@ -240,9 +212,3 @@ private fun StoryChoice.Available.toChoicesUiState(
         )
     }
 )
-
-private fun StoryChoice.Chosen.toChoiceUiState() =
-    StoryContentPartUiState.ChosenChoice(
-        text = option.text,
-        translatedText = option.translatedText,
-    )

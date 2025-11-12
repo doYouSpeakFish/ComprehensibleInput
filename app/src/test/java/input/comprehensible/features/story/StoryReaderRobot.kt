@@ -46,6 +46,12 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             .assertCountEquals(1)
     }
 
+    fun assertStoryTextIsNotVisible(sentence: String) {
+        composeTestRule
+            .onAllNodesWithText(sentence, substring = true, useUnmergedTree = true)
+            .assertCountEquals(0)
+    }
+
     fun assertChoiceIsShown(text: String) {
         composeTestRule
             .onNodeWithText(text, substring = true, useUnmergedTree = true)
@@ -113,10 +119,6 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
         composeTestRule
             .onNodeWithText(text, substring = true, useUnmergedTree = true)
             .performClick()
-    }
-
-    fun tapOnChosenChoiceText(text: String) {
-        tapOnChoiceText(text)
     }
 
     suspend fun skipToSentence(sentence: String) {
