@@ -8,8 +8,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -21,22 +24,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.LinkInteractionListener
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import input.comprehensible.R
 
@@ -196,48 +199,84 @@ private fun StoryChoices(
     isSelectionTranslated: Boolean,
     onOptionTextSelected: (Int) -> Unit,
 ) {
-    val colorScheme = MaterialTheme.colorScheme
-    val defaultTextColor = LocalContentColor.current
     Column(
         modifier = modifier.padding(bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         state.options.forEachIndexed { index, option ->
-            val isSelected = selectedOptionIndex == index
-            val textColor = if (isSelected) colorScheme.background else defaultTextColor
-            val backgroundColor = if (isSelected) colorScheme.onBackground else Color.Transparent
-            Row(
+            Choice(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                isSelected = selectedOptionIndex == index,
+                isSelectionTranslated = isSelectionTranslated,
+                onOptionTextSelected = { onOptionTextSelected(index) },
+                option = option,
+            )
+        }
+    }
+}
+
+@Composable
+private fun Choice(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    isSelectionTranslated: Boolean,
+    onOptionTextSelected: () -> Unit,
+    option: StoryContentPartUiState.Choices.Option,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val backgroundColor = if (isSelected) {
+        colorScheme.onBackground
+    } else {
+        colorScheme.background
+    }
+    val contentColor = if (isSelected) {
+        colorScheme.background
+    } else {
+        colorScheme.onBackground
+    }
+    val borderColor = if (isSelected) {
+        colorScheme.background
+    } else {
+        colorScheme.onBackground
+    }
+    Box(modifier) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(backgroundColor)
+                    .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
+                    .clickable { onOptionTextSelected() }
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                text = if (isSelected && isSelectionTranslated) {
+                    option.translatedText
+                } else {
+                    option.text
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                color = contentColor,
+            )
+            Button(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .semantics { contentDescription = option.text }
+                    .testTag("story_choice_button_${option.id}"),
+                onClick = option.onClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.onBackground,
+                    contentColor = colorScheme.background,
+                ),
+                shape = RoundedCornerShape(16.dp),
             ) {
-                Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(backgroundColor)
-                        .clickable { onOptionTextSelected(index) }
-                        .padding(vertical = 12.dp, horizontal = 16.dp),
-                    text = if (isSelected && isSelectionTranslated) {
-                        option.translatedText
-                    } else {
-                        option.text
-                    },
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = textColor,
-                )
-                Button(
-                    modifier = Modifier
-                        .semantics { contentDescription = option.text }
-                        .testTag("story_choice_button_${option.id}"),
-                    onClick = option.onClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorScheme.onBackground,
-                        contentColor = colorScheme.background,
-                    ),
-                ) {
-                    Text(text = stringResource(id = R.string.story_reader_choice_select_button))
-                }
+                Text(text = stringResource(id = R.string.story_reader_choice_select_button))
             }
         }
     }
