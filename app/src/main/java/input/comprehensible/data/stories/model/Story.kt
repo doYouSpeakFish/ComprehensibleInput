@@ -11,11 +11,13 @@ data class Story(
     val translatedTitle: String,
     val parts: List<StoryPart>,
     val currentPartId: String,
+    val lastChosenPartId: String?,
     val storyPosition: Int,
 )
 
 data class StoryPart(
     val id: String,
+    val leadingChoice: StoryChoiceOption?,
     val elements: List<StoryElement>,
     val choice: StoryChoice?,
 )

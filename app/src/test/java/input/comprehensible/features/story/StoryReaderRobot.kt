@@ -6,7 +6,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
-import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
@@ -19,6 +18,8 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
 import input.comprehensible.ComprehensibleInputTestScope
 import input.comprehensible.data.sample.TestStoryPart
 
@@ -119,8 +120,23 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
         tapOnChoiceText(text)
     }
 
+    fun swipeToNextPart() {
+        composeTestRule
+            .onNodeWithTag("story_reader_pager")
+            .performTouchInput { swipeLeft() }
+    }
+
+    fun swipeToPreviousPart() {
+        composeTestRule
+            .onNodeWithTag("story_reader_pager")
+            .performTouchInput { swipeRight() }
+    }
+
     suspend fun skipToSentence(sentence: String) {
-        val scrollNode = composeTestRule.onNode(hasScrollAction())
+        val scrollNode = composeTestRule.onNodeWithTag(
+            testTag = "story_reader_page_list",
+            useUnmergedTree = true,
+        )
         var index = 0
         while (!isSentenceDisplayed(sentence)) {
             try {
