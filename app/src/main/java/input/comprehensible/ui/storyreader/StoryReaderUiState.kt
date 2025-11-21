@@ -21,8 +21,32 @@ sealed interface StoryReaderUiState {
      */
     data class Loaded(
         val title: String,
-        val isTitleHighlighted: Boolean,
         val content: List<StoryContentPartUiState>,
-        val storyPosition: Int,
+        val currentPartId: String,
+        val initialContentIndex: Int,
+        val selectedText: SelectedText?,
     ) : StoryReaderUiState
+
+    sealed interface SelectedText {
+        data class Title(
+            val isTranslated: Boolean,
+        ) : SelectedText
+
+        data class SentenceInParagraph(
+            val paragraphIndex: Int,
+            val selectedSentenceIndex: Int,
+            val isTranslated: Boolean,
+        ) : SelectedText
+
+        data class ChoiceOption(
+            val choiceIndex: Int,
+            val optionIndex: Int,
+            val isTranslated: Boolean,
+        ) : SelectedText
+
+        data class ChosenChoice(
+            val choiceIndex: Int,
+            val isTranslated: Boolean,
+        ) : SelectedText
+    }
 }

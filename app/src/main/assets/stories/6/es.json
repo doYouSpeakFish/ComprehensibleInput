@@ -1,75 +1,83 @@
 {
   "id": "6",
   "title": "Árbol Viejo",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Todo comenzó cuando era una pequeña semilla.",
-        "Un pájaro me había llevado lejos de mis padres y me escondió en la tierra suave.",
-        "Pronto comencé a crecer.",
-        "El sol me calentaba y la lluvia me daba algo para beber."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Una plántula brotando del suelo.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Pasaron los años, y me hice más grande y fuerte.",
-        "Los niños venían y jugaban bajo mis ramas, y escuchaba sus risas.",
-        "A veces trepaban alto y construían pequeñas casas en mis ramas.",
-        "Me sentía feliz de traerles alegría."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Un árbol grande con una casa en sus ramas. Los niños corren emocionados hacia el árbol.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "A medida que envejecía, el mundo a mi alrededor cambiaba.",
-        "Se construyeron nuevos edificios y el paisaje cambió.",
-        "Vi a los caballos ser reemplazados por coches, y las luces de la ciudad se hicieron más brillantes.",
-        "Sin embargo, a través de todos los cambios, seguí siendo un testigo silencioso del paso del tiempo."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "El horizonte de una ciudad visto a través de las ramas de un árbol.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "En mis mejores años, fui hogar de muchos pájaros y pequeños animales.",
-        "Buscaban refugio en mi follaje y se alimentaban de los frutos que daba.",
-        "Estaba orgulloso de ser parte del ciclo de la vida."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Una ardilla acurrucada en un nido de pájaro. Otra ardilla está en el fondo sobre una rama comiendo nueces.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ahora soy muy viejo.",
-        "Mi corteza está agrietada, y mis ramas ya no son tan fuertes como antes.",
-        "Pero aún estoy aquí, y ofrezco sombra y consuelo a quienes lo buscan.",
-        "Espero estar aquí muchos años más, para contar las historias de la vida."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Un árbol viejo y retorcido de pie fuerte.",
-      "path": "5"
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Todo comenzó cuando era una pequeña semilla.",
+            "Un pájaro me había llevado lejos de mis padres y me escondió en la tierra suave.",
+            "Pronto comencé a crecer.",
+            "El sol me calentaba y la lluvia me daba algo para beber."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Una plántula brotando del suelo.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pasaron los años, y me hice más grande y fuerte.",
+            "Los niños venían y jugaban bajo mis ramas, y escuchaba sus risas.",
+            "A veces trepaban alto y construían pequeñas casas en mis ramas.",
+            "Me sentía feliz de traerles alegría."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Un árbol grande con una casa en sus ramas. Los niños corren emocionados hacia el árbol.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A medida que envejecía, el mundo a mi alrededor cambiaba.",
+            "Se construyeron nuevos edificios y el paisaje cambió.",
+            "Vi a los caballos ser reemplazados por coches, y las luces de la ciudad se hicieron más brillantes.",
+            "Sin embargo, a través de todos los cambios, seguí siendo un testigo silencioso del paso del tiempo."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "El horizonte de una ciudad visto a través de las ramas de un árbol.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "En mis mejores años, fui hogar de muchos pájaros y pequeños animales.",
+            "Buscaban refugio en mi follaje y se alimentaban de los frutos que daba.",
+            "Estaba orgulloso de ser parte del ciclo de la vida."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Una ardilla acurrucada en un nido de pájaro. Otra ardilla está en el fondo sobre una rama comiendo nueces.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ahora soy muy viejo.",
+            "Mi corteza está agrietada, y mis ramas ya no son tan fuertes como antes.",
+            "Pero aún estoy aquí, y ofrezco sombra y consuelo a quienes lo buscan.",
+            "Espero estar aquí muchos años más, para contar las historias de la vida."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Un árbol viejo y retorcido de pie fuerte.",
+          "path": "5"
+        }
+      ],
+      "choices": []
     }
   ]
 }

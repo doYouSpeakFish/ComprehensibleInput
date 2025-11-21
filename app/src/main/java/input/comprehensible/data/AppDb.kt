@@ -1,6 +1,7 @@
 package input.comprehensible.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -13,7 +14,11 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import javax.inject.Singleton
 
-@Database(entities = [StoryEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [StoryEntity::class],
+    version = 2,
+    autoMigrations = [AutoMigration(from = 1, to = 2)]
+)
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
 }

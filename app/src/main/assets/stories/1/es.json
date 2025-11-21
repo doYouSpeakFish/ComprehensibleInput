@@ -1,111 +1,136 @@
 {
   "id": "1",
-  "title": "Baño Curativo Secreto",
-  "content": [
+  "title": "Baño curativo secreto",
+  "startPartId": "start",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "image",
-      "contentDescription": "Una imagen de un manantial natural. En primer plano, hay una cascada que fluye desde el manantial. Rocas cubiertas de musgo son visibles en el fondo, detrás del vapor en el aire, iluminadas por la luz del sol que se filtra a través del dosel de los árboles arriba.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "María vive en un pequeño pueblo.",
-        "Cada mañana sale a caminar por el bosque junto a su casa.",
-        "Le encanta la paz y el aire fresco."
+      "id": "start",
+      "content": [
+        {
+          "type": "image",
+          "contentDescription": "Una imagen de un manantial natural. En primer plano hay una cascada que fluye desde el manantial. Se ven rocas cubiertas de musgo al fondo, detrás del vapor en el aire, iluminadas por la luz del sol que atraviesa el dosel de los árboles.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "María vive en un pueblo pequeño.",
+            "Cada mañana sale a caminar por el bosque junto a su casa.",
+            "Le encantan la tranquilidad y el aire fresco."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Un día escucha el sonido del agua corriendo.",
+            "Sigue el sonido y descubre un manantial.",
+            "El agua está tibia."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“¡Un baño curativo!”, piensa.",
+            "Un baño curativo es una poza natural con agua tibia.",
+            "Muchas personas creen que esa agua tiene poderes curativos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "María tiene una idea.",
+            "Podría venir aquí a relajarse.",
+            "Quizá incluso podría invitar a sus amigas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pero entonces ve algo en el fondo del baño curativo.",
+            "Es un objeto pequeño y brillante.",
+            "María lo recoge.",
+            "Es una moneda vieja."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De repente oye una voz detrás de ella: “¡Esa es mi moneda!”.",
+            "María se gira y ve a una anciana.",
+            "La mujer parece amable, pero tiene los ojos tristes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Este baño curativo pertenece a mi familia”, dice la anciana.",
+            "“Perdí esta moneda aquí hace muchos años.”"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "María se queda con la moneda.",
+          "targetPartId": "keep_coin"
+        },
+        {
+          "text": "María devuelve la moneda.",
+          "targetPartId": "return_coin"
+        }
       ]
     },
     {
-      "type": "paragraph",
-      "sentences": [
-        "Un día escucha el sonido del agua fluyendo.",
-        "Sigue el sonido y descubre un manantial.",
-        "El agua está tibia."
-      ]
+      "id": "keep_coin",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "María cierra la mano alrededor de la moneda.",
+            "La guarda en el bolsillo y se queda en silencio.",
+            "Cuando levanta la vista, la anciana ha desaparecido."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Al día siguiente la fuente está en silencio.",
+            "El agua está fría y el vapor ha desaparecido.",
+            "María se da cuenta de que el baño curativo ya no confía en ella."
+          ]
+        }
+      ],
+      "choices": []
     },
     {
-      "type": "paragraph",
-      "sentences": [
-        "“¡Un baño curativo!” piensa.",
-        "Un baño curativo es una piscina natural de agua tibia.",
-        "Muchas personas creen que tal agua tiene poderes curativos."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "María tiene una idea.",
-        "Podría venir aquí y relajarse.",
-        "Tal vez incluso podría invitar a sus amigos."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Pero entonces ve algo en el fondo del baño curativo.",
-        "Es un objeto pequeño y brillante.",
-        "María lo recoge.",
-        "Es una moneda antigua."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "De repente escucha una voz detrás de ella: “¡Esa es mi moneda!”",
-        "María se da vuelta y ve a una anciana.",
-        "La mujer parece amigable, pero sus ojos están tristes."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Este baño curativo pertenece a mi familia,” dice la anciana.",
-        "“Perdí esta moneda aquí hace muchos años.”"
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "María se siente mal.",
-        "Le devuelve la moneda a la mujer y se disculpa."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "La anciana sonríe.",
-        "“Está bien,” dice.",
-        "“Pero este baño curativo tiene un secreto.",
-        "Solo puede ser visto por aquellos que son puros de corazón.”"
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "María está sorprendida.",
-        "Agradece a la mujer y se va del baño curativo."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Al día siguiente, María trae a sus amigos al bosque.",
-        "Pero no pueden encontrar el baño curativo.",
-        "Ha desaparecido."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "María sonríe.",
-        "Ahora sabe que algunas cosas en la vida están destinadas solo para ella."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "El fin."
-      ]
+      "id": "return_coin",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "María se siente culpable y devuelve la moneda.",
+            "Se disculpa con la anciana.",
+            "La mujer sonríe y dice que el baño curativo tiene un secreto."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Solo los corazones amables pueden ver el manantial.",
+            "María promete proteger el lugar.",
+            "La anciana desaparece entre los árboles."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Al día siguiente María regresa con sus amigos.",
+            "No pueden encontrar el baño curativo.",
+            "María sonríe porque sabe que la recibirá cuando visite sola."
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

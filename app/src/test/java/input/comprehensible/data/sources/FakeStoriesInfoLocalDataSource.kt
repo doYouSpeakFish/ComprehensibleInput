@@ -7,21 +7,37 @@ import dagger.hilt.testing.TestInstallIn
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoModule
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDataSource {
-    private val stories = mutableMapOf<String, StoryEntity>()
+    private val stories = MutableStateFlow<Map<String, StoryEntity>>(emptyMap())
 
     override suspend fun insertStory(story: StoryEntity) {
-        stories[story.id] = story
+        stories.update { current -> current + (story.id to story) }
     }
 
-    override suspend fun getStory(id: String): StoryEntity? = stories[id]
+    override fun getStory(id: String): Flow<StoryEntity?> = stories.map { it[id] }
 
-    override suspend fun updateStory(story: StoryEntity) {
-        stories[story.id] = story
+    override suspend fun updateStory(id: String, position: Int) {
+        stories.update { current ->
+            val oldStoryInfo = current.getValue(id)
+            val newStoryInto = oldStoryInfo.copy(position = position)
+            current + (id to newStoryInto)
+        }
+    }
+
+    override suspend fun updateStory(id: String, partId: String) {
+        stories.update { current ->
+            val oldStoryInfo = current.getValue(id)
+            val newStoryInto = oldStoryInfo.copy(partId = partId)
+            current + (id to newStoryInto)
+        }
     }
 }
 

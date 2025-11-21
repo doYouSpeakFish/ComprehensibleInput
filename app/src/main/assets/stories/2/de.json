@@ -1,88 +1,96 @@
 {
   "id": "2",
   "title": "Kein Halt am Mars",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Heute ist ein besonderer Tag.",
-        "Ich bin der erste Mensch, der auf Phobos steht, einem kleinen Mond von Mars.",
-        "Ich stehe hier in meinem Raumanzug und schaue hoch zum roten Planeten.",
-        "Mars ist so groß und wunderschön.",
-        "Die Farben sind intensiv – rotes und oranges Licht.",
-        "Es ist ein unglaublicher Anblick."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein Astronaut steht, mit dem roten Boden von Phobos und dem roten Planeten Mars, die sich im Visier seines Raumanzugs spiegeln.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Aber in meinem Herzen ist auch ein kleines bisschen Traurigkeit.",
-        "Ich werde nie auf dem Mars selbst laufen können.",
-        "Diese Mission ist nur für Phobos.",
-        "Aber ich bin auch aufgeregt.",
-        "Phobos ist ein mysteriöser Ort, und ich bin der Erste, der ihn erkunden darf."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Die Schwerkraft hier ist sehr niedrig.",
-        "Ich fühle mich leicht und kann hoch springen.",
-        "Jeder Schritt fühlt sich seltsam an, fast wie fliegen.",
-        "Es ist lustig und macht mich glücklich."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein Astronaut springt hoch in die Luft auf der felsigen Oberfläche von Phobos. Der Himmel darüber ist voller Sterne.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Wir haben nur zwanzig Tage auf Phobos.",
-        "Die Wissenschaftler und Ingenieure haben hart gearbeitet, um die Reise kurz zu machen.",
-        "Es ist weniger gefährlich so.",
-        "Ich möchte viel entdecken in dieser kurzen Zeit."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ich freue mich auch darauf, nach Hause zu gehen.",
-        "Ich vermisse die Wolken und den Regen.",
-        "Ich stelle mir vor, wie ich wieder unter einem blauen Himmel stehe und das Wasser auf meiner Haut spüre."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein Astronaut mit Regen und Wolken in seinem Helm, der seine Gedanken an die Erde zeigt.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Aber jetzt, hier auf Phobos, ist es Zeit für Abenteuer.",
-        "Es gibt so viel zu tun.",
-        "Ich nehme meinen ersten Schritt und beginne mit meiner Arbeit.",
-        "Es ist ein großer Moment – für mich und für alle Menschen auf der Erde."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein Astronaut geht zielstrebig über die felsige Oberfläche von Phobos, mit Mars im Hintergrund.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ende"
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Heute ist ein besonderer Tag.",
+            "Ich bin der erste Mensch, der auf Phobos steht, einem kleinen Mond von Mars.",
+            "Ich stehe hier in meinem Raumanzug und schaue hoch zum roten Planeten.",
+            "Mars ist so groß und wunderschön.",
+            "Die Farben sind intensiv – rotes und oranges Licht.",
+            "Es ist ein unglaublicher Anblick."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein Astronaut steht, mit dem roten Boden von Phobos und dem roten Planeten Mars, die sich im Visier seines Raumanzugs spiegeln.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Aber in meinem Herzen ist auch ein kleines bisschen Traurigkeit.",
+            "Ich werde nie auf dem Mars selbst laufen können.",
+            "Diese Mission ist nur für Phobos.",
+            "Aber ich bin auch aufgeregt.",
+            "Phobos ist ein mysteriöser Ort, und ich bin der Erste, der ihn erkunden darf."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Die Schwerkraft hier ist sehr niedrig.",
+            "Ich fühle mich leicht und kann hoch springen.",
+            "Jeder Schritt fühlt sich seltsam an, fast wie fliegen.",
+            "Es ist lustig und macht mich glücklich."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein Astronaut springt hoch in die Luft auf der felsigen Oberfläche von Phobos. Der Himmel darüber ist voller Sterne.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Wir haben nur zwanzig Tage auf Phobos.",
+            "Die Wissenschaftler und Ingenieure haben hart gearbeitet, um die Reise kurz zu machen.",
+            "Es ist weniger gefährlich so.",
+            "Ich möchte viel entdecken in dieser kurzen Zeit."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ich freue mich auch darauf, nach Hause zu gehen.",
+            "Ich vermisse die Wolken und den Regen.",
+            "Ich stelle mir vor, wie ich wieder unter einem blauen Himmel stehe und das Wasser auf meiner Haut spüre."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein Astronaut mit Regen und Wolken in seinem Helm, der seine Gedanken an die Erde zeigt.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Aber jetzt, hier auf Phobos, ist es Zeit für Abenteuer.",
+            "Es gibt so viel zu tun.",
+            "Ich nehme meinen ersten Schritt und beginne mit meiner Arbeit.",
+            "Es ist ein großer Moment – für mich und für alle Menschen auf der Erde."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein Astronaut geht zielstrebig über die felsige Oberfläche von Phobos, mit Mars im Hintergrund.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ende"
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

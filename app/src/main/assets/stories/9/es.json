@@ -1,543 +1,551 @@
 {
   "id": "9",
   "title": "La aventura de la banda moteada",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "image",
-      "contentDescription": "La imagen muestra a Sherlock Holmes de perfil con una pipa, junto a él hay una serpiente de color amarillo anaranjado con manchas negras sobre un fondo blanco.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Al revisar mis notas de los muchos casos que he investigado con mi amigo Sherlock Holmes durante los últimos ocho años, descubrí que algunos eran trágicos, otros cómicos y muchos simplemente extraños, pero ninguno era ordinario.",
-        "Holmes prefería investigar cosas inusuales o incluso fantásticas.",
-        "De todos estos casos, ninguno fue más inusual que el que involucró a la antigua familia Roylott de Stoke Moran en Surrey.",
-        "Los hechos tuvieron lugar a principios del período en que vivíamos juntos como solteros en Baker Street.",
-        "Quizás hubiera escrito sobre ello antes, pero prometí mantenerlo en secreto.",
-        "Esa promesa terminó el mes pasado cuando la señora involucrada murió inesperadamente.",
-        "Sobre la muerte del Dr. Grimesby Roylott se han difundido extraños rumores que hacen que la historia parezca peor de lo que era.",
-        "Por eso creo que es correcto informar los hechos ahora."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Eran principios de abril de 1883 cuando me desperté una mañana y vi a Sherlock Holmes de pie junto a mi cama, ya completamente vestido.",
-        "Holmes normalmente se levantaba tarde, así que parpadeé sorprendida y quizás un poco molesta, ya que mantenía un horario establecido.“Lamento despertarlo, Watson”, dijo, “pero despertaremos a todos esta mañana.",
-        "La señora Hudson me despertó y ahora te estoy despertando a ti”.\"¿Qué pasa?\"Pregunté.“¿Un incendio?”“No”, respondió, “un cliente.",
-        "Ha venido una señorita muy emocionada e insiste en hablarme.",
-        "Ella está esperando en la sala de estar.",
-        "Si una mujer joven deambula por Londres a estas horas y despierta a la gente, debe ser algo importante.",
-        "Si el caso es interesante, sé que querrás seguir adelante desde el principio.",
-        "Por eso pensé que debería darte la oportunidad”.“Mi querido amigo, no me lo perdería por nada del mundo”, respondí.",
-        "Disfruté siguiendo a Holmes en sus investigaciones y admiré sus rápidas conclusiones, que parecían inspiración pero siempre lógicas.",
-        "Me vestí rápidamente y bajé a la sala con él."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Una dama vestida de negro con un tupido velo estaba sentada junto a la ventana.",
-        "Ella se puso de pie cuando entramos.\"Buenos días, señora\", dijo Holmes alegremente.“Mi nombre es Sherlock Holmes.",
-        "Este es mi buen amigo y colega, el Dr. Watson.",
-        "Puedes hablar con tanta libertad ante él como ante mí.",
-        "Me alegra que la señora Hudson encendiera el fuego.",
-        "Por favor, acércate y te traeré una taza de café caliente porque veo que estás temblando”.\"No es el frío lo que me hace temblar\", respondió en voz baja mientras se acercaba.\"¿Y entonces qué?\"“Es miedo, señor Holmes.",
-        "Es horror”.Ella se levantó el velo.",
-        "Su rostro estaba hundido y gris, con ojos inquietos como los de un animal perseguido.",
-        "Parecía tener unos treinta años, pero su cabello ya estaba veteado de canas y su expresión era cansada y exhausta.",
-        "Holmes la miró brevemente con una de sus amplias miradas.",
-        "Habló en voz baja y le dio unas palmaditas en el brazo.“No se puede tener miedo”, dijo.“Estoy seguro de que solucionaremos las cosas pronto.",
-        "Veo que viniste en tren esta mañana”.“¿Entonces me conoces?”preguntó en estado de shock.“No, pero veo la segunda mitad de un billete de regreso en la palma de tu guante izquierdo.",
-        "Debió haber salido temprano y todavía tuvo que caminar mucho en un carrito de perros por caminos embarrados antes de llegar a la estación”.La señora saltó y miró fijamente a mi amiga.",
-        "Holmes sonrió.“No es ningún secreto, señora”, dijo.“La manga izquierda de tu abrigo tiene siete salpicaduras frescas de barro.",
-        "Sólo un cochecito para perros arroja semejante barro y sólo si estás sentado al lado izquierdo del conductor”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"Cualesquiera que sean sus razones, tiene toda la razón\", dijo.“Salí antes de las seis, llegué a Leatherhead a las veinte y tomé el primer tren a Waterloo.",
-        "Señor, no puedo soportar más esta carga.",
-        "Me volveré loco si continúa.",
-        "No tengo a nadie a quien acudir, nadie excepto una persona que se preocupa por mí, y es poco lo que él puede hacer.",
-        "He oído hablar de usted, Sr. Holmes.",
-        "La señora Farintosh, a quien usted ayudó una vez, me dio su dirección.",
-        "Oh señor, ¿cree que podría ayudarme a mí también y traer algo de luz a la oscuridad que me rodea?",
-        "No puedo pagarte en este momento, pero en un mes o seis semanas me casaré y tendré mis propios ingresos, y entonces me encontrarás agradecido”.Holmes abrió un pequeño libro de casos de su escritorio y miró dentro.\"Farintosh\", dijo.“Ah sí, recuerdo el caso; se trataba de una tiara de ópalo.",
-        "Eso fue antes de su época, Watson.",
-        "Lo único que puedo decir, señora, es que dedicaré a su caso la misma atención que al de su amiga.",
-        "No trabajo por dinero; pero puedes cubrir los gastos en los que incurro si te conviene.",
-        "Ahora díganos cualquier cosa que pueda ayudarnos a formarnos una opinión”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"¡Oh!\"ella dijo.“Mis temores son vagos y mis sospechas se basan en pequeñas cosas que a otros podrían parecer triviales.",
-        "Incluso la persona de la que tengo derecho a esperar ayuda y consejo trata lo que digo como la imaginación de una mujer nerviosa.",
-        "No lo dice, pero lo noto en sus respuestas tranquilizadoras y en su mirada desviada.",
-        "Pero he oído que se puede ver profundamente la maldad del corazón humano.",
-        "Quizás puedas aconsejarme cómo vivir entre los peligros que me rodean”. \"Estoy escuchando\", dijo Holmes.“Mi nombre es Helen Stoner.",
-        "Vivo con mi padrastro, el último superviviente de una de las familias sajonas más antiguas de Inglaterra, los Roylott de Stoke Moran, en la frontera occidental de Surrey. Holmes asintió. \"Estoy familiarizado con el nombre\", dijo. “La familia fue una vez una de las más ricas de Inglaterra.",
-        "La finca se extendía hasta Berkshire en el norte y Hampshire en el oeste.",
-        "Sin embargo, en el siglo pasado, cuatro herederos fueron derrochadores y disolutos, y un jugador completó la ruina de la familia durante el reinado.",
-        "No quedó nada excepto unos pocos acres de tierra y una casa de doscientos años de antigüedad profundamente endeudada.",
-        "El último propietario vivió allí una vida miserable.",
-        "Su único hijo, mi padrastro, se dio cuenta de que tenía que cambiar su rumbo en la vida.",
-        "Pidió dinero prestado a un pariente, estudió medicina y se fue a Calcuta.",
-        "Allí construyó una gran práctica a través de sus habilidades y carácter.",
-        "En un ataque de ira por los robos en su casa, mató a golpes a su mayordomo local y escapó por poco de la sentencia de muerte.",
-        "Cumplió una larga sentencia de prisión y luego regresó a Inglaterra amargado y decepcionado”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Cuando el Dr. Roylott estuvo en la India, se casó con mi madre, la señora Stoner, la joven viuda del Mayor General Stoner de la Artillería de Bengala.",
-        "Mi hermana Julia y yo éramos gemelas y solo teníamos dos años en ese momento.",
-        "Mi madre tenía una suma considerable de dinero (no menos de mil libras al año) y dejó estos ingresos al Dr. Roylott, mientras viviéramos con él, con la condición de que cada uno de nosotros recibiera una pensión anual si nos casábamos.",
-        "Poco después de regresar a Inglaterra, mi madre murió en un accidente de tren cerca de Crewe hace ocho años.",
-        "Luego, el Dr. Roylott dejó de ejercer la medicina en Londres y nos llevó a vivir a la antigua casa familiar en Stoke Moran.",
-        "El dinero que me dejó mi madre era suficiente para nuestras necesidades y no parecía haber obstáculo alguno para nuestra felicidad”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Pero por esa época nuestro padrastro cambió terriblemente.",
-        "En lugar de hacerse amigo de los vecinos, que inicialmente estaban felices de ver a un Roylott de regreso en la antigua casa, se encerró y rara vez salía, y solo para discutir violentamente con cualquiera con quien se cruzaba.",
-        "El mal genio, casi la locura, es algo que viene de familia, y en mi padrastro esto se vio agravado por su larga estancia en el trópico.",
-        "Se produjeron una serie de peleas vergonzosas; dos de los cuales terminaron en los tribunales.",
-        "Con el tiempo se convirtió en el terror del pueblo y la gente huyó cuando lo vieron venir porque es un hombre muy fuerte y no puede controlarse cuando está enojado.",
-        "La semana pasada arrojó al herrero por una barandilla a un arroyo, y la única forma de evitar otro escándalo fue pagar todo el dinero que pude reunir.",
-        "No tiene más amigos que los gitanos errantes.",
-        "Les deja acampar en nuestras tierras y, a veces, camina con ellos durante semanas.",
-        "También le encantan los animales indios, que le envía un conocido.",
-        "Actualmente tiene un guepardo y un babuino que deambulan libremente por la propiedad y los aldeanos los temen casi tanto como él”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Puedes imaginar que mi hermana Julia y yo teníamos poca alegría en nuestras vidas.",
-        "Ningún sirviente quería quedarse con nosotros, así que teníamos que hacer todo el trabajo de la casa nosotros mismos.",
-        "Tenía sólo treinta años cuando murió y, sin embargo, su cabello ya había empezado a ponerse blanco, como el mío”.“¿Entonces tu hermana está muerta?”preguntó Holmes.“Murió hace dos años y es de su muerte de lo que quiero hablarles.",
-        "Por la forma en que vivíamos, teníamos pocas oportunidades de conocer a personas de nuestra edad y estatus.",
-        "Teníamos una tía, la hermana soltera de mi madre, la señorita Honoria Westphail, que vivía cerca de Harrow.",
-        "A veces se nos permitía visitarla.",
-        "Julia estuvo allí durante la Navidad hace dos años y conoció a un mayor retirado de la Marina con quien se comprometió.",
-        "Mi padrastro se enteró del compromiso cuando ella regresó y no se opuso al matrimonio; pero a las dos semanas de la fecha fijada para la boda ocurrió el terrible acontecimiento que me privó de mi única compañía”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Holmes se había recostado y cerrado los ojos, pero ahora los abrió y miró a nuestro visitante.\"Por favor, sean específicos en los detalles\", dijo.“Eso es fácil para mí”, respondió, “porque cada evento de esa época terrible está grabado en mi memoria.",
-        "La mansión, como dije, es muy antigua y ahora sólo un ala está habitada.",
-        "Los dormitorios de esta ala están en la planta baja y las salas de estar en el ala central.",
-        "De estos dormitorios, el primero es el del Dr. Roylott, el segundo el de mi hermana y el tercero el mío.",
-        "No hay puertas que los conecten, pero todos se abren al mismo pasillo.",
-        "¿Me he dejado claro? \"Perfectamente\", dijo Holmes. “Las ventanas de las tres habitaciones dan al césped.",
-        "Esa noche fatal, el doctor Roylott se fue temprano a su habitación, aunque sabíamos que aún no se había acostado porque mi hermana se quejaba del olor de los fuertes cigarros indios que fumaba.",
-        "Salió de su habitación y vino a la mía, donde pasamos un rato hablando de su próxima boda.",
-        "A las once se levantó para marcharse, pero se detuvo en la puerta y miró hacia atrás. —Dime, Helen —dijo—, ¿alguna vez has oído a alguien silbar por la noche? \"Nunca\", respondí. —¿No podías silbar mientras dormías? 'Por supuesto que no.",
-        "¿Pero por qué?' 'Porque las últimas noches, alrededor de las tres de la madrugada, siempre oía un silbido suave y claro.",
-        "Tengo el sueño ligero y él me despertó.",
-        "No puedo decir de dónde viene: tal vez de la habitación de al lado, tal vez del césped.",
-        "Pensé en preguntarte si lo escuchaste. 'No, no lo hice.",
-        "Deben ser esos gitanos en el bosque.' 'Muy probablemente.",
-        "Y, sin embargo, si fue en el césped, me sorprende que no lo hayas oído. 'Oh, pero duermo más profundamente que tú'. \"Bueno, de todos modos no es tan importante\". Ella me sonrió, cerró la puerta y unos momentos después la oí girar la llave en la cerradura."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“¿Siempre te encierras por la noche?”preguntó Holmes.“Siempre”, respondió ella.\"¿Y por qué?\"“Mencioné que el médico tenía un guepardo y un babuino.",
-        "No nos sentíamos seguros si nuestras puertas no estaban cerradas”.“Muy bien.",
-        "Por favor continúa”.“No pude dormir esa noche.",
-        "Tenía una vaga sensación de que algo malo iba a pasar.",
-        "Mi hermana y yo éramos gemelas y ya sabes lo estrechamente unidos que están los gemelos.",
-        "Fue una noche salvaje.",
-        "Afuera el viento aullaba y la lluvia azotaba las ventanas.",
-        "De repente, en medio del ruido de la tormenta, se escuchó el grito salvaje de una mujer asustada.",
-        "Sabía que era mi hermana.",
-        "Salté de la cama, me puse una bufanda y corrí hacia el pasillo.",
-        "Al abrir la puerta, me pareció escuchar un leve silbido como el que mi hermana había descrito, y unos momentos después un sonido metálico, como si hubiera caído un objeto pesado.",
-        "Mientras caminaba por el pasillo, la puerta de mi hermana estaba abierta y se abrió lentamente.",
-        "La miré con horror, sin saber qué sucedería.",
-        "A la luz de la lámpara del pasillo vi aparecer a mi hermana.",
-        "Su rostro estaba blanco de miedo, sus manos tanteaban en la oscuridad y todo su cuerpo se balanceaba como el de un borracho.",
-        "Corrí hacia ella y la rodeé con mis brazos, pero sus rodillas cedieron y cayó al suelo.",
-        "Se retorció con un dolor terrible y sus extremidades se contrajeron.",
-        "Al principio pensé que no me reconocía, pero cuando me incliné sobre ella de repente gritó: '¡Dios mío!",
-        "¡Helena!",
-        "¡Era la cinta!",
-        "¡La cinta moteada! Comenzó a decir algo más y señaló hacia la habitación del médico, pero otro espasmo se apoderó de ella y ahogó sus palabras.",
-        "Salí corriendo, llamé a mi padrastro y lo encontré saliendo de su habitación en bata.",
-        "Cuando alcanzó a mi hermana, ella estaba inconsciente.",
-        "Le vertió brandy en la garganta y mandó llamar a un médico del pueblo, pero todos los esfuerzos fueron en vano.",
-        "Lentamente se hundió y murió sin recuperar el conocimiento.",
-        "Ese fue el terrible final de mi querida hermana”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"Un momento\", dijo Holmes.“¿Estás seguro de que escuchaste ese silbido y el ruido metálico?",
-        "¿Podrías jurar por ello? “El forense del condado también me preguntó eso”, dijo. \"Tengo la fuerte impresión de haberlo oído y, sin embargo, es posible que me haya equivocado con el ruido de la tormenta y el crujido de una casa vieja\". “¿Estaba vestida tu hermana?”“No, ella estaba usando su camisón.",
-        "En su mano derecha se encontró el cabo carbonizado de una cerilla y en la izquierda una caja de cerillas”. “Esto muestra que ella encendió una luz y estaba mirando a su alrededor cuando sonó la alarma.",
-        "Esto es importante.",
-        "¿A qué conclusión llegó el forense?“Investigó el caso cuidadosamente porque la conducta del Dr. Roylott era bien conocida en el condado, pero no encontró ninguna causa de muerte.",
-        "Mi testimonio demostró que la puerta estaba cerrada con llave desde adentro y las ventanas estaban bloqueadas con contraventanas anticuadas con rejas de hierro y aseguradas todas las noches.",
-        "Las paredes eran sólidas y el suelo fue examinado minuciosamente con el mismo resultado.",
-        "La chimenea es ancha pero está bloqueada por cuatro grandes pernos.",
-        "Por tanto, es seguro que mi hermana estaba completamente sola cuando murió.",
-        "Además, no había signos de violencia en ella”.“¿Qué pasa con el veneno?” \"Los médicos lo examinaron pero no encontraron nada\".“¿Cómo crees que murió tu hermana?” \"Creo que murió de miedo y conmoción, aunque no puedo imaginar qué la asustó\".“¿Había gitanos en la plantación en ese momento?”\"Sí, casi siempre hay algunos allí\".“¿Y qué te pareció tu mención de una cinta, una cinta moteada?”\"A veces pensaba que era la charla descabellada del delirio; a veces que podría referirse a un grupo de personas, tal vez los gitanos de la plantación.",
-        "No sé si los pañuelos de lunares que muchos de ellos llevan en la cabeza sugerían la palabra “moteado”. Holmes negó con la cabeza. \"Esto es algo profundo\", dijo. “Por favor continúa con tu historia”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Han pasado dos años desde entonces y hasta hace poco mi vida era más solitaria que nunca.",
-        "Sin embargo, hace un mes, un querido amigo de muchos años me pidió que me casara con él.",
-        "Su nombre es Percy Armitage, segundo hijo del señor Armitage de Crane Water, cerca de Reading.",
-        "Mi padrastro no tiene nada en contra de la unión y se supone que nos casaremos en primavera.",
-        "Hace dos días comenzaron algunas reparaciones en el ala oeste de la casa y se rompió la pared de mi dormitorio.",
-        "Tuve que mudarme a la habitación donde murió mi hermana y dormir en la misma cama.",
-        "Imagínense mi horror mientras estaba despierto anoche pensando en su terrible destino y de repente escuché el débil silbido que anunció su muerte.",
-        "Salté y encendí la lámpara, pero no se veía nada en la habitación.",
-        "Estaba demasiado conmocionado para volver a la cama, así que me vestí y tan pronto como amaneció bajé las escaleras, alquilé un carrito para perros en el Crown Inn de enfrente y conduje hasta Leatherhead.",
-        "Desde allí vine a Londres esta mañana sólo para verte y pedirte consejo.“Actuaste sabiamente”, dijo Holmes.“¿Pero me has contado todo?”“Sí, todo”.“Señorita Stoner, no lo hizo.",
-        "Estás protegiendo a tu padrastro”.\"¿Por qué, qué quieres decir?\"Holmes le apartó el cordón de la muñeca.",
-        "Había cinco puntos oscuros: las huellas de cuatro dedos y el pulgar.“Te trataron mal”, dijo Holmes.",
-        "La dama se sonrojó profundamente y se cubrió la muñeca herida.\"Es un hombre duro\", dijo.\"Tal vez no conoce su propia fuerza\"."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Hubo un largo silencio.",
-        "Holmes apoyó la barbilla en las manos y miró fijamente el fuego.\"Este es un asunto muy serio\", dijo finalmente.“Hay mil detalles que quiero saber antes de decidir qué hacer.",
-        "Y, sin embargo, no debemos perder ni un minuto.",
-        "Si venimos hoy a Stoke Moran, ¿podemos mirar las habitaciones sin que se entere tu padrastro? “Quiso la suerte que dijera que hoy tenía que ir a la ciudad por un asunto importante.",
-        "Probablemente estará fuera todo el día y no habrá nada que te moleste.",
-        "Ahora tenemos un ama de llaves, pero es vieja y tonta y puedo sacarla de en medio fácilmente”. \"Excelente.",
-        "¿No tiene ninguna objeción a este viaje, Watson?“Ninguna en absoluto”, dije.“Entonces vendremos ambos.",
-        "¿Qué harás tú mismo? “Tengo un par de cosas que hacer ahora que estoy en la ciudad.",
-        "Pero volveré en el tren de las doce, así que estaré allí cuando llegues.“Puedes esperarnos a primera hora de la tarde.",
-        "Tengo algunas pequeñas cosas que hacer yo mismo.",
-        "¿No quieres esperar y desayunar? “No, tengo que irme.",
-        "Mi corazón ya está más ligero ahora que les he contado mis preocupaciones.",
-        "Espero volver a verte esta tarde”. Dejó caer el velo sobre su rostro y salió de la habitación."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"¿Qué opinas de todo esto, Watson?\"-preguntó Holmes cuando se hubo marchado.“Me parece un asunto muy oscuro y siniestro”, respondí.“Lo suficientemente oscuro y siniestro”, dijo.\"Sin embargo, si la dama tiene razón y el piso y las paredes son sólidas y la puerta, la ventana y la chimenea no se pueden usar, entonces su hermana sin duda debe haber estado sola cuando encontró su misterioso final\".\"Entonces, ¿qué pasa con los silbidos en la noche y las extrañas palabras de la mujer moribunda?\"\"No lo sé.\"\"Si combinas la idea de los silbatos nocturnos con la presencia de gitanos que son amigos del Doctor, el hecho de que el Doctor tiene un motivo para impedir el matrimonio de su hijastra, la mención de una cinta moribunda y, finalmente, el hecho de que la señorita Stoner escuchó un tintineo metálico que podría haber sido un cerrojo cayendo, creo que hay buenas razones para cerrar el misterio de esta manera\".“¿Pero qué tuvieron que ver los gitanos con esto?”“No puedo imaginar eso.",
-        "Veo muchas objeciones a tal teoría”.\"Yo también.",
-        "Por eso hoy vamos a Stoke Moran.",
-        "Quiero ver si las objeciones son decisivas o si se pueden explicar”.De repente se detuvo cuando la puerta se abrió y un hombre enorme estaba dentro”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "La ropa del hombre era una mezcla de profesional y campestre.",
-        "Llevaba un sombrero de copa negro, una levita larga y polainas altas y sostenía una fusta en la mano.",
-        "Era tan alto que su sombrero rozaba el travesaño del marco de la puerta y sus anchos hombros lo llenaban.",
-        "Su gran rostro estaba surcado de arrugas, amarillento por el sol y marcado por todas las malas pasiones.",
-        "Sus ojos hundidos e inyectados en sangre y su nariz delgada y afilada le daban la apariencia de un viejo y feroz ave de presa.“¿Quién de ustedes es Holmes?”preguntó.“Ese es mi nombre”, dijo mi amigo en voz baja.\"Pero tienes una ventaja sobre mí\".\"Soy el Dr. Grimesby Roylott de Stoke Moran\".\"Así es, doctor\", dijo Holmes amablemente.\"Por favor, tome asiento\".“No haré nada de eso.",
-        "Mi hijastra estuvo aquí.",
-        "La perseguí.",
-        "¿Qué te dijo ella? \"Hace un poco de frío para la época del año\", dijo Holmes. “¿Qué te dijo ella?”gritó el anciano enojado. \"Escuché que a los azafranes les está yendo bien\", continuó Holmes con calma. \"¡Ja!",
-        "Quiere distraerme -dijo nuestro visitante, dando un paso adelante y agitando su fusta-.¡Te conozco, sinvergüenza!",
-        "He oído hablar de ti antes.",
-        "¡Tú eres Holmes, el entrometido!Mi amigo sonrió.\"¡Holmes, el curioso!\"Su sonrisa se hizo más amplia.“¡Holmes, el burócrata de Scotland Yard!”Holmes se rió entre dientes.\"Su conversación es extremadamente entretenida\", dijo.“Si sales, por favor cierra la puerta porque hay corriente de aire”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Me iré cuando haya dicho lo que tengo que decir.",
-        "No interfieras en mis asuntos.",
-        "Sé que la señorita Stoner estuvo aquí.",
-        "¡La perseguí!",
-        "¡Soy un hombre peligroso con quien meterse!",
-        "Mira aquí”.Dio un paso adelante, agarró el atizador y lo dobló formando una curva con sus enormes manos.\"Asegúrate de mantenerte fuera de mi alcance\", gruñó, arrojando el atizador doblado al fuego y luego saliendo de la habitación.\"Parece una persona muy agradable\", dijo Holmes, riendo.\"No soy tan alto, pero si se hubiera quedado, podría haberle demostrado que mi agarre no es mucho más débil que el suyo\".Mientras hablaba, él Cogió el atizador de acero y lo enderezó con un esfuerzo repentino.“¡Imagínese su audacia al confundirme con la policía criminal oficial!",
-        "Este incidente hace que nuestra investigación sea más interesante y espero que nuestro cliente no sufra por permitir que continúe.",
-        "\"Ahora, Watson, pidamos el desayuno y luego iré a Doctors' Commons para obtener información\"."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Era casi la una cuando Holmes regresó.",
-        "Sostenía una hoja de papel azul cubierta de notas y números.“Vi el testamento de la esposa fallecida”, dijo.“Para entenderlo, tuve que calcular el valor actual de las inversiones mencionadas en él.",
-        "Los ingresos totales, que en el momento de la muerte de la mujer eran poco menos de mil cien libras, ahora son de unas setecientas cincuenta libras, debido a la caída de los precios agrícolas.",
-        "Cada hija, cuando se casa, puede reclamar un ingreso de doscientas cincuenta libras.",
-        "Está claro que si ambas chicas se hubieran casado, a este hombre le habría quedado sólo una pequeña cantidad, e incluso el matrimonio habría reducido considerablemente sus ingresos.",
-        "Mi trabajo matutino no fue en vano porque demuestra que él tiene una razón muy poderosa para impedir el matrimonio.",
-        "Bueno, Watson, esto es demasiado serio para dudar, sobre todo porque el viejo sabe que estamos interesados ​​en sus asuntos.",
-        "Cuando esté listo, llamaremos un taxi y nos dirigiremos a Waterloo.",
-        "Le agradecería que guardara su revólver en su bolsillo.",
-        "Un Eley's No.2 es un excelente argumento para los hombres que pueden doblar atizadores de acero para formar nudos.",
-        "Creo que eso y un cepillo de dientes es todo lo que necesitamos”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "En Waterloo tomamos un tren hasta Leatherhead, donde alquilamos un carruaje en el pub de la estación y viajamos cuatro o cinco millas a través de la hermosa campiña de Surrey.",
-        "Era un día perfecto, con un sol brillante y algunas nubes en el cielo.",
-        "Los árboles y los setos empezaban a echar sus primeros brotes verdes y el aire estaba impregnado del agradable olor a tierra húmeda.",
-        "Para mí fue un extraño contraste entre la dulce promesa de la primavera y la aterradora tarea en la que nos encontrábamos.",
-        "Holmes se sentó al frente con los brazos cruzados, el sombrero calado hasta los ojos y la barbilla apoyada en el pecho, perdido en sus pensamientos.",
-        "De repente me tocó el hombro y señaló hacia los prados.\"¡Mira ahí!\"dijo.",
-        "Un parque con árboles centenarios se elevaba suavemente y se espesaba hasta convertirse en una arboleda en la cima.",
-        "Entre los árboles se alzaban los frontones grises y el alto techo de una mansión muy antigua.“¿Avivar a Morán?”preguntó.\"Sí, señor, esta es la casa del Dr. Grimesby Roylott\", dijo el cochero.\"Hay obras en marcha\", dijo Holmes.“Ahí es donde vamos”.“Ahí está el pueblo”, dijo el cochero, señalando un grupo de tejados a la izquierda.“Pero si quieres llegar a la casa, es más corto subir estas escaleras y el camino de tierra.",
-        "Allí está la señora caminando”.\"Y la dama es la señorita Stoner\", observó Holmes.\"Sí, creo que deberíamos hacer lo que sugieres\".Salimos, pagamos el billete y miramos cómo se alejaba el carruaje.“Pensé que sería mejor”, dijo Holmes mientras subíamos las escaleras, “que pensara que éramos arquitectos o que teníamos algún negocio.",
-        "Eso podría impedirle chismorrear.",
-        "Hola, señorita Stoner.",
-        "Verás, cumplimos nuestra palabra”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Nuestro cliente corrió hacia nosotros con una cara radiante.“Te he estado esperando con tanto anhelo”, gritó, estrechándonos cálidamente la mano.“Todo salió bien.",
-        "El doctor Roylott ha ido a la ciudad y no es probable que regrese antes de la noche. \"Tuvimos el placer de conocer al médico\", dijo Holmes, y describió brevemente lo sucedido.",
-        "La señorita Stoner palideció mientras escuchaba. \"¡Dios mío!\" ella gritó. “Así que me siguió”. \"Eso parece\". “Es tan astuto que nunca sé cuándo estaré a salvo de él.",
-        "¿Qué dirá cuando regrese?“Tiene que tener cuidado porque podría encontrar a alguien más astuto que él pisándole los talones.",
-        "Tienes que encerrarte esta noche.",
-        "Si se vuelve violento, te llevaremos con tu tía en Harrow.",
-        "Ahora necesitamos hacer un buen uso de nuestro tiempo, así que llévanos a las habitaciones que quieres que examinemos”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "El edificio estaba construido con piedra gris cubierta de líquenes, con una sección central alta y dos alas curvas como las garras de un cangrejo.",
-        "Un ala tenía ventanas rotas que estaban tapiadas y el techo se había derrumbado parcialmente.",
-        "La sección del medio era un poco mejor, pero el bloque de la derecha era comparativamente moderno, y las persianas de las ventanas y el humo de las chimeneas demostraban que la familia vivía allí.",
-        "Habían levantado andamios en el hastial y habían roto los ladrillos, pero en ese momento no había trabajadores allí.",
-        "Holmes caminó lentamente por el césped cubierto de maleza, examinando cuidadosamente el exterior de las ventanas.\"Ésta\", dijo, \"¿es la habitación donde solías dormir; la del medio es la de tu hermana y la que está al lado del edificio principal es la habitación del Dr. Roylott?\"\"Precisamente como.",
-        "Pero ahora estoy durmiendo en el medio”.“Debido a las renovaciones, lo entiendo.",
-        "Por cierto, no parece haber ninguna necesidad urgente de reparar este muro a dos aguas”.“No hubo ninguno.",
-        "Creo que fue sólo una excusa para sacarme de mi habitación”.“Ah, eso es revelador.",
-        "Al otro lado de esta ala estrecha se encuentra el pasillo desde el que parten estas tres habitaciones.",
-        "Hay ventanas allí, ¿no? “Sí, pero muy pequeños.",
-        "Demasiado estrecho para que cualquiera pueda pasar”. “Dado que ambos cerraban sus puertas con llave por la noche, no se podía entrar a sus habitaciones desde este lado.",
-        "¿Podrías ir a tu habitación y cerrar las contraventanas?La señorita Stoner así lo hizo y Holmes intentó por todos los medios abrir la tienda desde el exterior, pero sin éxito.",
-        "No había ninguna ranura por la que se pudiera introducir un cuchillo para levantar el pestillo.",
-        "Las bisagras eran de hierro macizo y estaban firmemente incrustadas en la piedra.\"¡Mmm!\" dijo, rascándose la barbilla.“Mi teoría ciertamente tiene algunas dificultades.",
-        "Nadie podría pasar por estas tiendas si estuvieran cerradas.",
-        "Bueno, veremos si el interior nos da alguna pista”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Una pequeña puerta lateral conducía al pasillo encalado desde el que se abrían los tres dormitorios.",
-        "Holmes se negó a examinar la tercera habitación, así que fuimos directamente a la segunda, aquella donde ahora dormía la señorita Stoner y donde había muerto su hermana.",
-        "Era una pequeña y acogedora habitación con techo bajo y una amplia chimenea, como en las antiguas casas de campo.",
-        "Había una cómoda marrón en un rincón, una cama estrecha con colchas blancas en otro y un tocador a la izquierda de la ventana.",
-        "Estos, con dos pequeñas sillas de mimbre y una alfombra cuadrada, formaban todo el mobiliario.",
-        "Los suelos y paneles eran de roble viejo y carcomido, tan descoloridos que podrían proceder del edificio original.",
-        "Holmes acercó una silla a un rincón y se sentó en silencio, moviendo los ojos a su alrededor, captando cada detalle.\"¿A dónde va este cordón de timbre?\"preguntó, señalando un cordón grueso que colgaba al lado de la cama, la borla sobre la almohada.\"Conduce a la habitación del ama de llaves\".\"Parece más nuevo que las otras cosas\".\"Sí, se instaló hace unos años\".“¿Tu hermana lo pidió?”“No, nunca escuché que ella los usara.",
-        "Siempre obtuvimos lo que necesitábamos”.“Me parece innecesario poner allí una campana tan bonita.",
-        "Disculpe un momento mientras reviso el piso”.Se arrojó al suelo con su lupa y gateó rápidamente de un lado a otro, examinando las grietas entre las tablas.",
-        "Luego hizo lo mismo con las paredes paneladas.",
-        "Finalmente se acercó a la cama y se quedó un rato mirándola y la pared.",
-        "Tomó el cordón de la campana en su mano y tiró con fuerza."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"Vaya, es un muñeco\", dijo.\"¿No está sonando?\"“No, ni siquiera está conectado a un cable.",
-        "Esto es muy interesante.",
-        "Puedes ver que está sujeto a un gancho justo encima del pequeño orificio de ventilación”.“¡Qué absurdo!",
-        "Nunca me había dado cuenta de eso antes”.\"¡Muy extraño!\"-murmuró Holmes, tirando del cordón.“Hay uno o dos puntos muy extraños en esta sala.",
-        "¡Qué constructor tan estúpido, por ejemplo, al abrir un conducto de ventilación hacia otra habitación cuando podría haberlo abierto hacia el exterior con el mismo esfuerzo! \"Este respiradero también es nuevo\", dijo la señorita Stoner. \"¿Hecho al mismo tiempo que el cordón de la campana?\" \"Sí, en aquel entonces se hicieron varios pequeños cambios\". “Parece que se han producido cambios muy interesantes: cordones falsos para campanas y rejillas de ventilación que no ventilan.",
-        "Con su permiso, señorita Stoner, ahora miraremos la habitación interior”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "La habitación del doctor Grimesby Roylott era más grande que la de su hijastra, pero estaba amueblada con la misma sencillez.",
-        "Una cama plegable, una pequeña estantería de madera llena de libros -en su mayoría literatura especializada-, una silla al lado de la cama, otra en la pared, una mesa redonda y una gran caja fuerte de hierro eran las piezas principales.",
-        "Holmes caminó lentamente, examinando cada uno con gran interés.“¿Qué hay aquí?”preguntó, tocando la caja fuerte.\"Los documentos comerciales de mi padrastro\".\"¡Oh!",
-        "¿Entonces miraste dentro? “Sólo una vez, hace unos años.",
-        "Recuerdo que estaba lleno de papeles”. “¿No hay ningún gato en él?”\"No.",
-        "¡Qué idea más extraña!\"Bueno, mira esto\".Cogió un pequeño cuenco de leche que estaba encima.“No tenemos gatos.",
-        "Pero hay un guepardo y un babuino”.“¡Ah, sí, por supuesto!",
-        "Un guepardo es un felino grande y, sin embargo, un plato de leche no basta para satisfacerlo.",
-        "Hay un punto que quiero determinar”.Se agachó frente a la silla de madera y examinó el asiento con mucha atención.“Gracias.",
-        "Eso está hecho\", dijo, levantándose y guardando su lupa.\"¡Hola!",
-        "¡Aquí hay algo interesante! El objeto que llamó su atención fue una pequeña correa de perro que colgaba de la esquina de la cama.",
-        "El cordón se enrollaba sobre sí mismo y se ataba para formar un lazo."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“¿Qué opinas de eso, Watson?”preguntó.“Es un látigo ordinario.",
-        "Pero no sé por qué debería estar atada”.“No es tan común, ¿verdad?",
-        "Desgraciadamente, es un mundo malvado, y cuando un hombre inteligente se dedica al crimen, eso es lo peor.",
-        "Creo que ya he visto suficiente, señorita Stoner, y con su permiso saldremos al césped. Nunca había visto el rostro de mi amigo tan serio ni su frente tan oscura como cuando salimos del lugar del examen.",
-        "Caminamos arriba y abajo por el césped varias veces, ni la señorita Stoner ni yo queríamos interrumpir sus pensamientos hasta que hablara. \"Es muy importante, señorita Stoner\", dijo finalmente, \"que siga mis consejos cuidadosamente\". \"Ciertamente lo haré\". “Tu vida podría depender de ello”. “Te aseguro que estoy en tus manos”. \"Primero, mi amigo y yo tenemos que pasar la noche en tu habitación\". La señorita Stoner y yo lo miramos asombrados. “Sí, tiene que ser así.",
-        "Déjame explicarte.",
-        "¿Es esa la posada del pueblo de allí?“Sí, esa es la Corona”.\"Muy bien.",
-        "¿Puedes ver tus ventanas desde allí? \"Ciertamente.\" “Tienes que quedarte en tu habitación y fingir que te duele la cabeza cuando regresa tu padrastro.",
-        "Luego, cuando escuches que se va a la cama, debes abrir las contraventanas, abrir el pestillo, colocar tu lámpara en la ventana como señal y luego, silenciosamente, llevar todo lo que necesitas a la habitación que solías usar.",
-        "No tengo ninguna duda de que podrás pasar una noche allí a pesar de las reparaciones”. \"Oh, sí, fácil\". “Déjanos el resto a nosotros”. “¿Pero qué vas a hacer?”\"Pasaremos la noche en tu habitación e investigaremos la causa del ruido que te molestó\". \"Creo, señor Holmes, que ya ha tomado una decisión\", dijo la señorita Stoner, tocándole la manga. “Tal vez sí”. “Entonces, por el amor de Dios, dime qué causó la muerte de mi hermana”. \"Preferiría tener pruebas más claras antes de hablar\". “Al menos dime si mi pensamiento es correcto y si ella murió de terror”. “No, no lo creo.",
-        "Creo que hubo una causa más tangible.",
-        "Ahora, señorita Stoner, debemos dejarla.",
-        "Si el Dr. Roylott regresa y nos ve, nuestro viaje sería en vano.",
-        "Adiós, y sed valientes, que si hacéis lo que os he dicho, podéis estar seguros de que pronto ahuyentaremos los peligros que os acechan."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Sherlock Holmes y yo no tuvimos dificultades para alquilar un dormitorio y una sala de estar en el Crown Inn.",
-        "Estaban en el último piso y desde nuestra ventana podíamos ver la puerta y el ala habitada de Stoke Moran.",
-        "Al anochecer vimos pasar al Dr. Grimesby Roylott, su enorme figura destacando sobre la pequeña figura del niño que lo conducía.",
-        "El niño luchó por abrir la pesada puerta de hierro, escuchamos el rugido ronco del médico y lo vimos agitar los puños hacia el niño.",
-        "El carruaje avanzó y unos minutos más tarde vimos una luz entre los árboles mientras se encendía una lámpara en una de las salas de estar.“Sabes, Watson”, dijo Holmes mientras nos sentábamos en la oscuridad de la noche, “tengo algunas reservas acerca de llevarte conmigo esta noche.",
-        "Hay algún peligro”.“¿Puedo ser útil?”“Su presencia podría ser muy valiosa”.\"Entonces definitivamente iré\".\"Eso es amable de tu parte\".“Estás hablando de peligro.",
-        "Obviamente viste más en estas habitaciones que yo”.“No, pero creo que pude haber inferido más de ello.",
-        "Supongo que has visto todo lo que yo he visto”.\"No vi nada notable excepto el cordón de la campana, y no puedo adivinar su propósito\".“¿También viste el conducto de ventilación?”“Sí, pero no creo que sea inusual tener una pequeña abertura entre dos habitaciones.",
-        "Era tan pequeño que una rata apenas podría atravesarlo”.\"Sabía que encontraríamos un conducto de ventilación antes de llegar a Stoke Moran\".\"¡Mi querido Holmes!\"\"Oh sí.",
-        "¿Recuerdas que dijo que su hermana podría ser el cigarro del Dr. Smell Roylott?",
-        "Esto inmediatamente sugirió que debía haber una conexión entre los dos espacios.",
-        "Sólo podría ser pequeño, de lo contrario se habría notado durante el examen.",
-        "Llegué a la conclusión de que era un conducto de ventilación”.“¿Pero qué podría tener de perjudicial?”“Bueno, hay al menos una extraña coincidencia de fechas.",
-        "Se hace un conducto de ventilación, se cuelga una cuerda y una señora que duerme en esa cama muere.",
-        "¿No te parece extraño? \"No veo ninguna conexión todavía\". \"¿Notaste algo especial en la cama?\" \"No.\" “Estaba pegado al suelo.",
-        "¿Has visto alguna vez una cama atornillada?\"No puedo decir que lo tengo\".“La señora no podía mover su cama.",
-        "Siempre tenía que estar en la misma posición en relación con la ventilación y el cable, o como nunca fue pensado para tirar de una campana, lo llamamos cable”.“Holmes”, grité, “creo que estoy empezando a ver a dónde te refieres.",
-        "Llegamos justo a tiempo para evitar un crimen sutil y terrible”.“Lo suficientemente sutil y terrible.",
-        "Si un médico hace mal, es el peor de todos los criminales.",
-        "Tiene valor y conocimiento.",
-        "Palmer y Pritchard estaban entre los mejores en su campo.",
-        "Este hombre va más allá, pero creo, Watson, que podemos ir aún más profundo.",
-        "Pero ya tendremos suficientes horrores antes de que termine la noche; “Fumamos una pipa tranquilamente y pensemos en algo más agradable durante unas horas”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Como a las nueve la luz entre los árboles se apagó y todo quedó a oscuras hacia la mansión.",
-        "Pasaron lentamente dos horas y entonces, exactamente a las once, una única luz brillante brilló frente a nosotros.\"Esa es nuestra señal\", dijo Holmes, levantándose de un salto.\"Viene de la ventana del medio\".Cuando salimos, le dijo al posadero que íbamos a hacer una visita tardía a la casa de un amigo y que podríamos pasar la noche allí.",
-        "Un momento después estábamos en la calle oscura, un viento frío soplaba en nuestras caras y una luz amarilla brillando en la oscuridad delante de nosotros para guiarnos.",
-        "Fue fácil llegar al sitio porque había huecos sin reparar en el antiguo muro.",
-        "Nos abrimos paso entre los árboles, llegamos al césped, lo cruzamos y estábamos a punto de entrar por la ventana cuando, desde un grupo de laureles, una criatura fea y distorsionada saltó al césped, se dobló y luego corrió rápidamente a través del césped hacia la oscuridad.\"¡Dios mío!\"Susurré.\"¿Viste eso?\"Holmes estaba tan sorprendido como yo.",
-        "Su mano agarró mi muñeca, luego se rió suavemente y me susurró al oído.\"Es una casa agradable\", murmuró.\"Ese es el babuino\".Me había olvidado de las extrañas mascotas del Doctor.",
-        "También había un guepardo;tal vez en cualquier momento saltaría sobre nuestros hombros.",
-        "Me sentí más cómodo de pie en el dormitorio después de seguir el ejemplo de Holmes y quitarme los zapatos.",
-        "Holmes cerró silenciosamente las contraventanas, colocó la lámpara sobre la mesa y miró a su alrededor.",
-        "Todo estaba tal y como lo habíamos visto durante el día.",
-        "Luego se acercó sigilosamente a mí y me susurró en voz tan baja que apenas pude oírlo: \"El más mínimo ruido arruinaría nuestros planes\".Asentí para demostrar que entendía.“Tenemos que sentarnos sin luces.",
-        "Lo vería a través del conducto de ventilación”.Asentí de nuevo.\"No te duermas; tu vida puede depender de ello.",
-        "Tenga su pistola lista en caso de que la necesitemos.",
-        "Yo me sentaré en la cama y tú en la silla”.Saqué mi revólver y lo puse sobre la mesa.",
-        "Holmes había traído consigo un palo largo y delgado que colocó sobre la cama.",
-        "Al lado colocó las cerillas y una vela.",
-        "Luego apagó la lámpara y nos quedamos a oscuras."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Nunca olvidaré ese terrible guardia.",
-        "No podía oír ningún sonido, ni siquiera una respiración, y sin embargo sabía que mi compañero estaba sentado a unos pasos de distancia, con los ojos abiertos, tan tenso como yo.",
-        "Las contraventanas no dejaban entrar luz y esperamos en completa oscuridad.",
-        "Desde afuera llegaba ocasionalmente el canto de un pájaro nocturno, y una vez, justo afuera de nuestra ventana, un aullido largo y prolongado, parecido al de un gato, que nos dijo que el guepardo estaba efectivamente libre.",
-        "A lo lejos se oía el sonido grave del reloj de la torre de la iglesia, que daba cada cuarto de hora.",
-        "¡Qué largos me parecieron esos cuartos de hora!",
-        "Dieron las doce, la una, las dos y las tres, y todavía estábamos sentados esperando lo que pudiera pasar.",
-        "De repente se produjo un breve destello de luz en el conducto de ventilación, que desapareció inmediatamente, pero fue seguido por un fuerte olor a aceite quemado y metal caliente.",
-        "Alguien en la habitación de al lado había encendido una lámpara oscura.",
-        "Escuché un suave movimiento y luego todo quedó en silencio, aunque el olor se hizo más fuerte.",
-        "Me quedé escuchando atentamente durante media hora.",
-        "Entonces, de repente, se escuchó otro sonido: un silbido muy silencioso, como el vapor que se escapa de una tetera.",
-        "Tan pronto como lo oímos, Holmes saltó de la cama, encendió una cerilla y golpeó furiosamente el cordón del timbre con su bastón.\"¿Lo ves, Watson?\"gritó.“¿Lo ves?”Pero no vi nada.",
-        "En el momento en que Holmes encendió la lámpara escuché un silbido bajo y claro, pero el repentino resplandor en mis ojos cansados ​​hizo imposible ver qué estaba golpeando.",
-        "Sin embargo, pude ver que su rostro estaba mortalmente pálido y lleno de horror y disgusto.",
-        "Había dejado de latir y estaba mirando el conducto de ventilación cuando de repente el grito más terrible que jamás haya oído rompió el silencio de la noche.",
-        "Se hizo más y más fuerte: un grito ronco de dolor, miedo e ira, todo al mismo tiempo.",
-        "Se dice que en el pueblo e incluso en la lejana rectoría este grito despertó a la gente de sus camas.",
-        "Se nos heló la sangre y me quedé allí mirando a Holmes hasta que los últimos ecos se desvanecieron.“¿Qué podría significar esto?”Jadeé.\"Significa que todo ha terminado\", respondió Holmes.“Y tal vez, considerando todo, sea lo mejor.",
-        "Toma tu arma e iremos a la habitación del Dr. Roylott”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Con expresión seria, encendió la lámpara y nos condujo por el pasillo.",
-        "Tocó la puerta dos veces sin recibir respuesta.",
-        "Luego giró la manija y entró.",
-        "Lo seguí, revólver en mano.",
-        "Surgió una visión extraña.",
-        "Sobre la mesa había una lámpara oscura con la corredera entreabierta, el haz de luz incidía sobre la caja fuerte de hierro cuya puerta estaba abierta.",
-        "Junto a él, en una silla de madera, estaba sentado el doctor Grimesby Roylott, vestido con una larga bata gris, mostrando los tobillos desnudos y calzando unas zapatillas turcas rojas con la parte trasera abierta.",
-        "En su regazo yacía el palo corto con la cuerda larga que habíamos notado durante el día.",
-        "Tenía la barbilla levantada y sus ojos miraban fijamente la esquina del techo.",
-        "Alrededor de su frente había una extraña banda amarilla con manchas marrones, aparentemente atada fuertemente alrededor de su cabeza.",
-        "Cuando entramos no hizo ningún ruido ni movimiento.“¡La cinta!",
-        "¡La banda moteada! -susurró Holmes-.",
-        "Di un paso adelante.",
-        "Inmediatamente su extraño tocado comenzó a moverse, y de su cabello surgió una repugnante serpiente con una cabeza ancha en forma de diamante y un cuello hinchado. \"¡Es una cobra de pantano!\" -gritó Holmes-. “La serpiente más mortífera de la India.",
-        "Murió a los diez segundos de haber sido mordido.",
-        "En realidad, la violencia recae sobre los violentos, y el intrigante cae en el hoyo que cava para los demás.",
-        "\"Llevemos a este animal a su escondite y luego podremos llevar a la señorita Stoner a un lugar seguro y contarle a la policía del condado lo que pasó\"."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Mientras hablaba, rápidamente sacó la correa del perro del regazo del muerto, echó la soga alrededor del cuello del reptil, lo sacó de su lugar y, sosteniéndolo con el brazo extendido, lo arrojó dentro de la caja fuerte de hierro, que cerró con llave.",
-        "Estos son los hechos reales sobre la muerte del Dr. Grimesby Roylott.",
-        "No es necesario prolongar una historia ya larga describiendo cómo le dimos la noticia a la niña asustada, cómo la llevamos en el tren de la mañana a su tía en Harrow, o cómo el lento proceso de la investigación oficial concluyó que el médico encontró su destino jugando descuidadamente con una mascota peligrosa.",
-        "Lo poco que todavía me quedaba por aprender, me lo dijo Holmes en nuestro viaje de regreso al día siguiente."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“He llegado”, dijo, “a una conclusión totalmente equivocada, lo que demuestra, mi querido Watson, lo peligroso que es sacar conclusiones a partir de datos insuficientes.",
-        "La presencia de los gitanos y la palabra \"banda\", que seguramente la pobre chica utilizó para describir lo que vio a la luz de su partido, fueron suficientes para llevarme por el camino equivocado.",
-        "Sólo puedo decir que inmediatamente reconsideré mi posición cuando quedó claro que cualquier cosa que amenazara al ocupante de la habitación no podía venir ni de la ventana ni de la puerta.",
-        "Mi atención, como ya les dije, se centró en el respiradero y el cordón del timbre.",
-        "El descubrimiento de que la cuerda era un muñeco y la cama estaba atada al suelo inmediatamente me hizo sospechar que la cuerda era un puente para que algo pasara por el agujero y llegara a la cama.",
-        "Se me ocurrió la idea de una serpiente y cuando la combiné con mi conocimiento de que el médico tenía animales de la India, sentí que estaba en el camino correcto.",
-        "La idea de utilizar un veneno que no pudiera detectarse mediante ninguna prueba química se le ocurriría a un hombre inteligente y despiadado con experiencia oriental.",
-        "La velocidad con la que actúa dicho veneno también sería una ventaja.",
-        "Haría falta un patólogo forense muy astuto para darse cuenta de los dos pequeños pinchazos oscuros que dejarían los dientes de la serpiente.",
-        "Luego pensé en el silbato.",
-        "Por supuesto, tuvo que llamar a la serpiente antes de que la luz del día se la mostrara a la víctima.",
-        "Probablemente la había entrenado para regresar cuando fuera necesario con la leche que vimos.",
-        "La enviaría a través del respiradero en el momento que él eligiera, con la seguridad de saber que ella se arrastraría por la línea hasta la cama.",
-        "Puede o no morder al residente;tal vez se escaparía todas las noches durante una semana;pero tarde o temprano se convertiría en víctima”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Había llegado a estas conclusiones antes de entrar a su habitación.",
-        "El examen de su silla me mostró que estaba de pie sobre ella, lo cual era necesario para llegar al conducto de ventilación.",
-        "La vista de la caja fuerte, el cuenco de leche y el látigo atado con un lazo finalmente disipó todas las dudas.",
-        "El ruido metálico que escuchó la señorita Stoner fue claramente causado por su padrastro cerrando rápidamente la caja fuerte que contenía a su terrible animal.",
-        "Una vez que me di cuenta, ya sabes qué pasos tomé para demostrarlo.",
-        "Escuché al animal silbar, como estoy seguro que tú también, e inmediatamente encendí la luz y lo ataqué”.\"Con el resultado de que lo empujaste hacia atrás a través del conducto de ventilación\", dije.“Y que cayó sobre su amo del otro lado”, respondió.“Unos cuantos golpes de mi bastón lo golpearon y le irritaron tanto que atacó a la primera persona que vio.",
-        "De esta manera soy indirectamente responsable de la muerte del Dr. Grimesby Roylott y no puedo decir que eso pese mucho en mi conciencia”."
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "image",
+          "contentDescription": "La imagen muestra a Sherlock Holmes de perfil con una pipa, junto a él hay una serpiente de color amarillo anaranjado con manchas negras sobre un fondo blanco.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Al revisar mis notas de los muchos casos que he investigado con mi amigo Sherlock Holmes durante los últimos ocho años, descubrí que algunos eran trágicos, otros cómicos y muchos simplemente extraños, pero ninguno era ordinario.",
+            "Holmes prefería investigar cosas inusuales o incluso fantásticas.",
+            "De todos estos casos, ninguno fue más inusual que el que involucró a la antigua familia Roylott de Stoke Moran en Surrey.",
+            "Los hechos tuvieron lugar a principios del período en que vivíamos juntos como solteros en Baker Street.",
+            "Quizás hubiera escrito sobre ello antes, pero prometí mantenerlo en secreto.",
+            "Esa promesa terminó el mes pasado cuando la señora involucrada murió inesperadamente.",
+            "Sobre la muerte del Dr. Grimesby Roylott se han difundido extraños rumores que hacen que la historia parezca peor de lo que era.",
+            "Por eso creo que es correcto informar los hechos ahora."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Eran principios de abril de 1883 cuando me desperté una mañana y vi a Sherlock Holmes de pie junto a mi cama, ya completamente vestido.",
+            "Holmes normalmente se levantaba tarde, así que parpadeé sorprendida y quizás un poco molesta, ya que mantenía un horario establecido.“Lamento despertarlo, Watson”, dijo, “pero despertaremos a todos esta mañana.",
+            "La señora Hudson me despertó y ahora te estoy despertando a ti”.\"¿Qué pasa?\"Pregunté.“¿Un incendio?”“No”, respondió, “un cliente.",
+            "Ha venido una señorita muy emocionada e insiste en hablarme.",
+            "Ella está esperando en la sala de estar.",
+            "Si una mujer joven deambula por Londres a estas horas y despierta a la gente, debe ser algo importante.",
+            "Si el caso es interesante, sé que querrás seguir adelante desde el principio.",
+            "Por eso pensé que debería darte la oportunidad”.“Mi querido amigo, no me lo perdería por nada del mundo”, respondí.",
+            "Disfruté siguiendo a Holmes en sus investigaciones y admiré sus rápidas conclusiones, que parecían inspiración pero siempre lógicas.",
+            "Me vestí rápidamente y bajé a la sala con él."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Una dama vestida de negro con un tupido velo estaba sentada junto a la ventana.",
+            "Ella se puso de pie cuando entramos.\"Buenos días, señora\", dijo Holmes alegremente.“Mi nombre es Sherlock Holmes.",
+            "Este es mi buen amigo y colega, el Dr. Watson.",
+            "Puedes hablar con tanta libertad ante él como ante mí.",
+            "Me alegra que la señora Hudson encendiera el fuego.",
+            "Por favor, acércate y te traeré una taza de café caliente porque veo que estás temblando”.\"No es el frío lo que me hace temblar\", respondió en voz baja mientras se acercaba.\"¿Y entonces qué?\"“Es miedo, señor Holmes.",
+            "Es horror”.Ella se levantó el velo.",
+            "Su rostro estaba hundido y gris, con ojos inquietos como los de un animal perseguido.",
+            "Parecía tener unos treinta años, pero su cabello ya estaba veteado de canas y su expresión era cansada y exhausta.",
+            "Holmes la miró brevemente con una de sus amplias miradas.",
+            "Habló en voz baja y le dio unas palmaditas en el brazo.“No se puede tener miedo”, dijo.“Estoy seguro de que solucionaremos las cosas pronto.",
+            "Veo que viniste en tren esta mañana”.“¿Entonces me conoces?”preguntó en estado de shock.“No, pero veo la segunda mitad de un billete de regreso en la palma de tu guante izquierdo.",
+            "Debió haber salido temprano y todavía tuvo que caminar mucho en un carrito de perros por caminos embarrados antes de llegar a la estación”.La señora saltó y miró fijamente a mi amiga.",
+            "Holmes sonrió.“No es ningún secreto, señora”, dijo.“La manga izquierda de tu abrigo tiene siete salpicaduras frescas de barro.",
+            "Sólo un cochecito para perros arroja semejante barro y sólo si estás sentado al lado izquierdo del conductor”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"Cualesquiera que sean sus razones, tiene toda la razón\", dijo.“Salí antes de las seis, llegué a Leatherhead a las veinte y tomé el primer tren a Waterloo.",
+            "Señor, no puedo soportar más esta carga.",
+            "Me volveré loco si continúa.",
+            "No tengo a nadie a quien acudir, nadie excepto una persona que se preocupa por mí, y es poco lo que él puede hacer.",
+            "He oído hablar de usted, Sr. Holmes.",
+            "La señora Farintosh, a quien usted ayudó una vez, me dio su dirección.",
+            "Oh señor, ¿cree que podría ayudarme a mí también y traer algo de luz a la oscuridad que me rodea?",
+            "No puedo pagarte en este momento, pero en un mes o seis semanas me casaré y tendré mis propios ingresos, y entonces me encontrarás agradecido”.Holmes abrió un pequeño libro de casos de su escritorio y miró dentro.\"Farintosh\", dijo.“Ah sí, recuerdo el caso; se trataba de una tiara de ópalo.",
+            "Eso fue antes de su época, Watson.",
+            "Lo único que puedo decir, señora, es que dedicaré a su caso la misma atención que al de su amiga.",
+            "No trabajo por dinero; pero puedes cubrir los gastos en los que incurro si te conviene.",
+            "Ahora díganos cualquier cosa que pueda ayudarnos a formarnos una opinión”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"¡Oh!\"ella dijo.“Mis temores son vagos y mis sospechas se basan en pequeñas cosas que a otros podrían parecer triviales.",
+            "Incluso la persona de la que tengo derecho a esperar ayuda y consejo trata lo que digo como la imaginación de una mujer nerviosa.",
+            "No lo dice, pero lo noto en sus respuestas tranquilizadoras y en su mirada desviada.",
+            "Pero he oído que se puede ver profundamente la maldad del corazón humano.",
+            "Quizás puedas aconsejarme cómo vivir entre los peligros que me rodean”. \"Estoy escuchando\", dijo Holmes.“Mi nombre es Helen Stoner.",
+            "Vivo con mi padrastro, el último superviviente de una de las familias sajonas más antiguas de Inglaterra, los Roylott de Stoke Moran, en la frontera occidental de Surrey. Holmes asintió. \"Estoy familiarizado con el nombre\", dijo. “La familia fue una vez una de las más ricas de Inglaterra.",
+            "La finca se extendía hasta Berkshire en el norte y Hampshire en el oeste.",
+            "Sin embargo, en el siglo pasado, cuatro herederos fueron derrochadores y disolutos, y un jugador completó la ruina de la familia durante el reinado.",
+            "No quedó nada excepto unos pocos acres de tierra y una casa de doscientos años de antigüedad profundamente endeudada.",
+            "El último propietario vivió allí una vida miserable.",
+            "Su único hijo, mi padrastro, se dio cuenta de que tenía que cambiar su rumbo en la vida.",
+            "Pidió dinero prestado a un pariente, estudió medicina y se fue a Calcuta.",
+            "Allí construyó una gran práctica a través de sus habilidades y carácter.",
+            "En un ataque de ira por los robos en su casa, mató a golpes a su mayordomo local y escapó por poco de la sentencia de muerte.",
+            "Cumplió una larga sentencia de prisión y luego regresó a Inglaterra amargado y decepcionado”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Cuando el Dr. Roylott estuvo en la India, se casó con mi madre, la señora Stoner, la joven viuda del Mayor General Stoner de la Artillería de Bengala.",
+            "Mi hermana Julia y yo éramos gemelas y solo teníamos dos años en ese momento.",
+            "Mi madre tenía una suma considerable de dinero (no menos de mil libras al año) y dejó estos ingresos al Dr. Roylott, mientras viviéramos con él, con la condición de que cada uno de nosotros recibiera una pensión anual si nos casábamos.",
+            "Poco después de regresar a Inglaterra, mi madre murió en un accidente de tren cerca de Crewe hace ocho años.",
+            "Luego, el Dr. Roylott dejó de ejercer la medicina en Londres y nos llevó a vivir a la antigua casa familiar en Stoke Moran.",
+            "El dinero que me dejó mi madre era suficiente para nuestras necesidades y no parecía haber obstáculo alguno para nuestra felicidad”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Pero por esa época nuestro padrastro cambió terriblemente.",
+            "En lugar de hacerse amigo de los vecinos, que inicialmente estaban felices de ver a un Roylott de regreso en la antigua casa, se encerró y rara vez salía, y solo para discutir violentamente con cualquiera con quien se cruzaba.",
+            "El mal genio, casi la locura, es algo que viene de familia, y en mi padrastro esto se vio agravado por su larga estancia en el trópico.",
+            "Se produjeron una serie de peleas vergonzosas; dos de los cuales terminaron en los tribunales.",
+            "Con el tiempo se convirtió en el terror del pueblo y la gente huyó cuando lo vieron venir porque es un hombre muy fuerte y no puede controlarse cuando está enojado.",
+            "La semana pasada arrojó al herrero por una barandilla a un arroyo, y la única forma de evitar otro escándalo fue pagar todo el dinero que pude reunir.",
+            "No tiene más amigos que los gitanos errantes.",
+            "Les deja acampar en nuestras tierras y, a veces, camina con ellos durante semanas.",
+            "También le encantan los animales indios, que le envía un conocido.",
+            "Actualmente tiene un guepardo y un babuino que deambulan libremente por la propiedad y los aldeanos los temen casi tanto como él”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Puedes imaginar que mi hermana Julia y yo teníamos poca alegría en nuestras vidas.",
+            "Ningún sirviente quería quedarse con nosotros, así que teníamos que hacer todo el trabajo de la casa nosotros mismos.",
+            "Tenía sólo treinta años cuando murió y, sin embargo, su cabello ya había empezado a ponerse blanco, como el mío”.“¿Entonces tu hermana está muerta?”preguntó Holmes.“Murió hace dos años y es de su muerte de lo que quiero hablarles.",
+            "Por la forma en que vivíamos, teníamos pocas oportunidades de conocer a personas de nuestra edad y estatus.",
+            "Teníamos una tía, la hermana soltera de mi madre, la señorita Honoria Westphail, que vivía cerca de Harrow.",
+            "A veces se nos permitía visitarla.",
+            "Julia estuvo allí durante la Navidad hace dos años y conoció a un mayor retirado de la Marina con quien se comprometió.",
+            "Mi padrastro se enteró del compromiso cuando ella regresó y no se opuso al matrimonio; pero a las dos semanas de la fecha fijada para la boda ocurrió el terrible acontecimiento que me privó de mi única compañía”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Holmes se había recostado y cerrado los ojos, pero ahora los abrió y miró a nuestro visitante.\"Por favor, sean específicos en los detalles\", dijo.“Eso es fácil para mí”, respondió, “porque cada evento de esa época terrible está grabado en mi memoria.",
+            "La mansión, como dije, es muy antigua y ahora sólo un ala está habitada.",
+            "Los dormitorios de esta ala están en la planta baja y las salas de estar en el ala central.",
+            "De estos dormitorios, el primero es el del Dr. Roylott, el segundo el de mi hermana y el tercero el mío.",
+            "No hay puertas que los conecten, pero todos se abren al mismo pasillo.",
+            "¿Me he dejado claro? \"Perfectamente\", dijo Holmes. “Las ventanas de las tres habitaciones dan al césped.",
+            "Esa noche fatal, el doctor Roylott se fue temprano a su habitación, aunque sabíamos que aún no se había acostado porque mi hermana se quejaba del olor de los fuertes cigarros indios que fumaba.",
+            "Salió de su habitación y vino a la mía, donde pasamos un rato hablando de su próxima boda.",
+            "A las once se levantó para marcharse, pero se detuvo en la puerta y miró hacia atrás. —Dime, Helen —dijo—, ¿alguna vez has oído a alguien silbar por la noche? \"Nunca\", respondí. —¿No podías silbar mientras dormías? 'Por supuesto que no.",
+            "¿Pero por qué?' 'Porque las últimas noches, alrededor de las tres de la madrugada, siempre oía un silbido suave y claro.",
+            "Tengo el sueño ligero y él me despertó.",
+            "No puedo decir de dónde viene: tal vez de la habitación de al lado, tal vez del césped.",
+            "Pensé en preguntarte si lo escuchaste. 'No, no lo hice.",
+            "Deben ser esos gitanos en el bosque.' 'Muy probablemente.",
+            "Y, sin embargo, si fue en el césped, me sorprende que no lo hayas oído. 'Oh, pero duermo más profundamente que tú'. \"Bueno, de todos modos no es tan importante\". Ella me sonrió, cerró la puerta y unos momentos después la oí girar la llave en la cerradura."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“¿Siempre te encierras por la noche?”preguntó Holmes.“Siempre”, respondió ella.\"¿Y por qué?\"“Mencioné que el médico tenía un guepardo y un babuino.",
+            "No nos sentíamos seguros si nuestras puertas no estaban cerradas”.“Muy bien.",
+            "Por favor continúa”.“No pude dormir esa noche.",
+            "Tenía una vaga sensación de que algo malo iba a pasar.",
+            "Mi hermana y yo éramos gemelas y ya sabes lo estrechamente unidos que están los gemelos.",
+            "Fue una noche salvaje.",
+            "Afuera el viento aullaba y la lluvia azotaba las ventanas.",
+            "De repente, en medio del ruido de la tormenta, se escuchó el grito salvaje de una mujer asustada.",
+            "Sabía que era mi hermana.",
+            "Salté de la cama, me puse una bufanda y corrí hacia el pasillo.",
+            "Al abrir la puerta, me pareció escuchar un leve silbido como el que mi hermana había descrito, y unos momentos después un sonido metálico, como si hubiera caído un objeto pesado.",
+            "Mientras caminaba por el pasillo, la puerta de mi hermana estaba abierta y se abrió lentamente.",
+            "La miré con horror, sin saber qué sucedería.",
+            "A la luz de la lámpara del pasillo vi aparecer a mi hermana.",
+            "Su rostro estaba blanco de miedo, sus manos tanteaban en la oscuridad y todo su cuerpo se balanceaba como el de un borracho.",
+            "Corrí hacia ella y la rodeé con mis brazos, pero sus rodillas cedieron y cayó al suelo.",
+            "Se retorció con un dolor terrible y sus extremidades se contrajeron.",
+            "Al principio pensé que no me reconocía, pero cuando me incliné sobre ella de repente gritó: '¡Dios mío!",
+            "¡Helena!",
+            "¡Era la cinta!",
+            "¡La cinta moteada! Comenzó a decir algo más y señaló hacia la habitación del médico, pero otro espasmo se apoderó de ella y ahogó sus palabras.",
+            "Salí corriendo, llamé a mi padrastro y lo encontré saliendo de su habitación en bata.",
+            "Cuando alcanzó a mi hermana, ella estaba inconsciente.",
+            "Le vertió brandy en la garganta y mandó llamar a un médico del pueblo, pero todos los esfuerzos fueron en vano.",
+            "Lentamente se hundió y murió sin recuperar el conocimiento.",
+            "Ese fue el terrible final de mi querida hermana”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"Un momento\", dijo Holmes.“¿Estás seguro de que escuchaste ese silbido y el ruido metálico?",
+            "¿Podrías jurar por ello? “El forense del condado también me preguntó eso”, dijo. \"Tengo la fuerte impresión de haberlo oído y, sin embargo, es posible que me haya equivocado con el ruido de la tormenta y el crujido de una casa vieja\". “¿Estaba vestida tu hermana?”“No, ella estaba usando su camisón.",
+            "En su mano derecha se encontró el cabo carbonizado de una cerilla y en la izquierda una caja de cerillas”. “Esto muestra que ella encendió una luz y estaba mirando a su alrededor cuando sonó la alarma.",
+            "Esto es importante.",
+            "¿A qué conclusión llegó el forense?“Investigó el caso cuidadosamente porque la conducta del Dr. Roylott era bien conocida en el condado, pero no encontró ninguna causa de muerte.",
+            "Mi testimonio demostró que la puerta estaba cerrada con llave desde adentro y las ventanas estaban bloqueadas con contraventanas anticuadas con rejas de hierro y aseguradas todas las noches.",
+            "Las paredes eran sólidas y el suelo fue examinado minuciosamente con el mismo resultado.",
+            "La chimenea es ancha pero está bloqueada por cuatro grandes pernos.",
+            "Por tanto, es seguro que mi hermana estaba completamente sola cuando murió.",
+            "Además, no había signos de violencia en ella”.“¿Qué pasa con el veneno?” \"Los médicos lo examinaron pero no encontraron nada\".“¿Cómo crees que murió tu hermana?” \"Creo que murió de miedo y conmoción, aunque no puedo imaginar qué la asustó\".“¿Había gitanos en la plantación en ese momento?”\"Sí, casi siempre hay algunos allí\".“¿Y qué te pareció tu mención de una cinta, una cinta moteada?”\"A veces pensaba que era la charla descabellada del delirio; a veces que podría referirse a un grupo de personas, tal vez los gitanos de la plantación.",
+            "No sé si los pañuelos de lunares que muchos de ellos llevan en la cabeza sugerían la palabra “moteado”. Holmes negó con la cabeza. \"Esto es algo profundo\", dijo. “Por favor continúa con tu historia”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Han pasado dos años desde entonces y hasta hace poco mi vida era más solitaria que nunca.",
+            "Sin embargo, hace un mes, un querido amigo de muchos años me pidió que me casara con él.",
+            "Su nombre es Percy Armitage, segundo hijo del señor Armitage de Crane Water, cerca de Reading.",
+            "Mi padrastro no tiene nada en contra de la unión y se supone que nos casaremos en primavera.",
+            "Hace dos días comenzaron algunas reparaciones en el ala oeste de la casa y se rompió la pared de mi dormitorio.",
+            "Tuve que mudarme a la habitación donde murió mi hermana y dormir en la misma cama.",
+            "Imagínense mi horror mientras estaba despierto anoche pensando en su terrible destino y de repente escuché el débil silbido que anunció su muerte.",
+            "Salté y encendí la lámpara, pero no se veía nada en la habitación.",
+            "Estaba demasiado conmocionado para volver a la cama, así que me vestí y tan pronto como amaneció bajé las escaleras, alquilé un carrito para perros en el Crown Inn de enfrente y conduje hasta Leatherhead.",
+            "Desde allí vine a Londres esta mañana sólo para verte y pedirte consejo.“Actuaste sabiamente”, dijo Holmes.“¿Pero me has contado todo?”“Sí, todo”.“Señorita Stoner, no lo hizo.",
+            "Estás protegiendo a tu padrastro”.\"¿Por qué, qué quieres decir?\"Holmes le apartó el cordón de la muñeca.",
+            "Había cinco puntos oscuros: las huellas de cuatro dedos y el pulgar.“Te trataron mal”, dijo Holmes.",
+            "La dama se sonrojó profundamente y se cubrió la muñeca herida.\"Es un hombre duro\", dijo.\"Tal vez no conoce su propia fuerza\"."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Hubo un largo silencio.",
+            "Holmes apoyó la barbilla en las manos y miró fijamente el fuego.\"Este es un asunto muy serio\", dijo finalmente.“Hay mil detalles que quiero saber antes de decidir qué hacer.",
+            "Y, sin embargo, no debemos perder ni un minuto.",
+            "Si venimos hoy a Stoke Moran, ¿podemos mirar las habitaciones sin que se entere tu padrastro? “Quiso la suerte que dijera que hoy tenía que ir a la ciudad por un asunto importante.",
+            "Probablemente estará fuera todo el día y no habrá nada que te moleste.",
+            "Ahora tenemos un ama de llaves, pero es vieja y tonta y puedo sacarla de en medio fácilmente”. \"Excelente.",
+            "¿No tiene ninguna objeción a este viaje, Watson?“Ninguna en absoluto”, dije.“Entonces vendremos ambos.",
+            "¿Qué harás tú mismo? “Tengo un par de cosas que hacer ahora que estoy en la ciudad.",
+            "Pero volveré en el tren de las doce, así que estaré allí cuando llegues.“Puedes esperarnos a primera hora de la tarde.",
+            "Tengo algunas pequeñas cosas que hacer yo mismo.",
+            "¿No quieres esperar y desayunar? “No, tengo que irme.",
+            "Mi corazón ya está más ligero ahora que les he contado mis preocupaciones.",
+            "Espero volver a verte esta tarde”. Dejó caer el velo sobre su rostro y salió de la habitación."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"¿Qué opinas de todo esto, Watson?\"-preguntó Holmes cuando se hubo marchado.“Me parece un asunto muy oscuro y siniestro”, respondí.“Lo suficientemente oscuro y siniestro”, dijo.\"Sin embargo, si la dama tiene razón y el piso y las paredes son sólidas y la puerta, la ventana y la chimenea no se pueden usar, entonces su hermana sin duda debe haber estado sola cuando encontró su misterioso final\".\"Entonces, ¿qué pasa con los silbidos en la noche y las extrañas palabras de la mujer moribunda?\"\"No lo sé.\"\"Si combinas la idea de los silbatos nocturnos con la presencia de gitanos que son amigos del Doctor, el hecho de que el Doctor tiene un motivo para impedir el matrimonio de su hijastra, la mención de una cinta moribunda y, finalmente, el hecho de que la señorita Stoner escuchó un tintineo metálico que podría haber sido un cerrojo cayendo, creo que hay buenas razones para cerrar el misterio de esta manera\".“¿Pero qué tuvieron que ver los gitanos con esto?”“No puedo imaginar eso.",
+            "Veo muchas objeciones a tal teoría”.\"Yo también.",
+            "Por eso hoy vamos a Stoke Moran.",
+            "Quiero ver si las objeciones son decisivas o si se pueden explicar”.De repente se detuvo cuando la puerta se abrió y un hombre enorme estaba dentro”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "La ropa del hombre era una mezcla de profesional y campestre.",
+            "Llevaba un sombrero de copa negro, una levita larga y polainas altas y sostenía una fusta en la mano.",
+            "Era tan alto que su sombrero rozaba el travesaño del marco de la puerta y sus anchos hombros lo llenaban.",
+            "Su gran rostro estaba surcado de arrugas, amarillento por el sol y marcado por todas las malas pasiones.",
+            "Sus ojos hundidos e inyectados en sangre y su nariz delgada y afilada le daban la apariencia de un viejo y feroz ave de presa.“¿Quién de ustedes es Holmes?”preguntó.“Ese es mi nombre”, dijo mi amigo en voz baja.\"Pero tienes una ventaja sobre mí\".\"Soy el Dr. Grimesby Roylott de Stoke Moran\".\"Así es, doctor\", dijo Holmes amablemente.\"Por favor, tome asiento\".“No haré nada de eso.",
+            "Mi hijastra estuvo aquí.",
+            "La perseguí.",
+            "¿Qué te dijo ella? \"Hace un poco de frío para la época del año\", dijo Holmes. “¿Qué te dijo ella?”gritó el anciano enojado. \"Escuché que a los azafranes les está yendo bien\", continuó Holmes con calma. \"¡Ja!",
+            "Quiere distraerme -dijo nuestro visitante, dando un paso adelante y agitando su fusta-.¡Te conozco, sinvergüenza!",
+            "He oído hablar de ti antes.",
+            "¡Tú eres Holmes, el entrometido!Mi amigo sonrió.\"¡Holmes, el curioso!\"Su sonrisa se hizo más amplia.“¡Holmes, el burócrata de Scotland Yard!”Holmes se rió entre dientes.\"Su conversación es extremadamente entretenida\", dijo.“Si sales, por favor cierra la puerta porque hay corriente de aire”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Me iré cuando haya dicho lo que tengo que decir.",
+            "No interfieras en mis asuntos.",
+            "Sé que la señorita Stoner estuvo aquí.",
+            "¡La perseguí!",
+            "¡Soy un hombre peligroso con quien meterse!",
+            "Mira aquí”.Dio un paso adelante, agarró el atizador y lo dobló formando una curva con sus enormes manos.\"Asegúrate de mantenerte fuera de mi alcance\", gruñó, arrojando el atizador doblado al fuego y luego saliendo de la habitación.\"Parece una persona muy agradable\", dijo Holmes, riendo.\"No soy tan alto, pero si se hubiera quedado, podría haberle demostrado que mi agarre no es mucho más débil que el suyo\".Mientras hablaba, él Cogió el atizador de acero y lo enderezó con un esfuerzo repentino.“¡Imagínese su audacia al confundirme con la policía criminal oficial!",
+            "Este incidente hace que nuestra investigación sea más interesante y espero que nuestro cliente no sufra por permitir que continúe.",
+            "\"Ahora, Watson, pidamos el desayuno y luego iré a Doctors' Commons para obtener información\"."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Era casi la una cuando Holmes regresó.",
+            "Sostenía una hoja de papel azul cubierta de notas y números.“Vi el testamento de la esposa fallecida”, dijo.“Para entenderlo, tuve que calcular el valor actual de las inversiones mencionadas en él.",
+            "Los ingresos totales, que en el momento de la muerte de la mujer eran poco menos de mil cien libras, ahora son de unas setecientas cincuenta libras, debido a la caída de los precios agrícolas.",
+            "Cada hija, cuando se casa, puede reclamar un ingreso de doscientas cincuenta libras.",
+            "Está claro que si ambas chicas se hubieran casado, a este hombre le habría quedado sólo una pequeña cantidad, e incluso el matrimonio habría reducido considerablemente sus ingresos.",
+            "Mi trabajo matutino no fue en vano porque demuestra que él tiene una razón muy poderosa para impedir el matrimonio.",
+            "Bueno, Watson, esto es demasiado serio para dudar, sobre todo porque el viejo sabe que estamos interesados ​​en sus asuntos.",
+            "Cuando esté listo, llamaremos un taxi y nos dirigiremos a Waterloo.",
+            "Le agradecería que guardara su revólver en su bolsillo.",
+            "Un Eley's No.2 es un excelente argumento para los hombres que pueden doblar atizadores de acero para formar nudos.",
+            "Creo que eso y un cepillo de dientes es todo lo que necesitamos”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "En Waterloo tomamos un tren hasta Leatherhead, donde alquilamos un carruaje en el pub de la estación y viajamos cuatro o cinco millas a través de la hermosa campiña de Surrey.",
+            "Era un día perfecto, con un sol brillante y algunas nubes en el cielo.",
+            "Los árboles y los setos empezaban a echar sus primeros brotes verdes y el aire estaba impregnado del agradable olor a tierra húmeda.",
+            "Para mí fue un extraño contraste entre la dulce promesa de la primavera y la aterradora tarea en la que nos encontrábamos.",
+            "Holmes se sentó al frente con los brazos cruzados, el sombrero calado hasta los ojos y la barbilla apoyada en el pecho, perdido en sus pensamientos.",
+            "De repente me tocó el hombro y señaló hacia los prados.\"¡Mira ahí!\"dijo.",
+            "Un parque con árboles centenarios se elevaba suavemente y se espesaba hasta convertirse en una arboleda en la cima.",
+            "Entre los árboles se alzaban los frontones grises y el alto techo de una mansión muy antigua.“¿Avivar a Morán?”preguntó.\"Sí, señor, esta es la casa del Dr. Grimesby Roylott\", dijo el cochero.\"Hay obras en marcha\", dijo Holmes.“Ahí es donde vamos”.“Ahí está el pueblo”, dijo el cochero, señalando un grupo de tejados a la izquierda.“Pero si quieres llegar a la casa, es más corto subir estas escaleras y el camino de tierra.",
+            "Allí está la señora caminando”.\"Y la dama es la señorita Stoner\", observó Holmes.\"Sí, creo que deberíamos hacer lo que sugieres\".Salimos, pagamos el billete y miramos cómo se alejaba el carruaje.“Pensé que sería mejor”, dijo Holmes mientras subíamos las escaleras, “que pensara que éramos arquitectos o que teníamos algún negocio.",
+            "Eso podría impedirle chismorrear.",
+            "Hola, señorita Stoner.",
+            "Verás, cumplimos nuestra palabra”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nuestro cliente corrió hacia nosotros con una cara radiante.“Te he estado esperando con tanto anhelo”, gritó, estrechándonos cálidamente la mano.“Todo salió bien.",
+            "El doctor Roylott ha ido a la ciudad y no es probable que regrese antes de la noche. \"Tuvimos el placer de conocer al médico\", dijo Holmes, y describió brevemente lo sucedido.",
+            "La señorita Stoner palideció mientras escuchaba. \"¡Dios mío!\" ella gritó. “Así que me siguió”. \"Eso parece\". “Es tan astuto que nunca sé cuándo estaré a salvo de él.",
+            "¿Qué dirá cuando regrese?“Tiene que tener cuidado porque podría encontrar a alguien más astuto que él pisándole los talones.",
+            "Tienes que encerrarte esta noche.",
+            "Si se vuelve violento, te llevaremos con tu tía en Harrow.",
+            "Ahora necesitamos hacer un buen uso de nuestro tiempo, así que llévanos a las habitaciones que quieres que examinemos”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "El edificio estaba construido con piedra gris cubierta de líquenes, con una sección central alta y dos alas curvas como las garras de un cangrejo.",
+            "Un ala tenía ventanas rotas que estaban tapiadas y el techo se había derrumbado parcialmente.",
+            "La sección del medio era un poco mejor, pero el bloque de la derecha era comparativamente moderno, y las persianas de las ventanas y el humo de las chimeneas demostraban que la familia vivía allí.",
+            "Habían levantado andamios en el hastial y habían roto los ladrillos, pero en ese momento no había trabajadores allí.",
+            "Holmes caminó lentamente por el césped cubierto de maleza, examinando cuidadosamente el exterior de las ventanas.\"Ésta\", dijo, \"¿es la habitación donde solías dormir; la del medio es la de tu hermana y la que está al lado del edificio principal es la habitación del Dr. Roylott?\"\"Precisamente como.",
+            "Pero ahora estoy durmiendo en el medio”.“Debido a las renovaciones, lo entiendo.",
+            "Por cierto, no parece haber ninguna necesidad urgente de reparar este muro a dos aguas”.“No hubo ninguno.",
+            "Creo que fue sólo una excusa para sacarme de mi habitación”.“Ah, eso es revelador.",
+            "Al otro lado de esta ala estrecha se encuentra el pasillo desde el que parten estas tres habitaciones.",
+            "Hay ventanas allí, ¿no? “Sí, pero muy pequeños.",
+            "Demasiado estrecho para que cualquiera pueda pasar”. “Dado que ambos cerraban sus puertas con llave por la noche, no se podía entrar a sus habitaciones desde este lado.",
+            "¿Podrías ir a tu habitación y cerrar las contraventanas?La señorita Stoner así lo hizo y Holmes intentó por todos los medios abrir la tienda desde el exterior, pero sin éxito.",
+            "No había ninguna ranura por la que se pudiera introducir un cuchillo para levantar el pestillo.",
+            "Las bisagras eran de hierro macizo y estaban firmemente incrustadas en la piedra.\"¡Mmm!\" dijo, rascándose la barbilla.“Mi teoría ciertamente tiene algunas dificultades.",
+            "Nadie podría pasar por estas tiendas si estuvieran cerradas.",
+            "Bueno, veremos si el interior nos da alguna pista”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Una pequeña puerta lateral conducía al pasillo encalado desde el que se abrían los tres dormitorios.",
+            "Holmes se negó a examinar la tercera habitación, así que fuimos directamente a la segunda, aquella donde ahora dormía la señorita Stoner y donde había muerto su hermana.",
+            "Era una pequeña y acogedora habitación con techo bajo y una amplia chimenea, como en las antiguas casas de campo.",
+            "Había una cómoda marrón en un rincón, una cama estrecha con colchas blancas en otro y un tocador a la izquierda de la ventana.",
+            "Estos, con dos pequeñas sillas de mimbre y una alfombra cuadrada, formaban todo el mobiliario.",
+            "Los suelos y paneles eran de roble viejo y carcomido, tan descoloridos que podrían proceder del edificio original.",
+            "Holmes acercó una silla a un rincón y se sentó en silencio, moviendo los ojos a su alrededor, captando cada detalle.\"¿A dónde va este cordón de timbre?\"preguntó, señalando un cordón grueso que colgaba al lado de la cama, la borla sobre la almohada.\"Conduce a la habitación del ama de llaves\".\"Parece más nuevo que las otras cosas\".\"Sí, se instaló hace unos años\".“¿Tu hermana lo pidió?”“No, nunca escuché que ella los usara.",
+            "Siempre obtuvimos lo que necesitábamos”.“Me parece innecesario poner allí una campana tan bonita.",
+            "Disculpe un momento mientras reviso el piso”.Se arrojó al suelo con su lupa y gateó rápidamente de un lado a otro, examinando las grietas entre las tablas.",
+            "Luego hizo lo mismo con las paredes paneladas.",
+            "Finalmente se acercó a la cama y se quedó un rato mirándola y la pared.",
+            "Tomó el cordón de la campana en su mano y tiró con fuerza."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"Vaya, es un muñeco\", dijo.\"¿No está sonando?\"“No, ni siquiera está conectado a un cable.",
+            "Esto es muy interesante.",
+            "Puedes ver que está sujeto a un gancho justo encima del pequeño orificio de ventilación”.“¡Qué absurdo!",
+            "Nunca me había dado cuenta de eso antes”.\"¡Muy extraño!\"-murmuró Holmes, tirando del cordón.“Hay uno o dos puntos muy extraños en esta sala.",
+            "¡Qué constructor tan estúpido, por ejemplo, al abrir un conducto de ventilación hacia otra habitación cuando podría haberlo abierto hacia el exterior con el mismo esfuerzo! \"Este respiradero también es nuevo\", dijo la señorita Stoner. \"¿Hecho al mismo tiempo que el cordón de la campana?\" \"Sí, en aquel entonces se hicieron varios pequeños cambios\". “Parece que se han producido cambios muy interesantes: cordones falsos para campanas y rejillas de ventilación que no ventilan.",
+            "Con su permiso, señorita Stoner, ahora miraremos la habitación interior”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "La habitación del doctor Grimesby Roylott era más grande que la de su hijastra, pero estaba amueblada con la misma sencillez.",
+            "Una cama plegable, una pequeña estantería de madera llena de libros -en su mayoría literatura especializada-, una silla al lado de la cama, otra en la pared, una mesa redonda y una gran caja fuerte de hierro eran las piezas principales.",
+            "Holmes caminó lentamente, examinando cada uno con gran interés.“¿Qué hay aquí?”preguntó, tocando la caja fuerte.\"Los documentos comerciales de mi padrastro\".\"¡Oh!",
+            "¿Entonces miraste dentro? “Sólo una vez, hace unos años.",
+            "Recuerdo que estaba lleno de papeles”. “¿No hay ningún gato en él?”\"No.",
+            "¡Qué idea más extraña!\"Bueno, mira esto\".Cogió un pequeño cuenco de leche que estaba encima.“No tenemos gatos.",
+            "Pero hay un guepardo y un babuino”.“¡Ah, sí, por supuesto!",
+            "Un guepardo es un felino grande y, sin embargo, un plato de leche no basta para satisfacerlo.",
+            "Hay un punto que quiero determinar”.Se agachó frente a la silla de madera y examinó el asiento con mucha atención.“Gracias.",
+            "Eso está hecho\", dijo, levantándose y guardando su lupa.\"¡Hola!",
+            "¡Aquí hay algo interesante! El objeto que llamó su atención fue una pequeña correa de perro que colgaba de la esquina de la cama.",
+            "El cordón se enrollaba sobre sí mismo y se ataba para formar un lazo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“¿Qué opinas de eso, Watson?”preguntó.“Es un látigo ordinario.",
+            "Pero no sé por qué debería estar atada”.“No es tan común, ¿verdad?",
+            "Desgraciadamente, es un mundo malvado, y cuando un hombre inteligente se dedica al crimen, eso es lo peor.",
+            "Creo que ya he visto suficiente, señorita Stoner, y con su permiso saldremos al césped. Nunca había visto el rostro de mi amigo tan serio ni su frente tan oscura como cuando salimos del lugar del examen.",
+            "Caminamos arriba y abajo por el césped varias veces, ni la señorita Stoner ni yo queríamos interrumpir sus pensamientos hasta que hablara. \"Es muy importante, señorita Stoner\", dijo finalmente, \"que siga mis consejos cuidadosamente\". \"Ciertamente lo haré\". “Tu vida podría depender de ello”. “Te aseguro que estoy en tus manos”. \"Primero, mi amigo y yo tenemos que pasar la noche en tu habitación\". La señorita Stoner y yo lo miramos asombrados. “Sí, tiene que ser así.",
+            "Déjame explicarte.",
+            "¿Es esa la posada del pueblo de allí?“Sí, esa es la Corona”.\"Muy bien.",
+            "¿Puedes ver tus ventanas desde allí? \"Ciertamente.\" “Tienes que quedarte en tu habitación y fingir que te duele la cabeza cuando regresa tu padrastro.",
+            "Luego, cuando escuches que se va a la cama, debes abrir las contraventanas, abrir el pestillo, colocar tu lámpara en la ventana como señal y luego, silenciosamente, llevar todo lo que necesitas a la habitación que solías usar.",
+            "No tengo ninguna duda de que podrás pasar una noche allí a pesar de las reparaciones”. \"Oh, sí, fácil\". “Déjanos el resto a nosotros”. “¿Pero qué vas a hacer?”\"Pasaremos la noche en tu habitación e investigaremos la causa del ruido que te molestó\". \"Creo, señor Holmes, que ya ha tomado una decisión\", dijo la señorita Stoner, tocándole la manga. “Tal vez sí”. “Entonces, por el amor de Dios, dime qué causó la muerte de mi hermana”. \"Preferiría tener pruebas más claras antes de hablar\". “Al menos dime si mi pensamiento es correcto y si ella murió de terror”. “No, no lo creo.",
+            "Creo que hubo una causa más tangible.",
+            "Ahora, señorita Stoner, debemos dejarla.",
+            "Si el Dr. Roylott regresa y nos ve, nuestro viaje sería en vano.",
+            "Adiós, y sed valientes, que si hacéis lo que os he dicho, podéis estar seguros de que pronto ahuyentaremos los peligros que os acechan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sherlock Holmes y yo no tuvimos dificultades para alquilar un dormitorio y una sala de estar en el Crown Inn.",
+            "Estaban en el último piso y desde nuestra ventana podíamos ver la puerta y el ala habitada de Stoke Moran.",
+            "Al anochecer vimos pasar al Dr. Grimesby Roylott, su enorme figura destacando sobre la pequeña figura del niño que lo conducía.",
+            "El niño luchó por abrir la pesada puerta de hierro, escuchamos el rugido ronco del médico y lo vimos agitar los puños hacia el niño.",
+            "El carruaje avanzó y unos minutos más tarde vimos una luz entre los árboles mientras se encendía una lámpara en una de las salas de estar.“Sabes, Watson”, dijo Holmes mientras nos sentábamos en la oscuridad de la noche, “tengo algunas reservas acerca de llevarte conmigo esta noche.",
+            "Hay algún peligro”.“¿Puedo ser útil?”“Su presencia podría ser muy valiosa”.\"Entonces definitivamente iré\".\"Eso es amable de tu parte\".“Estás hablando de peligro.",
+            "Obviamente viste más en estas habitaciones que yo”.“No, pero creo que pude haber inferido más de ello.",
+            "Supongo que has visto todo lo que yo he visto”.\"No vi nada notable excepto el cordón de la campana, y no puedo adivinar su propósito\".“¿También viste el conducto de ventilación?”“Sí, pero no creo que sea inusual tener una pequeña abertura entre dos habitaciones.",
+            "Era tan pequeño que una rata apenas podría atravesarlo”.\"Sabía que encontraríamos un conducto de ventilación antes de llegar a Stoke Moran\".\"¡Mi querido Holmes!\"\"Oh sí.",
+            "¿Recuerdas que dijo que su hermana podría ser el cigarro del Dr. Smell Roylott?",
+            "Esto inmediatamente sugirió que debía haber una conexión entre los dos espacios.",
+            "Sólo podría ser pequeño, de lo contrario se habría notado durante el examen.",
+            "Llegué a la conclusión de que era un conducto de ventilación”.“¿Pero qué podría tener de perjudicial?”“Bueno, hay al menos una extraña coincidencia de fechas.",
+            "Se hace un conducto de ventilación, se cuelga una cuerda y una señora que duerme en esa cama muere.",
+            "¿No te parece extraño? \"No veo ninguna conexión todavía\". \"¿Notaste algo especial en la cama?\" \"No.\" “Estaba pegado al suelo.",
+            "¿Has visto alguna vez una cama atornillada?\"No puedo decir que lo tengo\".“La señora no podía mover su cama.",
+            "Siempre tenía que estar en la misma posición en relación con la ventilación y el cable, o como nunca fue pensado para tirar de una campana, lo llamamos cable”.“Holmes”, grité, “creo que estoy empezando a ver a dónde te refieres.",
+            "Llegamos justo a tiempo para evitar un crimen sutil y terrible”.“Lo suficientemente sutil y terrible.",
+            "Si un médico hace mal, es el peor de todos los criminales.",
+            "Tiene valor y conocimiento.",
+            "Palmer y Pritchard estaban entre los mejores en su campo.",
+            "Este hombre va más allá, pero creo, Watson, que podemos ir aún más profundo.",
+            "Pero ya tendremos suficientes horrores antes de que termine la noche; “Fumamos una pipa tranquilamente y pensemos en algo más agradable durante unas horas”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Como a las nueve la luz entre los árboles se apagó y todo quedó a oscuras hacia la mansión.",
+            "Pasaron lentamente dos horas y entonces, exactamente a las once, una única luz brillante brilló frente a nosotros.\"Esa es nuestra señal\", dijo Holmes, levantándose de un salto.\"Viene de la ventana del medio\".Cuando salimos, le dijo al posadero que íbamos a hacer una visita tardía a la casa de un amigo y que podríamos pasar la noche allí.",
+            "Un momento después estábamos en la calle oscura, un viento frío soplaba en nuestras caras y una luz amarilla brillando en la oscuridad delante de nosotros para guiarnos.",
+            "Fue fácil llegar al sitio porque había huecos sin reparar en el antiguo muro.",
+            "Nos abrimos paso entre los árboles, llegamos al césped, lo cruzamos y estábamos a punto de entrar por la ventana cuando, desde un grupo de laureles, una criatura fea y distorsionada saltó al césped, se dobló y luego corrió rápidamente a través del césped hacia la oscuridad.\"¡Dios mío!\"Susurré.\"¿Viste eso?\"Holmes estaba tan sorprendido como yo.",
+            "Su mano agarró mi muñeca, luego se rió suavemente y me susurró al oído.\"Es una casa agradable\", murmuró.\"Ese es el babuino\".Me había olvidado de las extrañas mascotas del Doctor.",
+            "También había un guepardo;tal vez en cualquier momento saltaría sobre nuestros hombros.",
+            "Me sentí más cómodo de pie en el dormitorio después de seguir el ejemplo de Holmes y quitarme los zapatos.",
+            "Holmes cerró silenciosamente las contraventanas, colocó la lámpara sobre la mesa y miró a su alrededor.",
+            "Todo estaba tal y como lo habíamos visto durante el día.",
+            "Luego se acercó sigilosamente a mí y me susurró en voz tan baja que apenas pude oírlo: \"El más mínimo ruido arruinaría nuestros planes\".Asentí para demostrar que entendía.“Tenemos que sentarnos sin luces.",
+            "Lo vería a través del conducto de ventilación”.Asentí de nuevo.\"No te duermas; tu vida puede depender de ello.",
+            "Tenga su pistola lista en caso de que la necesitemos.",
+            "Yo me sentaré en la cama y tú en la silla”.Saqué mi revólver y lo puse sobre la mesa.",
+            "Holmes había traído consigo un palo largo y delgado que colocó sobre la cama.",
+            "Al lado colocó las cerillas y una vela.",
+            "Luego apagó la lámpara y nos quedamos a oscuras."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nunca olvidaré ese terrible guardia.",
+            "No podía oír ningún sonido, ni siquiera una respiración, y sin embargo sabía que mi compañero estaba sentado a unos pasos de distancia, con los ojos abiertos, tan tenso como yo.",
+            "Las contraventanas no dejaban entrar luz y esperamos en completa oscuridad.",
+            "Desde afuera llegaba ocasionalmente el canto de un pájaro nocturno, y una vez, justo afuera de nuestra ventana, un aullido largo y prolongado, parecido al de un gato, que nos dijo que el guepardo estaba efectivamente libre.",
+            "A lo lejos se oía el sonido grave del reloj de la torre de la iglesia, que daba cada cuarto de hora.",
+            "¡Qué largos me parecieron esos cuartos de hora!",
+            "Dieron las doce, la una, las dos y las tres, y todavía estábamos sentados esperando lo que pudiera pasar.",
+            "De repente se produjo un breve destello de luz en el conducto de ventilación, que desapareció inmediatamente, pero fue seguido por un fuerte olor a aceite quemado y metal caliente.",
+            "Alguien en la habitación de al lado había encendido una lámpara oscura.",
+            "Escuché un suave movimiento y luego todo quedó en silencio, aunque el olor se hizo más fuerte.",
+            "Me quedé escuchando atentamente durante media hora.",
+            "Entonces, de repente, se escuchó otro sonido: un silbido muy silencioso, como el vapor que se escapa de una tetera.",
+            "Tan pronto como lo oímos, Holmes saltó de la cama, encendió una cerilla y golpeó furiosamente el cordón del timbre con su bastón.\"¿Lo ves, Watson?\"gritó.“¿Lo ves?”Pero no vi nada.",
+            "En el momento en que Holmes encendió la lámpara escuché un silbido bajo y claro, pero el repentino resplandor en mis ojos cansados ​​hizo imposible ver qué estaba golpeando.",
+            "Sin embargo, pude ver que su rostro estaba mortalmente pálido y lleno de horror y disgusto.",
+            "Había dejado de latir y estaba mirando el conducto de ventilación cuando de repente el grito más terrible que jamás haya oído rompió el silencio de la noche.",
+            "Se hizo más y más fuerte: un grito ronco de dolor, miedo e ira, todo al mismo tiempo.",
+            "Se dice que en el pueblo e incluso en la lejana rectoría este grito despertó a la gente de sus camas.",
+            "Se nos heló la sangre y me quedé allí mirando a Holmes hasta que los últimos ecos se desvanecieron.“¿Qué podría significar esto?”Jadeé.\"Significa que todo ha terminado\", respondió Holmes.“Y tal vez, considerando todo, sea lo mejor.",
+            "Toma tu arma e iremos a la habitación del Dr. Roylott”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Con expresión seria, encendió la lámpara y nos condujo por el pasillo.",
+            "Tocó la puerta dos veces sin recibir respuesta.",
+            "Luego giró la manija y entró.",
+            "Lo seguí, revólver en mano.",
+            "Surgió una visión extraña.",
+            "Sobre la mesa había una lámpara oscura con la corredera entreabierta, el haz de luz incidía sobre la caja fuerte de hierro cuya puerta estaba abierta.",
+            "Junto a él, en una silla de madera, estaba sentado el doctor Grimesby Roylott, vestido con una larga bata gris, mostrando los tobillos desnudos y calzando unas zapatillas turcas rojas con la parte trasera abierta.",
+            "En su regazo yacía el palo corto con la cuerda larga que habíamos notado durante el día.",
+            "Tenía la barbilla levantada y sus ojos miraban fijamente la esquina del techo.",
+            "Alrededor de su frente había una extraña banda amarilla con manchas marrones, aparentemente atada fuertemente alrededor de su cabeza.",
+            "Cuando entramos no hizo ningún ruido ni movimiento.“¡La cinta!",
+            "¡La banda moteada! -susurró Holmes-.",
+            "Di un paso adelante.",
+            "Inmediatamente su extraño tocado comenzó a moverse, y de su cabello surgió una repugnante serpiente con una cabeza ancha en forma de diamante y un cuello hinchado. \"¡Es una cobra de pantano!\" -gritó Holmes-. “La serpiente más mortífera de la India.",
+            "Murió a los diez segundos de haber sido mordido.",
+            "En realidad, la violencia recae sobre los violentos, y el intrigante cae en el hoyo que cava para los demás.",
+            "\"Llevemos a este animal a su escondite y luego podremos llevar a la señorita Stoner a un lugar seguro y contarle a la policía del condado lo que pasó\"."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mientras hablaba, rápidamente sacó la correa del perro del regazo del muerto, echó la soga alrededor del cuello del reptil, lo sacó de su lugar y, sosteniéndolo con el brazo extendido, lo arrojó dentro de la caja fuerte de hierro, que cerró con llave.",
+            "Estos son los hechos reales sobre la muerte del Dr. Grimesby Roylott.",
+            "No es necesario prolongar una historia ya larga describiendo cómo le dimos la noticia a la niña asustada, cómo la llevamos en el tren de la mañana a su tía en Harrow, o cómo el lento proceso de la investigación oficial concluyó que el médico encontró su destino jugando descuidadamente con una mascota peligrosa.",
+            "Lo poco que todavía me quedaba por aprender, me lo dijo Holmes en nuestro viaje de regreso al día siguiente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“He llegado”, dijo, “a una conclusión totalmente equivocada, lo que demuestra, mi querido Watson, lo peligroso que es sacar conclusiones a partir de datos insuficientes.",
+            "La presencia de los gitanos y la palabra \"banda\", que seguramente la pobre chica utilizó para describir lo que vio a la luz de su partido, fueron suficientes para llevarme por el camino equivocado.",
+            "Sólo puedo decir que inmediatamente reconsideré mi posición cuando quedó claro que cualquier cosa que amenazara al ocupante de la habitación no podía venir ni de la ventana ni de la puerta.",
+            "Mi atención, como ya les dije, se centró en el respiradero y el cordón del timbre.",
+            "El descubrimiento de que la cuerda era un muñeco y la cama estaba atada al suelo inmediatamente me hizo sospechar que la cuerda era un puente para que algo pasara por el agujero y llegara a la cama.",
+            "Se me ocurrió la idea de una serpiente y cuando la combiné con mi conocimiento de que el médico tenía animales de la India, sentí que estaba en el camino correcto.",
+            "La idea de utilizar un veneno que no pudiera detectarse mediante ninguna prueba química se le ocurriría a un hombre inteligente y despiadado con experiencia oriental.",
+            "La velocidad con la que actúa dicho veneno también sería una ventaja.",
+            "Haría falta un patólogo forense muy astuto para darse cuenta de los dos pequeños pinchazos oscuros que dejarían los dientes de la serpiente.",
+            "Luego pensé en el silbato.",
+            "Por supuesto, tuvo que llamar a la serpiente antes de que la luz del día se la mostrara a la víctima.",
+            "Probablemente la había entrenado para regresar cuando fuera necesario con la leche que vimos.",
+            "La enviaría a través del respiradero en el momento que él eligiera, con la seguridad de saber que ella se arrastraría por la línea hasta la cama.",
+            "Puede o no morder al residente;tal vez se escaparía todas las noches durante una semana;pero tarde o temprano se convertiría en víctima”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Había llegado a estas conclusiones antes de entrar a su habitación.",
+            "El examen de su silla me mostró que estaba de pie sobre ella, lo cual era necesario para llegar al conducto de ventilación.",
+            "La vista de la caja fuerte, el cuenco de leche y el látigo atado con un lazo finalmente disipó todas las dudas.",
+            "El ruido metálico que escuchó la señorita Stoner fue claramente causado por su padrastro cerrando rápidamente la caja fuerte que contenía a su terrible animal.",
+            "Una vez que me di cuenta, ya sabes qué pasos tomé para demostrarlo.",
+            "Escuché al animal silbar, como estoy seguro que tú también, e inmediatamente encendí la luz y lo ataqué”.\"Con el resultado de que lo empujaste hacia atrás a través del conducto de ventilación\", dije.“Y que cayó sobre su amo del otro lado”, respondió.“Unos cuantos golpes de mi bastón lo golpearon y le irritaron tanto que atacó a la primera persona que vio.",
+            "De esta manera soy indirectamente responsable de la muerte del Dr. Grimesby Roylott y no puedo decir que eso pese mucho en mi conciencia”."
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

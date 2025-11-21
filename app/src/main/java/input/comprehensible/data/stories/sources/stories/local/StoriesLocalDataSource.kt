@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import javax.inject.Singleton
@@ -21,12 +22,12 @@ interface StoriesLocalDataSource {
     /**
      * Gets a list of stories from the local data source.
      */
-    suspend fun getStories(learningLanguage: String): List<StoryData>
+    fun getStories(learningLanguage: String): Flow<List<StoryData>>
 
     /**
      * Loads an image from the assets folder.
      */
-    suspend fun loadStoryImage(storyId: String, path: String): Bitmap
+    suspend fun loadStoryImage(storyId: String, path: String): Bitmap?
 }
 
 
@@ -37,7 +38,31 @@ interface StoriesLocalDataSource {
 data class StoryData(
     val id: String,
     val title: String,
+    val startPartId: String,
+    val featuredImagePath: String,
+    val parts: List<StoryPartData>,
+) {
+    val partParents = parts
+        .asSequence()
+        .flatMap { part ->
+            part.choices.map { choice -> part.id to choice.targetPartId }
+        }
+        .associate { (parentId, childId) ->
+            childId to parentId
+        }
+}
+
+@Serializable
+data class StoryPartData(
+    val id: String,
     val content: List<StoryElementData>,
+    val choices: List<StoryChoiceData> = emptyList(),
+)
+
+@Serializable
+data class StoryChoiceData(
+    val text: String,
+    val targetPartId: String,
 )
 
 /**

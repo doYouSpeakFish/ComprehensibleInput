@@ -1,85 +1,93 @@
 {
   "id": "5",
   "title": "Day of Magic",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Once, on a completely ordinary morning, something incredible happened: magic suddenly became real!",
-        "People on the street could hardly believe what was happening.",
-        "They saw children floating in the air and dogs that could talk!"
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Four children and a dog holding sparkling magic wands. The children are smiling and three of them are floating in the air.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "In a small village, the day began like any other.",
-        "But then people started casting spells.",
-        "A boy turned his apple into gold, and a woman made flowers grow out of her hand."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "A boy holds a golden apple out to a girl who has flowers in her hair.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "The scientists were confused but excited.",
-        "They had always thought that magic only existed in fairy tales.",
-        "Now they had the chance to study the impossible."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Scientists in lab coats and glasses looking at a glowing crystal ball.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "But not everything was perfect.",
-        "Some people used the magic to play pranks, and that caused problems.",
-        "Cars flew through the air, and some buildings changed their colors!"
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Cars and buses flying through the air. The buildings in the background are very colorful.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Then, just as suddenly as the magic had come, it disappeared again.",
-        "The next day, everything was back to normal.",
-        "People talked about the magical day for a long time, but no one knew why it had happened or if it would ever happen again."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "A group of people looking up in wonder at the night sky.",
-      "path": "5"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "That day showed us that life is full of surprises.",
-        "Sometimes things happen that we could never have imagined.",
-        "And maybe, just maybe, magic is out there somewhere, waiting for the right moment to become reality again."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "The End"
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Once, on a completely ordinary morning, something incredible happened: magic suddenly became real!",
+            "People on the street could hardly believe what was happening.",
+            "They saw children floating in the air and dogs that could talk!"
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Four children and a dog holding sparkling magic wands. The children are smiling and three of them are floating in the air.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In a small village, the day began like any other.",
+            "But then people started casting spells.",
+            "A boy turned his apple into gold, and a woman made flowers grow out of her hand."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "A boy holds a golden apple out to a girl who has flowers in her hair.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The scientists were confused but excited.",
+            "They had always thought that magic only existed in fairy tales.",
+            "Now they had the chance to study the impossible."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Scientists in lab coats and glasses looking at a glowing crystal ball.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "But not everything was perfect.",
+            "Some people used the magic to play pranks, and that caused problems.",
+            "Cars flew through the air, and some buildings changed their colors!"
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Cars and buses flying through the air. The buildings in the background are very colorful.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Then, just as suddenly as the magic had come, it disappeared again.",
+            "The next day, everything was back to normal.",
+            "People talked about the magical day for a long time, but no one knew why it had happened or if it would ever happen again."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "A group of people looking up in wonder at the night sky.",
+          "path": "5"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "That day showed us that life is full of surprises.",
+            "Sometimes things happen that we could never have imagined.",
+            "And maybe, just maybe, magic is out there somewhere, waiting for the right moment to become reality again."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The End"
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

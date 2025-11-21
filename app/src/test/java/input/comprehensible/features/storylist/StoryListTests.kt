@@ -95,7 +95,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
         runCurrent()
 
         onStoryList {
-            assertStoryImageIsVisible(stories.first().images.first().contentDescription)
+            assertStoryImageIsVisible(stories.first().id)
         }
     }
 

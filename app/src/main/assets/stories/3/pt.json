@@ -1,110 +1,118 @@
 {
   "id": "3",
   "title": "O Carnaval Vazio",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Era uma vez uma pequena cidade na Alemanha conhecida pelo seu carnaval colorido e animado.",
-        "Todos os anos vinha gente de todo o lado para desfrutar das atividades festivas e da música alegre."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Uma rua vazia com guirlandas coloridas e decorações penduradas acima.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Mas este ano foi diferente.",
-        "Quando Anna, uma jovem que morava perto, chegou ao recinto da feira, tudo estava estranhamente silencioso.",
-        "“Onde estão todas as pessoas?” ela se perguntou.",
-        "As ruas estavam vazias, nenhuma música tocava, nenhuma criança ria."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Uma garota está na entrada de um parque de diversões, olhando em volta confusa. Ao fundo, é visível um carrossel deserto.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Anna caminhou pelos becos e viu as barracas decoradas, mas não havia vendedores, nem luzes brilhantes, nem balões.",
-        "Era como se o carnaval nunca tivesse começado."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Barracas de feira com decorações coloridas, mas sem gente por perto. Uma atmosfera de vazio e silêncio no ar.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "De repente ela ouviu um som fraco.",
-        "\"Olá?\" ela ligou.",
-        "Nenhuma resposta.",
-        "Ela seguiu o som e encontrou um cachorrinho assustado escondido debaixo de um banco."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Um cachorro se esconde debaixo de um banco, parecendo assustado.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "\"O que você está fazendo aqui sozinho?\" Anna perguntou ao cachorro.",
-        "O cachorro olhou para ela com olhos arregalados, como se dissesse: “Eu também não sei”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Anna decidiu acompanhar o cachorro e juntos procuraram pistas.",
-        "Encontraram um cartaz que dizia: “Carnaval adiado! Novas datas em breve”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Anna agora entendia por que não havia ninguém ali.",
-        "O carnaval havia sido adiado, mas ela não sabia disso.",
-        "Ela sorriu para o cachorro e disse: “Bem, parece que temos o lugar todo só para nós”."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "E assim, Anna e a cachorrinha passaram o dia juntas na feira vazia, brincando entre as barracas coloridas e curtindo a paz inesperada."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Uma menina joga uma bola para um cachorro pegar, em frente às barracas vazias da feira. O cachorro parece feliz e brincalhão.",
-      "path": "5"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ao escurecer, Anna levou o cachorro para casa e prometeu visitá-lo novamente no dia seguinte.",
-        "Talvez o carnaval logo abrisse para todos, mas por hoje era o segredinho deles - o segredo do carnaval vazio."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Uma menina sai de um parque de diversões vazio, seguida por um cachorro. O sol se põe ao fundo.",
-      "path": "6"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "E a moral da história?",
-        "Às vezes, quando as coisas não acontecem como esperamos, encontramos alegria nos momentos mais inusitados e amizades nos lugares mais inesperados."
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Era uma vez uma pequena cidade na Alemanha conhecida pelo seu carnaval colorido e animado.",
+            "Todos os anos vinha gente de todo o lado para desfrutar das atividades festivas e da música alegre."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Uma rua vazia com guirlandas coloridas e decorações penduradas acima.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mas este ano foi diferente.",
+            "Quando Anna, uma jovem que morava perto, chegou ao recinto da feira, tudo estava estranhamente silencioso.",
+            "“Onde estão todas as pessoas?” ela se perguntou.",
+            "As ruas estavam vazias, nenhuma música tocava, nenhuma criança ria."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Uma garota está na entrada de um parque de diversões, olhando em volta confusa. Ao fundo, é visível um carrossel deserto.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Anna caminhou pelos becos e viu as barracas decoradas, mas não havia vendedores, nem luzes brilhantes, nem balões.",
+            "Era como se o carnaval nunca tivesse começado."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Barracas de feira com decorações coloridas, mas sem gente por perto. Uma atmosfera de vazio e silêncio no ar.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De repente ela ouviu um som fraco.",
+            "\"Olá?\" ela ligou.",
+            "Nenhuma resposta.",
+            "Ela seguiu o som e encontrou um cachorrinho assustado escondido debaixo de um banco."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Um cachorro se esconde debaixo de um banco, parecendo assustado.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "\"O que você está fazendo aqui sozinho?\" Anna perguntou ao cachorro.",
+            "O cachorro olhou para ela com olhos arregalados, como se dissesse: “Eu também não sei”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Anna decidiu acompanhar o cachorro e juntos procuraram pistas.",
+            "Encontraram um cartaz que dizia: “Carnaval adiado! Novas datas em breve”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Anna agora entendia por que não havia ninguém ali.",
+            "O carnaval havia sido adiado, mas ela não sabia disso.",
+            "Ela sorriu para o cachorro e disse: “Bem, parece que temos o lugar todo só para nós”."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "E assim, Anna e a cachorrinha passaram o dia juntas na feira vazia, brincando entre as barracas coloridas e curtindo a paz inesperada."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Uma menina joga uma bola para um cachorro pegar, em frente às barracas vazias da feira. O cachorro parece feliz e brincalhão.",
+          "path": "5"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ao escurecer, Anna levou o cachorro para casa e prometeu visitá-lo novamente no dia seguinte.",
+            "Talvez o carnaval logo abrisse para todos, mas por hoje era o segredinho deles - o segredo do carnaval vazio."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Uma menina sai de um parque de diversões vazio, seguida por um cachorro. O sol se põe ao fundo.",
+          "path": "6"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "E a moral da história?",
+            "Às vezes, quando as coisas não acontecem como esperamos, encontramos alegria nos momentos mais inusitados e amizades nos lugares mais inesperados."
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

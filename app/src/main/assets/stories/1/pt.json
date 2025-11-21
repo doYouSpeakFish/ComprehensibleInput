@@ -1,111 +1,136 @@
 {
   "id": "1",
-  "title": "Banho de Cura Secreto",
-  "content": [
+  "title": "Banho de cura secreto",
+  "startPartId": "start",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "image",
-      "contentDescription": "Uma foto de uma fonte natural. Em primeiro plano, há uma cachoeira que flui da nascente. Rochas cobertas de musgo são visíveis ao fundo, atrás do vapor no ar, iluminadas pela luz solar filtrada pela copa das árvores acima.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria mora em uma pequena aldeia.",
-        "Todas as manhãs ela sai para passear na floresta ao lado de sua casa.",
-        "Ela adora a paz e o ar fresco."
+      "id": "start",
+      "content": [
+        {
+          "type": "image",
+          "contentDescription": "Imagem de uma fonte natural. Em primeiro plano há uma cachoeira que nasce da fonte. Rochas cobertas de musgo aparecem ao fundo, atrás do vapor no ar, iluminadas pela luz do sol que atravessa o dossel das árvores.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria mora em uma vila pequena.",
+            "Todas as manhãs ela caminha pela floresta ao lado de sua casa.",
+            "Ela gosta da tranquilidade e do ar fresco."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Um dia ela ouve o som de água correndo.",
+            "Ela segue o som e descobre uma fonte.",
+            "A água é morna."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Um banho de cura!”, pensa.",
+            "Um banho de cura é uma piscina natural com água morna.",
+            "Muitas pessoas acreditam que essa água tem poderes de cura."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria tem uma ideia.",
+            "Ela pode vir aqui para relaxar.",
+            "Talvez até possa convidar seus amigos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mas então ela vê algo no fundo do banho de cura.",
+            "É um objeto pequeno e brilhante.",
+            "Maria o pega.",
+            "É uma moeda antiga."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De repente ela ouve uma voz atrás dela: “Essa moeda é minha!”.",
+            "Maria se vira e vê uma senhora.",
+            "A mulher parece simpática, mas seus olhos são tristes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "“Este banho de cura pertence à minha família”, diz a senhora.",
+            "“Perdi essa moeda aqui muitos anos atrás.”"
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "Maria fica com a moeda.",
+          "targetPartId": "keep_coin"
+        },
+        {
+          "text": "Maria devolve a moeda.",
+          "targetPartId": "return_coin"
+        }
       ]
     },
     {
-      "type": "paragraph",
-      "sentences": [
-        "Um dia ela ouve o som de água corrente.",
-        "Ela segue o som e descobre uma fonte.",
-        "A água está quente."
-      ]
+      "id": "keep_coin",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria fecha a mão em torno da moeda.",
+            "Ela a coloca no bolso e fica em silêncio.",
+            "Quando levanta o olhar, a mulher idosa desapareceu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No dia seguinte, a nascente está silenciosa.",
+            "A água está fria e o vapor sumiu.",
+            "Maria percebe que o banho de cura não confia mais nela."
+          ]
+        }
+      ],
+      "choices": []
     },
     {
-      "type": "paragraph",
-      "sentences": [
-        "“Um banho curativo!” ela pensa.",
-        "Um banho curativo é uma piscina natural com água morna.",
-        "Muitas pessoas acreditam que essa água tem poderes curativos."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria tem uma ideia.",
-        "Ela poderia vir aqui e relaxar.",
-        "Talvez ela pudesse até convidar seus amigos."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Mas então ela vê algo no fundo do banho curativo.",
-        "É um objeto pequeno e brilhante.",
-        "Maria atende.",
-        "É uma moeda antiga."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "De repente, ela ouve uma voz atrás dela: “Essa moeda é minha!”",
-        "Maria se vira e vê uma velha.",
-        "A mulher parece amigável, mas seus olhos estão tristes."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "“Este banho curativo é da minha família”, diz a velha.",
-        "“Perdi esta moeda aqui há muitos anos.”"
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria se sente mal.",
-        "Ela devolve a moeda à mulher e pede desculpas."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "A velha sorri.",
-        "“Está tudo bem”, ela diz.",
-        "“Mas este banho curativo tem um segredo.",
-        "Só pode ser visto por aqueles que são puros de coração.”"
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria fica surpresa.",
-        "Ela agradece à mulher e sai do banho curativo."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "No dia seguinte Maria traz seus amigos para a floresta.",
-        "Mas eles não conseguem encontrar o banho curativo.",
-        "Desapareceu."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Maria sorri.",
-        "Ela agora sabe que algumas coisas na vida são destinadas apenas a ela."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "O fim."
-      ]
+      "id": "return_coin",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Maria se sente culpada e devolve a moeda.",
+            "Ela pede desculpas à mulher idosa.",
+            "A mulher sorri e diz que o banho de cura guarda um segredo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Somente corações bondosos podem ver a nascente.",
+            "Maria promete proteger o lugar.",
+            "A mulher idosa desaparece entre as árvores."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No dia seguinte, Maria volta com os amigos.",
+            "Eles não conseguem encontrar o banho de cura.",
+            "Maria sorri porque sabe que ele a acolherá quando vier sozinha."
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

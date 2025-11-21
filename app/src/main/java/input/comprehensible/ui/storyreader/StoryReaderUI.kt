@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,18 +18,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,19 +42,18 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
-import input.comprehensible.ui.components.SelectableText
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -74,8 +76,11 @@ fun StoryReader(
         modifier = modifier,
         onTitleClicked = viewModel::onTitleSelected,
         onStoryPartVisible = viewModel::onStoryLocationUpdated,
-        state = state,
+        onSentenceSelected = viewModel::onSentenceSelected,
+        onChoiceTextSelected = viewModel::onChoiceTextSelected,
+        onChosenChoiceSelected = viewModel::onChosenChoiceSelected,
         onErrorDismissed = onErrorDismissed,
+        state = state,
     )
 }
 
@@ -83,9 +88,12 @@ fun StoryReader(
 private fun StoryReader(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
-    onStoryPartVisible: (index: Int) -> Unit,
-    state: StoryReaderUiState,
+    onStoryPartVisible: (elementIndex: Int) -> Unit,
+    onSentenceSelected: (paragraph: Int, sentence: Int) -> Unit,
+    onChoiceTextSelected: (choiceIndex: Int, optionIndex: Int) -> Unit,
+    onChosenChoiceSelected: (choiceIndex: Int) -> Unit,
     onErrorDismissed: () -> Unit,
+    state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
         Box(
@@ -105,6 +113,9 @@ private fun StoryReader(
                     state = state,
                     onTitleClicked = onTitleClicked,
                     onStoryPartVisible = onStoryPartVisible,
+                    onSentenceSelected = onSentenceSelected,
+                    onChoiceTextSelected = onChoiceTextSelected,
+                    onChosenChoiceSelected = onChosenChoiceSelected,
                 )
 
                 StoryReaderUiState.Error -> Unit
@@ -121,16 +132,19 @@ private fun StoryReader(
 private fun StoryContent(
     modifier: Modifier = Modifier,
     onTitleClicked: () -> Unit,
-    onStoryPartVisible: (index: Int) -> Unit,
+    onStoryPartVisible: (elementIndex: Int) -> Unit,
+    onSentenceSelected: (paragraph: Int, sentence: Int) -> Unit,
+    onChoiceTextSelected: (choiceIndex: Int, optionIndex: Int) -> Unit,
+    onChosenChoiceSelected: (choiceIndex: Int) -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
     val isExplainerShownAtStart = timesExplainerTapped < 11
     val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = if (state.storyPosition == 0 ) {
+        initialFirstVisibleItemIndex = if (state.content.isEmpty() || state.initialContentIndex == 0) {
             0
         } else {
-            state.storyPosition + 1 // Accounts for header
+            state.initialContentIndex + 1 // Accounts for header
         }
     )
     LaunchedEffect(Unit) {
@@ -138,9 +152,7 @@ private fun StoryContent(
             .conflate()
             .distinctUntilChanged()
             .collect { currentItemIndex ->
-                val currentStoryPart = (currentItemIndex - 1) // Don't count header item
-                    .coerceAtLeast(0)
-                onStoryPartVisible(currentStoryPart)
+                onStoryPartVisible((currentItemIndex - 1).coerceAtLeast(0))
             }
     }
     Box(modifier) {
@@ -156,7 +168,7 @@ private fun StoryContent(
                     Title(
                         onTitleClicked = onTitleClicked,
                         title = state.title,
-                        isTitleHighlighted = state.isTitleHighlighted,
+                        isTitleHighlighted = state.selectedText is StoryReaderUiState.SelectedText.Title,
                     )
                     Spacer(Modifier.height(8.dp))
                     AnimatedVisibility(isExplainerShownAtStart) {
@@ -168,9 +180,40 @@ private fun StoryContent(
                     }
                 }
             }
-            items(state.content) {
+            itemsIndexed(state.content) { paragraphIndex, item ->
+                val selectedSentence =
+                    state.selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph
+                val selectedChoice =
+                    state.selectedText as? StoryReaderUiState.SelectedText.ChoiceOption
+                val selectedChosenChoice =
+                    state.selectedText as? StoryReaderUiState.SelectedText.ChosenChoice
+                val sentenceSelectionIndex = selectedSentence?.selectedSentenceIndex
+                    ?.takeIf { paragraphIndex == selectedSentence.paragraphIndex }
+                val choiceSelectionIndex = selectedChoice?.optionIndex
+                    ?.takeIf { paragraphIndex == selectedChoice.choiceIndex }
+                val isSelectionTranslated = when {
+                    sentenceSelectionIndex != null -> selectedSentence?.isTranslated == true
+                    choiceSelectionIndex != null -> selectedChoice?.isTranslated == true
+                    else -> false
+                }
+                val isChosenChoiceTranslated =
+                    selectedChosenChoice?.isTranslated == true &&
+                        paragraphIndex == selectedChosenChoice.choiceIndex
                 StoryContentPart(
-                    state = it,
+                    state = item,
+                    selectedSentenceIndex = sentenceSelectionIndex,
+                    selectedChoiceIndex = choiceSelectionIndex,
+                    isSelectionTranslated = isSelectionTranslated,
+                    isChosenChoiceTranslated = isChosenChoiceTranslated,
+                    onSentenceSelected = { sentenceIndex ->
+                        onSentenceSelected(paragraphIndex, sentenceIndex)
+                    },
+                    onChoiceTextSelected = { optionIndex ->
+                        onChoiceTextSelected(paragraphIndex, optionIndex)
+                    },
+                    onChosenChoiceSelected = {
+                        onChosenChoiceSelected(paragraphIndex)
+                    },
                 )
             }
             if (!isExplainerShownAtStart) {
@@ -193,16 +236,30 @@ private fun Title(
     title: String,
     isTitleHighlighted: Boolean,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Column(modifier) {
-        SelectableText(
-            text = title,
-            onTextClicked = { onTitleClicked() },
-            selectedText = TextRange(
-                start = 0,
-                end = title.length,
-            ).takeIf { isTitleHighlighted },
-            style = MaterialTheme.typography.headlineLarge,
-        )
+        TextButton(
+            onClick = onTitleClicked,
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = if (isTitleHighlighted) {
+                    colorScheme.onBackground
+                } else {
+                    Color.Transparent
+                },
+                contentColor = if (isTitleHighlighted) {
+                    colorScheme.background
+                } else {
+                    colorScheme.onBackground
+                }
+            ),
+            contentPadding = PaddingValues(0.dp),
+            shape = RectangleShape
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineLarge,
+            )
+        }
     }
 }
 
@@ -287,19 +344,32 @@ fun StoryReaderPreview() {
         StoryReader(
             onTitleClicked = {},
             onStoryPartVisible = {},
+            onSentenceSelected = { _, _ -> },
+            onChoiceTextSelected = { _, _ -> },
+            onChosenChoiceSelected = {},
+            onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
-                isTitleHighlighted = false,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
-                        paragraph = "Content",
-                        onClick = {},
-                        selectedTextRange = null
-                    )
+                        sentences = listOf("Content"),
+                        translatedSentences = listOf("Contenido"),
+                    ),
+                    StoryContentPartUiState.Choices(
+                        options = listOf(
+                            StoryContentPartUiState.Choices.Option(
+                                id = "option-1",
+                                text = "Sie behält den Schlüssel.",
+                                translatedText = "She keeps the key.",
+                                onClick = {},
+                            ),
+                        ),
+                    ),
                 ),
-                storyPosition = 0,
+                currentPartId = "part",
+                initialContentIndex = 0,
+                selectedText = null,
             ),
-            onErrorDismissed = {},
         )
     }
 }
@@ -311,19 +381,32 @@ fun StoryReaderTranslationPreview() {
         StoryReader(
             onTitleClicked = {},
             onStoryPartVisible = {},
+            onSentenceSelected = { _, _ -> },
+            onChoiceTextSelected = { _, _ -> },
+            onChosenChoiceSelected = {},
+            onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
-                isTitleHighlighted = true,
                 content = listOf(
                     StoryContentPartUiState.Paragraph(
-                        paragraph = "Content",
-                        onClick = {},
-                        selectedTextRange = null
-                    )
+                        sentences = listOf("Content"),
+                        translatedSentences = listOf("Contenido"),
+                    ),
+                    StoryContentPartUiState.Choices(
+                        options = listOf(
+                            StoryContentPartUiState.Choices.Option(
+                                id = "option-1",
+                                text = "Sie behält den Schlüssel.",
+                                translatedText = "She keeps the key.",
+                                onClick = {},
+                            ),
+                        ),
+                    ),
                 ),
-                storyPosition = 0,
+                currentPartId = "part",
+                initialContentIndex = 0,
+                selectedText = StoryReaderUiState.SelectedText.Title(isTranslated = true),
             ),
-            onErrorDismissed = {},
         )
     }
 }
@@ -335,8 +418,11 @@ fun StoryReaderErrorPreview() {
         StoryReader(
             onTitleClicked = {},
             onStoryPartVisible = {},
-            state = StoryReaderUiState.Error,
+            onSentenceSelected = { _, _ -> },
+            onChoiceTextSelected = { _, _ -> },
+            onChosenChoiceSelected = {},
             onErrorDismissed = {},
+            state = StoryReaderUiState.Error,
         )
     }
 }

@@ -29,14 +29,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.core.graphics.createBitmap
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass.Companion.COMPACT
+import input.comprehensible.extensions.isCompact
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -120,7 +121,7 @@ private fun StoryListScaffold(
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
 ) {
-    val columns = if (windowSizeClass.windowWidthSizeClass == COMPACT) 2 else 4
+    val columns = if (windowSizeClass.isCompact) 2 else 4
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -162,14 +163,10 @@ private fun StoryListItem(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FeatureImage(
+                modifier = Modifier.testTag("story-image-${story.id}"),
                 image = story.featuredImage.asImageBitmap(),
-                contentDescription = story.featuredImageContentDescription
             )
-            Box {
-                // Add empty title with max lines to force every card to have the same height
-                StoryTitle(title = "\n", subtitle = "\n")
-                StoryTitle(title = story.title, subtitle = story.subtitle)
-            }
+            StoryTitle(title = story.title, subtitle = story.subtitle)
         }
     }
 }
@@ -178,7 +175,7 @@ private fun StoryListItem(
 private fun FeatureImage(
     modifier: Modifier = Modifier,
     image: ImageBitmap,
-    contentDescription: String,
+    contentDescription: String? = null,
 ) {
     Box(modifier, propagateMinConstraints = true) {
         Image(
@@ -199,26 +196,36 @@ private fun StoryTitle(
     title: String,
     subtitle: String,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    @Composable
+    fun Title(
+        title: String,
+        subtitle: String,
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+    Box(modifier = modifier) {
+        // Add empty title with max line height to force every title to have the same height
+        Title(title = "\n", subtitle = "\n")
+        Title(title = title, subtitle = subtitle)
     }
 }
 
@@ -238,7 +245,6 @@ fun StoryListScreenPreview() {
                         title = "Title $it",
                         subtitle = "Translated Title $it",
                         featuredImage = createBitmap(100, 100),
-                        featuredImageContentDescription = "Content description $it",
                     )
                 },
                 learningLanguage = LanguageSelection.GERMAN,

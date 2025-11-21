@@ -9,8 +9,26 @@ data class Story(
     val id: String,
     val title: String,
     val translatedTitle: String,
-    val content: List<StoryElement>,
-    val currentStoryElementIndex: Int,
+    val parts: List<StoryPart>,
+    val currentPartId: String,
+    val storyPosition: Int,
+)
+
+data class StoryPart(
+    val id: String,
+    val elements: List<StoryElement>,
+    val choice: StoryChoice?,
+)
+
+sealed interface StoryChoice {
+    data class Available(val options: List<StoryChoiceOption>) : StoryChoice
+    data class Chosen(val option: StoryChoiceOption) : StoryChoice
+}
+
+data class StoryChoiceOption(
+    val text: String,
+    val translatedText: String,
+    val targetPartId: String,
 )
 
 /**

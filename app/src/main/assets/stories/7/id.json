@@ -1,103 +1,111 @@
 {
   "id": "7",
   "title": "Bisikan Hantu dan Detak Jantung",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Marco berlari menembus hujan.",
-        "Petir menyambar di langit yang gelap dan guntur bergemuruh.",
-        "Dia tiba di sebuah rumah tua yang besar.",
-        "Itu tampak seperti sebuah kastil, besar dan agak menyeramkan.",
-        "Aysha sudah menunggunya di cahaya pintu masuk."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Sebuah rumah besar bergaya Gotik. Ada kilat di latar belakang.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Dia tersenyum dan melambai.",
-        "\"Masuk! Ini hanya badai petir.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Tapi Marco tahu itu bukan hanya badai petir.",
-        "Ada hantu di rumah ini.",
-        "Dia telah mendengarnya dan terkadang, pada malam hari, melihatnya.",
-        "Marco tidak menyukai hantu.",
-        "Tapi dia sangat menyukai Aysha."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Seorang wanita melambai dan tersenyum memberi salam di pintu masuk sebuah rumah besar bergaya Gotik. Di latar belakang, terlihat sosok hantu yang gelap.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Mereka pergi ke dapur bersama.",
-        "Rumah itu berderit.",
-        "Aysha membuat teh dan mereka membicarakan hal-hal normal: pekerjaan, buku, musik.",
-        "Marco mencoba melupakan hantu-hantu itu."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Tiba-tiba mereka mendengar suara berisik di lantai atas.",
-        "Aisyah tertawa.",
-        "\"Oh, itu hanya rumahnya.",
-        "Itu sudah tua.\""
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Marco memandangnya.",
-        "Bagaimana mungkin dia tidak takut?",
-        "Aysha melihat kekhawatirannya dan meraih tangannya.",
-        "\"Kamu akan terbiasa dengan hal itu.",
-        "Para hantu tidak melakukan apa pun.",
-        "Mereka adalah bagian dari rumah.\""
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Seorang pria dan seorang wanita duduk di meja dan minum teh. Wanita itu terlihat santai. Di latar belakang, terlihat sosok gelap dan bayangan, seolah sedang memperhatikan mereka.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Marco ingin menjadi berani.",
-        "\"Oke,\" katanya dan meminum tehnya.",
-        "Namun jauh di lubuk hatinya, dia merasa ada yang tidak beres.",
-        "Tetap saja, dia sedang jatuh cinta.",
-        "Dan bagi Aysha, dia akan menerima hantu, kengerian, bahkan ketakutannya."
-      ]
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Malam tiba dan mereka pergi tidur.",
-        "Di ruangan gelap, sesuatu yang tidak diketahui berbisik.",
-        "Marco menggenggam tangan Aysha dengan erat.",
-        "Dia akan tinggal.",
-        "Karena cinta.",
-        "Namun dia bertanya-tanya apakah cinta cukup untuk mengalahkan bayang-bayang."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Seorang pria dan seorang wanita di tempat tidur. Pria itu terlihat seperti sedang membisikkan sesuatu kepada wanita tersebut. Di latar belakang, sesosok hantu meniru pria tersebut, seolah mengejeknya.",
-      "path": "4"
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marco berlari menembus hujan.",
+            "Petir menyambar di langit yang gelap dan guntur bergemuruh.",
+            "Dia tiba di sebuah rumah tua yang besar.",
+            "Itu tampak seperti sebuah kastil, besar dan agak menyeramkan.",
+            "Aysha sudah menunggunya di cahaya pintu masuk."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Sebuah rumah besar bergaya Gotik. Ada kilat di latar belakang.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia tersenyum dan melambai.",
+            "\"Masuk! Ini hanya badai petir.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Tapi Marco tahu itu bukan hanya badai petir.",
+            "Ada hantu di rumah ini.",
+            "Dia telah mendengarnya dan terkadang, pada malam hari, melihatnya.",
+            "Marco tidak menyukai hantu.",
+            "Tapi dia sangat menyukai Aysha."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Seorang wanita melambai dan tersenyum memberi salam di pintu masuk sebuah rumah besar bergaya Gotik. Di latar belakang, terlihat sosok hantu yang gelap.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mereka pergi ke dapur bersama.",
+            "Rumah itu berderit.",
+            "Aysha membuat teh dan mereka membicarakan hal-hal normal: pekerjaan, buku, musik.",
+            "Marco mencoba melupakan hantu-hantu itu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Tiba-tiba mereka mendengar suara berisik di lantai atas.",
+            "Aisyah tertawa.",
+            "\"Oh, itu hanya rumahnya.",
+            "Itu sudah tua.\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marco memandangnya.",
+            "Bagaimana mungkin dia tidak takut?",
+            "Aysha melihat kekhawatirannya dan meraih tangannya.",
+            "\"Kamu akan terbiasa dengan hal itu.",
+            "Para hantu tidak melakukan apa pun.",
+            "Mereka adalah bagian dari rumah.\""
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Seorang pria dan seorang wanita duduk di meja dan minum teh. Wanita itu terlihat santai. Di latar belakang, terlihat sosok gelap dan bayangan, seolah sedang memperhatikan mereka.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marco ingin menjadi berani.",
+            "\"Oke,\" katanya dan meminum tehnya.",
+            "Namun jauh di lubuk hatinya, dia merasa ada yang tidak beres.",
+            "Tetap saja, dia sedang jatuh cinta.",
+            "Dan bagi Aysha, dia akan menerima hantu, kengerian, bahkan ketakutannya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Malam tiba dan mereka pergi tidur.",
+            "Di ruangan gelap, sesuatu yang tidak diketahui berbisik.",
+            "Marco menggenggam tangan Aysha dengan erat.",
+            "Dia akan tinggal.",
+            "Karena cinta.",
+            "Namun dia bertanya-tanya apakah cinta cukup untuk mengalahkan bayang-bayang."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Seorang pria dan seorang wanita di tempat tidur. Pria itu terlihat seperti sedang membisikkan sesuatu kepada wanita tersebut. Di latar belakang, sesosok hantu meniru pria tersebut, seolah mengejeknya.",
+          "path": "4"
+        }
+      ],
+      "choices": []
     }
   ]
 }

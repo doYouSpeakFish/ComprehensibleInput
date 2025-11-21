@@ -1,90 +1,98 @@
 {
   "id": "4",
   "title": "Die winzigen Wikinger von Berlin",
-  "content": [
+  "startPartId": "main",
+  "featuredImagePath": "1",
+  "parts": [
     {
-      "type": "paragraph",
-      "sentences": [
-        "Es war einmal ein kleines Dorf von Wikingern, nicht größer als Spielzeugfiguren, die durch die Zeit segelten und plötzlich im Herzen von Berlin landeten.",
-        "Stellt euch ihre Überraschung vor, als sie ihre hölzernen Schiffe am Ufer der Spree festmachten und von riesigen Gebäuden und leuchtenden Kutschen - oder wie wir sie nennen, Autos - umgeben waren."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Mehrere winzige Wikinger in Wikinger-Ruderbooten auf der Spree in Berlin.",
-      "path": "1"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Am Anfang waren die kleinen Wikinger sehr verwirrt.",
-        "\"Was ist das für ein Zauber?\" fragte der Anführer, während er auf einen blinkenden Ampelmann zeigte.",
-        "\"Und warum bewegt sich diese Mauer dort von selbst?\" fügte er hinzu, als eine U-Bahn an ihnen vorbeirauschte."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Drei winzige Wikinger stehen und zeigen verwirrt auf eine Ampel.",
-      "path": "2"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Aber Wikinger sind bekannt für ihre Anpassungsfähigkeit und ihren Entdeckergeist.",
-        "Sie beschlossen, diese neue Welt zu erkunden.",
-        "Sie kletterten auf Fahrräder, die ihnen wie riesige Schlachtschiffe vorkamen, und fuhren los, um mehr zu entdecken."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein winziger Wikinger fährt mit einem Fahrrad durch den Verkehr von Berlin, während zwei andere zu Fuß neben den Pedalen laufen.",
-      "path": "3"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ihr erster Halt war der berühmte Alexanderplatz, wo sie sich unter die Menschenmengen mischten.",
-        "Die Leute bemerkten sie kaum, abgelenkt von ihren Handys und dem Trubel der Stadt.",
-        "Die Wikinger waren fasziniert von den vielen Ständen mit Essen.",
-        "\"Was für ein Festmahl!\", riefen sie und probierten ein Stück Döner, das fast so groß war wie sie selbst."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Ein winziger Wikinger geht mit einem ganzen Döner-Spieß in den Händen, sieht sehr zufrieden aus.",
-      "path": "4"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Nachdem sie sich gestärkt hatten, setzten die Wikinger ihre Reise fort.",
-        "Sie kamen an einem Ort vorbei, der voller Schätze zu sein schien – ein Elektronikmarkt.",
-        "Sie staunten über die schimmernden Bildschirme und seltsamen Geräte, die sie für Zaubergegenstände hielten."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Drei winzige Wikinger schauen staunend auf ein Tablet in einem Elektronikgeschäft.",
-      "path": "5"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Am Ende des Tages waren die winzigen Wikinger erschöpft, aber glücklich.",
-        "Sie hatten eine Menge über die moderne Welt gelernt und beschlossen, Berlin zu ihrer neuen Heimat zu machen.",
-        "Jeden Tag würden sie ein neues Abenteuer erleben, aber für heute reichte es ihnen, unter dem Sternenhimmel neben ihrer vertrauten Spree zu schlafen."
-      ]
-    },
-    {
-      "type": "image",
-      "contentDescription": "Winzige Wikinger stehen Seite an Seite auf ihrem Langboot und schauen auf den Fluss und die Skyline von Berlin bei Nacht.",
-      "path": "6"
-    },
-    {
-      "type": "paragraph",
-      "sentences": [
-        "Ende"
-      ]
+      "id": "main",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Es war einmal ein kleines Dorf von Wikingern, nicht größer als Spielzeugfiguren, die durch die Zeit segelten und plötzlich im Herzen von Berlin landeten.",
+            "Stellt euch ihre Überraschung vor, als sie ihre hölzernen Schiffe am Ufer der Spree festmachten und von riesigen Gebäuden und leuchtenden Kutschen - oder wie wir sie nennen, Autos - umgeben waren."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Mehrere winzige Wikinger in Wikinger-Ruderbooten auf der Spree in Berlin.",
+          "path": "1"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Am Anfang waren die kleinen Wikinger sehr verwirrt.",
+            "\"Was ist das für ein Zauber?\" fragte der Anführer, während er auf einen blinkenden Ampelmann zeigte.",
+            "\"Und warum bewegt sich diese Mauer dort von selbst?\" fügte er hinzu, als eine U-Bahn an ihnen vorbeirauschte."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Drei winzige Wikinger stehen und zeigen verwirrt auf eine Ampel.",
+          "path": "2"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Aber Wikinger sind bekannt für ihre Anpassungsfähigkeit und ihren Entdeckergeist.",
+            "Sie beschlossen, diese neue Welt zu erkunden.",
+            "Sie kletterten auf Fahrräder, die ihnen wie riesige Schlachtschiffe vorkamen, und fuhren los, um mehr zu entdecken."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein winziger Wikinger fährt mit einem Fahrrad durch den Verkehr von Berlin, während zwei andere zu Fuß neben den Pedalen laufen.",
+          "path": "3"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ihr erster Halt war der berühmte Alexanderplatz, wo sie sich unter die Menschenmengen mischten.",
+            "Die Leute bemerkten sie kaum, abgelenkt von ihren Handys und dem Trubel der Stadt.",
+            "Die Wikinger waren fasziniert von den vielen Ständen mit Essen.",
+            "\"Was für ein Festmahl!\", riefen sie und probierten ein Stück Döner, das fast so groß war wie sie selbst."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Ein winziger Wikinger geht mit einem ganzen Döner-Spieß in den Händen, sieht sehr zufrieden aus.",
+          "path": "4"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nachdem sie sich gestärkt hatten, setzten die Wikinger ihre Reise fort.",
+            "Sie kamen an einem Ort vorbei, der voller Schätze zu sein schien – ein Elektronikmarkt.",
+            "Sie staunten über die schimmernden Bildschirme und seltsamen Geräte, die sie für Zaubergegenstände hielten."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Drei winzige Wikinger schauen staunend auf ein Tablet in einem Elektronikgeschäft.",
+          "path": "5"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Am Ende des Tages waren die winzigen Wikinger erschöpft, aber glücklich.",
+            "Sie hatten eine Menge über die moderne Welt gelernt und beschlossen, Berlin zu ihrer neuen Heimat zu machen.",
+            "Jeden Tag würden sie ein neues Abenteuer erleben, aber für heute reichte es ihnen, unter dem Sternenhimmel neben ihrer vertrauten Spree zu schlafen."
+          ]
+        },
+        {
+          "type": "image",
+          "contentDescription": "Winzige Wikinger stehen Seite an Seite auf ihrem Langboot und schauen auf den Fluss und die Skyline von Berlin bei Nacht.",
+          "path": "6"
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ende"
+          ]
+        }
+      ],
+      "choices": []
     }
   ]
 }

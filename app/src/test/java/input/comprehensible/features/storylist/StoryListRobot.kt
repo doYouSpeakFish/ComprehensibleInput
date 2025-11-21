@@ -5,6 +5,7 @@ import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -52,9 +53,12 @@ class StoryListRobot(
             .performClick()
     }
 
-    fun assertStoryImageIsVisible(contentDescription: String) {
+    fun assertStoryImageIsVisible(storyId: String) {
         composeTestRule
-            .onNodeWithContentDescription(contentDescription)
+            .onNodeWithTag(
+                testTag = "story-image-$storyId",
+                useUnmergedTree = true,
+            )
             .assertExists()
     }
 
