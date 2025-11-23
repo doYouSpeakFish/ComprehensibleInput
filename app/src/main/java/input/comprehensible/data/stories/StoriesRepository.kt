@@ -134,7 +134,6 @@ class StoriesRepository @Inject constructor(
             id = id,
             partId = partId,
             lastChosenPartId = partId,
-            position = 0,
         )
     }
 

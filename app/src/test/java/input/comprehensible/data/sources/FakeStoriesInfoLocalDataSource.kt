@@ -44,14 +44,12 @@ class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDat
         id: String,
         partId: String,
         lastChosenPartId: String,
-        position: Int,
     ) {
         stories.update { current ->
             val oldStoryInfo = current.getValue(id)
             val newStoryInfo = oldStoryInfo.copy(
                 partId = partId,
                 lastChosenPartId = lastChosenPartId,
-                position = position,
             )
             current + (id to newStoryInfo)
         }

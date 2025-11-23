@@ -54,7 +54,7 @@ interface StoriesInfoLocalDataSource {
             UPDATE StoryEntity
             SET partId = :partId,
                 lastChosenPartId = :lastChosenPartId,
-                position = :position
+                position = 0
             WHERE id = :id
         """
     )
@@ -62,7 +62,6 @@ interface StoriesInfoLocalDataSource {
         id: String,
         partId: String,
         lastChosenPartId: String,
-        position: Int,
     )
 }
 
