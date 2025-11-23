@@ -34,6 +34,7 @@ class SoftwareLicencesTest(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onSoftwareLicences {
+            waitUntilLicencesHaveLoaded()
             assertLicenceIsVisible("AboutLibraries Core Library")
         }
     }
@@ -45,6 +46,7 @@ class SoftwareLicencesTest(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onSoftwareLicences {
+            waitUntilLicencesHaveLoaded()
             themeMode.captureScreenWithTheme("software-licences-screen")
         }
     }
