@@ -11,7 +11,6 @@ data class Story(
     val translatedTitle: String,
     val parts: List<StoryPart>,
     val currentPartId: String,
-    val lastChosenPartId: String?,
     val storyPosition: Int,
 )
 

@@ -270,7 +270,6 @@ class StoriesRepository @Inject constructor(
             translatedTitle = translation.title,
             parts = storyParts,
             currentPartId = resolvedCurrentPartId,
-            lastChosenPartId = storyInfo.lastChosenPartId,
             storyPosition = storyInfo.position,
         )
     }
