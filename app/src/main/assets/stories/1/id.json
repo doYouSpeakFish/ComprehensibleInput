@@ -1,136 +1,131 @@
 {
   "id": "1",
   "title": "Pemandian Rahasia",
-  "startPartId": "start",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "start",
-      "content": [
-        {
-          "type": "image",
-          "contentDescription": "Gambar mata air alami. Di latar depan terdapat air terjun yang mengalir dari mata air. Batu-batu berlumut terlihat di latar belakang, di balik uap di udara yang diterangi cahaya matahari yang menembus kanopi pepohonan.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria tinggal di sebuah desa kecil.",
-            "Setiap pagi ia berjalan di hutan di samping rumahnya.",
-            "Ia menyukai ketenangan dan udara segar."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Suatu hari ia mendengar suara air yang mengalir.",
-            "Ia mengikuti suara itu dan menemukan sebuah mata air.",
-            "Airnya hangat."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "“Pemandian penyembuhan!” pikirnya.",
-            "Pemandian penyembuhan adalah kolam alami dengan air hangat.",
-            "Banyak orang percaya air seperti itu mempunyai kekuatan penyembuhan."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria mendapat ide.",
-            "Ia bisa datang ke sini untuk beristirahat.",
-            "Mungkin ia bahkan bisa mengundang teman-temannya."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Namun ia melihat sesuatu di dasar pemandian.",
-            "Itu benda kecil yang berkilau.",
-            "Maria mengambilnya.",
-            "Itu koin tua."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Tiba-tiba ia mendengar suara di belakangnya: “Itu koinku!”",
-            "Maria menoleh dan melihat seorang wanita tua.",
-            "Wanita itu tampak ramah, tetapi matanya sedih."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "“Pemandian penyembuhan ini milik keluarga saya,” kata wanita tua itu.",
-            "“Saya kehilangan koin ini di sini bertahun-tahun lalu.”"
-          ]
+  "start": {
+    "id": "start",
+    "content": [
+      {
+        "type": "image",
+        "contentDescription": "Gambar mata air alami. Di latar depan terdapat air terjun yang mengalir dari mata air. Batu-batu berlumut terlihat di latar belakang, di balik uap di udara yang diterangi cahaya matahari yang menembus kanopi pepohonan.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maria tinggal di sebuah desa kecil.",
+          "Setiap pagi ia berjalan di hutan di samping rumahnya.",
+          "Ia menyukai ketenangan dan udara segar."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Suatu hari ia mendengar suara air yang mengalir.",
+          "Ia mengikuti suara itu dan menemukan sebuah mata air.",
+          "Airnya hangat."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "“Pemandian penyembuhan!” pikirnya.",
+          "Pemandian penyembuhan adalah kolam alami dengan air hangat.",
+          "Banyak orang percaya air seperti itu mempunyai kekuatan penyembuhan."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maria mendapat ide.",
+          "Ia bisa datang ke sini untuk beristirahat.",
+          "Mungkin ia bahkan bisa mengundang teman-temannya."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Namun ia melihat sesuatu di dasar pemandian.",
+          "Itu benda kecil yang berkilau.",
+          "Maria mengambilnya.",
+          "Itu koin tua."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Tiba-tiba ia mendengar suara di belakangnya: “Itu koinku!”",
+          "Maria menoleh dan melihat seorang wanita tua.",
+          "Wanita itu tampak ramah, tetapi matanya sedih."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "“Pemandian penyembuhan ini milik keluarga saya,” kata wanita tua itu.",
+          "“Saya kehilangan koin ini di sini bertahun-tahun lalu.”"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "text": "Maria menyimpan koin itu.",
+        "part": {
+          "id": "keep_coin",
+          "content": [
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Maria menggenggam erat koin itu.",
+                "Ia memasukkannya ke saku dan tetap diam.",
+                "Saat ia menoleh, wanita tua itu sudah menghilang."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Keesokan harinya mata air itu sunyi.",
+                "Airnya dingin dan uapnya lenyap.",
+                "Maria menyadari bahwa pemandian penyembuhan itu tidak lagi percaya padanya."
+              ]
+            }
+          ],
+          "choices": []
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria menyimpan koin itu.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria mengembalikan koin itu.",
-          "targetPartId": "return_coin"
+      },
+      {
+        "text": "Maria mengembalikan koin itu.",
+        "part": {
+          "id": "return_coin",
+          "content": [
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Maria merasa bersalah dan mengembalikan koin itu.",
+                "Ia meminta maaf kepada wanita tua itu.",
+                "Wanita itu tersenyum dan berkata bahwa pemandian penyembuhan itu punya rahasia."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Hanya hati yang baik yang dapat melihat mata air tersebut.",
+                "Maria berjanji akan menjaga tempat itu.",
+                "Wanita tua itu menghilang di antara pepohonan."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Keesokan harinya Maria kembali bersama teman-temannya.",
+                "Mereka tidak menemukan pemandian penyembuhan itu.",
+                "Maria tersenyum karena tahu tempat itu akan menyambutnya ketika ia datang sendiri."
+              ]
+            }
+          ],
+          "choices": []
         }
-      ]
-    },
-    {
-      "id": "keep_coin",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria menggenggam erat koin itu.",
-            "Ia memasukkannya ke saku dan tetap diam.",
-            "Saat ia menoleh, wanita tua itu sudah menghilang."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Keesokan harinya mata air itu sunyi.",
-            "Airnya dingin dan uapnya lenyap.",
-            "Maria menyadari bahwa pemandian penyembuhan itu tidak lagi percaya padanya."
-          ]
-        }
-      ],
-      "choices": []
-    },
-    {
-      "id": "return_coin",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria merasa bersalah dan mengembalikan koin itu.",
-            "Ia meminta maaf kepada wanita tua itu.",
-            "Wanita itu tersenyum dan berkata bahwa pemandian penyembuhan itu punya rahasia."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Hanya hati yang baik yang dapat melihat mata air tersebut.",
-            "Maria berjanji akan menjaga tempat itu.",
-            "Wanita tua itu menghilang di antara pepohonan."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Keesokan harinya Maria kembali bersama teman-temannya.",
-            "Mereka tidak menemukan pemandian penyembuhan itu.",
-            "Maria tersenyum karena tahu tempat itu akan menyambutnya ketika ia datang sendiri."
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+      }
+    ]
+  }
 }

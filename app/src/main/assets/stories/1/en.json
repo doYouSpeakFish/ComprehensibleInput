@@ -1,136 +1,131 @@
 {
   "id": "1",
   "title": "Secret Healing Bath",
-  "startPartId": "start",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "start",
-      "content": [
-        {
-          "type": "image",
-          "contentDescription": "A picture of a natural spring. In the foreground, there is a waterfall flowing from the spring. Moss-covered rocks are visible in the background, behind steam in the air, illuminated by sunlight filtering through the tree canopy above.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria lives in a small village.",
-            "Every morning she goes for a walk in the forest next to her house.",
-            "She loves the peace and the fresh air."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "One day she hears the sound of flowing water.",
-            "She follows the sound and discovers a spring.",
-            "The water is warm."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "“A healing bath!” she thinks.",
-            "A healing bath is a natural water pool with warm water.",
-            "Many people believe that such water has healing powers."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria has an idea.",
-            "She could come here and relax.",
-            "Maybe she could even invite her friends."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "But then she sees something at the bottom of the healing bath.",
-            "It is a small, shiny object.",
-            "Maria picks it up.",
-            "It is an old coin."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Suddenly she hears a voice behind her: “That is my coin!”",
-            "Maria turns around and sees an old woman.",
-            "The woman looks friendly, but her eyes are sad."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "“This healing bath belongs to my family,” says the old woman.",
-            "“I lost this coin here many years ago.”"
-          ]
+  "start": {
+    "id": "start",
+    "content": [
+      {
+        "type": "image",
+        "contentDescription": "A picture of a natural spring. In the foreground, there is a waterfall flowing from the spring. Moss-covered rocks are visible in the background, behind steam in the air, illuminated by sunlight filtering through the tree canopy above.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maria lives in a small village.",
+          "Every morning she goes for a walk in the forest next to her house.",
+          "She loves the peace and the fresh air."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "One day she hears the sound of flowing water.",
+          "She follows the sound and discovers a spring.",
+          "The water is warm."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "“A healing bath!” she thinks.",
+          "A healing bath is a natural water pool with warm water.",
+          "Many people believe that such water has healing powers."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maria has an idea.",
+          "She could come here and relax.",
+          "Maybe she could even invite her friends."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "But then she sees something at the bottom of the healing bath.",
+          "It is a small, shiny object.",
+          "Maria picks it up.",
+          "It is an old coin."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Suddenly she hears a voice behind her: “That is my coin!”",
+          "Maria turns around and sees an old woman.",
+          "The woman looks friendly, but her eyes are sad."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "“This healing bath belongs to my family,” says the old woman.",
+          "“I lost this coin here many years ago.”"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "text": "Maria keeps the coin.",
+        "part": {
+          "id": "keep_coin",
+          "content": [
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Maria closes her hand around the coin.",
+                "She slips it into her pocket and stays quiet.",
+                "When she looks up, the old woman is gone."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "The next day the spring is silent.",
+                "The water is cold and the steam has vanished.",
+                "Maria realizes the healing bath no longer trusts her."
+              ]
+            }
+          ],
+          "choices": []
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria keeps the coin.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria gives the coin back.",
-          "targetPartId": "return_coin"
+      },
+      {
+        "text": "Maria gives the coin back.",
+        "part": {
+          "id": "return_coin",
+          "content": [
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Maria feels bad and gives the coin back.",
+                "She apologizes to the old woman.",
+                "The woman smiles and says the healing bath has a secret."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Only kind hearts can see the spring.",
+                "Maria promises to keep the place safe.",
+                "The old woman disappears between the trees."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "The next day Maria returns with her friends.",
+                "They cannot find the healing bath.",
+                "Maria smiles, knowing it will welcome her when she visits alone."
+              ]
+            }
+          ],
+          "choices": []
         }
-      ]
-    },
-    {
-      "id": "keep_coin",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria closes her hand around the coin.",
-            "She slips it into her pocket and stays quiet.",
-            "When she looks up, the old woman is gone."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "The next day the spring is silent.",
-            "The water is cold and the steam has vanished.",
-            "Maria realizes the healing bath no longer trusts her."
-          ]
-        }
-      ],
-      "choices": []
-    },
-    {
-      "id": "return_coin",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria feels bad and gives the coin back.",
-            "She apologizes to the old woman.",
-            "The woman smiles and says the healing bath has a secret."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Only kind hearts can see the spring.",
-            "Maria promises to keep the place safe.",
-            "The old woman disappears between the trees."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "The next day Maria returns with her friends.",
-            "They cannot find the healing bath.",
-            "Maria smiles, knowing it will welcome her when she visits alone."
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+      }
+    ]
+  }
 }

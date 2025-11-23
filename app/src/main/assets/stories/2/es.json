@@ -1,96 +1,93 @@
 {
   "id": "2",
   "title": "Sin Parada en Marte",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Hoy es un día especial.",
-            "Soy la primera persona en estar en Fobos, una pequeña luna de Marte.",
-            "Estoy aquí en mi traje espacial y miro hacia el planeta rojo.",
-            "Marte es tan grande y hermoso.",
-            "Los colores son intensos: luz roja y naranja.",
-            "Es una vista increíble."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un astronauta se encuentra con la superficie roja de Fobos y el planeta rojo Marte reflejados en el visor de su casco.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Pero en mi corazón, también hay un poco de tristeza.",
-            "Nunca podré caminar en Marte.",
-            "Esta misión es solo para Fobos.",
-            "Pero también estoy emocionado.",
-            "Fobos es un lugar misterioso, y soy el primero en explorarlo."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "La gravedad aquí es muy baja.",
-            "Me siento ligero y puedo saltar alto.",
-            "Cada paso se siente extraño, casi como volar.",
-            "Es divertido y me hace feliz."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un astronauta salta alto en el aire en la rocosa superficie de Fobos. El cielo arriba está lleno de estrellas.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Solo tenemos veinte días en Fobos.",
-            "Los científicos e ingenieros han trabajado duro para hacer el viaje corto.",
-            "Es menos peligroso de esa manera.",
-            "Quiero descubrir mucho en este corto tiempo."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "También estoy deseando volver a casa.",
-            "Extraño las nubes y la lluvia.",
-            "Imagino estar bajo un cielo azul otra vez y sentir el agua en mi piel."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un astronauta con lluvia y nubes en su casco, mostrando sus pensamientos sobre la Tierra.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Pero ahora, aquí en Fobos, es tiempo de aventura.",
-            "Hay mucho que hacer.",
-            "Doy mi primer paso y comienzo mi trabajo.",
-            "Es un gran momento, para mí y para todas las personas en la Tierra."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un astronauta camina con propósito por la rocosa superficie de Fobos, con Marte en el fondo.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "El fin"
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Hoy es un día especial.",
+          "Soy la primera persona en estar en Fobos, una pequeña luna de Marte.",
+          "Estoy aquí en mi traje espacial y miro hacia el planeta rojo.",
+          "Marte es tan grande y hermoso.",
+          "Los colores son intensos: luz roja y naranja.",
+          "Es una vista increíble."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un astronauta se encuentra con la superficie roja de Fobos y el planeta rojo Marte reflejados en el visor de su casco.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Pero en mi corazón, también hay un poco de tristeza.",
+          "Nunca podré caminar en Marte.",
+          "Esta misión es solo para Fobos.",
+          "Pero también estoy emocionado.",
+          "Fobos es un lugar misterioso, y soy el primero en explorarlo."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "La gravedad aquí es muy baja.",
+          "Me siento ligero y puedo saltar alto.",
+          "Cada paso se siente extraño, casi como volar.",
+          "Es divertido y me hace feliz."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un astronauta salta alto en el aire en la rocosa superficie de Fobos. El cielo arriba está lleno de estrellas.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Solo tenemos veinte días en Fobos.",
+          "Los científicos e ingenieros han trabajado duro para hacer el viaje corto.",
+          "Es menos peligroso de esa manera.",
+          "Quiero descubrir mucho en este corto tiempo."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "También estoy deseando volver a casa.",
+          "Extraño las nubes y la lluvia.",
+          "Imagino estar bajo un cielo azul otra vez y sentir el agua en mi piel."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un astronauta con lluvia y nubes en su casco, mostrando sus pensamientos sobre la Tierra.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Pero ahora, aquí en Fobos, es tiempo de aventura.",
+          "Hay mucho que hacer.",
+          "Doy mi primer paso y comienzo mi trabajo.",
+          "Es un gran momento, para mí y para todas las personas en la Tierra."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un astronauta camina con propósito por la rocosa superficie de Fobos, con Marte en el fondo.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "El fin"
+        ]
+      }
+    ],
+    "choices": []
+  }
 }

@@ -1,98 +1,95 @@
 {
   "id": "4",
   "title": "Os Pequenos Vikings de Berlim",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Era uma vez uma pequena aldeia de vikings, do tamanho de bonecos de brinquedo, que navegaram no tempo e de repente pousaram no coração de Berlim.",
-            "Imagine a surpresa deles quando atracaram seus navios de madeira nas margens do Spree e se viram cercados por edifícios gigantes e carruagens brilhantes - ou, como os chamamos, carros."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Vários pequenos vikings em barcos a remo Viking no Spree, em Berlim.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "No início, os pequenos vikings ficaram muito confusos.",
-            "\"Que tipo de magia é essa?\" perguntou o líder, apontando para um sinal de pedestres piscando.",
-            "\"E por que essa parede está se movendo sozinha?\" ele acrescentou enquanto um trem do metrô passava por eles."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Três minúsculos vikings apontam confusos para um semáforo.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Mas os Vikings são conhecidos pela sua adaptabilidade e espírito de exploração.",
-            "Eles decidiram explorar este novo mundo.",
-            "Subiram em bicicletas, que lhes pareciam navios de guerra gigantescos, e partiram em busca de mais informações."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Um pequeno viking anda de bicicleta no trânsito de Berlim, enquanto outros dois caminham ao lado dos pedais.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "A primeira parada foi na famosa Alexanderplatz, onde se misturaram à multidão.",
-            "As pessoas mal os notavam, distraídas com seus telefones e com a agitação da cidade.",
-            "Os vikings ficaram fascinados pelas muitas barracas de comida.",
-            "“Que festa!” exclamaram, experimentando um pedaço de döner quase tão grande quanto eles."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Um pequeno Viking caminha com um espeto de döner inteiro nas mãos, parecendo muito satisfeito.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Depois de se fartarem, os vikings continuaram sua jornada.",
-            "Eles passaram por um lugar que parecia cheio de tesouros – um mercado de eletrônicos.",
-            "Eles ficaram maravilhados com as telas brilhantes e os dispositivos estranhos, que pensaram serem itens mágicos."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Três pequenos vikings olham surpresos para um tablet em uma loja de eletrônicos.",
-          "path": "5"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "No final do dia, os pequenos vikings estavam exaustos, mas felizes.",
-            "Eles aprenderam muito sobre o mundo moderno e decidiram fazer de Berlim seu novo lar.",
-            "Todos os dias eles teriam uma nova aventura, mas por hoje bastava dormir sob o céu estrelado ao lado de seu familiar Spree."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Pequenos vikings ficam lado a lado em seu escaler, olhando o rio e o horizonte de Berlim à noite.",
-          "path": "6"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "O fim"
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Era uma vez uma pequena aldeia de vikings, do tamanho de bonecos de brinquedo, que navegaram no tempo e de repente pousaram no coração de Berlim.",
+          "Imagine a surpresa deles quando atracaram seus navios de madeira nas margens do Spree e se viram cercados por edifícios gigantes e carruagens brilhantes - ou, como os chamamos, carros."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Vários pequenos vikings em barcos a remo Viking no Spree, em Berlim.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "No início, os pequenos vikings ficaram muito confusos.",
+          "\"Que tipo de magia é essa?\" perguntou o líder, apontando para um sinal de pedestres piscando.",
+          "\"E por que essa parede está se movendo sozinha?\" ele acrescentou enquanto um trem do metrô passava por eles."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Três minúsculos vikings apontam confusos para um semáforo.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Mas os Vikings são conhecidos pela sua adaptabilidade e espírito de exploração.",
+          "Eles decidiram explorar este novo mundo.",
+          "Subiram em bicicletas, que lhes pareciam navios de guerra gigantescos, e partiram em busca de mais informações."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Um pequeno viking anda de bicicleta no trânsito de Berlim, enquanto outros dois caminham ao lado dos pedais.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "A primeira parada foi na famosa Alexanderplatz, onde se misturaram à multidão.",
+          "As pessoas mal os notavam, distraídas com seus telefones e com a agitação da cidade.",
+          "Os vikings ficaram fascinados pelas muitas barracas de comida.",
+          "“Que festa!” exclamaram, experimentando um pedaço de döner quase tão grande quanto eles."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Um pequeno Viking caminha com um espeto de döner inteiro nas mãos, parecendo muito satisfeito.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Depois de se fartarem, os vikings continuaram sua jornada.",
+          "Eles passaram por um lugar que parecia cheio de tesouros – um mercado de eletrônicos.",
+          "Eles ficaram maravilhados com as telas brilhantes e os dispositivos estranhos, que pensaram serem itens mágicos."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Três pequenos vikings olham surpresos para um tablet em uma loja de eletrônicos.",
+        "path": "5"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "No final do dia, os pequenos vikings estavam exaustos, mas felizes.",
+          "Eles aprenderam muito sobre o mundo moderno e decidiram fazer de Berlim seu novo lar.",
+          "Todos os dias eles teriam uma nova aventura, mas por hoje bastava dormir sob o céu estrelado ao lado de seu familiar Spree."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Pequenos vikings ficam lado a lado em seu escaler, olhando o rio e o horizonte de Berlim à noite.",
+        "path": "6"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "O fim"
+        ]
+      }
+    ],
+    "choices": []
+  }
 }

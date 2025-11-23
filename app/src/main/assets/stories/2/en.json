@@ -1,96 +1,93 @@
 {
   "id": "2",
   "title": "No Stop at Mars",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Today is a special day.",
-            "I am the first person to stand on Phobos, a small moon of Mars.",
-            "I stand here in my spacesuit and look up at the red planet.",
-            "Mars is so big and beautiful.",
-            "The colors are intense – red and orange light.",
-            "It is an incredible sight."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "An astronaut stands with the red surface of Phobos and the red planet Mars reflected in his spacesuit visor.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "But in my heart, there is also a little bit of sadness.",
-            "I will never be able to walk on Mars itself.",
-            "This mission is only for Phobos.",
-            "But I am also excited.",
-            "Phobos is a mysterious place, and I am the first to explore it."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "The gravity here is very low.",
-            "I feel light and can jump high.",
-            "Every step feels strange, almost like flying.",
-            "It is fun and makes me happy."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "An astronaut jumps high into the air on the rocky surface of Phobos. The sky above is full of stars.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "We only have twenty days on Phobos.",
-            "The scientists and engineers have worked hard to make the trip short.",
-            "It is less dangerous that way.",
-            "I want to discover a lot in this short time."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "I am also looking forward to going home.",
-            "I miss the clouds and the rain.",
-            "I imagine standing under a blue sky again and feeling the water on my skin."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "An astronaut with rain and clouds in his helmet, showing his thoughts of Earth.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "But now, here on Phobos, it's time for adventure.",
-            "There is so much to do.",
-            "I take my first step and begin my work.",
-            "It is a big moment – for me and for all people on Earth."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "An astronaut walks purposefully across the rocky surface of Phobos, with Mars in the background.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "The end"
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Today is a special day.",
+          "I am the first person to stand on Phobos, a small moon of Mars.",
+          "I stand here in my spacesuit and look up at the red planet.",
+          "Mars is so big and beautiful.",
+          "The colors are intense – red and orange light.",
+          "It is an incredible sight."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "An astronaut stands with the red surface of Phobos and the red planet Mars reflected in his spacesuit visor.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "But in my heart, there is also a little bit of sadness.",
+          "I will never be able to walk on Mars itself.",
+          "This mission is only for Phobos.",
+          "But I am also excited.",
+          "Phobos is a mysterious place, and I am the first to explore it."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "The gravity here is very low.",
+          "I feel light and can jump high.",
+          "Every step feels strange, almost like flying.",
+          "It is fun and makes me happy."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "An astronaut jumps high into the air on the rocky surface of Phobos. The sky above is full of stars.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "We only have twenty days on Phobos.",
+          "The scientists and engineers have worked hard to make the trip short.",
+          "It is less dangerous that way.",
+          "I want to discover a lot in this short time."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "I am also looking forward to going home.",
+          "I miss the clouds and the rain.",
+          "I imagine standing under a blue sky again and feeling the water on my skin."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "An astronaut with rain and clouds in his helmet, showing his thoughts of Earth.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "But now, here on Phobos, it's time for adventure.",
+          "There is so much to do.",
+          "I take my first step and begin my work.",
+          "It is a big moment – for me and for all people on Earth."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "An astronaut walks purposefully across the rocky surface of Phobos, with Mars in the background.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "The end"
+        ]
+      }
+    ],
+    "choices": []
+  }
 }

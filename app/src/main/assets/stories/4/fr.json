@@ -1,98 +1,95 @@
 {
   "id": "4",
   "title": "Les petits Vikings de Berlin",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Il était une fois un petit village de Vikings, pas plus grands que des figurines, qui ont navigué à travers le temps et ont soudainement atterri au cœur de Berlin.",
-            "Imaginez leur surprise lorsqu'ils ont amarré leurs navires en bois sur les rives de la Spree et se sont retrouvés entourés de bâtiments géants et de carrosses lumineux - ou comme nous les appelons, des voitures."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Plusieurs petits Vikings dans des bateaux à rames vikings sur la Spree à Berlin.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Au début, les petits Vikings étaient très confus.",
-            "\"Quelle sorte de magie est-ce ?\" demanda le chef, pointant du doigt un signal piéton clignotant.",
-            "\"Et pourquoi ce mur bouge-t-il tout seul ?\" ajouta-t-il alors qu'un métro passait devant eux."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Trois petits Vikings se tiennent debout et pointent confusément un feu de signalisation.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Mais les Vikings sont connus pour leur adaptabilité et leur esprit d'exploration.",
-            "Ils décidèrent d'explorer ce nouveau monde.",
-            "Ils montèrent sur des vélos, qui leur semblaient être de gigantesques navires de guerre, et partirent découvrir davantage."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un petit Viking monte à vélo dans le trafic de Berlin, tandis que deux autres marchent à côté des pédales.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Leur premier arrêt fut le célèbre Alexanderplatz, où ils se mêlèrent à la foule.",
-            "Les gens les remarquaient à peine, distraits par leurs téléphones et l'agitation de la ville.",
-            "Les Vikings étaient fascinés par les nombreux stands de nourriture.",
-            "\"Quel festin !\" s'exclamèrent-ils en essayant un morceau de döner presque aussi grand qu'eux."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un petit Viking marche avec une brochette de döner entière dans ses mains, ayant l'air très satisfait.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Après avoir mangé à leur faim, les Vikings continuèrent leur voyage.",
-            "Ils passèrent devant un endroit qui semblait rempli de trésors – un marché de l'électronique.",
-            "Ils s'émerveillèrent devant les écrans scintillants et les appareils étranges, qu'ils pensaient être des objets magiques."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Trois petits Vikings regardent avec étonnement une tablette dans un magasin d'électronique.",
-          "path": "5"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "À la fin de la journée, les petits Vikings étaient épuisés mais heureux.",
-            "Ils avaient beaucoup appris sur le monde moderne et décidèrent de faire de Berlin leur nouvelle maison.",
-            "Chaque jour, ils auraient une nouvelle aventure, mais pour aujourd'hui, il suffisait de dormir sous le ciel étoilé à côté de leur familière Spree."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Les petits Vikings se tiennent côte à côte sur leur longboat, regardant la rivière et la ligne d'horizon de Berlin la nuit.",
-          "path": "6"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "La fin"
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Il était une fois un petit village de Vikings, pas plus grands que des figurines, qui ont navigué à travers le temps et ont soudainement atterri au cœur de Berlin.",
+          "Imaginez leur surprise lorsqu'ils ont amarré leurs navires en bois sur les rives de la Spree et se sont retrouvés entourés de bâtiments géants et de carrosses lumineux - ou comme nous les appelons, des voitures."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Plusieurs petits Vikings dans des bateaux à rames vikings sur la Spree à Berlin.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Au début, les petits Vikings étaient très confus.",
+          "\"Quelle sorte de magie est-ce ?\" demanda le chef, pointant du doigt un signal piéton clignotant.",
+          "\"Et pourquoi ce mur bouge-t-il tout seul ?\" ajouta-t-il alors qu'un métro passait devant eux."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Trois petits Vikings se tiennent debout et pointent confusément un feu de signalisation.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Mais les Vikings sont connus pour leur adaptabilité et leur esprit d'exploration.",
+          "Ils décidèrent d'explorer ce nouveau monde.",
+          "Ils montèrent sur des vélos, qui leur semblaient être de gigantesques navires de guerre, et partirent découvrir davantage."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un petit Viking monte à vélo dans le trafic de Berlin, tandis que deux autres marchent à côté des pédales.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Leur premier arrêt fut le célèbre Alexanderplatz, où ils se mêlèrent à la foule.",
+          "Les gens les remarquaient à peine, distraits par leurs téléphones et l'agitation de la ville.",
+          "Les Vikings étaient fascinés par les nombreux stands de nourriture.",
+          "\"Quel festin !\" s'exclamèrent-ils en essayant un morceau de döner presque aussi grand qu'eux."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un petit Viking marche avec une brochette de döner entière dans ses mains, ayant l'air très satisfait.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Après avoir mangé à leur faim, les Vikings continuèrent leur voyage.",
+          "Ils passèrent devant un endroit qui semblait rempli de trésors – un marché de l'électronique.",
+          "Ils s'émerveillèrent devant les écrans scintillants et les appareils étranges, qu'ils pensaient être des objets magiques."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Trois petits Vikings regardent avec étonnement une tablette dans un magasin d'électronique.",
+        "path": "5"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "À la fin de la journée, les petits Vikings étaient épuisés mais heureux.",
+          "Ils avaient beaucoup appris sur le monde moderne et décidèrent de faire de Berlin leur nouvelle maison.",
+          "Chaque jour, ils auraient une nouvelle aventure, mais pour aujourd'hui, il suffisait de dormir sous le ciel étoilé à côté de leur familière Spree."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Les petits Vikings se tiennent côte à côte sur leur longboat, regardant la rivière et la ligne d'horizon de Berlin la nuit.",
+        "path": "6"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "La fin"
+        ]
+      }
+    ],
+    "choices": []
+  }
 }

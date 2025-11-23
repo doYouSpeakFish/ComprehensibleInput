@@ -1,118 +1,115 @@
 {
   "id": "3",
   "title": "Karnaval Kosong",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Dahulu kala, ada sebuah kota kecil di Jerman yang terkenal dengan karnavalnya yang penuh warna dan semarak.",
-            "Setiap tahun, orang-orang datang dari berbagai penjuru untuk menikmati kegiatan meriah dan musik ceria."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Jalan kosong dengan karangan bunga dan dekorasi berwarna-warni tergantung di atasnya.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Tapi tahun ini berbeda.",
-            "Ketika Anna, seorang wanita muda yang tinggal di dekatnya, tiba di tempat pekan raya, anehnya segalanya menjadi sunyi.",
-            "\"Di mana semua orangnya?\" dia bertanya-tanya.",
-            "Jalanan sepi, tidak ada musik yang diputar, tidak ada anak-anak yang tertawa."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Seorang gadis berdiri di pintu masuk tempat pekan raya, melihat sekeliling dengan bingung. Di latar belakang, terlihat komidi putar yang sepi.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Anna berjalan melewati gang dan melihat kios-kios yang dihias, tapi tidak ada pedagang, tidak ada lampu yang berkilauan, tidak ada balon.",
-            "Seolah-olah karnaval belum pernah dimulai."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Kios-kios pameran dengan dekorasi warna-warni, tetapi tidak ada orang di sekitarnya. Suasana kehampaan dan keheningan di udara.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Tiba-tiba dia mendengar suara samar.",
-            "\"Halo?\" dia menelepon.",
-            "Tidak ada jawaban.",
-            "Dia mengikuti suara itu dan menemukan seekor anjing kecil ketakutan bersembunyi di bawah bangku."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Seekor anjing bersembunyi di bawah bangku, tampak ketakutan.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "\"Apa yang kamu lakukan di sini sendirian?\" Anna bertanya pada anjing itu.",
-            "Anjing itu menatapnya dengan mata besar, seolah berkata: \"Saya juga tidak tahu.\""
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Anna memutuskan untuk menemani anjing itu, dan bersama-sama mereka mencari petunjuk.",
-            "Mereka menemukan poster yang bertuliskan: \"Karnaval ditunda! Tanggal baru akan segera menyusul.\""
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Anna sekarang mengerti mengapa tidak ada seorang pun di sana.",
-            "Karnavalnya telah ditunda, tapi dia belum mengetahuinya.",
-            "Dia tersenyum pada anjing itu dan berkata: \"Yah, sepertinya kita punya seluruh tempat untuk diri kita sendiri.\""
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maka, Anna dan anjing kecil itu menghabiskan hari bersama di pasar malam yang kosong, bermain di antara kios-kios yang penuh warna dan menikmati kedamaian yang tak terduga."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Seorang gadis melempar bola untuk ditangkap anjing, di depan kios-kios pasar yang kosong. Anjing itu terlihat bahagia dan ceria.",
-          "path": "5"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Saat hari mulai gelap, Anna membawa pulang anjing itu dan berjanji akan mengunjunginya lagi keesokan harinya.",
-            "Mungkin karnaval akan segera dibuka untuk semua orang, tetapi untuk hari ini itulah rahasia kecil mereka – rahasia karnaval yang kosong."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Seorang gadis berjalan menjauh dari tempat pekan raya yang kosong, diikuti oleh seekor anjing. Matahari terbenam di latar belakang.",
-          "path": "6"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Dan pesan moral dari cerita ini?",
-            "Terkadang, ketika segala sesuatunya tidak berjalan seperti yang kita harapkan, kita menemukan kegembiraan di saat-saat yang paling tidak biasa dan persahabatan di tempat yang paling tidak terduga."
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Dahulu kala, ada sebuah kota kecil di Jerman yang terkenal dengan karnavalnya yang penuh warna dan semarak.",
+          "Setiap tahun, orang-orang datang dari berbagai penjuru untuk menikmati kegiatan meriah dan musik ceria."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Jalan kosong dengan karangan bunga dan dekorasi berwarna-warni tergantung di atasnya.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Tapi tahun ini berbeda.",
+          "Ketika Anna, seorang wanita muda yang tinggal di dekatnya, tiba di tempat pekan raya, anehnya segalanya menjadi sunyi.",
+          "\"Di mana semua orangnya?\" dia bertanya-tanya.",
+          "Jalanan sepi, tidak ada musik yang diputar, tidak ada anak-anak yang tertawa."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Seorang gadis berdiri di pintu masuk tempat pekan raya, melihat sekeliling dengan bingung. Di latar belakang, terlihat komidi putar yang sepi.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Anna berjalan melewati gang dan melihat kios-kios yang dihias, tapi tidak ada pedagang, tidak ada lampu yang berkilauan, tidak ada balon.",
+          "Seolah-olah karnaval belum pernah dimulai."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Kios-kios pameran dengan dekorasi warna-warni, tetapi tidak ada orang di sekitarnya. Suasana kehampaan dan keheningan di udara.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Tiba-tiba dia mendengar suara samar.",
+          "\"Halo?\" dia menelepon.",
+          "Tidak ada jawaban.",
+          "Dia mengikuti suara itu dan menemukan seekor anjing kecil ketakutan bersembunyi di bawah bangku."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Seekor anjing bersembunyi di bawah bangku, tampak ketakutan.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "\"Apa yang kamu lakukan di sini sendirian?\" Anna bertanya pada anjing itu.",
+          "Anjing itu menatapnya dengan mata besar, seolah berkata: \"Saya juga tidak tahu.\""
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Anna memutuskan untuk menemani anjing itu, dan bersama-sama mereka mencari petunjuk.",
+          "Mereka menemukan poster yang bertuliskan: \"Karnaval ditunda! Tanggal baru akan segera menyusul.\""
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Anna sekarang mengerti mengapa tidak ada seorang pun di sana.",
+          "Karnavalnya telah ditunda, tapi dia belum mengetahuinya.",
+          "Dia tersenyum pada anjing itu dan berkata: \"Yah, sepertinya kita punya seluruh tempat untuk diri kita sendiri.\""
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maka, Anna dan anjing kecil itu menghabiskan hari bersama di pasar malam yang kosong, bermain di antara kios-kios yang penuh warna dan menikmati kedamaian yang tak terduga."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Seorang gadis melempar bola untuk ditangkap anjing, di depan kios-kios pasar yang kosong. Anjing itu terlihat bahagia dan ceria.",
+        "path": "5"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Saat hari mulai gelap, Anna membawa pulang anjing itu dan berjanji akan mengunjunginya lagi keesokan harinya.",
+          "Mungkin karnaval akan segera dibuka untuk semua orang, tetapi untuk hari ini itulah rahasia kecil mereka – rahasia karnaval yang kosong."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Seorang gadis berjalan menjauh dari tempat pekan raya yang kosong, diikuti oleh seekor anjing. Matahari terbenam di latar belakang.",
+        "path": "6"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Dan pesan moral dari cerita ini?",
+          "Terkadang, ketika segala sesuatunya tidak berjalan seperti yang kita harapkan, kita menemukan kegembiraan di saat-saat yang paling tidak biasa dan persahabatan di tempat yang paling tidak terduga."
+        ]
+      }
+    ],
+    "choices": []
+  }
 }

@@ -99,13 +99,13 @@ class StoryTranslationStructureTest {
         structure: StoryDescriptor,
         reference: StoryDescriptor,
     ): List<String> {
-        if (structure.startPartId == reference.startPartId) {
+        if (structure.start.id == reference.start.id) {
             return emptyList()
         }
 
         return listOf(
             context.storyMessage(
-                "starts at part '${structure.startPartId}' but expected '${reference.startPartId}' as in '${context.referenceKey}'."
+                "starts at part '${structure.start.id}' but expected '${reference.start.id}' as in '${context.referenceKey}'."
             )
         )
     }
@@ -303,12 +303,12 @@ class StoryTranslationStructureTest {
 
             part.choices.forEachIndexed { index, choice ->
                 val referenceChoice = referencePart.choices[index]
-                if (choice.targetPartId != referenceChoice.targetPartId) {
+                if (choice.part.id != referenceChoice.part.id) {
                     val message = buildString {
                         append("choice $index targets '")
-                        append(choice.targetPartId)
+                        append(choice.part.id)
                         append("' but expected '")
-                        append(referenceChoice.targetPartId)
+                        append(referenceChoice.part.id)
                         append("' as in '")
                         append(context.referenceKey)
                         append("'.")
@@ -330,49 +330,31 @@ class StoryTranslationStructureTest {
         val visited = mutableSetOf<String>()
         val visiting = mutableSetOf<String>()
 
-        fun dfs(partId: String) {
-            val part = story.parts[partId]
-            if (part == null) {
-                  failures += storyMessage(
-                      storyDir = storyDir,
-                      translation = translation,
-                      content = "references missing part '$partId'.",
-                  )
+        fun dfs(part: StoryPartDescriptor) {
+            if (visiting.contains(part.id)) {
+                failures += storyMessage(
+                    storyDir = storyDir,
+                    translation = translation,
+                    content = "part '${part.id}' participates in a loop.",
+                )
                 return
             }
-            if (!visited.add(partId)) {
-                  failures += storyMessage(
-                      storyDir = storyDir,
-                      translation = translation,
-                      content = "part '$partId' can be reached through more than one path.",
-                  )
+            if (!visited.add(part.id)) {
+                failures += storyMessage(
+                    storyDir = storyDir,
+                    translation = translation,
+                    content = "part '${part.id}' can be reached through more than one path.",
+                )
                 return
             }
-            visiting.add(partId)
+            visiting.add(part.id)
             part.choices.forEach { choice ->
-                val targetId = choice.targetPartId
-                if (!story.parts.containsKey(targetId)) {
-                  failures += storyMessage(
-                      storyDir = storyDir,
-                      translation = translation,
-                      content = "part '$partId' has a choice targeting unknown part '$targetId'.",
-                  )
-                    return@forEach
-                }
-                if (visiting.contains(targetId)) {
-                  failures += storyMessage(
-                      storyDir = storyDir,
-                      translation = translation,
-                      content = "part '$partId' choice to '$targetId' creates a loop.",
-                  )
-                    return@forEach
-                }
-                dfs(targetId)
+                dfs(choice.part)
             }
-            visiting.remove(partId)
+            visiting.remove(part.id)
         }
 
-        dfs(story.startPartId)
+        dfs(story.start)
 
         val unreachable = story.parts.keys - visited
         if (unreachable.isNotEmpty()) {
@@ -499,40 +481,21 @@ class StoryTranslationStructureTest {
 
     private fun parseStory(path: Path): StoryDescriptor {
         val element = json.parseToJsonElement(path.readText()).jsonObject
-        val startPartId = element.requireString(key = "startPartId", path = path)
         val featuredImagePath = element.requireString(key = "featuredImagePath", path = path)
-        val partsArray = element.requireArray(key = "parts", path = path)
+        val startObject = element.requireObject(key = "start", path = path)
 
-        val parts = partsArray.map { partElement ->
-            val partObject = partElement.jsonObject
-            val partId = partObject.requireString(key = "id", path = path, context = "part")
-            val contentArray = partObject.requireContentArray(path = path, partId = partId)
-            val contentDescriptors = contentArray.mapIndexed { index, item ->
-                item.jsonObject.toContentDescriptor(path = path, partId = partId, index = index)
+        val startPart = startObject.toStoryPartDescriptor(path = path)
+        val partsById = mutableMapOf<String, StoryPartDescriptor>()
+
+        fun collectParts(part: StoryPartDescriptor) {
+            if (partsById.containsKey(part.id)) {
+                error("Story file '$path' has duplicate part ids: ${part.id}")
             }
-            val choicesArray = partObject["choices"] as? JsonArray ?: JsonArray(emptyList())
-            val choices = choicesArray.mapIndexed { index, choiceElement ->
-                val choiceObject = choiceElement.jsonObject
-                val targetId = choiceObject.requireString(key = "targetPartId", path = path, context = "choice $index in part '$partId'")
-                val text = choiceObject.requireString(key = "text", path = path, context = "choice $index in part '$partId'")
-                ChoiceDescriptor(
-                    text = text,
-                    targetPartId = targetId,
-                )
-            }
-            StoryPartDescriptor(
-                id = partId,
-                content = contentDescriptors,
-                choices = choices,
-            )
+            partsById[part.id] = part
+            part.choices.forEach { choice -> collectParts(choice.part) }
         }
 
-        val duplicateParts = parts.groupBy { it.id }.filterValues { it.size > 1 }.keys
-        if (duplicateParts.isNotEmpty()) {
-            error("Story file '$path' has duplicate part ids: ${duplicateParts.sorted().joinToString()}")
-        }
-
-        val partsById = parts.associateBy { it.id }
+        collectParts(startPart)
 
         if (featuredImagePath.isNotBlank()) {
             val containsFeaturedImage = partsById.values.any { part ->
@@ -543,12 +506,8 @@ class StoryTranslationStructureTest {
             }
         }
 
-        if (!partsById.containsKey(startPartId)) {
-            error("Story file '$path' startPartId '$startPartId' does not match any part")
-        }
-
         return StoryDescriptor(
-            startPartId = startPartId,
+            start = startPart,
             featuredImagePath = featuredImagePath,
             parts = partsById,
         )
@@ -566,10 +525,10 @@ class StoryTranslationStructureTest {
         }
     }
 
-    private fun JsonObject.requireArray(key: String, path: Path): JsonArray {
-        val element = this[key] ?: error("Story file '$path' is missing a '$key' array")
-        return element as? JsonArray
-            ?: error("Story file '$path' has a non-array '$key' element")
+    private fun JsonObject.requireObject(key: String, path: Path): JsonObject {
+        val element = this[key] ?: error("Story file '$path' is missing a '$key' object")
+        return element as? JsonObject
+            ?: error("Story file '$path' has a non-object '$key' element")
     }
 
     private fun JsonObject.requireContentArray(path: Path, partId: String): JsonArray {
@@ -577,6 +536,36 @@ class StoryTranslationStructureTest {
             ?: error("Story file '$path' is missing a 'content' array in part '$partId'")
         return contentElement as? JsonArray
             ?: error("Story file '$path' has a non-array 'content' element in part '$partId'")
+    }
+
+    private fun JsonObject.toStoryPartDescriptor(path: Path): StoryPartDescriptor {
+        val partId = requireString(key = "id", path = path, context = "part")
+        val contentArray = requireContentArray(path = path, partId = partId)
+        val contentDescriptors = contentArray.mapIndexed { index, item ->
+            item.jsonObject.toContentDescriptor(path = path, partId = partId, index = index)
+        }
+        val choicesArray = this["choices"] as? JsonArray ?: JsonArray(emptyList())
+        val choices = choicesArray.mapIndexed { index, choiceElement ->
+            val choiceObject = choiceElement.jsonObject
+            val choicePart = choiceObject.requireObject(
+                key = "part",
+                path = path,
+            ).toStoryPartDescriptor(path = path)
+            val text = choiceObject.requireString(
+                key = "text",
+                path = path,
+                context = "choice $index in part '$partId'",
+            )
+            ChoiceDescriptor(
+                text = text,
+                part = choicePart,
+            )
+        }
+        return StoryPartDescriptor(
+            id = partId,
+            content = contentDescriptors,
+            choices = choices,
+        )
     }
 
     private fun JsonObject.toContentDescriptor(
@@ -617,7 +606,7 @@ class StoryTranslationStructureTest {
     }
 
     private data class StoryDescriptor(
-        val startPartId: String,
+        val start: StoryPartDescriptor,
         val featuredImagePath: String,
         val parts: Map<String, StoryPartDescriptor>,
     )
@@ -630,7 +619,7 @@ class StoryTranslationStructureTest {
 
     private data class ChoiceDescriptor(
         val text: String,
-        val targetPartId: String,
+        val part: StoryPartDescriptor,
     )
 
     private data class ContentDescriptor(

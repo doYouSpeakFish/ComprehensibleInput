@@ -1,136 +1,131 @@
 {
   "id": "1",
   "title": "Geheimes Heilbad",
-  "startPartId": "start",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "start",
-      "content": [
-        {
-          "type": "image",
-          "contentDescription": "Ein Bild einer natürlichen Quelle. Im Vordergrund gibt es einen Wasserfall, der aus der Quelle fließt. Mit Moos bedeckte Felsen sind im Hintergrund sichtbar, hinter Dampf in der Luft, beleuchtet von Sonnenstrahlen, die durch das Blätterdach der Bäume darüber dringen.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria lebt in einem kleinen Dorf.",
-            "Jeden Morgen geht sie spazieren im Wald neben ihrem Haus.",
-            "Sie liebt die Ruhe und die frische Luft."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Eines Tages hört sie das Geräusch von fließendem Wasser.",
-            "Sie folgt dem Geräusch und entdeckt eine Quelle.",
-            "Das Wasser ist warm."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "„Ein Heilbad!“, denkt sie.",
-            "Ein Heilbad ist ein natürliches Wasserbecken mit warmem Wasser.",
-            "Viele Menschen glauben, dass solches Wasser heilende Kräfte hat."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria hat eine Idee.",
-            "Sie könnte hierher kommen und sich entspannen.",
-            "Vielleicht könnte sie sogar ihre Freunde einladen."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Aber dann sieht sie etwas am Boden des Heilbades.",
-            "Es ist ein kleiner, glänzender Gegenstand.",
-            "Maria nimmt ihn hoch.",
-            "Es ist eine alte Münze."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Plötzlich hört sie eine Stimme hinter sich: „Das ist meine Münze!“",
-            "Maria dreht sich um und sieht eine alte Frau.",
-            "Die Frau sieht freundlich aus, aber ihre Augen sind traurig."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "„Dieses Heilbad gehört meiner Familie“, sagt die alte Frau.",
-            "„Ich habe diese Münze vor vielen Jahren hier verloren.“"
-          ]
+  "start": {
+    "id": "start",
+    "content": [
+      {
+        "type": "image",
+        "contentDescription": "Ein Bild einer natürlichen Quelle. Im Vordergrund gibt es einen Wasserfall, der aus der Quelle fließt. Mit Moos bedeckte Felsen sind im Hintergrund sichtbar, hinter Dampf in der Luft, beleuchtet von Sonnenstrahlen, die durch das Blätterdach der Bäume darüber dringen.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maria lebt in einem kleinen Dorf.",
+          "Jeden Morgen geht sie spazieren im Wald neben ihrem Haus.",
+          "Sie liebt die Ruhe und die frische Luft."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Eines Tages hört sie das Geräusch von fließendem Wasser.",
+          "Sie folgt dem Geräusch und entdeckt eine Quelle.",
+          "Das Wasser ist warm."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "„Ein Heilbad!“, denkt sie.",
+          "Ein Heilbad ist ein natürliches Wasserbecken mit warmem Wasser.",
+          "Viele Menschen glauben, dass solches Wasser heilende Kräfte hat."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Maria hat eine Idee.",
+          "Sie könnte hierher kommen und sich entspannen.",
+          "Vielleicht könnte sie sogar ihre Freunde einladen."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Aber dann sieht sie etwas am Boden des Heilbades.",
+          "Es ist ein kleiner, glänzender Gegenstand.",
+          "Maria nimmt ihn hoch.",
+          "Es ist eine alte Münze."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Plötzlich hört sie eine Stimme hinter sich: „Das ist meine Münze!“",
+          "Maria dreht sich um und sieht eine alte Frau.",
+          "Die Frau sieht freundlich aus, aber ihre Augen sind traurig."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "„Dieses Heilbad gehört meiner Familie“, sagt die alte Frau.",
+          "„Ich habe diese Münze vor vielen Jahren hier verloren.“"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "text": "Maria behält die Münze.",
+        "part": {
+          "id": "keep_coin",
+          "content": [
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Maria schließt ihre Hand um die Münze.",
+                "Sie steckt sie in ihre Tasche und schweigt.",
+                "Als sie wieder aufblickt, ist die alte Frau verschwunden."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Am nächsten Tag ist die Quelle still.",
+                "Das Wasser ist kalt und der Dampf ist verschwunden.",
+                "Maria merkt, dass das Heilbad ihr nicht mehr vertraut."
+              ]
+            }
+          ],
+          "choices": []
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria behält die Münze.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria gibt die Münze zurück.",
-          "targetPartId": "return_coin"
+      },
+      {
+        "text": "Maria gibt die Münze zurück.",
+        "part": {
+          "id": "return_coin",
+          "content": [
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Maria bekommt ein schlechtes Gewissen und gibt die Münze zurück.",
+                "Sie entschuldigt sich bei der alten Frau.",
+                "Die Frau lächelt und sagt, das Heilbad habe ein Geheimnis."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Nur reine Herzen können die Quelle sehen.",
+                "Maria verspricht, den Ort zu schützen.",
+                "Die alte Frau verschwindet zwischen den Bäumen."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "sentences": [
+                "Am nächsten Tag kommt Maria mit ihren Freunden zurück.",
+                "Sie können das Heilbad nicht finden.",
+                "Maria lächelt, weil sie weiß, dass es sie allein willkommen heißt."
+              ]
+            }
+          ],
+          "choices": []
         }
-      ]
-    },
-    {
-      "id": "keep_coin",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria schließt ihre Hand um die Münze.",
-            "Sie steckt sie in ihre Tasche und schweigt.",
-            "Als sie wieder aufblickt, ist die alte Frau verschwunden."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Am nächsten Tag ist die Quelle still.",
-            "Das Wasser ist kalt und der Dampf ist verschwunden.",
-            "Maria merkt, dass das Heilbad ihr nicht mehr vertraut."
-          ]
-        }
-      ],
-      "choices": []
-    },
-    {
-      "id": "return_coin",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Maria bekommt ein schlechtes Gewissen und gibt die Münze zurück.",
-            "Sie entschuldigt sich bei der alten Frau.",
-            "Die Frau lächelt und sagt, das Heilbad habe ein Geheimnis."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Nur reine Herzen können die Quelle sehen.",
-            "Maria verspricht, den Ort zu schützen.",
-            "Die alte Frau verschwindet zwischen den Bäumen."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Am nächsten Tag kommt Maria mit ihren Freunden zurück.",
-            "Sie können das Heilbad nicht finden.",
-            "Maria lächelt, weil sie weiß, dass es sie allein willkommen heißt."
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+      }
+    ]
+  }
 }

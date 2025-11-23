@@ -1,118 +1,115 @@
 {
   "id": "3",
   "title": "El Carnaval Vacío",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Érase una vez, un pequeño pueblo en Alemania conocido por su colorido y animado carnaval.",
-            "Cada año, la gente venía de todas partes para disfrutar de las actividades festivas y la música alegre."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Una calle vacía con guirnaldas y decoraciones coloridas colgando arriba.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Pero este año fue diferente.",
-            "Cuando Anna, una joven que vivía cerca, llegó al recinto ferial, todo estaba extrañamente tranquilo.",
-            "\"¿Dónde está toda la gente?\" se preguntó.",
-            "Las calles estaban vacías, no se escuchaba música, no había niños riendo."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Una chica está en la entrada de un recinto ferial, mirando alrededor confundida. En el fondo, se ve un carrusel desierto.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Anna caminó por los callejones y vio los puestos decorados, pero no había vendedores, ni luces brillantes, ni globos.",
-            "Era como si el carnaval nunca hubiera comenzado."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Puestos de feria con decoraciones coloridas, pero sin gente alrededor. Una atmósfera de vacío y silencio en el aire.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "De repente, escuchó un sonido débil.",
-            "\"¿Hola?\" llamó.",
-            "No hubo respuesta.",
-            "Siguió el sonido y encontró a un pequeño perro asustado escondido bajo un banco."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Un perro se esconde bajo un banco, luciendo asustado.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "\"¿Qué haces aquí solo?\" Anna le preguntó al perro.",
-            "El perro la miró con ojos grandes, como diciendo: \"Yo tampoco lo sé.\""
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Anna decidió acompañar al perro, y juntos buscaron pistas.",
-            "Encontraron un cartel que decía: \"¡Carnaval pospuesto! Nuevas fechas próximamente.\""
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Anna ahora entendía por qué no había nadie allí.",
-            "El carnaval había sido pospuesto, pero ella no lo sabía.",
-            "Sonrió al perro y dijo: \"Bueno, parece que tenemos todo el lugar para nosotros.\""
-          ]
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Y así, Anna y el pequeño perro pasaron el día juntos en el recinto ferial vacío, jugando entre los coloridos puestos y disfrutando de la inesperada paz."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Una chica lanza una pelota para que un perro la atrape, frente a puestos de feria vacíos. El perro parece feliz y juguetón.",
-          "path": "5"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Al oscurecer, Anna llevó al perro a casa y prometió visitarlo de nuevo al día siguiente.",
-            "Tal vez el carnaval pronto abriría para todos, pero por hoy era su pequeño secreto: el secreto del carnaval vacío."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Una chica se aleja de un recinto ferial vacío, seguida por un perro. El sol se pone en el fondo.",
-          "path": "6"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "¿Y la moraleja de la historia?",
-            "A veces, cuando las cosas no salen como esperamos, encontramos alegría en los momentos más inusuales y amistades en los lugares más inesperados."
-          ]
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Érase una vez, un pequeño pueblo en Alemania conocido por su colorido y animado carnaval.",
+          "Cada año, la gente venía de todas partes para disfrutar de las actividades festivas y la música alegre."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Una calle vacía con guirnaldas y decoraciones coloridas colgando arriba.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Pero este año fue diferente.",
+          "Cuando Anna, una joven que vivía cerca, llegó al recinto ferial, todo estaba extrañamente tranquilo.",
+          "\"¿Dónde está toda la gente?\" se preguntó.",
+          "Las calles estaban vacías, no se escuchaba música, no había niños riendo."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Una chica está en la entrada de un recinto ferial, mirando alrededor confundida. En el fondo, se ve un carrusel desierto.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Anna caminó por los callejones y vio los puestos decorados, pero no había vendedores, ni luces brillantes, ni globos.",
+          "Era como si el carnaval nunca hubiera comenzado."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Puestos de feria con decoraciones coloridas, pero sin gente alrededor. Una atmósfera de vacío y silencio en el aire.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "De repente, escuchó un sonido débil.",
+          "\"¿Hola?\" llamó.",
+          "No hubo respuesta.",
+          "Siguió el sonido y encontró a un pequeño perro asustado escondido bajo un banco."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Un perro se esconde bajo un banco, luciendo asustado.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "\"¿Qué haces aquí solo?\" Anna le preguntó al perro.",
+          "El perro la miró con ojos grandes, como diciendo: \"Yo tampoco lo sé.\""
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Anna decidió acompañar al perro, y juntos buscaron pistas.",
+          "Encontraron un cartel que decía: \"¡Carnaval pospuesto! Nuevas fechas próximamente.\""
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Anna ahora entendía por qué no había nadie allí.",
+          "El carnaval había sido pospuesto, pero ella no lo sabía.",
+          "Sonrió al perro y dijo: \"Bueno, parece que tenemos todo el lugar para nosotros.\""
+        ]
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Y así, Anna y el pequeño perro pasaron el día juntos en el recinto ferial vacío, jugando entre los coloridos puestos y disfrutando de la inesperada paz."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Una chica lanza una pelota para que un perro la atrape, frente a puestos de feria vacíos. El perro parece feliz y juguetón.",
+        "path": "5"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Al oscurecer, Anna llevó al perro a casa y prometió visitarlo de nuevo al día siguiente.",
+          "Tal vez el carnaval pronto abriría para todos, pero por hoy era su pequeño secreto: el secreto del carnaval vacío."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Una chica se aleja de un recinto ferial vacío, seguida por un perro. El sol se pone en el fondo.",
+        "path": "6"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "¿Y la moraleja de la historia?",
+          "A veces, cuando las cosas no salen como esperamos, encontramos alegría en los momentos más inusuales y amistades en los lugares más inesperados."
+        ]
+      }
+    ],
+    "choices": []
+  }
 }

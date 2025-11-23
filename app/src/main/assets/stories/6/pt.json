@@ -1,83 +1,80 @@
 {
   "id": "6",
   "title": "Árvore Velha",
-  "startPartId": "main",
   "featuredImagePath": "1",
-  "parts": [
-    {
-      "id": "main",
-      "content": [
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Tudo começou quando eu era uma pequena semente.",
-            "Um pássaro me carregou para longe dos meus pais e me escondeu na terra fofa.",
-            "Logo comecei a crescer.",
-            "O sol me aqueceu e a chuva me deu algo para beber."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Uma muda brotando do chão.",
-          "path": "1"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Os anos se passaram e eu me tornei maior e mais forte.",
-            "As crianças vinham brincar debaixo dos meus galhos e eu ouvia suas risadas.",
-            "Às vezes subiam alto e construíam casinhas nos meus galhos.",
-            "Fiquei feliz em trazer-lhes alegria."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Uma grande árvore com uma casa na árvore nos galhos. As crianças correm animadamente em direção à árvore.",
-          "path": "2"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "À medida que fui crescendo, o mundo ao meu redor mudou.",
-            "Novos edifícios foram erguidos e a paisagem mudou.",
-            "Vi cavalos substituídos por carros e as luzes da cidade ficaram mais brilhantes.",
-            "No entanto, apesar de todas as mudanças, permaneci uma testemunha silenciosa da passagem do tempo."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "O horizonte de uma cidade visto através dos galhos de uma árvore.",
-          "path": "3"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Nos meus melhores anos, fui lar de muitos pássaros e pequenos animais.",
-            "Eles procuraram abrigo em minha folhagem e se alimentaram dos frutos que eu produzia.",
-            "Tive orgulho de fazer parte do ciclo da vida."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Um esquilo enrolado em um ninho de pássaro. Outro esquilo está sentado em um galho ao fundo, comendo nozes.",
-          "path": "4"
-        },
-        {
-          "type": "paragraph",
-          "sentences": [
-            "Agora estou muito velho.",
-            "Minha casca está rachada e meus galhos não são mais tão fortes como antes.",
-            "Mas continuo aqui e ofereço sombra e conforto a quem procura.",
-            "Espero estar aqui por muitos mais anos, para contar histórias de vida."
-          ]
-        },
-        {
-          "type": "image",
-          "contentDescription": "Uma velha árvore retorcida e forte.",
-          "path": "5"
-        }
-      ],
-      "choices": []
-    }
-  ]
+  "start": {
+    "id": "main",
+    "content": [
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Tudo começou quando eu era uma pequena semente.",
+          "Um pássaro me carregou para longe dos meus pais e me escondeu na terra fofa.",
+          "Logo comecei a crescer.",
+          "O sol me aqueceu e a chuva me deu algo para beber."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Uma muda brotando do chão.",
+        "path": "1"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Os anos se passaram e eu me tornei maior e mais forte.",
+          "As crianças vinham brincar debaixo dos meus galhos e eu ouvia suas risadas.",
+          "Às vezes subiam alto e construíam casinhas nos meus galhos.",
+          "Fiquei feliz em trazer-lhes alegria."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Uma grande árvore com uma casa na árvore nos galhos. As crianças correm animadamente em direção à árvore.",
+        "path": "2"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "À medida que fui crescendo, o mundo ao meu redor mudou.",
+          "Novos edifícios foram erguidos e a paisagem mudou.",
+          "Vi cavalos substituídos por carros e as luzes da cidade ficaram mais brilhantes.",
+          "No entanto, apesar de todas as mudanças, permaneci uma testemunha silenciosa da passagem do tempo."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "O horizonte de uma cidade visto através dos galhos de uma árvore.",
+        "path": "3"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Nos meus melhores anos, fui lar de muitos pássaros e pequenos animais.",
+          "Eles procuraram abrigo em minha folhagem e se alimentaram dos frutos que eu produzia.",
+          "Tive orgulho de fazer parte do ciclo da vida."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Um esquilo enrolado em um ninho de pássaro. Outro esquilo está sentado em um galho ao fundo, comendo nozes.",
+        "path": "4"
+      },
+      {
+        "type": "paragraph",
+        "sentences": [
+          "Agora estou muito velho.",
+          "Minha casca está rachada e meus galhos não são mais tão fortes como antes.",
+          "Mas continuo aqui e ofereço sombra e conforto a quem procura.",
+          "Espero estar aqui por muitos mais anos, para contar histórias de vida."
+        ]
+      },
+      {
+        "type": "image",
+        "contentDescription": "Uma velha árvore retorcida e forte.",
+        "path": "5"
+      }
+    ],
+    "choices": []
+  }
 }

@@ -38,19 +38,9 @@ interface StoriesLocalDataSource {
 data class StoryData(
     val id: String,
     val title: String,
-    val startPartId: String,
     val featuredImagePath: String,
-    val parts: List<StoryPartData>,
-) {
-    val partParents = parts
-        .asSequence()
-        .flatMap { part ->
-            part.choices.map { choice -> part.id to choice.targetPartId }
-        }
-        .associate { (parentId, childId) ->
-            childId to parentId
-        }
-}
+    val start: StoryPartData,
+)
 
 @Serializable
 data class StoryPartData(
@@ -62,7 +52,7 @@ data class StoryPartData(
 @Serializable
 data class StoryChoiceData(
     val text: String,
-    val targetPartId: String,
+    val part: StoryPartData,
 )
 
 /**
