@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -134,133 +135,6 @@ private fun StoryReader(
     }
 }
 
-@Suppress("LongMethod", "CyclomaticComplexMethod")
-@Composable
-private fun StoryPage(
-    modifier: Modifier = Modifier,
-    partIndex: Int,
-    part: StoryReaderPartUiState,
-    selectedText: StoryReaderUiState.SelectedText?,
-    isCurrentPart: Boolean,
-    initialContentIndex: Int,
-    isExplainerShownAtStart: Boolean,
-    timesExplainerTapped: Int,
-    onExplainerTapped: () -> Unit,
-    onSentenceSelected: (partIndex: Int, paragraph: Int, sentence: Int) -> Unit,
-    onChoiceTextSelected: (partIndex: Int, optionIndex: Int) -> Unit,
-    onChosenChoiceSelected: (partIndex: Int) -> Unit,
-    onStoryPositionUpdated: (Int) -> Unit,
-) {
-    val headerOffset = if (part.leadingChoice != null) 1 else 0
-    val initialListIndex = if (isCurrentPart) {
-        if (initialContentIndex == 0) 0 else initialContentIndex + headerOffset
-    } else {
-        0
-    }
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListIndex)
-
-    LaunchedEffect(isCurrentPart, initialContentIndex) {
-        if (isCurrentPart) {
-            val targetIndex = if (initialContentIndex == 0) 0 else initialContentIndex + headerOffset
-            listState.scrollToItem(targetIndex)
-        } else if (listState.firstVisibleItemIndex != 0) {
-            listState.scrollToItem(0)
-        }
-    }
-
-    LaunchedEffect(isCurrentPart) {
-        if (isCurrentPart) {
-            snapshotFlow { listState.firstVisibleItemIndex }
-                .conflate()
-                .distinctUntilChanged()
-                .collect { listIndex ->
-                    val storyPosition = if (listIndex <= headerOffset) 0 else listIndex - headerOffset
-                    onStoryPositionUpdated(storyPosition)
-                }
-        }
-    }
-
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("story_reader_page_list"),
-        state = listState,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        part.leadingChoice?.let { leadingChoice ->
-            item(key = "${part.id}_leading_choice") {
-                val isTranslated =
-                    (selectedText as? StoryReaderUiState.SelectedText.ChosenChoice)
-                        ?.takeIf { selected -> selected.partIndex == partIndex }
-                        ?.isTranslated == true
-                StoryContentPart(
-                    state = StoryContentPartUiState.ChosenChoice(
-                        text = leadingChoice.text,
-                        translatedText = leadingChoice.translatedText,
-                    ),
-                    isChosenChoiceTranslated = isTranslated,
-                    onChosenChoiceSelected = { onChosenChoiceSelected(partIndex) },
-                )
-            }
-        }
-
-        itemsIndexed(part.content, key = { index, content ->
-            "${part.id}_${index}_${content::class.simpleName}"
-        }) { contentIndex, item ->
-            val selectedSentence =
-                selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph
-            val selectedChoice =
-                selectedText as? StoryReaderUiState.SelectedText.ChoiceOption
-            val selectedChosenChoice =
-                selectedText as? StoryReaderUiState.SelectedText.ChosenChoice
-            val sentenceSelectionIndex = selectedSentence?.selectedSentenceIndex
-                ?.takeIf {
-                    contentIndex == selectedSentence.paragraphIndex &&
-                        partIndex == selectedSentence.partIndex
-                }
-            val choiceSelectionIndex = selectedChoice?.optionIndex
-                ?.takeIf {
-                    partIndex == selectedChoice.partIndex && item is StoryContentPartUiState.Choices
-                }
-            val isSelectionTranslated = when {
-                sentenceSelectionIndex != null -> selectedSentence?.isTranslated == true
-                choiceSelectionIndex != null -> selectedChoice?.isTranslated == true
-                else -> false
-            }
-            val isChosenChoiceTranslated =
-                selectedChosenChoice?.isTranslated == true &&
-                    partIndex == selectedChosenChoice.partIndex &&
-                    item is StoryContentPartUiState.ChosenChoice
-            StoryContentPart(
-                state = item,
-                selectedSentenceIndex = sentenceSelectionIndex,
-                selectedChoiceIndex = choiceSelectionIndex,
-                isSelectionTranslated = isSelectionTranslated,
-                isChosenChoiceTranslated = isChosenChoiceTranslated,
-                onSentenceSelected = { sentenceIndex ->
-                    onSentenceSelected(partIndex, contentIndex, sentenceIndex)
-                },
-                onChoiceTextSelected = { optionIndex ->
-                    onChoiceTextSelected(partIndex, optionIndex)
-                },
-                onChosenChoiceSelected = {
-                    onChosenChoiceSelected(partIndex)
-                },
-            )
-        }
-
-        if (!isExplainerShownAtStart) {
-            item(key = "${part.id}_explainer") {
-                TranslateExplainer(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    onExplainerTapped = onExplainerTapped,
-                    timesExplainerTapped = timesExplainerTapped,
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun StoryContent(
@@ -278,22 +152,23 @@ private fun StoryContent(
     val currentPartIndex = remember(state.parts, state.currentPartId) {
         state.parts.indexOfFirst { part -> part.id == state.currentPartId }.coerceAtLeast(0)
     }
+    val idOfLastPage = state.parts.lastOrNull()?.id
+    var oldIdOfLastPage by remember { mutableStateOf(idOfLastPage) }
     val pagerState = rememberPagerState(
         initialPage = currentPartIndex,
         pageCount = { state.parts.size },
     )
 
-    LaunchedEffect(state.parts, state.currentPartId) {
-        val targetIndex = state.parts.indexOfFirst { part -> part.id == state.currentPartId }
-            .takeIf { it >= 0 }
-            ?: 0
-        if (pagerState.currentPage != targetIndex) {
-            pagerState.scrollToPage(targetIndex)
+    LaunchedEffect(idOfLastPage) {
+        // Changes only when a choice is made, and that choice should be scrolled to
+        if (idOfLastPage != oldIdOfLastPage) {
+            pagerState.animateScrollToPage(state.parts.lastIndex)
+            oldIdOfLastPage = idOfLastPage
         }
     }
 
     LaunchedEffect(pagerState, state.parts) {
-        snapshotFlow { pagerState.currentPage }
+        snapshotFlow { pagerState.settledPage }
             .distinctUntilChanged()
             .collect { page ->
                 state.parts.getOrNull(page)?.let { part ->
@@ -335,7 +210,6 @@ private fun StoryContent(
                 partIndex = pageIndex,
                 part = state.parts[pageIndex],
                 selectedText = state.selectedText,
-                isCurrentPart = state.parts[pageIndex].id == state.currentPartId,
                 initialContentIndex = state.initialContentIndex,
                 isExplainerShownAtStart = isExplainerShownAtStart,
                 timesExplainerTapped = timesExplainerTapped,
@@ -344,7 +218,139 @@ private fun StoryContent(
                 onChoiceTextSelected = onChoiceTextSelected,
                 onChosenChoiceSelected = onChosenChoiceSelected,
                 onStoryPositionUpdated = onStoryPositionUpdated,
+                pageIndex = pageIndex,
+                currentlyVisiblePageIndex = pagerState.settledPage,
             )
+        }
+    }
+}
+
+@Suppress("LongMethod", "CyclomaticComplexMethod")
+@Composable
+private fun StoryPage(
+    modifier: Modifier = Modifier,
+    partIndex: Int,
+    part: StoryReaderPartUiState,
+    selectedText: StoryReaderUiState.SelectedText?,
+    initialContentIndex: Int,
+    isExplainerShownAtStart: Boolean,
+    timesExplainerTapped: Int,
+    onExplainerTapped: () -> Unit,
+    onSentenceSelected: (partIndex: Int, paragraph: Int, sentence: Int) -> Unit,
+    onChoiceTextSelected: (partIndex: Int, optionIndex: Int) -> Unit,
+    onChosenChoiceSelected: (partIndex: Int) -> Unit,
+    onStoryPositionUpdated: (Int) -> Unit,
+    pageIndex: Int,
+    currentlyVisiblePageIndex: Int,
+) {
+    val headerOffset = if (part.leadingChoice != null) 1 else 0
+    val isCurrentPart = partIndex == currentlyVisiblePageIndex
+    val initialListIndex = if (isCurrentPart) {
+        if (initialContentIndex == 0) 0 else initialContentIndex + headerOffset
+    } else {
+        0
+    }
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListIndex)
+
+    LaunchedEffect(pageIndex, currentlyVisiblePageIndex) {
+        when {
+            pageIndex < currentlyVisiblePageIndex -> listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
+            pageIndex > currentlyVisiblePageIndex -> listState.scrollToItem(0)
+        }
+    }
+
+    LaunchedEffect(isCurrentPart) {
+        if (isCurrentPart) {
+            snapshotFlow { listState.firstVisibleItemIndex }
+                .conflate()
+                .distinctUntilChanged()
+                .collect { listIndex ->
+                    val storyPosition = if (listIndex <= headerOffset) 0 else listIndex - headerOffset
+                    onStoryPositionUpdated(storyPosition)
+                }
+        }
+    }
+
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("story_reader_page_list"),
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        part.leadingChoice?.let { leadingChoice ->
+            item(key = "${part.id}_leading_choice") {
+                val isTranslated =
+                    (selectedText as? StoryReaderUiState.SelectedText.ChosenChoice)
+                        ?.takeIf { selected -> selected.partIndex == partIndex }
+                        ?.isTranslated == true
+                StoryContentPart(
+                    state = StoryContentPartUiState.ChosenChoice(
+                        text = leadingChoice.text,
+                        translatedText = leadingChoice.translatedText,
+                    ),
+                    isChosenChoiceTranslated = isTranslated,
+                    onChosenChoiceSelected = { onChosenChoiceSelected(partIndex) },
+                )
+            }
+        }
+
+        itemsIndexed(
+            items = part.content,
+            key = { index, content ->
+                "${part.id}_${index}_${content::class.simpleName}"
+            }
+        ) { contentIndex, item ->
+            val selectedSentence =
+                selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph
+            val selectedChoice =
+                selectedText as? StoryReaderUiState.SelectedText.ChoiceOption
+            val selectedChosenChoice =
+                selectedText as? StoryReaderUiState.SelectedText.ChosenChoice
+            val sentenceSelectionIndex = selectedSentence?.selectedSentenceIndex
+                ?.takeIf {
+                    contentIndex == selectedSentence.paragraphIndex &&
+                            partIndex == selectedSentence.partIndex
+                }
+            val choiceSelectionIndex = selectedChoice?.optionIndex
+                ?.takeIf {
+                    partIndex == selectedChoice.partIndex && item is StoryContentPartUiState.Choices
+                }
+            val isSelectionTranslated = when {
+                sentenceSelectionIndex != null -> selectedSentence.isTranslated
+                choiceSelectionIndex != null -> selectedChoice.isTranslated
+                else -> false
+            }
+            val isChosenChoiceTranslated =
+                selectedChosenChoice?.isTranslated == true &&
+                        partIndex == selectedChosenChoice.partIndex &&
+                        item is StoryContentPartUiState.ChosenChoice
+            StoryContentPart(
+                state = item,
+                selectedSentenceIndex = sentenceSelectionIndex,
+                selectedChoiceIndex = choiceSelectionIndex,
+                isSelectionTranslated = isSelectionTranslated,
+                isChosenChoiceTranslated = isChosenChoiceTranslated,
+                onSentenceSelected = { sentenceIndex ->
+                    onSentenceSelected(partIndex, contentIndex, sentenceIndex)
+                },
+                onChoiceTextSelected = { optionIndex ->
+                    onChoiceTextSelected(partIndex, optionIndex)
+                },
+                onChosenChoiceSelected = {
+                    onChosenChoiceSelected(partIndex)
+                },
+            )
+        }
+
+        if (!isExplainerShownAtStart) {
+            item(key = "${part.id}_explainer") {
+                TranslateExplainer(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    onExplainerTapped = onExplainerTapped,
+                    timesExplainerTapped = timesExplainerTapped,
+                )
+            }
         }
     }
 }
