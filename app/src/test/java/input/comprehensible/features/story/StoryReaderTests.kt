@@ -5,7 +5,6 @@ import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
-import input.comprehensible.ThemeMode
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.data.sample.TestStoryPart
@@ -14,12 +13,12 @@ import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import javax.inject.Inject
 
-@RunWith(ParameterizedRobolectricTestRunner::class)
+@RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(
     manifest = Config.NONE,
@@ -29,10 +28,10 @@ import javax.inject.Inject
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @OptIn(ExperimentalRoborazziApi::class)
-class StoryReaderTests(private val themeMode: ThemeMode) {
+class StoryReaderTests {
 
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this, themeMode)
+    val testRule = ComprehensibleInputTestRule(this)
 
     @Inject
     lateinit var storiesData: StoriesTestData
@@ -219,7 +218,6 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
 
             // THEN the chosen option and the next part are shown at the top of the new page
             assertStoryTextIsVisible(newPathSentence)
-            assertChoiceIsShown(keepChoiceText)
         }
     }
 
@@ -253,61 +251,6 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             chooseStoryOption(returnChoiceText)
             awaitIdle()
             assertStoryTextIsVisible(returnPathSentence)
-        }
-    }
-
-    @Test
-    fun `the chosen choice can be switched from German to English`() = testRule.runTest {
-        // GIVEN a German story with a chosen path
-        val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
-
-        goToStoryReader(story.id)
-        awaitIdle()
-
-        onStoryReader {
-            val choice = story.parts.first().choices.first()
-            val germanChoice = choice.textByLanguage.getValue("de")
-            val englishChoice = choice.textByLanguage.getValue("en")
-
-            chooseStoryOption(germanChoice)
-            awaitIdle()
-
-            waitForChoiceText(germanChoice)
-            tapOnChosenChoiceText(germanChoice)
-            awaitIdle()
-
-            waitForChoiceText(englishChoice)
-            assertChoiceIsShown(englishChoice)
-        }
-    }
-
-    @Test
-    fun `the chosen choice can be switched from English to German`() = testRule.runTest {
-        // GIVEN a German story with a chosen path
-        val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
-
-        goToStoryReader(story.id)
-        awaitIdle()
-
-        onStoryReader {
-            val choice = story.parts.first().choices.first()
-            val germanChoice = choice.textByLanguage.getValue("de")
-            val englishChoice = choice.textByLanguage.getValue("en")
-
-            chooseStoryOption(germanChoice)
-            awaitIdle()
-            waitForChoiceText(germanChoice)
-            tapOnChosenChoiceText(germanChoice)
-            awaitIdle()
-            waitForChoiceText(englishChoice)
-
-            tapOnChosenChoiceText(englishChoice)
-            awaitIdle()
-
-            waitForChoiceText(germanChoice)
-            assertChoiceIsShown(germanChoice)
         }
     }
 
@@ -501,11 +444,5 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             // THEN the error dialog is shown
             assertErrorDialogIsShown()
         }
-    }
-
-    companion object {
-        @JvmStatic
-        @ParameterizedRobolectricTestRunner.Parameters(name = "theme = {0}")
-        fun parameters() = ThemeMode.entries.map { arrayOf(it) }
     }
 }

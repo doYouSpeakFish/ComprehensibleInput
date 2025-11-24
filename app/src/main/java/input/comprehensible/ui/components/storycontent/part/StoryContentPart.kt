@@ -1,6 +1,5 @@
 package input.comprehensible.ui.components.storycontent.part
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -52,10 +50,8 @@ fun StoryContentPart(
     selectedSentenceIndex: Int? = null,
     selectedChoiceIndex: Int? = null,
     isSelectionTranslated: Boolean = false,
-    isChosenChoiceTranslated: Boolean = false,
     onSentenceSelected: (Int) -> Unit = {},
     onChoiceTextSelected: (Int) -> Unit = {},
-    onChosenChoiceSelected: () -> Unit = {},
     state: StoryContentPartUiState,
 ) {
     Box(modifier) {
@@ -72,11 +68,6 @@ fun StoryContentPart(
                 selectedOptionIndex = selectedChoiceIndex,
                 isSelectionTranslated = isSelectionTranslated,
                 onOptionTextSelected = onChoiceTextSelected,
-            )
-            is StoryContentPartUiState.ChosenChoice -> StoryChosenChoice(
-                state = state,
-                isTranslated = isChosenChoiceTranslated,
-                onChosenChoiceSelected = onChosenChoiceSelected,
             )
         }
     }
@@ -224,21 +215,9 @@ private fun Choice(
     option: StoryContentPartUiState.Choices.Option,
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    val backgroundColor = if (isSelected) {
-        colorScheme.onBackground
-    } else {
-        colorScheme.background
-    }
-    val contentColor = if (isSelected) {
-        colorScheme.background
-    } else {
-        colorScheme.onBackground
-    }
-    val borderColor = if (isSelected) {
-        colorScheme.background
-    } else {
-        colorScheme.onBackground
-    }
+    val backgroundColor = if (isSelected) colorScheme.onBackground else colorScheme.background
+    val contentColor = if (isSelected) colorScheme.background else colorScheme.onBackground
+    val borderColor = if (isSelected) colorScheme.background else colorScheme.onBackground
     Box(modifier) {
         Row(
             modifier = Modifier
@@ -279,46 +258,5 @@ private fun Choice(
                 Text(text = stringResource(id = R.string.story_reader_choice_select_button))
             }
         }
-    }
-}
-
-@Composable
-private fun StoryChosenChoice(
-    modifier: Modifier = Modifier,
-    state: StoryContentPartUiState.ChosenChoice,
-    isTranslated: Boolean,
-    onChosenChoiceSelected: () -> Unit,
-) {
-    val colorScheme = MaterialTheme.colorScheme
-    val backgroundColor = if (isTranslated) {
-        colorScheme.onBackground
-    } else {
-        colorScheme.background
-    }
-    val contentColor = if (isTranslated) {
-        colorScheme.background
-    } else {
-        colorScheme.onBackground
-    }
-    val borderColor = if (isTranslated) {
-        colorScheme.background
-    } else {
-        colorScheme.onBackground
-    }
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        shape = RoundedCornerShape(16.dp),
-        color = backgroundColor,
-        contentColor = contentColor,
-        border = BorderStroke(1.dp, borderColor),
-        onClick = onChosenChoiceSelected,
-    ) {
-        Text(
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 20.dp),
-            text = if (isTranslated) state.translatedText else state.text,
-            style = MaterialTheme.typography.bodyLarge,
-        )
     }
 }

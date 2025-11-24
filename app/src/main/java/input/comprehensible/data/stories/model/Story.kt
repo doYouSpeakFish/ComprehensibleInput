@@ -16,20 +16,15 @@ data class Story(
 
 data class StoryPart(
     val id: String,
-    val leadingChoice: StoryChoiceOption?,
     val elements: List<StoryElement>,
-    val choice: StoryChoice?,
+    val choices: List<StoryChoice>,
 )
 
-sealed interface StoryChoice {
-    data class Available(val options: List<StoryChoiceOption>) : StoryChoice
-    data class Chosen(val option: StoryChoiceOption) : StoryChoice
-}
-
-data class StoryChoiceOption(
+data class StoryChoice(
     val text: String,
     val translatedText: String,
     val targetPartId: String,
+    val isChosen: Boolean,
 )
 
 /**
