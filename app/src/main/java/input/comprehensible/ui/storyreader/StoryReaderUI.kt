@@ -179,19 +179,6 @@ private fun StoryContent(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Title(
-            onTitleClicked = onTitleClicked,
-            title = state.title,
-            isTitleHighlighted = state.selectedText is StoryReaderUiState.SelectedText.Title,
-        )
-        AnimatedVisibility(isExplainerShownAtStart) {
-            TranslateExplainer(
-                modifier = Modifier.padding(vertical = 16.dp),
-                onExplainerTapped = { timesExplainerTapped++ },
-                timesExplainerTapped = timesExplainerTapped,
-            )
-        }
-
         HorizontalPager(
             modifier = Modifier
                 .weight(1f)
@@ -205,6 +192,8 @@ private fun StoryContent(
                 modifier = Modifier.fillMaxSize(),
                 partIndex = pageIndex,
                 part = state.parts[pageIndex],
+                title = state.title,
+                onTitleClicked = onTitleClicked,
                 selectedText = state.selectedText,
                 initialContentIndex = state.initialContentIndex,
                 isExplainerShownAtStart = isExplainerShownAtStart,
@@ -226,6 +215,8 @@ private fun StoryPage(
     modifier: Modifier = Modifier,
     partIndex: Int,
     part: StoryReaderPartUiState,
+    title: String,
+    onTitleClicked: () -> Unit,
     selectedText: StoryReaderUiState.SelectedText?,
     initialContentIndex: Int,
     isExplainerShownAtStart: Boolean,
@@ -237,6 +228,7 @@ private fun StoryPage(
     pageIndex: Int,
     currentlyVisiblePageIndex: Int,
 ) {
+    val isFirstPart = partIndex == 0
     val isCurrentPart = partIndex == currentlyVisiblePageIndex
     val initialListIndex = if (isCurrentPart) initialContentIndex else 0
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListIndex)
@@ -264,11 +256,24 @@ private fun StoryPage(
         state = listState,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        if (isFirstPart) {
+            item {
+                Title(
+                    onTitleClicked = onTitleClicked,
+                    title = title,
+                    isTitleHighlighted = selectedText is StoryReaderUiState.SelectedText.Title,
+                )
+                AnimatedVisibility(isExplainerShownAtStart) {
+                    TranslateExplainer(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        onExplainerTapped = onExplainerTapped,
+                        timesExplainerTapped = timesExplainerTapped,
+                    )
+                }
+            }
+        }
         itemsIndexed(
             items = part.content,
-            key = { index, content ->
-                "${part.id}_${index}_${content::class.simpleName}"
-            }
         ) { contentIndex, item ->
             val selectedSentence =
                 selectedText as? StoryReaderUiState.SelectedText.SentenceInParagraph
@@ -303,7 +308,7 @@ private fun StoryPage(
         }
 
         if (!isExplainerShownAtStart) {
-            item(key = "${part.id}_explainer") {
+            item {
                 TranslateExplainer(
                     modifier = Modifier.padding(vertical = 16.dp),
                     onExplainerTapped = onExplainerTapped,
