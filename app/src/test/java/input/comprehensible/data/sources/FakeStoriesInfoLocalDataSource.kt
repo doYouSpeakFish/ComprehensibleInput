@@ -40,15 +40,13 @@ class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDat
         }
     }
 
-    override suspend fun updateStory(
+    override suspend fun updateStoryChoice(
         id: String,
-        partId: String,
         lastChosenPartId: String,
     ) {
         stories.update { current ->
             val oldStoryInfo = current.getValue(id)
             val newStoryInfo = oldStoryInfo.copy(
-                partId = partId,
                 lastChosenPartId = lastChosenPartId,
             )
             current + (id to newStoryInfo)

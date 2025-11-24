@@ -129,9 +129,8 @@ class StoriesRepository @Inject constructor(
     }
 
     suspend fun updateStoryChoice(id: String, partId: String) {
-        storiesInfoLocalDataSource.updateStory(
+        storiesInfoLocalDataSource.updateStoryChoice(
             id = id,
-            partId = partId,
             lastChosenPartId = partId,
         )
     }

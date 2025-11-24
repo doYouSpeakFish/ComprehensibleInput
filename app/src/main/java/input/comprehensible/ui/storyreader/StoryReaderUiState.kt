@@ -25,6 +25,7 @@ sealed interface StoryReaderUiState {
         val currentPartId: String,
         val initialContentIndex: Int,
         val selectedText: SelectedText?,
+        val scrollingToPage: Int?,
     ) : StoryReaderUiState
 
     sealed interface SelectedText {

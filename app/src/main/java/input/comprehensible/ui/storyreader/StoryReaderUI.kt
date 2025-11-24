@@ -38,8 +38,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -84,6 +84,7 @@ fun StoryReader(
         onSentenceSelected = viewModel::onSentenceSelected,
         onChoiceTextSelected = viewModel::onChoiceTextSelected,
         onErrorDismissed = onErrorDismissed,
+        onPartScrolledTo = viewModel::onPartScrolledTo,
         state = state,
     )
 }
@@ -97,6 +98,7 @@ private fun StoryReader(
     onSentenceSelected: (partIndex: Int, paragraph: Int, sentence: Int) -> Unit,
     onChoiceTextSelected: (partIndex: Int, optionIndex: Int) -> Unit,
     onErrorDismissed: () -> Unit,
+    onPartScrolledTo: () -> Unit,
     state: StoryReaderUiState,
 ) {
     Scaffold(modifier) { paddingValues ->
@@ -120,6 +122,7 @@ private fun StoryReader(
                     onCurrentPartChanged = onCurrentPartChanged,
                     onSentenceSelected = onSentenceSelected,
                     onChoiceTextSelected = onChoiceTextSelected,
+                    onPartScrolledTo = onPartScrolledTo,
                 )
 
                 StoryReaderUiState.Error -> Unit
@@ -141,6 +144,7 @@ private fun StoryContent(
     onCurrentPartChanged: (String) -> Unit,
     onSentenceSelected: (partIndex: Int, paragraph: Int, sentence: Int) -> Unit,
     onChoiceTextSelected: (partIndex: Int, optionIndex: Int) -> Unit,
+    onPartScrolledTo: () -> Unit,
     state: StoryReaderUiState.Loaded,
 ) {
     var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
@@ -148,26 +152,24 @@ private fun StoryContent(
     val currentPartIndex = remember(state.parts, state.currentPartId) {
         state.parts.indexOfFirst { part -> part.id == state.currentPartId }.coerceAtLeast(0)
     }
-    val idOfLastPage = state.parts.lastOrNull()?.id
-    var oldIdOfLastPage by remember { mutableStateOf(idOfLastPage) }
     val pagerState = rememberPagerState(
         initialPage = currentPartIndex,
         pageCount = { state.parts.size },
     )
+    val currentParts by rememberUpdatedState(state.parts)
 
-    LaunchedEffect(idOfLastPage) {
-        // Changes only when a choice is made, and that choice should be scrolled to
-        if (idOfLastPage != oldIdOfLastPage) {
-            pagerState.animateScrollToPage(state.parts.lastIndex)
-            oldIdOfLastPage = idOfLastPage
+    LaunchedEffect(state.scrollingToPage) {
+        state.scrollingToPage?.let {
+            pagerState.animateScrollToPage(it)
+            onPartScrolledTo()
         }
     }
 
-    LaunchedEffect(pagerState, state.parts) {
+    LaunchedEffect(Unit) {
         snapshotFlow { pagerState.settledPage }
             .distinctUntilChanged()
             .collect { page ->
-                state.parts.getOrNull(page)?.let { part ->
+                currentParts.getOrNull(page)?.let { part ->
                     if (part.id != state.currentPartId) onCurrentPartChanged(part.id)
                 }
             }
@@ -437,6 +439,7 @@ fun StoryReaderPreview() {
             onCurrentPartChanged = {},
             onSentenceSelected = { _, _, _ -> },
             onChoiceTextSelected = { _, _ -> },
+            onPartScrolledTo = {},
             onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
@@ -465,6 +468,7 @@ fun StoryReaderPreview() {
                 currentPartId = "part",
                 initialContentIndex = 0,
                 selectedText = null,
+                scrollingToPage = null,
             ),
         )
     }
@@ -480,6 +484,7 @@ fun StoryReaderTranslationPreview() {
             onCurrentPartChanged = {},
             onSentenceSelected = { _, _, _ -> },
             onChoiceTextSelected = { _, _ -> },
+            onPartScrolledTo = {},
             onErrorDismissed = {},
             state = StoryReaderUiState.Loaded(
                 title = "Title",
@@ -508,6 +513,7 @@ fun StoryReaderTranslationPreview() {
                 currentPartId = "part",
                 initialContentIndex = 0,
                 selectedText = StoryReaderUiState.SelectedText.Title(isTranslated = true),
+                scrollingToPage = null,
             ),
         )
     }
@@ -523,6 +529,7 @@ fun StoryReaderErrorPreview() {
             onCurrentPartChanged = {},
             onSentenceSelected = { _, _, _ -> },
             onChoiceTextSelected = { _, _ -> },
+            onPartScrolledTo = {},
             onErrorDismissed = {},
             state = StoryReaderUiState.Error,
         )

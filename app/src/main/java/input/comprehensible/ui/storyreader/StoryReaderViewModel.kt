@@ -45,12 +45,14 @@ class StoryReaderViewModel @Inject constructor(
                 .orEmpty()
         }
     private val selectedTextState = MutableStateFlow<SelectedText?>(null)
+    private val partIdToScrollTo = MutableStateFlow<String?>(null)
 
     val state = combine(
         story,
         selectedTextState,
         content,
-    ) { storyResult, selectedText, content ->
+        partIdToScrollTo,
+    ) { storyResult, selectedText, content, latestSelectedPartId ->
         when (storyResult) {
             StoryResult.Error -> Error
             is StoryResult.Success -> Loaded(
@@ -63,6 +65,9 @@ class StoryReaderViewModel @Inject constructor(
                 currentPartId = storyResult.story.currentPartId,
                 initialContentIndex = storyResult.story.storyPosition,
                 selectedText = selectedText,
+                scrollingToPage = content
+                    .indexOfLast { it.id == latestSelectedPartId }
+                    .takeIf { it > 0 }
             )
         }
     }.stateIn(
@@ -169,11 +174,16 @@ class StoryReaderViewModel @Inject constructor(
      */
     fun onChoiceSelected(targetPartId: String) {
         viewModelScope.launch {
+            partIdToScrollTo.value = targetPartId
             storiesRepository.updateStoryChoice(
                 id = id,
                 partId = targetPartId,
             )
         }
+    }
+
+    fun onPartScrolledTo() {
+        partIdToScrollTo.value = null
     }
 }
 
