@@ -224,8 +224,8 @@ class StoriesRepository @Inject constructor(
         require(content.size == translation.content.size) {
             "Story $id content could not be fully matched between $learningLanguage and $translationsLanguage"
         }
-        val elements = content.zip(translation.content) { it, translation ->
-            val element = it.toStoryElement(
+        val elements = content.zip(translation.content) { elementData, translation ->
+            val element = elementData.toStoryElement(
                 storyId = storyId,
                 translation = translation,
                 learningLanguage = learningLanguage,
