@@ -35,6 +35,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -157,6 +158,15 @@ private fun StoryContent(
         pageCount = { state.parts.size },
     )
     val currentParts by rememberUpdatedState(state.parts)
+
+    DisposableEffect(currentParts, state.currentPartId) {
+        onDispose {
+            val settledPartId = currentParts.getOrNull(pagerState.settledPage)?.id
+            if (settledPartId != null && settledPartId != state.currentPartId) {
+                onCurrentPartChanged(settledPartId)
+            }
+        }
+    }
 
     LaunchedEffect(state.scrollingToPage) {
         state.scrollingToPage?.let {

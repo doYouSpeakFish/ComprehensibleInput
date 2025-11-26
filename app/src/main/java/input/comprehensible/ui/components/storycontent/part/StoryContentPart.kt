@@ -15,8 +15,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,8 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.LinkInteractionListener
@@ -39,6 +43,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import input.comprehensible.R
 
 /**
@@ -218,6 +223,20 @@ private fun Choice(
     val backgroundColor = if (isSelected) colorScheme.onBackground else colorScheme.background
     val contentColor = if (isSelected) colorScheme.background else colorScheme.onBackground
     val borderColor = if (isSelected) colorScheme.background else colorScheme.onBackground
+    val buttonContainerColor = if (option.isChosen) colorScheme.background else colorScheme.onBackground
+    val buttonContentColor = if (option.isChosen) colorScheme.onBackground else colorScheme.background
+    val buttonIcon = if (option.isChosen) Icons.Filled.Check else Icons.AutoMirrored.Filled.ArrowForward
+    val buttonStateDescription = if (option.isChosen) {
+        stringResource(
+            id = R.string.story_reader_choice_chosen_button_content_description,
+            option.text,
+        )
+    } else {
+        stringResource(
+            id = R.string.story_reader_choice_select_button_content_description,
+            option.text,
+        )
+    }
     Box(modifier) {
         Row(
             modifier = Modifier
@@ -246,16 +265,19 @@ private fun Choice(
             Button(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics { contentDescription = option.text }
+                    .semantics {
+                        contentDescription = option.text
+                        stateDescription = buttonStateDescription
+                    }
                     .testTag("story_choice_button_${option.id}"),
                 onClick = option.onClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.onBackground,
-                    contentColor = colorScheme.background,
+                    containerColor = buttonContainerColor,
+                    contentColor = buttonContentColor,
                 ),
                 shape = RoundedCornerShape(16.dp),
             ) {
-                Text(text = stringResource(id = R.string.story_reader_choice_select_button))
+                Icon(imageVector = buttonIcon, contentDescription = null)
             }
         }
     }

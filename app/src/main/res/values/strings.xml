@@ -43,4 +43,6 @@
     <string name="story_reader_error_dialog_button">OK</string>
     <string name="story_reader_error_dialog_content_description">Illustration of a sad robot</string>
     <string name="story_reader_choice_select_button">Select</string>
+    <string name="story_reader_choice_select_button_content_description">Select %1$s</string>
+    <string name="story_reader_choice_chosen_button_content_description">Selected option: %1$s</string>
 </resources>
