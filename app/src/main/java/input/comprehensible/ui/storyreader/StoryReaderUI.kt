@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -35,7 +34,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -158,16 +156,6 @@ private fun StoryContent(
         pageCount = { state.parts.size },
     )
     val currentParts by rememberUpdatedState(state.parts)
-
-    DisposableEffect(currentParts, state.currentPartId) {
-        onDispose {
-            val settledPartId = currentParts.getOrNull(pagerState.settledPage)?.id
-            if (settledPartId != null && settledPartId != state.currentPartId) {
-                onCurrentPartChanged(settledPartId)
-            }
-        }
-    }
-
     LaunchedEffect(state.scrollingToPage) {
         state.scrollingToPage?.let {
             pagerState.animateScrollToPage(it)
@@ -185,16 +173,11 @@ private fun StoryContent(
             }
     }
 
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Box(modifier) {
         HorizontalPager(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+                .padding(16.dp)
+                .fillMaxSize()
                 .testTag("story_reader_pager"),
             state = pagerState,
             key = { index -> state.parts.getOrNull(index)?.id ?: index },
@@ -266,7 +249,7 @@ private fun StoryPage(
             .fillMaxSize()
             .testTag("story_reader_page_list"),
         state = listState,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         if (isFirstPart) {
             item {
