@@ -1,0 +1,2 @@
+json_key_data(ENV["SUPPLY_JSON_KEY_DATA"])
+package_name(ENV["GOOGLE_PLAY_PACKAGE_NAME"] || "in.comprehensible")

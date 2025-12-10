@@ -1,0 +1,56 @@
+# frozen_string_literal: true
+
+require 'date'
+
+fastlane_version '2.229.1'
+
+def next_version_name_for_today(release_names)
+  today = Time.now.utc.to_date
+  day_of_year = today.yday - 1
+
+  todays_releases = release_names.count do |name|
+    components = name.split('.')
+    components.length == 3 &&
+      components[0].to_i == today.year &&
+      components[1].to_i == day_of_year
+  end
+
+  "#{today.year}.#{day_of_year}.#{todays_releases}"
+end
+
+def gradle_file_path
+  ENV.fetch('ANDROID_GRADLE_FILE_PATH', 'app/build.gradle.kts')
+end
+
+def track_name
+  ENV.fetch('GOOGLE_PLAY_TRACK', 'internal')
+end
+
+def package_name
+  ENV.fetch('GOOGLE_PLAY_PACKAGE_NAME', 'in.comprehensible')
+end
+
+platform :android do
+  desc 'Deploy to Google Play internal testing'
+  lane :internal_release do
+    UI.message("Finding the next version code for #{package_name} on #{track_name} track")
+    version_codes = google_play_track_version_codes(track: track_name, package_name: package_name) || []
+    next_version_code = (version_codes.max || 0) + 1
+    increment_version_code(gradle_file_path: gradle_file_path, version_code: next_version_code)
+
+    UI.message('Calculating version name for today')
+    release_names = google_play_track_release_names(track: track_name, package_name: package_name) || []
+    version_name = next_version_name_for_today(release_names)
+    increment_version_name(gradle_file_path: gradle_file_path, version_name: version_name)
+
+    gradle(task: 'bundle', build_type: 'Release')
+
+    upload_to_play_store(
+      track: track_name,
+      release_status: 'completed',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+      release_name: version_name,
+      package_name: package_name
+    )
+  end
+end
