@@ -42,7 +42,4 @@
     <string name="story_reader_error_dialog_message">Nous n\'avons pas pu ouvrir cette histoire. Veuillez réessayer plus tard.</string>
     <string name="story_reader_error_dialog_button">OK</string>
     <string name="story_reader_error_dialog_content_description">Illustration d\'un robot triste</string>
-    <string name="story_reader_choice_select_button">Sélectionner</string>
-    <string name="story_reader_choice_select_button_content_description">Sélectionner %1$s</string>
-    <string name="story_reader_choice_chosen_button_content_description">Option sélectionnée : %1$s</string>
 </resources>
