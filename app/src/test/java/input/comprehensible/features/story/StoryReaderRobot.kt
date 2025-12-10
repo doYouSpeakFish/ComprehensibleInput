@@ -10,6 +10,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -106,7 +107,10 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
 
     fun chooseStoryOption(text: String) {
         composeTestRule
-            .onNodeWithContentDescription(text)
+            .onNode(
+                hasContentDescription(value = text, substring = true),
+                useUnmergedTree = true,
+            )
             .performClick()
     }
 
