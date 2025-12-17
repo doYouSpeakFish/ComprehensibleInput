@@ -65,6 +65,7 @@ import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 /**
  * A screen for reading a story.
@@ -165,12 +166,16 @@ private fun StoryContent(
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(currentParts, state.currentPartId) {
+        var lastReportedPartId = state.currentPartId
+
         snapshotFlow { pagerState.settledPage }
+            .map { page -> currentParts.getOrNull(page)?.id }
             .distinctUntilChanged()
-            .collect { page ->
-                currentParts.getOrNull(page)?.let { part ->
-                    if (part.id != state.currentPartId) onCurrentPartChanged(part.id)
+            .collect { partId ->
+                if (partId != null && partId != lastReportedPartId) {
+                    lastReportedPartId = partId
+                    onCurrentPartChanged(partId)
                 }
             }
     }

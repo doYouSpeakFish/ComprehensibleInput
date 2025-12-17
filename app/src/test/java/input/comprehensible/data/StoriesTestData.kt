@@ -136,7 +136,7 @@ class StoriesTestData @Inject constructor(
         return StoryPartData(
             id = id,
             content = contentData,
-            choices = choices.map { it.toStoryChoiceData(languageCode = languageCode) },
+            choice = choice?.toStoryChoiceData(languageCode = languageCode),
         )
     }
 
@@ -153,7 +153,7 @@ class StoriesTestData @Inject constructor(
             ?: error("Missing choice text for language $languageCode")
         return StoryChoiceData(
             text = text,
-            targetPartId = targetPartId,
+            parentPartId = parentPartId,
         )
     }
 }

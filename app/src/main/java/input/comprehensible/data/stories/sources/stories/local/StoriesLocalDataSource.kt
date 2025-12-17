@@ -44,25 +44,23 @@ data class StoryData(
 ) {
     val partParents = parts
         .asSequence()
-        .flatMap { part ->
-            part.choices.map { choice -> part.id to choice.targetPartId }
+        .mapNotNull { part ->
+            part.choice?.let { choice -> part.id to choice.parentPartId }
         }
-        .associate { (parentId, childId) ->
-            childId to parentId
-        }
+        .associate { (childId, parentId) -> childId to parentId }
 }
 
 @Serializable
 data class StoryPartData(
     val id: String,
     val content: List<StoryElementData>,
-    val choices: List<StoryChoiceData> = emptyList(),
+    val choice: StoryChoiceData? = null,
 )
 
 @Serializable
 data class StoryChoiceData(
     val text: String,
-    val targetPartId: String,
+    val parentPartId: String,
 )
 
 /**

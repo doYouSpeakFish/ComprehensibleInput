@@ -4,6 +4,7 @@ import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryElement
+import input.comprehensible.data.stories.model.StoryParentChoice
 import input.comprehensible.data.stories.model.StoryPart
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryChoiceData
@@ -159,6 +160,22 @@ class StoriesRepository @Inject constructor(
     ): Story {
         val learningParts = parts.associateBy { it.id }
         val translationParts = translation.parts.associateBy { it.id }
+        val childrenByParent = parts
+            .mapNotNull { part ->
+                part.choice?.parentPartId?.let { parentId -> parentId to part }
+            }
+            .groupBy(
+                keySelector = { it.first },
+                valueTransform = { it.second }
+            )
+        val translatedChildrenByParent = translation.parts
+            .mapNotNull { part ->
+                part.choice?.parentPartId?.let { parentId -> parentId to part }
+            }
+            .groupBy(
+                keySelector = { it.first },
+                valueTransform = { it.second }
+            )
         val path = getPartIdsForCurrentPathThroughStory(
             lastChosenPartId = storyInfo.lastChosenPartId,
         )
@@ -176,6 +193,8 @@ class StoriesRepository @Inject constructor(
                 chosenChoiceId = storyInfo.lastChosenPartId,
                 learningLanguage = learningLanguage,
                 translationsLanguage = translationsLanguage,
+                children = childrenByParent[partId].orEmpty(),
+                translatedChildren = translatedChildrenByParent[partId].orEmpty(),
             )
         }
 
@@ -202,21 +221,31 @@ class StoriesRepository @Inject constructor(
         }.reversed()
     }
 
+    @Suppress("LongParameterList")
     private suspend fun StoryPartData.toStoryPart(
         storyId: String,
         translation: StoryPartData,
         chosenChoiceId: String?,
         learningLanguage: String,
         translationsLanguage: String,
+        children: List<StoryPartData>,
+        translatedChildren: List<StoryPartData>,
     ): StoryPart {
-        val translatedChoices = translation.choices.associateBy { it.targetPartId }
-        val choicesWithTranslations = choices.map {
-            val translatedChoice = requireNotNull(translatedChoices[it.targetPartId]) {
-                "Story $id translation is missing choice with id ${it.targetPartId}"
+        val translatedChildrenById = translatedChildren.associateBy { it.id }
+        val choicesWithTranslations = children.map { childPart ->
+            val translatedChild = requireNotNull(translatedChildrenById[childPart.id]) {
+                "Story $id translation is missing part with id ${childPart.id}"
             }
-            it.toStoryChoice(
+            val choice = requireNotNull(childPart.choice) {
+                "Story $id child part ${childPart.id} is missing its parent choice"
+            }
+            val translatedChoice = requireNotNull(translatedChild.choice) {
+                "Story $id translation is missing parent choice for part ${childPart.id}"
+            }
+            choice.toStoryChoice(
                 translation = translatedChoice,
-                isChosen = it.targetPartId == chosenChoiceId,
+                targetPartId = childPart.id,
+                isChosen = childPart.id == chosenChoiceId,
             )
         }
 
@@ -238,12 +267,18 @@ class StoriesRepository @Inject constructor(
         return StoryPart(
             id = id,
             elements = elements,
-            choices = choicesWithTranslations
+            choices = choicesWithTranslations,
+            parentChoice = translation.choice?.let { translatedChoice ->
+                choice?.toParentChoice(
+                    translation = translatedChoice,
+                )
+            }
         )
     }
 
     private fun StoryChoiceData.toStoryChoice(
         translation: StoryChoiceData,
+        targetPartId: String,
         isChosen: Boolean,
     ): StoryChoice {
         return StoryChoice(
@@ -251,6 +286,16 @@ class StoriesRepository @Inject constructor(
             translatedText = translation.text,
             targetPartId = targetPartId,
             isChosen = isChosen,
+        )
+    }
+
+    private fun StoryChoiceData.toParentChoice(
+        translation: StoryChoiceData,
+    ): StoryParentChoice {
+        return StoryParentChoice(
+            parentPartId = parentPartId,
+            text = text,
+            translatedText = translation.text,
         )
     }
 

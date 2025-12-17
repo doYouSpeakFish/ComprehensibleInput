@@ -68,16 +68,6 @@
             "« J'ai perdu cette pièce ici il y a de nombreuses années. »"
           ]
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria garde la pièce.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria rend la pièce.",
-          "targetPartId": "return_coin"
-        }
       ]
     },
     {
@@ -100,7 +90,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria garde la pièce."
+      }
     },
     {
       "id": "return_coin",
@@ -130,7 +123,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria rend la pièce."
+      }
     }
   ]
 }

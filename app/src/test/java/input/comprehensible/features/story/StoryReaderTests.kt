@@ -159,8 +159,14 @@ class StoryReaderTests {
         awaitIdle()
 
         onStoryReader {
-            val germanChoice = story.parts.first().choices.first().textByLanguage.getValue("de")
-            val englishChoice = story.parts.first().choices.first().textByLanguage.getValue("en")
+            val germanChoice = story.parts
+                .first { it.choice?.parentPartId == "start" }
+                .choice!!
+                .textByLanguage.getValue("de")
+            val englishChoice = story.parts
+                .first { it.choice?.parentPartId == "start" }
+                .choice!!
+                .textByLanguage.getValue("en")
 
             tapOnChoiceText(text = germanChoice)
             awaitIdle()
@@ -180,7 +186,7 @@ class StoryReaderTests {
         awaitIdle()
 
         onStoryReader {
-            val choice = story.parts.first().choices.first()
+            val choice = story.parts.first { it.choice?.parentPartId == "start" }.choice!!
             val germanChoice = choice.textByLanguage.getValue("de")
             val englishChoice = choice.textByLanguage.getValue("en")
 
@@ -201,7 +207,10 @@ class StoryReaderTests {
         storiesData.setLocalStories(listOf(story))
 
         val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
-        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
+        val keepChoiceText = story.parts
+            .first { it.choice?.parentPartId == "start" && it.id == "keep_key" }
+            .choice!!
+            .textByLanguage.getValue("de")
         val newPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
             .germanSentences.first()
 
@@ -226,8 +235,8 @@ class StoryReaderTests {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
         storiesData.setLocalStories(listOf(story))
 
-        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
-        val returnChoiceText = story.parts.first().choices.last().textByLanguage.getValue("de")
+        val keepChoiceText = story.parts.first { it.id == "keep_key" }.choice!!.textByLanguage.getValue("de")
+        val returnChoiceText = story.parts.first { it.id == "return_key" }.choice!!.textByLanguage.getValue("de")
         val returnPathSentence = (story.parts.first { it.id == "return_key" }.content.first() as TestStoryPart.Paragraph)
             .germanSentences.first()
 
@@ -324,7 +333,7 @@ class StoryReaderTests {
         storiesData.setLocalStories(listOf(story))
 
         val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
-        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
+        val keepChoiceText = story.parts.first { it.id == "keep_key" }.choice!!.textByLanguage.getValue("de")
         val newPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
             .germanSentences.first()
 

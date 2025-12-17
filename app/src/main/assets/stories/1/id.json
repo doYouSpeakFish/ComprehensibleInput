@@ -68,16 +68,6 @@
             "“Saya kehilangan koin ini di sini bertahun-tahun lalu.”"
           ]
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria menyimpan koin itu.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria mengembalikan koin itu.",
-          "targetPartId": "return_coin"
-        }
       ]
     },
     {
@@ -100,7 +90,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria menyimpan koin itu."
+      }
     },
     {
       "id": "return_coin",
@@ -130,7 +123,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria mengembalikan koin itu."
+      }
     }
   ]
 }

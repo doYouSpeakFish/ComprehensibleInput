@@ -292,29 +292,27 @@ class StoryTranslationStructureTest {
         structure.parts.keys.sorted().forEach { partId ->
             val part = structure.parts.getValue(partId)
             val referencePart = reference.parts.getValue(partId)
+            val partChoice = part.choice
+            val referenceChoice = referencePart.choice
 
-            if (part.choices.size != referencePart.choices.size) {
+            if ((partChoice == null) != (referenceChoice == null)) {
+                val expected = if (referenceChoice == null) "no parent choice" else "a parent choice"
+                val choiceState = if (partChoice == null) "no" else "a"
                 failures += context.partMessage(
                     partId = partId,
-                    content = "has ${part.choices.size} choices but expected ${referencePart.choices.size} as in '${context.referenceKey}'."
+                    content = "has $choiceState parent choice but expected $expected as in '${context.referenceKey}'."
                 )
                 return@forEach
             }
 
-            part.choices.forEachIndexed { index, choice ->
-                val referenceChoice = referencePart.choices[index]
-                if (choice.targetPartId != referenceChoice.targetPartId) {
-                    val message = buildString {
-                        append("choice $index targets '")
-                        append(choice.targetPartId)
-                        append("' but expected '")
-                        append(referenceChoice.targetPartId)
-                        append("' as in '")
-                        append(context.referenceKey)
-                        append("'.")
-                    }
-                    failures += context.partMessage(partId = partId, content = message)
-                }
+            if (partChoice != null && referenceChoice != null &&
+                partChoice.parentPartId != referenceChoice.parentPartId
+            ) {
+                failures += context.partMessage(
+                    partId = partId,
+                    content = "points to parent '${partChoice.parentPartId}' but expected " +
+                        "'${referenceChoice.parentPartId}' as in '${context.referenceKey}'."
+                )
             }
         }
 
@@ -349,25 +347,27 @@ class StoryTranslationStructureTest {
                 return
             }
             visiting.add(partId)
-            part.choices.forEach { choice ->
-                val targetId = choice.targetPartId
-                if (!story.parts.containsKey(targetId)) {
+            val children = story.parts.values
+                .filter { child -> child.choice?.parentPartId == partId }
+                .map { it.id }
+            children.forEach { childId ->
+                if (!story.parts.containsKey(childId)) {
                   failures += storyMessage(
                       storyDir = storyDir,
                       translation = translation,
-                      content = "part '$partId' has a choice targeting unknown part '$targetId'.",
+                      content = "part '$partId' has a choice targeting unknown part '$childId'.",
                   )
                     return@forEach
                 }
-                if (visiting.contains(targetId)) {
+                if (visiting.contains(childId)) {
                   failures += storyMessage(
                       storyDir = storyDir,
                       translation = translation,
-                      content = "part '$partId' choice to '$targetId' creates a loop.",
+                      content = "part '$partId' choice to '$childId' creates a loop.",
                   )
                     return@forEach
                 }
-                dfs(targetId)
+                dfs(childId)
             }
             visiting.remove(partId)
         }
@@ -510,20 +510,19 @@ class StoryTranslationStructureTest {
             val contentDescriptors = contentArray.mapIndexed { index, item ->
                 item.jsonObject.toContentDescriptor(path = path, partId = partId, index = index)
             }
-            val choicesArray = partObject["choices"] as? JsonArray ?: JsonArray(emptyList())
-            val choices = choicesArray.mapIndexed { index, choiceElement ->
-                val choiceObject = choiceElement.jsonObject
-                val targetId = choiceObject.requireString(key = "targetPartId", path = path, context = "choice $index in part '$partId'")
-                val text = choiceObject.requireString(key = "text", path = path, context = "choice $index in part '$partId'")
+            val choiceObject = partObject["choice"] as? JsonObject
+            val choice = choiceObject?.let {
+                val parentId = it.requireString(key = "parentPartId", path = path, context = "parent choice in part '$partId'")
+                val text = it.requireString(key = "text", path = path, context = "parent choice in part '$partId'")
                 ChoiceDescriptor(
                     text = text,
-                    targetPartId = targetId,
+                    parentPartId = parentId,
                 )
             }
             StoryPartDescriptor(
                 id = partId,
                 content = contentDescriptors,
-                choices = choices,
+                choice = choice,
             )
         }
 
@@ -625,12 +624,12 @@ class StoryTranslationStructureTest {
     private data class StoryPartDescriptor(
         val id: String,
         val content: List<ContentDescriptor>,
-        val choices: List<ChoiceDescriptor>,
+        val choice: ChoiceDescriptor?,
     )
 
     private data class ChoiceDescriptor(
         val text: String,
-        val targetPartId: String,
+        val parentPartId: String,
     )
 
     private data class ContentDescriptor(

@@ -68,16 +68,6 @@
             "“I lost this coin here many years ago.”"
           ]
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria keeps the coin.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria gives the coin back.",
-          "targetPartId": "return_coin"
-        }
       ]
     },
     {
@@ -100,7 +90,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria keeps the coin."
+      }
     },
     {
       "id": "return_coin",
@@ -130,7 +123,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria gives the coin back."
+      }
     }
   ]
 }
