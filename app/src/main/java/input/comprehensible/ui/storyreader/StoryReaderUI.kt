@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -136,6 +137,35 @@ private fun StoryReader(
     }
 }
 
+/**
+ * Creates a [PagerState] that is remembered across compositions.
+ *
+ * @param initialPage The initial page to show when the pager is first created. If this value is
+ * changed, the pager will not change the page.
+ * @param pageToScrollTo The page to animate scroll to after the pager has been created. If this
+ * value is changed to a non-null value, the pager will animate scroll to the new page.
+ * @param onNewPageSettled A callback that is invoked when the pager has settled on a new page.
+ * @param pageCount The number of pages in the pager.
+ */
+@Composable
+fun rememberPagerState(
+    initialPage: Int,
+    pageToScrollTo: Int? = null,
+    onNewPageSettled: (Int) -> Unit,
+    pageCount: () -> Int,
+): PagerState {
+    val state = rememberPagerState(initialPage = initialPage, pageCount = pageCount)
+    LaunchedEffect(state.settledPage) {
+        onNewPageSettled(state.settledPage)
+    }
+    LaunchedEffect(pageToScrollTo) {
+        if (pageToScrollTo != null) {
+            state.animateScrollToPage(pageToScrollTo)
+        }
+    }
+    return state
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun StoryContent(
@@ -153,32 +183,16 @@ private fun StoryContent(
     val currentPartIndex = remember(state.parts, state.currentPartId) {
         state.parts.indexOfFirst { part -> part.id == state.currentPartId }.coerceAtLeast(0)
     }
+    val currentParts by rememberUpdatedState(state.parts)
     val pagerState = rememberPagerState(
         initialPage = currentPartIndex,
+        pageToScrollTo = state.scrollingToPage,
         pageCount = { state.parts.size },
+        onNewPageSettled = { pageIndex ->
+            if (pageIndex == state.scrollingToPage) onPartScrolledTo()
+            currentParts.getOrNull(pageIndex)?.id?.let(onCurrentPartChanged)
+        },
     )
-    val currentParts by rememberUpdatedState(state.parts)
-
-    LaunchedEffect(state.scrollingToPage) {
-        state.scrollingToPage?.let {
-            pagerState.animateScrollToPage(it)
-            onPartScrolledTo()
-        }
-    }
-
-    LaunchedEffect(currentParts, state.currentPartId) {
-        var lastReportedPartId = state.currentPartId
-
-        snapshotFlow { pagerState.settledPage }
-            .map { page -> currentParts.getOrNull(page)?.id }
-            .distinctUntilChanged()
-            .collect { partId ->
-                if (partId != null && partId != lastReportedPartId) {
-                    lastReportedPartId = partId
-                    onCurrentPartChanged(partId)
-                }
-            }
-    }
 
     Column(
         modifier = modifier
