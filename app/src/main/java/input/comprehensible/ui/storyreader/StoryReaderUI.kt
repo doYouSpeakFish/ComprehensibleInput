@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -59,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
+import input.comprehensible.ui.components.rememberPagerState
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -137,35 +137,6 @@ private fun StoryReader(
     }
 }
 
-/**
- * Creates a [PagerState] that is remembered across compositions.
- *
- * @param initialPage The initial page to show when the pager is first created. If this value is
- * changed, the pager will not change the page.
- * @param pageToScrollTo The page to animate scroll to after the pager has been created. If this
- * value is changed to a non-null value, the pager will animate scroll to the new page.
- * @param onNewPageSettled A callback that is invoked when the pager has settled on a new page.
- * @param pageCount The number of pages in the pager.
- */
-@Composable
-fun rememberPagerState(
-    initialPage: Int,
-    pageToScrollTo: Int? = null,
-    onNewPageSettled: (Int) -> Unit,
-    pageCount: () -> Int,
-): PagerState {
-    val state = rememberPagerState(initialPage = initialPage, pageCount = pageCount)
-    LaunchedEffect(state.settledPage) {
-        onNewPageSettled(state.settledPage)
-    }
-    LaunchedEffect(pageToScrollTo) {
-        if (pageToScrollTo != null) {
-            state.animateScrollToPage(pageToScrollTo)
-        }
-    }
-    return state
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun StoryContent(
@@ -194,16 +165,11 @@ private fun StoryContent(
         },
     )
 
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Box(modifier) {
         HorizontalPager(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+                .padding(16.dp)
+                .fillMaxSize()
                 .testTag("story_reader_pager"),
             state = pagerState,
             key = { index -> state.parts.getOrNull(index)?.id ?: index },
@@ -275,7 +241,7 @@ private fun StoryPage(
             .fillMaxSize()
             .testTag("story_reader_page_list"),
         state = listState,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         if (isFirstPart) {
             item {

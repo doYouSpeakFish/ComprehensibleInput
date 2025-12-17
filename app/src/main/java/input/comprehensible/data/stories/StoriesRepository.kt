@@ -201,7 +201,7 @@ class StoriesRepository @Inject constructor(
                 add(nextPartId)
                 nextPartId = partsById[nextPartId]?.choice?.parentPartId
             }
-        }
+        }.reversed()
     }
 
     @Suppress("LongParameterList")

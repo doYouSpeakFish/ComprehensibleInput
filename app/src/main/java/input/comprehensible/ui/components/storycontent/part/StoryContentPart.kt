@@ -1,45 +1,35 @@
 package input.comprehensible.ui.components.storycontent.part
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.LocalContentColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.LinkInteractionListener
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import input.comprehensible.R
+import input.comprehensible.ui.components.TranslatableText
 
 /**
  * A composable for displaying a part of a stories main content.
@@ -81,82 +71,14 @@ private fun Paragraph(
     onSentenceSelected: (Int) -> Unit,
     state: StoryContentPartUiState.Paragraph,
 ) {
-    Box(modifier) {
-        val textStyle = MaterialTheme.typography.bodyLarge
-        val defaultSpanStyle = SpanStyle(
-            background = Color.Transparent,
-            color = LocalContentColor.current,
-        )
-        val colorScheme = MaterialTheme.colorScheme
-        val highlightedSpanStyle = remember(colorScheme.background, colorScheme.onBackground) {
-            SpanStyle(
-                color = colorScheme.background,
-                background = colorScheme.onBackground,
-            )
-        }
-        val textContent = rememberParagraphText(
-            sentences = state.sentences,
-            translatedSentences = state.translatedSentences,
-            onSentenceSelected = onSentenceSelected,
-            selectedSentenceIndex = selectedSentenceIndex,
-            isSelectionTranslated = isSelectionTranslated,
-            highlightedSpanStyle = highlightedSpanStyle,
-            defaultSpanStyle = defaultSpanStyle,
-        )
-        BasicText(
-            modifier = Modifier.padding(bottom = 16.dp),
-            text = textContent,
-            style = textStyle,
-        )
-    }
-}
-
-@Composable
-private fun rememberParagraphText(
-    sentences: List<String>,
-    translatedSentences: List<String>,
-    onSentenceSelected: (Int) -> Unit,
-    selectedSentenceIndex: Int?,
-    isSelectionTranslated: Boolean,
-    highlightedSpanStyle: SpanStyle,
-    defaultSpanStyle: SpanStyle,
-) = remember(
-    sentences,
-    translatedSentences,
-    highlightedSpanStyle,
-    defaultSpanStyle,
-    selectedSentenceIndex,
-    isSelectionTranslated,
-) {
-    buildAnnotatedString {
-        sentences.forEachIndexed { index, sentence ->
-            val isSelected = selectedSentenceIndex == index
-            val textToDisplay = if (isSelected && isSelectionTranslated) {
-                translatedSentences.getOrNull(index) ?: sentence
-            } else {
-                sentence
-            }
-            withLink(
-                link = LinkAnnotation.Clickable(
-                    tag = "sentence-$index",
-                    linkInteractionListener = LinkInteractionListener {
-                        onSentenceSelected(index)
-                    }
-                )
-            ) {
-                withStyle(
-                    if (isSelected) highlightedSpanStyle else defaultSpanStyle
-                ) {
-                    append(textToDisplay)
-                }
-            }
-            if (index != sentences.lastIndex) {
-                withStyle(defaultSpanStyle) {
-                    append(" ")
-                }
-            }
-        }
-    }
+    TranslatableText(
+        modifier = modifier,
+        sentences = state.sentences,
+        translatedSentences = state.translatedSentences,
+        selectedSentenceIndex = selectedSentenceIndex,
+        isSelectionTranslated = isSelectionTranslated,
+        onSentenceSelected = onSentenceSelected,
+    )
 }
 
 @Composable
@@ -191,8 +113,9 @@ private fun StoryChoices(
     onOptionTextSelected: (Int) -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier.padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         state.options.forEachIndexed { index, option ->
             Choice(
@@ -215,48 +138,53 @@ private fun Choice(
     option: StoryContentPartUiState.Choices.Option,
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    val backgroundColor = if (isSelected) colorScheme.onBackground else colorScheme.background
-    val contentColor = if (isSelected) colorScheme.background else colorScheme.onBackground
-    val borderColor = if (isSelected) colorScheme.background else colorScheme.onBackground
+    val buttonContainerColor =
+        if (option.isChosen) colorScheme.onBackground else colorScheme.background
+    val buttonContentColor =
+        if (option.isChosen) colorScheme.background else colorScheme.onBackground
+    val buttonIcon =
+        if (option.isChosen) Icons.Filled.Check else Icons.AutoMirrored.Filled.ArrowForward
     Box(modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
+            IconButton(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(backgroundColor)
-                    .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
-                    .clickable { onOptionTextSelected() }
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                text = if (isSelected && isSelectionTranslated) {
-                    option.translatedText
-                } else {
-                    option.text
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                color = contentColor,
-            )
-            Button(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .semantics { contentDescription = option.text }
-                    .testTag("story_choice_button_${option.id}"),
+                    .semantics {
+                        role = Role.RadioButton
+                        selected = option.isChosen
+                    }
+                    .testTag("story_choice_button_${option.id}")
+                    .border(
+                        width = 1.dp,
+                        shape = CircleShape,
+                        color = colorScheme.onBackground,
+                    ),
                 onClick = option.onClick,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.onBackground,
-                    contentColor = colorScheme.background,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = buttonContainerColor,
+                    contentColor = buttonContentColor,
                 ),
-                shape = RoundedCornerShape(16.dp),
+                shape = CircleShape,
             ) {
-                Text(text = stringResource(id = R.string.story_reader_choice_select_button))
+                Icon(
+                    imageVector = buttonIcon,
+                    contentDescription = null,
+                )
             }
+            TranslatableText(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .weight(weight = 1f),
+                text = option.text,
+                onTextSelected = onOptionTextSelected,
+                translation = option.translatedText,
+                textStyle = MaterialTheme.typography.headlineSmall,
+                isTextSelected = isSelected,
+                isTextTranslated = isSelectionTranslated,
+            )
         }
     }
 }
