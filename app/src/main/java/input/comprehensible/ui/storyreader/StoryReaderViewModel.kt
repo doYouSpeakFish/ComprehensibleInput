@@ -41,16 +41,18 @@ class StoryReaderViewModel @Inject constructor(
     private val content = story
         .map {
             (it as? StoryResult.Success)?.story
-                ?.toContentItems(onChoiceSelected = ::onChoiceSelected)
+                ?.toPartUiStates(onChoiceSelected = ::onChoiceSelected)
                 .orEmpty()
         }
     private val selectedTextState = MutableStateFlow<SelectedText?>(null)
+    private val partIdToScrollTo = MutableStateFlow<String?>(null)
 
     val state = combine(
         story,
         selectedTextState,
         content,
-    ) { storyResult, selectedText, content ->
+        partIdToScrollTo,
+    ) { storyResult, selectedText, content, latestSelectedPartId ->
         when (storyResult) {
             StoryResult.Error -> Error
             is StoryResult.Success -> Loaded(
@@ -59,10 +61,13 @@ class StoryReaderViewModel @Inject constructor(
                 } else {
                     storyResult.story.title
                 },
-                content = content,
+                parts = content,
                 currentPartId = storyResult.story.currentPartId,
                 initialContentIndex = storyResult.story.storyPosition,
                 selectedText = selectedText,
+                scrollingToPage = content
+                    .indexOfLast { it.id == latestSelectedPartId }
+                    .takeIf { it > 0 }
             )
         }
     }.stateIn(
@@ -89,23 +94,23 @@ class StoryReaderViewModel @Inject constructor(
      *
      * If the selected sentence is the same as the one already selected, it toggles its translated
      * state. Otherwise, it updates the selection to the new sentence and shows its translation.
-     *
-     * @param paragraphIndex The index of the paragraph containing the selected sentence.
-     * @param sentenceIndex The index of the selected sentence within the paragraph.
      */
     fun onSentenceSelected(
+        partIndex: Int,
         paragraphIndex: Int,
         sentenceIndex: Int,
     ) {
         selectedTextState.update { selectedText ->
             val selectedSentence = selectedText as? SelectedText.SentenceInParagraph
+            val samePart = selectedSentence?.partIndex == partIndex
             val sameParagraph = selectedSentence?.paragraphIndex == paragraphIndex
             val sameSentence = selectedSentence?.selectedSentenceIndex == sentenceIndex
-            if (sameParagraph && sameSentence) {
+            if (samePart && sameParagraph && sameSentence) {
                 return@update selectedSentence.copy(isTranslated = !selectedSentence.isTranslated)
             }
 
             SelectedText.SentenceInParagraph(
+                partIndex = partIndex,
                 paragraphIndex = paragraphIndex,
                 selectedSentenceIndex = sentenceIndex,
                 isTranslated = true
@@ -118,24 +123,21 @@ class StoryReaderViewModel @Inject constructor(
      *
      * If the same choice option is selected again, it toggles its translated state.
      * Otherwise, it selects the new option and shows its translation.
-     *
-     * @param choiceIndex The index of the choice within the story content list.
-     * @param optionIndex The index of the option within the choice.
      */
     fun onChoiceTextSelected(
-        choiceIndex: Int,
+        partIndex: Int,
         optionIndex: Int,
     ) {
         selectedTextState.update { selectedText ->
             val selectedChoice = selectedText as? SelectedText.ChoiceOption
-            val sameChoice = selectedChoice?.choiceIndex == choiceIndex
+            val samePart = selectedChoice?.partIndex == partIndex
             val sameOption = selectedChoice?.optionIndex == optionIndex
-            if (sameChoice && sameOption) {
+            if (samePart && sameOption) {
                 return@update selectedChoice.copy(isTranslated = !selectedChoice.isTranslated)
             }
 
             SelectedText.ChoiceOption(
-                choiceIndex = choiceIndex,
+                partIndex = partIndex,
                 optionIndex = optionIndex,
                 isTranslated = true,
             )
@@ -143,31 +145,8 @@ class StoryReaderViewModel @Inject constructor(
     }
 
     /**
-     * Handles the selection of a chosen story choice so it can be translated.
-     *
-     * If the same choice is selected again, it toggles its translated state.
-     * Otherwise, it selects the choice and shows its translation.
-     *
-     * @param choiceIndex The index of the choice within the story content list.
-     */
-    fun onChosenChoiceSelected(choiceIndex: Int) {
-        selectedTextState.update { selectedText ->
-            val selectedChoice = selectedText as? SelectedText.ChosenChoice
-            val sameChoice = selectedChoice?.choiceIndex == choiceIndex
-            if (sameChoice) {
-                return@update selectedChoice.copy(isTranslated = !selectedChoice.isTranslated)
-            }
-
-            SelectedText.ChosenChoice(
-                choiceIndex = choiceIndex,
-                isTranslated = true,
-            )
-        }
-    }
-
-    /**
-     * Persists the current story location, so if the story is closed, it can be resumed from this
-     * point.
+     * Persists the current story location within a page, so if the story is closed, it can be
+     * resumed from this point.
      */
     fun onStoryLocationUpdated(elementIndex: Int) {
         viewModelScope.launch {
@@ -179,30 +158,47 @@ class StoryReaderViewModel @Inject constructor(
     }
 
     /**
+     * Persists the current part, so if the story is closed, it can be resumed from this point.
+     */
+    fun onCurrentPartChanged(partId: String) {
+        viewModelScope.launch {
+            storiesRepository.updateStoryPart(
+                id = id,
+                partId = partId,
+            )
+        }
+    }
+
+    /**
      * Persists the user's choice, appending the chosen part to the current story.
-     *
-     * @param targetPartId The ID of the story part that the user has chosen.
      */
     fun onChoiceSelected(targetPartId: String) {
         viewModelScope.launch {
-            storiesRepository.updateStoryPart(
+            partIdToScrollTo.value = targetPartId
+            storiesRepository.updateStoryChoice(
                 id = id,
                 partId = targetPartId,
             )
         }
     }
+
+    fun onPartScrolledTo() {
+        partIdToScrollTo.value = null
+    }
 }
 
-private fun Story.toContentItems(
+private fun Story.toPartUiStates(
     onChoiceSelected: (String) -> Unit,
-): List<StoryContentPartUiState> = buildList {
-    parts.forEach { part ->
-        part.elements.forEach { element ->
-            add(element.toStoryContentPartUiState())
-        }
-        part.choice?.toStoryContentPartUiState(onChoiceSelected = onChoiceSelected)
-            ?.let(::add)
-    }
+): List<StoryReaderPartUiState> = parts.map { part ->
+    StoryReaderPartUiState(
+        id = part.id,
+        content = buildList {
+            part.elements.forEach { element ->
+                add(element.toStoryContentPartUiState())
+            }
+            add(part.choices.toChoicesUiState(onChoiceSelected = onChoiceSelected))
+        },
+    )
 }
 
 private fun StoryElement.toStoryContentPartUiState() = when (this) {
@@ -221,28 +217,26 @@ private fun StoryElement.Image.toImageUiState() = StoryContentPartUiState.Image(
     bitmap = bitmap,
 )
 
-private fun StoryChoice.toStoryContentPartUiState(
+private fun List<StoryChoice>.toChoicesUiState(
     onChoiceSelected: (String) -> Unit,
-) = when (this) {
-    is StoryChoice.Available -> toChoicesUiState(onChoiceSelected = onChoiceSelected)
-    is StoryChoice.Chosen -> toChoiceUiState()
+): StoryContentPartUiState.Choices {
+    return StoryContentPartUiState.Choices(
+        options = map { choice ->
+            choice.toChoiceUiState(
+                onChoiceSelected = onChoiceSelected,
+                isChosen = choice.isChosen,
+            )
+        }
+    )
 }
 
-private fun StoryChoice.Available.toChoicesUiState(
+private fun StoryChoice.toChoiceUiState(
     onChoiceSelected: (String) -> Unit,
-) = StoryContentPartUiState.Choices(
-    options = options.map { option ->
-        StoryContentPartUiState.Choices.Option(
-            id = option.targetPartId,
-            text = option.text,
-            translatedText = option.translatedText,
-            onClick = { onChoiceSelected(option.targetPartId) },
-        )
-    }
+    isChosen: Boolean,
+) = StoryContentPartUiState.Choices.Option(
+    id = targetPartId,
+    text = text,
+    translatedText = translatedText,
+    onClick = { onChoiceSelected(targetPartId) },
+    isChosen = isChosen,
 )
-
-private fun StoryChoice.Chosen.toChoiceUiState() =
-    StoryContentPartUiState.ChosenChoice(
-        text = option.text,
-        translatedText = option.translatedText,
-    )

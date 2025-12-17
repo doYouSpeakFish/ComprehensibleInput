@@ -27,16 +27,29 @@ class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDat
     override suspend fun updateStory(id: String, position: Int) {
         stories.update { current ->
             val oldStoryInfo = current.getValue(id)
-            val newStoryInto = oldStoryInfo.copy(position = position)
-            current + (id to newStoryInto)
+            val newStoryInfo = oldStoryInfo.copy(position = position)
+            current + (id to newStoryInfo)
         }
     }
 
     override suspend fun updateStory(id: String, partId: String) {
         stories.update { current ->
             val oldStoryInfo = current.getValue(id)
-            val newStoryInto = oldStoryInfo.copy(partId = partId)
-            current + (id to newStoryInto)
+            val newStoryInfo = oldStoryInfo.copy(partId = partId, position = 0)
+            current + (id to newStoryInfo)
+        }
+    }
+
+    override suspend fun updateStoryChoice(
+        id: String,
+        lastChosenPartId: String,
+    ) {
+        stories.update { current ->
+            val oldStoryInfo = current.getValue(id)
+            val newStoryInfo = oldStoryInfo.copy(
+                lastChosenPartId = lastChosenPartId,
+            )
+            current + (id to newStoryInfo)
         }
     }
 }

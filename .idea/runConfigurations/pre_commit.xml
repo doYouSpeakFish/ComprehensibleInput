@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="pre-commit" type="CompoundRunConfigurationType">
+    <toRun name="All tests" type="GradleRunConfiguration" />
+    <toRun name="ComprehensibleInput [detekt]" type="GradleRunConfiguration" />
+    <toRun name="ComprehensibleInput [lint]" type="GradleRunConfiguration" />
+    <method v="2" />
+  </configuration>
+</component>

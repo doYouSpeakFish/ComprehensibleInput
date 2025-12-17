@@ -42,11 +42,24 @@ interface StoriesInfoLocalDataSource {
     @Query(
         """
             UPDATE StoryEntity
-            SET partId = :partId 
+            SET partId = :partId,
+                position = 0
             WHERE id = :id
         """
     )
     suspend fun updateStory(id: String, partId: String)
+
+    @Query(
+        """
+            UPDATE StoryEntity
+            SET lastChosenPartId = :lastChosenPartId
+            WHERE id = :id
+        """
+    )
+    suspend fun updateStoryChoice(
+        id: String,
+        lastChosenPartId: String,
+    )
 }
 
 fun StoriesInfoLocalDataSource.getOrCreateStory(

@@ -18,12 +18,15 @@ class SoftwareLicencesRobot(private val composeTestRule: ComposeTestRule) {
     }
 
     @OptIn(ExperimentalTestApi::class)
-    fun assertLicenceIsVisible(softwareLicence: String) {
+    fun waitUntilLicencesHaveLoaded() {
         composeTestRule.waitUntilAtLeastOneExists(
-            matcher = hasText(softwareLicence),
+            matcher = hasText("Apache License 2.0"),
             timeoutMillis = 2000L,
         )
+    }
 
+    @OptIn(ExperimentalTestApi::class)
+    fun assertLicenceIsVisible(softwareLicence: String) {
         composeTestRule
             .onAllNodesWithText(softwareLicence)
             .onFirst()

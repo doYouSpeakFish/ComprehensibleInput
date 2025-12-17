@@ -133,14 +133,13 @@ data class TestStory(
     val spanishTitle: String,
     val parts: List<TestStoryPartSegment>,
 ) {
-    val content: List<TestStoryPart>
-        get() = parts.firstOrNull()?.content ?: emptyList()
-
     val paragraphs: List<TestStoryPart.Paragraph> =
         parts.flatMap { part -> part.content.filterIsInstance<TestStoryPart.Paragraph>() }
 
     val images: List<TestStoryPart.Image> =
         parts.flatMap { part -> part.content.filterIsInstance<TestStoryPart.Image>() }
+
+    fun getPart(id: String) = parts.first { it.id == id }
 }
 
 sealed interface TestStoryPart {
@@ -163,3 +162,5 @@ data class TestStoryChoice(
     val targetPartId: String,
     val textByLanguage: Map<String, String>,
 )
+
+fun List<TestStoryPart>.filterParagraphs() = filterIsInstance<TestStoryPart.Paragraph>()

@@ -5,21 +5,21 @@ import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
-import input.comprehensible.ThemeMode
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.data.sample.TestStoryPart
+import input.comprehensible.data.sample.filterParagraphs
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import javax.inject.Inject
 
-@RunWith(ParameterizedRobolectricTestRunner::class)
+@RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(
     manifest = Config.NONE,
@@ -29,10 +29,10 @@ import javax.inject.Inject
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @OptIn(ExperimentalRoborazziApi::class)
-class StoryReaderTests(private val themeMode: ThemeMode) {
+class StoryReaderTests {
 
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this, themeMode)
+    val testRule = ComprehensibleInputTestRule(this)
 
     @Inject
     lateinit var storiesData: StoriesTestData
@@ -197,57 +197,67 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
     }
 
     @Test
-    fun `the chosen choice can be switched from German to English`() = testRule.runTest {
-        // GIVEN a German story with a chosen path
+    fun `choosing a path opens the next part on a new page`() = testRule.runTest {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
         storiesData.setLocalStories(listOf(story))
 
+        val startPart = story.parts.first()
+        val startSentence = startPart.content.filterParagraphs().first().germanSentences.first()
+
+        val choice = startPart.choices.first()
+        val choiceId = choice.targetPartId
+
+        val chosenPart = story.getPart(choice.targetPartId)
+        val firstSentenceOfChosenPart = chosenPart.content.filterParagraphs().first().germanSentences.first()
+
+        // GIVEN the first part of the story is visible
         goToStoryReader(story.id)
         awaitIdle()
 
         onStoryReader {
-            val choice = story.parts.first().choices.first()
-            val germanChoice = choice.textByLanguage.getValue("de")
-            val englishChoice = choice.textByLanguage.getValue("en")
+            assertStoryTextIsVisible(startSentence)
 
-            chooseStoryOption(germanChoice)
+            // WHEN the reader chooses the first option
+            chooseStoryOption(choiceId)
             awaitIdle()
 
-            waitForChoiceText(germanChoice)
-            tapOnChosenChoiceText(germanChoice)
-            awaitIdle()
-
-            waitForChoiceText(englishChoice)
-            assertChoiceIsShown(englishChoice)
+            // THEN the chosen option and the next part are shown at the top of the new page
+            assertStoryTextIsVisible(firstSentenceOfChosenPart)
         }
     }
 
     @Test
-    fun `the chosen choice can be switched from English to German`() = testRule.runTest {
-        // GIVEN a German story with a chosen path
+    fun `choices stay available when paging backwards`() = testRule.runTest {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
         storiesData.setLocalStories(listOf(story))
 
+        val keepChoice = story.parts.first().choices.first()
+        val keepChoiceText = keepChoice.textByLanguage.getValue("de")
+        val returnChoice = story.parts.first().choices.last()
+        val returnChoiceText = returnChoice.textByLanguage.getValue("de")
+        val returnPathSentence = (story.parts.first { it.id == "return_key" }.content.first() as TestStoryPart.Paragraph)
+            .germanSentences.first()
+
+        // GIVEN the user has followed one path
         goToStoryReader(story.id)
         awaitIdle()
 
         onStoryReader {
-            val choice = story.parts.first().choices.first()
-            val germanChoice = choice.textByLanguage.getValue("de")
-            val englishChoice = choice.textByLanguage.getValue("en")
-
-            chooseStoryOption(germanChoice)
-            awaitIdle()
-            waitForChoiceText(germanChoice)
-            tapOnChosenChoiceText(germanChoice)
-            awaitIdle()
-            waitForChoiceText(englishChoice)
-
-            tapOnChosenChoiceText(englishChoice)
+            chooseStoryOption(keepChoice.targetPartId)
             awaitIdle()
 
-            waitForChoiceText(germanChoice)
-            assertChoiceIsShown(germanChoice)
+            // WHEN they page back to the earlier part
+            swipeToPreviousPart()
+            awaitIdle()
+
+            // THEN the choices are still available
+            assertChoiceIsShown(keepChoiceText)
+            assertChoiceIsShown(returnChoiceText)
+
+            // AND a different choice can be selected
+            chooseStoryOption(returnChoice.targetPartId)
+            awaitIdle()
+            assertStoryTextIsVisible(returnPathSentence)
         }
     }
 
@@ -321,8 +331,7 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         storiesData.setLocalStories(listOf(story))
 
         val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
-        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
-        val returnChoiceText = story.parts.first().choices.last().textByLanguage.getValue("de")
+        val keepChoice = story.parts.first().choices.first()
         val newPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
             .germanSentences.first()
 
@@ -331,20 +340,13 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            // WHEN the first part is shown
-            assertStoryTextIsVisible(startSentence)
-            assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsShown(returnChoiceText)
-
             // WHEN the reader chooses to keep the key
-            chooseStoryOption(keepChoiceText)
+            assertStoryTextIsVisible(startSentence)
+            chooseStoryOption(keepChoice.targetPartId)
             awaitIdle()
 
-            // THEN the story shows the chosen path
-            skipToSentence(newPathSentence)
-            assertStoryTextExists(newPathSentence)
-            assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsNotShown(returnChoiceText)
+            // THEN the next part is shown
+            assertStoryTextIsVisible(newPathSentence)
         }
 
         // AND the story is closed
@@ -356,10 +358,13 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
         awaitIdle()
 
         onStoryReader {
-            assertChoiceIsShown(keepChoiceText)
-            assertChoiceIsNotShown(returnChoiceText)
-            skipToSentence(newPathSentence)
-            assertStoryTextExists(newPathSentence)
+            // THEN it resumes on the chosen path
+            assertStoryTextIsVisible(newPathSentence)
+
+            // AND the original part can still be reached by paging backwards
+            swipeToPreviousPart()
+            awaitIdle()
+            assertStoryTextIsVisible(startSentence)
         }
     }
 
@@ -441,11 +446,5 @@ class StoryReaderTests(private val themeMode: ThemeMode) {
             // THEN the error dialog is shown
             assertErrorDialogIsShown()
         }
-    }
-
-    companion object {
-        @JvmStatic
-        @ParameterizedRobolectricTestRunner.Parameters(name = "theme = {0}")
-        fun parameters() = ThemeMode.entries.map { arrayOf(it) }
     }
 }
