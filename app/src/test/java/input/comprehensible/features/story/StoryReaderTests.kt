@@ -8,6 +8,7 @@ import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.data.sample.TestStoryPart
+import input.comprehensible.data.sample.filterParagraphs
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
 import org.junit.Rule
@@ -200,10 +201,14 @@ class StoryReaderTests {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
         storiesData.setLocalStories(listOf(story))
 
-        val startSentence = (story.parts.first().content.first() as TestStoryPart.Paragraph).germanSentences.first()
-        val keepChoiceText = story.parts.first().choices.first().textByLanguage.getValue("de")
-        val newPathSentence = (story.parts.first { it.id == "keep_key" }.content.first() as TestStoryPart.Paragraph)
-            .germanSentences.first()
+        val startPart = story.parts.first()
+        val startSentence = startPart.content.filterParagraphs().first().germanSentences.first()
+
+        val choice = startPart.choices.first()
+        val choiceText = choice.textByLanguage.getValue("de")
+
+        val chosenPart = story.getPart(choice.targetPartId)
+        val firstSentenceOfChosenPart = chosenPart.content.filterParagraphs().first().germanSentences.first()
 
         // GIVEN the first part of the story is visible
         goToStoryReader(story.id)
@@ -213,11 +218,11 @@ class StoryReaderTests {
             assertStoryTextIsVisible(startSentence)
 
             // WHEN the reader chooses the first option
-            chooseStoryOption(keepChoiceText)
+            chooseStoryOption(choiceText)
             awaitIdle()
 
             // THEN the chosen option and the next part are shown at the top of the new page
-            assertStoryTextIsVisible(newPathSentence)
+            assertStoryTextIsVisible(firstSentenceOfChosenPart)
         }
     }
 
