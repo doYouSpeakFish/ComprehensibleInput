@@ -59,24 +59,6 @@ object SampleStoriesData {
                         )
                     )
                 ),
-                choices = listOf(
-                    TestStoryChoice(
-                        targetPartId = "keep_key",
-                        textByLanguage = mapOf(
-                            "de" to "Sie behält den Schlüssel.",
-                            "en" to "She keeps the key.",
-                            "es" to "Ella se queda con la llave."
-                        )
-                    ),
-                    TestStoryChoice(
-                        targetPartId = "return_key",
-                        textByLanguage = mapOf(
-                            "de" to "Sie bringt den Schlüssel zum Fundbüro.",
-                            "en" to "She takes the key to the lost property office.",
-                            "es" to "Lleva la llave a objetos perdidos."
-                        )
-                    )
-                )
             ),
             TestStoryPartSegment(
                 id = "keep_key",
@@ -97,6 +79,14 @@ object SampleStoriesData {
                             "Por la tarde descubre una puerta pequeña detrás del ayuntamiento.",
                             "La llave encaja y encuentra un rincón tranquilo para leer."
                         )
+                    )
+                ),
+                choice = TestStoryChoice(
+                    parentPartId = "start",
+                    textByLanguage = mapOf(
+                        "de" to "Sie behält den Schlüssel.",
+                        "en" to "She keeps the key.",
+                        "es" to "Ella se queda con la llave."
                     )
                 )
             ),
@@ -119,6 +109,14 @@ object SampleStoriesData {
                             "La encargada le agradece con cariño y le ofrece un té.",
                             "Lina se siente orgullosa por hacer algo amable."
                         )
+                    )
+                ),
+                choice = TestStoryChoice(
+                    parentPartId = "start",
+                    textByLanguage = mapOf(
+                        "de" to "Sie bringt den Schlüssel zum Fundbüro.",
+                        "en" to "She takes the key to the lost property office.",
+                        "es" to "Lleva la llave a objetos perdidos."
                     )
                 )
             )
@@ -155,11 +153,11 @@ sealed interface TestStoryPart {
 data class TestStoryPartSegment(
     val id: String,
     val content: List<TestStoryPart>,
-    val choices: List<TestStoryChoice> = emptyList(),
+    val choice: TestStoryChoice? = null,
 )
 
 data class TestStoryChoice(
-    val targetPartId: String,
+    val parentPartId: String,
     val textByLanguage: Map<String, String>,
 )
 

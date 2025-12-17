@@ -27,6 +27,12 @@ data class StoryChoice(
     val isChosen: Boolean,
 )
 
+data class StoryParentChoice(
+    val parentPartId: String,
+    val text: String,
+    val translatedText: String,
+)
+
 /**
  * A part of a story that can be read.
  */

@@ -68,16 +68,6 @@
             "„Ich habe diese Münze vor vielen Jahren hier verloren.“"
           ]
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria behält die Münze.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria gibt die Münze zurück.",
-          "targetPartId": "return_coin"
-        }
       ]
     },
     {
@@ -100,7 +90,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria behält die Münze."
+      }
     },
     {
       "id": "return_coin",
@@ -130,7 +123,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria gibt die Münze zurück."
+      }
     }
   ]
 }

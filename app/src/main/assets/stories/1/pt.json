@@ -68,16 +68,6 @@
             "“Perdi essa moeda aqui muitos anos atrás.”"
           ]
         }
-      ],
-      "choices": [
-        {
-          "text": "Maria fica com a moeda.",
-          "targetPartId": "keep_coin"
-        },
-        {
-          "text": "Maria devolve a moeda.",
-          "targetPartId": "return_coin"
-        }
       ]
     },
     {
@@ -100,7 +90,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria fica com a moeda."
+      }
     },
     {
       "id": "return_coin",
@@ -130,7 +123,10 @@
           ]
         }
       ],
-      "choices": []
+      "choice": {
+        "parentPartId": "start",
+        "text": "Maria devolve a moeda."
+      }
     }
   ]
 }

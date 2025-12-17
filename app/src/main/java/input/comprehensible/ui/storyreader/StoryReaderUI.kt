@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import input.comprehensible.R
+import input.comprehensible.ui.components.rememberPagerState
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -64,6 +66,7 @@ import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 /**
  * A screen for reading a story.
@@ -151,27 +154,16 @@ private fun StoryContent(
     val currentPartIndex = remember(state.parts, state.currentPartId) {
         state.parts.indexOfFirst { part -> part.id == state.currentPartId }.coerceAtLeast(0)
     }
+    val currentParts by rememberUpdatedState(state.parts)
     val pagerState = rememberPagerState(
         initialPage = currentPartIndex,
+        pageToScrollTo = state.scrollingToPage,
         pageCount = { state.parts.size },
+        onNewPageSettled = { pageIndex ->
+            if (pageIndex == state.scrollingToPage) onPartScrolledTo()
+            currentParts.getOrNull(pageIndex)?.id?.let(onCurrentPartChanged)
+        },
     )
-    val currentParts by rememberUpdatedState(state.parts)
-    LaunchedEffect(state.scrollingToPage) {
-        state.scrollingToPage?.let {
-            pagerState.animateScrollToPage(it)
-            onPartScrolledTo()
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        snapshotFlow { pagerState.settledPage }
-            .distinctUntilChanged()
-            .collect { page ->
-                currentParts.getOrNull(page)?.let { part ->
-                    if (part.id != state.currentPartId) onCurrentPartChanged(part.id)
-                }
-            }
-    }
 
     Box(modifier) {
         HorizontalPager(
