@@ -209,6 +209,7 @@ class StoryReaderTests {
 
         val startSentence = story.parts.first().content.filterParagraphs().first().germanSentences.first()
         val keepChoicePart = story.getPart("keep_key")
+        val keepChoiceId = keepChoicePart.id
         val keepChoiceText = keepChoicePart.choice!!.textByLanguage.getValue("de")
         val newPathSentence = keepChoicePart.content.filterParagraphs().first().germanSentences.first()
 
@@ -220,7 +221,7 @@ class StoryReaderTests {
             assertStoryTextIsVisible(startSentence)
 
             // WHEN the reader chooses the first option
-            chooseStoryOption(keepChoiceText)
+            chooseStoryOption(keepChoiceId)
             awaitIdle()
 
             // THEN the chosen option and the next part are shown at the top of the new page
@@ -233,8 +234,12 @@ class StoryReaderTests {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
         storiesData.setLocalStories(listOf(story))
 
-        val keepChoiceText = story.getPart("keep_key").choice!!.textByLanguage.getValue("de")
-        val returnChoiceText = story.getPart("return_key").choice!!.textByLanguage.getValue("de")
+        val keepChoicePart = story.getPart("keep_key")
+        val keepChoiceId = keepChoicePart.id
+        val keepChoiceText = keepChoicePart.choice!!.textByLanguage.getValue("de")
+        val returnChoicePart = story.getPart("return_key")
+        val returnChoiceId = returnChoicePart.id
+        val returnChoiceText = returnChoicePart.choice!!.textByLanguage.getValue("de")
         val returnPathSentence = story.getPart("return_key").content.filterParagraphs().first()
             .germanSentences.first()
 
@@ -243,7 +248,7 @@ class StoryReaderTests {
         awaitIdle()
 
         onStoryReader {
-            chooseStoryOption(keepChoiceText)
+            chooseStoryOption(keepChoiceId)
             awaitIdle()
 
             // WHEN they page back to the earlier part
@@ -255,7 +260,7 @@ class StoryReaderTests {
             assertChoiceIsShown(returnChoiceText)
 
             // AND a different choice can be selected
-            chooseStoryOption(returnChoiceText)
+            chooseStoryOption(returnChoiceId)
             awaitIdle()
             assertStoryTextIsVisible(returnPathSentence)
         }
@@ -332,6 +337,7 @@ class StoryReaderTests {
 
         val startSentence = story.parts.first().content.filterParagraphs().first().germanSentences.first()
         val keepChoicePart = story.getPart("keep_key")
+        val keepChoiceId = keepChoicePart.id
         val keepChoiceText = keepChoicePart.choice!!.textByLanguage.getValue("de")
         val newPathSentence = keepChoicePart.content.filterParagraphs().first().germanSentences.first()
 
@@ -342,7 +348,7 @@ class StoryReaderTests {
         onStoryReader {
             // WHEN the reader chooses to keep the key
             assertStoryTextIsVisible(startSentence)
-            chooseStoryOption(keepChoiceText)
+            chooseStoryOption(keepChoiceId)
             awaitIdle()
 
             // THEN the next part is shown
