@@ -105,12 +105,9 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             }
     }
 
-    fun chooseStoryOption(text: String) {
+    fun chooseStoryOption(optionId: String) {
         composeTestRule
-            .onNode(
-                hasContentDescription(value = text, substring = true),
-                useUnmergedTree = true,
-            )
+            .onNodeWithTag("story_choice_button_$optionId", useUnmergedTree = true)
             .performClick()
     }
 
