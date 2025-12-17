@@ -42,12 +42,8 @@ data class StoryData(
     val featuredImagePath: String,
     val parts: List<StoryPartData>,
 ) {
-    val partParents = parts
-        .asSequence()
-        .mapNotNull { part ->
-            part.choice?.let { choice -> part.id to choice.parentPartId }
-        }
-        .associate { (childId, parentId) -> childId to parentId }
+    val partsById = parts.associateBy { it.id }
+    val childrenByParentId = parts.groupBy { it.choice?.parentPartId }
 }
 
 @Serializable

@@ -18,7 +18,6 @@ data class StoryPart(
     val id: String,
     val elements: List<StoryElement>,
     val choices: List<StoryChoice>,
-    val parentChoice: StoryParentChoice?,
 )
 
 data class StoryChoice(
