@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.room) apply false
+    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 
 //val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
