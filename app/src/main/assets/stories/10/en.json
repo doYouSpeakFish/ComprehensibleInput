@@ -1,0 +1,2429 @@
+{
+  "id": "10",
+  "title": "The Clockwork Lighthouse",
+  "startPartId": "start",
+  "featuredImagePath": "1",
+  "parts": [
+    {
+      "id": "start",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha has lived her whole life on Clifftop Isle, where the sea never truly goes quiet.",
+            "She is the lighthouse keeper’s apprentice, responsible for winding the clockwork core and cleaning the great glass lens."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "On the first day of the winter gales, the horizon turns the color of wet slate.",
+            "Fishing boats rush toward the harbor, and the gulls fly low as if the sky has grown heavy."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "At noon, Keeper Marek presses a brass key into Asha’s palm and leaves for the mainland to fetch supplies.",
+            "He tells her to keep the light steady until he returns, no matter what the weather does."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "By late afternoon, the lighthouse begins to sound wrong.",
+            "Instead of a smooth, confident tick, the mechanism stutters and clicks, like a watch with sand in its teeth."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha climbs the spiral stair and feels the tower shiver under a gust.",
+            "The lantern room smells faintly of hot oil, and the lens throws a tired, uneven shimmer across the glass."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Then, from somewhere below the floorboards, she hears a second rhythm.",
+            "It is a deeper ticking, coming from the sealed service tunnels that Marek never lets visitors see."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Night is coming fast, and ships will rely on the beacon to find the safe channel.",
+            "Asha has to choose where to spend her remaining daylight."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lantern_room",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha goes straight to the lantern room, where the heart of the lighthouse lives.",
+            "The lens rotates, but it hesitates every few seconds, as if it is catching on something."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "If she can steady the light before dusk, the storm will be only noise and rain.",
+            "If she cannot, the reef below Clifftop Isle will collect wrecks the way a net collects fish."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Climb to the lantern room and examine the beacon."
+      }
+    },
+    {
+      "id": "tunnels",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha kneels and finds the iron ring set into the lantern room floor.",
+            "With a hard pull, she lifts the hatch that leads into the service tunnels."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Cold air rises from below, damp with salt and stone.",
+            "The deeper ticking is louder now, like a second clock hidden in the tower’s bones."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She lights her small lantern and descends into darkness.",
+            "The staircase ends at a junction where three passages diverge."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Open the floor hatch and follow the strange ticking below."
+      }
+    },
+    {
+      "id": "harbor_master",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides the problem is too big to solve alone.",
+            "She pulls on her coat, runs down the cliff path, and heads for the harbor office."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The wind whips salt into her face and makes her eyes water.",
+            "In the harbor, ropes creak, masts sway, and everyone watches the darkening sky."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Harbor Master Soren looks up from a stack of tide charts when she bursts through the door.",
+            "He listens without interrupting, then sets his jaw as if he has been waiting for this day."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Run to the harbor master and ask for help."
+      }
+    },
+    {
+      "id": "lens_inspect",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha leans close to the great Fresnel lens.",
+            "Fine grit has worked its way into the brass teeth around the base, and the glass shows faint streaks where spray has dried."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The lens is delicate but unforgiving.",
+            "A bad adjustment can make the light wobble, and a cracked prism can scatter the beam into useless fragments."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Inspect the lens and its gears for damage."
+      }
+    },
+    {
+      "id": "coil_check",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha moves to the clockwork core: a drum of springs, weights, and copper coils that store and release steady power.",
+            "One coil casing is warm to the touch, and a thin line of soot marks its edge."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "If the coil fails, the beacon will fade long before midnight.",
+            "Replacing it could fix everything, but it will take time she may not have."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Check the power coils and the clockwork core."
+      }
+    },
+    {
+      "id": "sea_watch",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Before touching anything, Asha steps to the seaward window.",
+            "The channel is already rough, and distant sails look like torn paper in the rising wind."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A light that falters at the wrong moment can be worse than no light at all.",
+            "If danger is already close, she may need to warn ships first and repair later."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Look out to sea and decide what must happen first."
+      }
+    },
+    {
+      "id": "polish",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mixes a small amount of solvent, the kind Marek uses on the brass once a month.",
+            "She wipes the lens housing carefully, then polishes the gear ring until the teeth shine."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "As the grime lifts, she notices a shallow engraving on the inner rim.",
+            "It is not a maker’s mark; it looks like a set of directions, scratched by a patient hand."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lens_inspect",
+        "text": "Clean and polish the lens ring to remove grit."
+      }
+    },
+    {
+      "id": "gear_adjust",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tightens her grip and tries a careful adjustment on the gear tensioner.",
+            "The lens turns smoothly for three rotations, and hope rises in her chest."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Then the mechanism slips with a sharp metallic snap.",
+            "One tooth on the drive gear shears away and skitters across the floor like a dropped coin."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The lens still turns, but it now catches at the broken point, jerking the beam each time it passes.",
+            "Asha has to decide whether to improvise or abandon this approach."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lens_inspect",
+        "text": "Adjust the lens gear tension to stop the hesitation."
+      }
+    },
+    {
+      "id": "consult_archives",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha recognizes the pattern from old keeper lore.",
+            "She finds Marek’s battered logbook cabinet and pulls out a folded maintenance diagram."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The engraving matches a forgotten calibration sequence, meant for nights when the air is thick with salt.",
+            "She follows it step by step, loosening one screw, tightening another, and resetting the lens track."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When she releases the brake, the lens glides without a stutter.",
+            "At dusk, the beam sweeps the channel with a steady, bright pulse that cuts through the first sheets of rain."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "By the time Marek returns, the storm is already raging, but the lighthouse stands firm.",
+            "Asha tells him about the hidden engraving, and he nods as if the tower itself has finally accepted her."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "polish",
+        "text": "Use the engraving to find the correct calibration and reset the lens."
+      }
+    },
+    {
+      "id": "pocket_note",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memorizes the scratched directions and decides she cannot spare the time to chase old mysteries.",
+            "She finishes the cleaning, then forces the lens into motion with a quick adjustment."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beam steadies for an hour, but as the storm front arrives, the air turns thick and the glass begins to fog.",
+            "Without the full calibration sequence, the lens slips again, and the light becomes uneven."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ships in the channel slow to a crawl, and a few turn back rather than risk the reefs.",
+            "The lighthouse does not fail completely, but the night is tense and uncertain."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When Marek returns, he is relieved to find the tower still lit, yet he notices Asha’s tired eyes.",
+            "She realizes that sometimes the safest shortcut is still a gamble."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "polish",
+        "text": "Ignore the engraving and rely on a quick cleaning and minor adjustment."
+      }
+    },
+    {
+      "id": "improvise_gear",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha finds the broken gear tooth and measures it against the missing gap.",
+            "From a tin of spare parts, she selects a brass shim and files it into a rough substitute."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She seats the shim into place with a small hammer and a prayer, then re-engages the drive.",
+            "The lens no longer snaps, though it makes a faint rasping sound with each rotation."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The light holds through the worst of the gale, but by dawn the shim is already wearing thin.",
+            "Asha has bought the island one safe night, and she knows what tomorrow’s work will be."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "gear_adjust",
+        "text": "Improvise a replacement tooth and keep the lens turning."
+      }
+    },
+    {
+      "id": "seek_help_from_lens",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides the damage is too risky to patch alone.",
+            "She locks the lantern room brake to prevent further grinding and runs down the stairs."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "At the harbor, she finds a retired engineer who once serviced coastal towers.",
+            "He agrees to climb with her immediately, grumbling about storms and young keepers who should not be left alone."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Together, they swap the damaged gear for a proper spare and re-align the drive.",
+            "The repair costs Asha her pride and a jar of preserved lemons from the harbor pantry, but the beam becomes steady again."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When the storm finally breaks, the channel is empty of wrecks.",
+            "Asha learns that asking for help can be a skill as important as any tool."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "gear_adjust",
+        "text": "Stop the mechanism and find a skilled helper for a proper repair."
+      }
+    },
+    {
+      "id": "replace_coil",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha opens the coil housing and sees the problem immediately.",
+            "A hairline crack runs along the casing, and the insulation smells faintly burned."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek keeps spare coils in the workshop two floors below.",
+            "If she can retrieve one and install it before dusk, the beacon should last all night."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "coil_check",
+        "text": "Replace the cracked coil with a spare from the workshop."
+      }
+    },
+    {
+      "id": "dim_light",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha closes the coil housing without opening it further.",
+            "A full replacement might work, but it might also trigger a failure if she rushes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Instead, she decides to ration power.",
+            "If she dims the lamp and uses manual signals, she might stretch the coil through the worst hours."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "coil_check",
+        "text": "Keep the coil in place and ration power to last the night."
+      }
+    },
+    {
+      "id": "storm_path",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The quickest route to the workshop is an exterior catwalk that wraps the tower.",
+            "It is exposed to the wind, but it saves precious minutes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha steps onto the catwalk and the gust nearly steals her breath.",
+            "Rain needles her cheeks, and the sea below roars as if it is trying to climb the cliff."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "replace_coil",
+        "text": "Take the exterior catwalk to reach the workshop quickly."
+      }
+    },
+    {
+      "id": "safe_stairs",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha chooses the interior stairs.",
+            "They are slower, but stone walls block the worst of the wind."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The tower’s old masonry holds the sound of the storm at a distance.",
+            "By the time she reaches the workshop door, she is damp but steady on her feet."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The handle does not turn.",
+            "The workshop is locked."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "replace_coil",
+        "text": "Use the interior stairs and reach the workshop safely."
+      }
+    },
+    {
+      "id": "aid_bird",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Halfway across the catwalk, Asha finds a gull tangled in a length of fishing line.",
+            "The bird flaps weakly, pinned against the railing by the wind."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha could free it, or she could keep moving and trust that nature will sort itself out.",
+            "But the line is cutting into the gull’s leg, and the storm is not gentle."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She kneels, works her fingers numb with cold, and finally snaps the line free.",
+            "The gull hops once, then launches into the gale and vanishes into the gray."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Minutes later, the same gull circles back and calls sharply, then darts toward a maintenance hatch Asha has never noticed.",
+            "Inside, she finds a dry cache of spare coils and sealed oil flasks left by earlier keepers."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "With the spare in hand, she replaces the cracked coil before the sun fully disappears.",
+            "That night the lighthouse burns strong, and Asha sleeps with the sound of a grateful wingbeat in her memory."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "storm_path",
+        "text": "Stop to free the tangled gull."
+      }
+    },
+    {
+      "id": "hurry",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha lowers her head and forces herself to move faster.",
+            "The wind slams into her side, and the catwalk becomes slick beneath her boots."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She reaches for the rail, but her glove slips.",
+            "Her knee hits iron hard enough to make her vision flash white."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She manages to crawl back inside the tower, shaking with pain.",
+            "The coil still needs replacing, but now every step is slow and sharp."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "By the time she installs a spare, the lamp is already fading.",
+            "The beacon does not go out completely, but it grows weak, and the night feels longer than it should."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "storm_path",
+        "text": "Ignore the gull and hurry to the workshop."
+      }
+    },
+    {
+      "id": "pick_lock",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha examines the workshop lock.",
+            "It is old, but it was reinforced recently, as if someone wanted it to resist more than casual curiosity."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She takes a thin wire from her lantern kit and works it into the keyhole.",
+            "After several tense seconds, the tumblers give with a soft click."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The door opens onto a room that smells of lamp oil and wet canvas.",
+            "Crates are stacked where tools should be, and none of the crates carry a maker’s stamp."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "safe_stairs",
+        "text": "Pick the lock and enter the workshop."
+      }
+    },
+    {
+      "id": "fetch_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides not to force anything.",
+            "Marek keeps the workshop key in his cottage at the base of the tower."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She runs down the stairs, crosses the courtyard, and finds the key hook empty.",
+            "In its place is a note, written in Marek’s careful hand: ‘If the workshop is locked, check the tide cave. Trust the low water.’"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The note is unsettling, but it is also specific.",
+            "Asha can follow it, or she can search the cottage and return as quickly as possible."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "safe_stairs",
+        "text": "Leave the lock alone and look for the workshop key."
+      }
+    },
+    {
+      "id": "confront_smugglers",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha steps between the crates and calls out, demanding to know who stored them here.",
+            "A shadow shifts behind a canvas sheet, and a man with a sea-knife in his belt emerges, startled and angry."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "He is not alone.",
+            "Two others appear, and the room suddenly feels too small for Asha’s courage."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "They seize her lantern and tie her hands, warning her to keep quiet until their boat arrives.",
+            "But storms make schedules unreliable."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "An hour later, Harbor Master Soren and two sailors force the workshop door and find her alive.",
+            "The smugglers escape into the tunnels, yet the spare coil Asha spotted in the corner is enough to keep the beacon lit."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The light holds, and the harbor begins a search at dawn.",
+            "Asha learns that bravery without a plan can still cost more than she expects."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "pick_lock",
+        "text": "Confront whoever is using the workshop."
+      }
+    },
+    {
+      "id": "hide_listen",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha slips behind a stack of crates and holds her breath.",
+            "Outside, footsteps approach, and low voices pass through the door as if the speakers assume the tower is empty."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She hears dates, tides, and a mention of a ‘quiet channel’ beneath the cliff.",
+            "One voice complains that the lighthouse keeper has become ‘too careful’ about locking doors."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When the voices fade, Asha takes one small coil from a tool shelf and closes the door again.",
+            "She runs to the harbor office, repeats what she heard, and hands Soren the coil as proof the tower has been compromised."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "That night the beacon stays bright, and just before midnight a patrol boat intercepts a skiff near the cliff.",
+            "In the morning, the harbor is tired but safe, and Asha feels the relief of having acted without being seen."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "pick_lock",
+        "text": "Hide, listen, and gather information before acting."
+      }
+    },
+    {
+      "id": "tide_cave",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha follows the cliff path down to a narrow inlet that only appears at low tide.",
+            "A shallow cave mouth opens between dark rocks, breathing cold air and the smell of kelp."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Inside, she finds an iron box chained to a ring bolt.",
+            "The chain is rusted enough to break with effort, but the sea is already creeping back toward the entrance."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The box could contain spare parts, or it could contain something else entirely.",
+            "Asha has to choose how much risk to take while the tide returns."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "fetch_key",
+        "text": "Follow Marek’s note and search the tide cave."
+      }
+    },
+    {
+      "id": "return_with_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha searches the cottage quickly and finds a spare key hidden inside a flour tin.",
+            "She returns to the workshop, unlocks the door, and locates a sealed replacement coil."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The installation is difficult, but familiar.",
+            "When the new coil clicks into place, the lamp brightens as if it has been holding its breath."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The storm arrives in full after dark, yet the beacon stays steady until morning.",
+            "Asha does not know why Marek hid a key in a flour tin, but she decides she will ask him directly."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "fetch_key",
+        "text": "Ignore the note, find a spare key, and return to replace the coil."
+      }
+    },
+    {
+      "id": "take_battery",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha breaks the rusted chain and opens the iron box.",
+            "Inside is an old auxiliary battery pack, wrapped in oilcloth, along with a pouch of spare fuses."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She grabs everything and turns to leave, but a wave surges into the cave and soaks her boots.",
+            "The water rises quickly, and the cave’s narrow mouth becomes a snarling throat of foam."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha fights for a foothold, but the returning tide pins her against the rocks long enough to sap her strength.",
+            "She escapes only by abandoning the heavy battery and crawling out bruised and shivering."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Back in the tower, she manages a partial repair, but the beacon weakens overnight.",
+            "The lesson is harsh and immediate: the sea always collects what is owed."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tide_cave",
+        "text": "Break the chain, take the heavy battery, and try to outrun the tide."
+      }
+    },
+    {
+      "id": "retreat",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha marks the cave entrance with a strip of bright cloth and decides not to gamble her life against the water.",
+            "She returns to the tower with empty hands but a clear plan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "At the harbor office, she convinces Soren to lend her two sailors and a handcart at the next low tide.",
+            "Together, they retrieve the iron box safely and bring the auxiliary battery up the cliff."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The battery holds the lamp steady through the storm’s longest hours.",
+            "In the morning, Soren quietly thanks Asha for choosing patience over pride."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tide_cave",
+        "text": "Mark the location, retreat, and return with help at the next low tide."
+      }
+    },
+    {
+      "id": "manual_shutter",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha dims the lamp to reduce strain on the coil.",
+            "Then she pulls the manual shutter lever that controls a narrow beam through the lens."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When she spots a fishing boat struggling in the channel, she signals with steady flashes that point toward the safe water.",
+            "The boat answers with a lantern of its own and follows her guidance."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The lighthouse is not as bright as it should be, but it is intelligent, speaking in patterns instead of raw strength.",
+            "By dawn, the coil is nearly spent, yet no one has broken on the reef."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha’s arms ache from the shutter work, and her eyes burn from watching the sea all night.",
+            "But she has kept her promise, and the island feels less lonely in the morning light."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "dim_light",
+        "text": "Dim the lamp and guide ships with manual shutter signals."
+      }
+    },
+    {
+      "id": "close_night",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha dims the lamp further, hoping the ships will shelter in the harbor until the storm passes.",
+            "She closes the shutter and lets the beam rest, saving every possible turn of the spring."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "For a while, the channel looks empty.",
+            "Then she hears a distant crack, not thunder but wood against stone."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "At first light, wreckage washes into the inlet below the cliff.",
+            "No lives are lost, but a family boat is ruined, and the harbor is quieter than usual."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha helps drag timbers off the rocks and cannot meet the owner’s eyes.",
+            "She understands now that safety requires guidance, even when guidance is exhausting."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "dim_light",
+        "text": "Close the shutter to save power and hope ships stay in harbor."
+      }
+    },
+    {
+      "id": "flare",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha spots a low, unlit boat cutting toward the reef line.",
+            "It moves with confidence, as if it knows the water by memory rather than by light."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She fires a warning flare from the window.",
+            "The red arc hisses into the wind and briefly turns the sea into a field of moving metal."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The boat veers away immediately and disappears into the storm haze.",
+            "Asha cannot tell whether she has prevented an accident or interrupted something deliberate."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The lighthouse remains functional enough for the night, and the harbor stays safe.",
+            "Yet the unlit boat lingers in her thoughts like an unanswered question."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "sea_watch",
+        "text": "Launch a flare to warn an unlit boat away from the reefs."
+      }
+    },
+    {
+      "id": "track",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha keeps the lantern dim and watches the unlit boat instead of announcing herself.",
+            "It does not head for the channel at all."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "It angles toward the cliff shadow, where a narrow cove hides beneath the lighthouse’s western face.",
+            "No honest captain chooses that water in a storm."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha can follow on foot along the cliff path, or she can report to the harbor immediately and stay with the beacon.",
+            "Both choices carry their own risks."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "sea_watch",
+        "text": "Track the unlit boat and see where it goes."
+      }
+    },
+    {
+      "id": "follow_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha locks the lantern room brake and descends quickly, keeping her steps quiet.",
+            "Outside, she follows the cliff path toward the western cove, using lightning flashes to time her movement."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Below, the boat noses into a slot between rocks.",
+            "Figures unload something heavy, moving with practiced speed."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "track",
+        "text": "Follow the boat to the western cove."
+      }
+    },
+    {
+      "id": "report_harbor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides the lighthouse cannot be left without supervision.",
+            "She writes a short note with the boat’s direction and sends it with a runner from the nearest cottage."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Harbor Master Soren mobilizes a patrol while Asha stays with the beacon.",
+            "The storm makes pursuit difficult, but the patrol finds fresh tracks and hidden ropes at the western cove."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nothing is seized that night, yet the harbor begins watching the cliff with new attention.",
+            "Asha keeps the light burning, and the island learns to look for threats from land as well as sea."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "track",
+        "text": "Report the boat’s movement to the harbor and stay with the beacon."
+      }
+    },
+    {
+      "id": "sneak_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha creeps closer, staying behind boulders slick with spray.",
+            "She hears the men talk about storing cargo in the lighthouse workshop and using the storm as cover."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A rock shifts under her boot.",
+            "One of the figures turns, and the beam of a lantern sweeps toward her hiding place."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha runs, and a shout follows her into the wind.",
+            "She reaches the tower breathless and bolts the door from the inside."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The smugglers do not break in, but the lighthouse mechanism is sabotaged before dawn, and the lamp gutters for a dangerous hour.",
+            "The harbor survives the night, yet Asha understands she has drawn attention without securing help."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "follow_cove",
+        "text": "Sneak closer to learn what the figures are doing."
+      }
+    },
+    {
+      "id": "retreat_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides she has seen enough.",
+            "She retreats along the cliff path, then runs for the harbor office without looking back."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren organizes a small team to approach the western cove from above.",
+            "They arrive to find the boat already gone, but they recover a dropped ledger wrapped in oilcloth."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The ledger lists dates, tides, and coded locations that match the lighthouse grounds.",
+            "With evidence in hand, the harbor begins a formal investigation, and the smugglers’ advantage of secrecy is broken."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon stays lit through the storm.",
+            "Asha ends the night shaken but satisfied, knowing she chose the path that protected others."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "follow_cove",
+        "text": "Retreat and report immediately, rather than risking a confrontation."
+      }
+    },
+    {
+      "id": "left_passage",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha takes the left passage, where the stone is damp and the air tastes of rust.",
+            "The ticking grows uneven, as if something down here is struggling to keep time."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The passage opens into a low chamber with a shallow puddle across the floor.",
+            "A wooden shelf holds a water-stained journal and a small brass key."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Take the left passage toward the uneven ticking."
+      }
+    },
+    {
+      "id": "right_passage",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha takes the right passage, and the air becomes warmer.",
+            "The smell of lamp oil grows stronger with each step."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ahead, light leaks beneath a door that should not exist in a sealed service tunnel.",
+            "Voices murmur on the other side, and the ticking sound is replaced by quiet work."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Take the right passage toward the smell of oil and faint voices."
+      }
+    },
+    {
+      "id": "return_up",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha hesitates at the junction and decides the tunnels are a distraction.",
+            "She climbs back to the lantern room, determined to solve everything from above."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "But the deeper ticking continues beneath her feet, and the tower’s mechanism never fully settles.",
+            "By midnight the coil overheats, the light dims, and a fog bank rolls in from the north."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No ship is lost, but the harbor spends a fearful night sounding horns and holding position.",
+            "In the morning, Asha stares at the hatch and knows she chose comfort over answers."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Turn back and handle the lighthouse problems without entering the tunnels."
+      }
+    },
+    {
+      "id": "read_journal",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha opens the journal carefully, keeping it away from the puddle.",
+            "The pages belong to a keeper from decades ago, written in neat lines that smell faintly of smoke."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The keeper describes a ‘pendulum governor’ beneath the lantern room that smooths the beacon’s rotation in heavy weather.",
+            "He warns that if the governor drifts out of alignment, the whole light will stutter, no matter how clean the lens is."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The final entry ends with a simple instruction: reset the pendulum at the iron mark, then listen for the true tick.",
+            "Asha can follow the instruction, or she can keep searching for whoever has been using these tunnels."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "left_passage",
+        "text": "Read the water-stained journal on the shelf."
+      }
+    },
+    {
+      "id": "grab_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pockets the brass key and moves deeper into the passage.",
+            "The tunnel narrows and ends at a metal door with a lock that matches the key’s shape."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The ticking is loud here, like a heartbeat trapped behind iron.",
+            "Asha can use the key, or she can leave the door untouched and return to the junction."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "left_passage",
+        "text": "Take the brass key and continue down the passage."
+      }
+    },
+    {
+      "id": "reset_pendulum",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha follows the journal’s directions and finds the pendulum governor mounted on a stone plinth.",
+            "A brass rod swings slowly, but it is off-center, scraping faintly against a guide rail."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She nudges the assembly until the rod aligns with the iron mark described in the journal.",
+            "The scraping stops, and the ticking becomes even and calm."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When she returns to the lantern room, the lens rotation is smooth, as if the tower has exhaled.",
+            "At dusk the beacon shines with a steady rhythm that carries through the storm."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha closes the hatch and keeps the journal safe for Marek to read.",
+            "Some secrets, she realizes, are not meant to stay forgotten."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "read_journal",
+        "text": "Reset the pendulum governor as the journal instructs."
+      }
+    },
+    {
+      "id": "look_culprit",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha leaves the governor alone and keeps walking, searching for signs of recent use.",
+            "She finds footprints in the wet dust and a smear of fresh oil on a wall."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Behind a loose stone, seawater seeps in a thin stream, feeding the puddle in the chamber.",
+            "The leak is small now, but it will worsen as the storm pressure rises."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha can try to plug the leak immediately, or she can run for tools and risk the water spreading.",
+            "The tunnels feel suddenly less like history and more like a trap."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "read_journal",
+        "text": "Ignore the journal and search for whoever has been down here."
+      }
+    },
+    {
+      "id": "plug_leak",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha packs cloth into the gap behind the stone and wedges it tight with a splintered plank.",
+            "For a moment, the leak slows to a drip."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Then a hatch clanks open behind her, and someone curses at the sight of the improvised plug.",
+            "Asha turns to see a smuggler with a lantern and a hard expression."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "He knocks her lantern aside and shoves her toward the wall, warning her not to interfere.",
+            "Asha escapes back to the tower shaken, and the governor remains misaligned."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon stutters through the night, and the harbor spends hours on high alert.",
+            "Asha survives, but the smugglers now know she has seen the tunnels."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "look_culprit",
+        "text": "Try to plug the leak before it worsens."
+      }
+    },
+    {
+      "id": "run_help",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides she needs proper tools and another pair of hands.",
+            "She runs back toward the hatch and up the stairs, taking the steps two at a time."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "By the time she returns with wedges and sealant, the leak has spread into a shallow stream.",
+            "The puddle in the chamber is now ankle-deep, and the air is colder."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She slows the water, but the governor chamber has become damp, and the tick remains uneven.",
+            "The lighthouse light holds, yet it trembles whenever the wind hits hard."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In the morning, Asha is exhausted and angry at herself for leaving the problem unattended.",
+            "She understands that some failures are created by hesitation rather than action."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "look_culprit",
+        "text": "Run for tools and return with a proper seal."
+      }
+    },
+    {
+      "id": "use_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha slides the brass key into the lock.",
+            "It turns with surprising ease, as if the door has been opened recently."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Beyond the door is a cramped control room with a second set of weights and a small signaling device wired to the tower.",
+            "A paper chart on the wall marks tide times and the western cove in red pencil."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha realizes this room can send a signal beyond the island, but it could also alert whoever set it up.",
+            "She has to choose what message to send, if any."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "grab_key",
+        "text": "Use the brass key to open the locked metal door."
+      }
+    },
+    {
+      "id": "leave_door",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha backs away from the locked door and returns to the junction.",
+            "The tunnels feel too uncertain, and she fears becoming lost or trapped below."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She climbs back up and focuses on the lantern room, making only minor adjustments.",
+            "The deeper ticking continues beneath her, unchanged."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon lasts through most of the night, but its rhythm never becomes fully steady.",
+            "At dawn, Asha still has questions and no answers, only the certainty that the tower hides more than dust and stone."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "grab_key",
+        "text": "Leave the locked door alone and return to the lighthouse above."
+      }
+    },
+    {
+      "id": "send_distress",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha sets the signaling device to the emergency channel used by coastal stations.",
+            "She sends a concise message: mechanical fault, possible illegal activity, storm conditions worsening."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Within an hour, the harbor’s patrol boat acknowledges the signal.",
+            "They cannot reach the island immediately in the rough sea, but they begin watching the western cove from a safe distance."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha returns to the lantern room and resets the weights using the control room’s secondary governor.",
+            "The beacon stabilizes, and the patrol’s presence discourages any night landings."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "By morning, the storm has passed and the smugglers have vanished from the coast.",
+            "The lighthouse stands lit and uncompromised, and Asha has turned secrecy into accountability."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "use_key",
+        "text": "Send an official distress and security signal to the harbor patrol."
+      }
+    },
+    {
+      "id": "send_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tunes the device to a private frequency Marek once showed her, meant for keeper-to-keeper messages.",
+            "She sends a simple code: the tower has a hidden room, and someone has been using it."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The response comes faster than she expects.",
+            "Marek answers that he will return immediately and tells her to stay alone in the lantern room until he arrives."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha cannot tell whether the urgency is protective or fearful.",
+            "As the storm batters the tower, she waits, listening to the even tick she has managed to restore using the secondary weights."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When Marek finally arrives, soaked and pale, he looks at the control room chart without surprise.",
+            "Asha must decide whether to trust him with what she has found."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "use_key",
+        "text": "Send a coded message directly to Marek and wait for him."
+      }
+    },
+    {
+      "id": "trust_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha chooses trust.",
+            "She tells Marek everything: the tide chart, the red markings, and the voices she heard above."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek sits heavily on a crate and admits he has been threatened.",
+            "Smugglers learned his mainland route and demanded access to the tower in exchange for leaving the harbor families alone."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Together, Asha and Marek alter the mechanism so the hidden control room cannot override the lantern room again.",
+            "They send a second, honest signal to Soren with the smuggling details."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The arrests happen weeks later, when the sea is calmer and the evidence is ready.",
+            "Asha keeps the light burning every night in the meantime, knowing she has helped end a quiet danger without breaking the tower apart."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "send_mentor",
+        "text": "Trust Marek and share everything you found."
+      }
+    },
+    {
+      "id": "accuse_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha’s fear hardens into suspicion.",
+            "She tells Marek she thinks he has been involved, and she refuses to hand over the key."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek’s face tightens, not with anger but with something like grief.",
+            "He says her caution is fair, then turns and leaves the control room without another word."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha locks the door and signals the harbor patrol instead, describing the room and its chart.",
+            "The patrol cannot act in the height of the storm, but they record her statement and begin watching Marek’s movements afterward."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon survives the night, yet the keeper and apprentice no longer share easy trust.",
+            "Asha gains safety at the cost of certainty, and the lighthouse feels colder even when the lamp is bright."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "send_mentor",
+        "text": "Accuse Marek and keep the key, then alert the harbor on your own."
+      }
+    },
+    {
+      "id": "steal_oil",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha presses her ear to the door and hears men talking about ‘lantern oil’ and ‘quiet storage’.",
+            "If smugglers have supplies down here, she might use them to keep the lighthouse running."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She opens the door a finger’s width and slips into a lit room stacked with barrels.",
+            "No one notices her at first."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She can take only a small amount without being seen, or she can try to move a full barrel and solve the problem decisively.",
+            "Either way, she risks being caught underground."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Slip into the lit room and try to take oil for the lighthouse."
+      }
+    },
+    {
+      "id": "set_trap",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides information is not enough; she needs control.",
+            "She rigs a simple tripline using bell wire and a brass chime from her lantern kit."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Then she retreats into shadow and waits.",
+            "When the door opens, the chime rings sharply, and startled voices curse in surprise."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha uses the confusion to sprint back to the hatch and slam it shut from above.",
+            "She wedges the hatch with an iron bar, trapping the smugglers in the tunnel network."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "With the men contained, she focuses on the lantern room repairs and keeps the beacon steady through the night.",
+            "At dawn, Harbor Master Soren arrives with guards and takes custody of the trapped men without a fight."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Set a trap to detect and contain whoever is using the tunnels."
+      }
+    },
+    {
+      "id": "back_away",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decides the voices are too dangerous to face alone.",
+            "She backs away quietly, extinguishes her lantern to hide its glow, and returns to the junction."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When she climbs back to the lantern room, the lighthouse mechanism still stutters, and the storm is nearly upon her.",
+            "Without proof or spare parts, she can only make minor adjustments."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon lasts, but it is uneven, and the night is filled with anxious listening for the sound of rock against hull.",
+            "In the morning, Asha knows she has avoided immediate danger while leaving a larger threat unresolved."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Back away from the door and avoid contact with the voices."
+      }
+    },
+    {
+      "id": "small_can",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha fills a small can with lamp oil and hides it under her coat.",
+            "She leaves the room as quietly as she entered, her heart loud in her ears."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In the lantern room, she tops up the burner and adjusts the wick for a cleaner flame.",
+            "The light brightens and steadies, buying hours of safety."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The smugglers never realize what has been taken until morning.",
+            "By then, the storm has passed and Soren’s patrol is searching the cliff for access points."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha has kept the beacon lit with the enemy’s own supplies.",
+            "It feels like a small justice, but she knows it is only the beginning of a larger reckoning."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "steal_oil",
+        "text": "Take a small amount of oil and leave without being noticed."
+      }
+    },
+    {
+      "id": "full_barrel",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tries to roll a full barrel toward the tunnel.",
+            "It is heavier than she expects, and the wooden staves groan as it shifts."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A voice snaps from across the room, demanding to know who is there.",
+            "Lantern light swings toward her, and shadows sharpen into faces."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha runs, but the tunnel is narrow and her boots splash on stone.",
+            "Hands grab her coat, and she is dragged back into the oil room."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The smugglers bind her and threaten the lighthouse if she raises an alarm.",
+            "She is released only after the storm, and the beacon burns low through the night under their control."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No ship is lost, but the harbor whispers about the strange, weak light on the cliff.",
+            "Asha survives, and she vows that this tower will not be used against its own waters again."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "steal_oil",
+        "text": "Try to roll a full barrel to solve the problem at once."
+      }
+    },
+    {
+      "id": "crew_help",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tells Soren she needs hands, tools, and someone who knows machinery.",
+            "Soren nods and calls for volunteers, but the storm makes everyone cautious."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Two options present themselves: a retired engineer with a reputation for precision, or a group of eager sailors who can move fast.",
+            "Asha has to choose who climbs the lighthouse with her."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "harbor_master",
+        "text": "Ask the harbor master to send a repair crew to the lighthouse."
+      }
+    },
+    {
+      "id": "quiet",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha hesitates to mention the strange ticking and the hint of hidden activity.",
+            "She tells Soren only that the beacon is faltering and she may need parts."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren offers help anyway, but his attention is divided by the storm preparations.",
+            "Asha can go to the market to find what she needs, or she can attempt a makeshift fix using whatever is in the tower."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "harbor_master",
+        "text": "Keep the details quiet and handle the problem without involving the whole harbor."
+      }
+    },
+    {
+      "id": "engineer_rowan",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren sends Engineer Rowan, a gray-haired man who once maintained the channel buoys.",
+            "Rowan arrives with a leather tool roll and a careful, unimpressed expression."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In the lantern room, Rowan listens to the stuttering tick and immediately asks who has been accessing the workshop.",
+            "His question makes Asha’s skin prickle."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rowan can focus on the beacon first, or he can chase the hint of illegal activity while there is still daylight.",
+            "Asha must choose what matters most right now."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "crew_help",
+        "text": "Bring Engineer Rowan to make a careful, technical repair."
+      }
+    },
+    {
+      "id": "volunteers",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren gathers three sailors who volunteer to help, all strong arms and quick smiles.",
+            "They carry coils, oil, and rope up the cliff as if speed alone can defeat weather."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In the lantern room, the sailors talk over one another, each offering a different fix.",
+            "Asha realizes she must either organize them with discipline or let them rush and hope for the best."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "crew_help",
+        "text": "Take the eager volunteers and move fast."
+      }
+    },
+    {
+      "id": "beacon_first",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tells Rowan the beacon comes first.",
+            "Rowan grunts approval and sets to work with clean, efficient motions."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "He replaces the failing coil, re-seats the weights, and re-aligns the gear track.",
+            "By dusk, the lighthouse shines steadily into the storm."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rowan mentions that the workshop lock has been tampered with, but he does not pursue it in the dark.",
+            "The smugglers, if they exist, go unchallenged tonight."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The harbor survives the gale without incident.",
+            "In the quiet after, Asha and Soren begin planning a daylight inspection of every tunnel and lock on the island."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "engineer_rowan",
+        "text": "Prioritize the beacon repair and leave any investigation for later."
+      }
+    },
+    {
+      "id": "investigate_first",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha cannot ignore Rowan’s suspicion.",
+            "She agrees to investigate the workshop and tunnels while there is still light."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "They find contraband crates and a hidden tide chart, enough to confirm smuggling.",
+            "But the search costs time, and the coil fails completely before they finish the repair."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren’s patrol keeps ships in harbor all night using horns and signal flags.",
+            "No ship wrecks, but fishing crews lose a night’s work and grumble about the dark tower."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "At dawn, smugglers are arrested, and the harbor is safer in the long term.",
+            "Asha is left weighing immediate safety against future safety, knowing she chose one over the other."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "engineer_rowan",
+        "text": "Investigate the suspicious signs before repairing the beacon."
+      }
+    },
+    {
+      "id": "assign_tasks",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha raises her voice over the wind and assigns roles.",
+            "One sailor winds the core, one prepares the replacement coil, and one stands watch at the stairwell."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "With everyone focused, the repair becomes orderly.",
+            "The new coil seats properly, the weights are balanced, and the lens rotation smooths out."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon burns bright into the storm, and the volunteers look at Asha with new respect.",
+            "Soren later tells her that leadership is not volume but direction."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When Marek returns, he finds a working tower and an apprentice who has learned how to command a room.",
+            "The lighthouse feels like it has a future again."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "volunteers",
+        "text": "Organize the volunteers carefully and assign clear tasks."
+      }
+    },
+    {
+      "id": "rush_tasks",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha lets the sailors work as they please, hoping speed will outweigh confusion.",
+            "Two hands reach for the same bolt, and one sailor winds the core while another is still adjusting the tension."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A loud clank echoes through the lantern room as a weight slips off its track.",
+            "The lens shudders, the lamp sputters, and smoke curls into the air."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "They manage to prevent a fire, but the beacon is unstable for hours.",
+            "Soren pulls the volunteers back before anyone is injured."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "That night the lighthouse burns dim and uneven.",
+            "Asha learns, painfully, that haste is not a substitute for coordination."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "volunteers",
+        "text": "Let the volunteers rush the work and hope it comes together."
+      }
+    },
+    {
+      "id": "market",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha heads to the small market street where traders sell rope, oil, and salvaged metal.",
+            "The wind has already driven most stalls closed, but one wagon remains open under a tarpaulin."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A traveling tinker offers polished lens segments and copper wire.",
+            "He claims he can sell Asha exactly what she needs to keep the beacon strong through the storm."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha can pay coin she does not really have, or she can bargain for a different kind of price.",
+            "Either choice could keep the lighthouse alive tonight."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "quiet",
+        "text": "Go to the market to buy or trade for parts."
+      }
+    },
+    {
+      "id": "makeshift",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha returns to the tower and inventories what she has: rope, canvas, and a few reflective panels used for maintenance.",
+            "No spare coil appears, and the oil stock is lower than Marek promised."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "If she cannot restore the beacon fully, she can still try to create guidance.",
+            "She can rig reflective sails to catch the lamp’s weak beam, or she can light signal fires on the cliff."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "quiet",
+        "text": "Attempt a makeshift fix using only what is already in the tower."
+      }
+    },
+    {
+      "id": "buy_lens",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha spends nearly all her saved coin on a replacement lens segment and a roll of insulated wire.",
+            "The tinker accepts the money without a smile and disappears before the rain turns to sleet."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Back in the lantern room, Asha swaps the clouded segment for the new one and reinforces the coil casing with the wire.",
+            "The light becomes brighter and steadier almost immediately."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon holds through the storm, and ships pass the channel without incident.",
+            "But in the weeks that follow, Asha works extra shifts at the harbor to repay what she spent."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She kept the sea safe, and she paid for it honestly.",
+            "The cost is real, yet it does not feel like regret."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "market",
+        "text": "Buy the parts outright, even if it empties your savings."
+      }
+    },
+    {
+      "id": "barter",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tells the tinker she cannot pay full coin.",
+            "He studies her face and says he will trade, but only if she does a small delivery for him tonight."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The package is wrapped in oilcloth and sealed with wax.",
+            "He insists she deliver it to the western cove after dusk, when the tide is right."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha can agree and take the parts, or she can refuse and find another way.",
+            "The tinker’s eyes remain calm either way, as if he already knows the answer."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "market",
+        "text": "Barter with the tinker instead of paying full coin."
+      }
+    },
+    {
+      "id": "deliver_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha accepts the trade and takes the parts along with the sealed package.",
+            "On the walk back to the tower, the package feels heavier than its size should allow."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "In the lantern room, the new lens segment would help immediately, but the delivery deadline is close.",
+            "Asha decides to repair quickly, then head for the cove."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Before leaving, she notices the wax seal bears a symbol that matches markings she has seen on contraband crates.",
+            "Asha can open the package and learn what she is carrying, or she can deliver it unopened as agreed."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "barter",
+        "text": "Agree to the delivery in exchange for parts."
+      }
+    },
+    {
+      "id": "refuse",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha refuses the delivery.",
+            "The tinker shrugs, covers his goods, and tells her to keep her lighthouse warm."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "By the time Asha returns to the tower, the market is closed and the storm is fully arriving.",
+            "She attempts minor repairs with limited supplies."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The beacon struggles through the night and fades for a dangerous hour near midnight.",
+            "No ship wrecks, but the harbor’s nerves are raw by morning."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha wonders what the tinker offered to someone less cautious.",
+            "The island remains safe, but the sense of being watched does not fade."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "barter",
+        "text": "Refuse the trade and return to the tower without new parts."
+      }
+    },
+    {
+      "id": "open_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha breaks the wax seal and unfolds the oilcloth.",
+            "Inside is not a tool or a trinket, but a thin packet of papers: tide charts, channel sketches, and a list of payment amounts."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The papers map the western cove and the lighthouse grounds in careful detail.",
+            "Asha realizes she has been asked to deliver instructions, not goods."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "She can alert the harbor immediately, or she can keep the maps and use them to find the smugglers’ cache herself.",
+            "Either choice will change how tonight unfolds."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "deliver_package",
+        "text": "Open the package and see what you are being asked to carry."
+      }
+    },
+    {
+      "id": "deliver_unopened",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha keeps the package sealed and delivers it to the western cove after dusk.",
+            "A lantern signal answers from the rocks, and a man takes the package without speaking."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha returns to the tower and installs the tinker’s lens segment.",
+            "The beacon improves, but the act of delivery sits in her stomach like a stone."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Days later, Soren mentions strange boat traffic near the cliff and asks if Asha has noticed anything.",
+            "Asha says nothing and hates the silence she has chosen."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The lighthouse stays functional, yet Asha feels complicit in something she does not understand.",
+            "She has saved ships, but she has endangered trust."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "deliver_package",
+        "text": "Deliver the package unopened and focus on keeping the beacon running."
+      }
+    },
+    {
+      "id": "alert_from_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha takes the papers straight to Harbor Master Soren.",
+            "He reads them once, then again more slowly, and his face hardens with certainty."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren organizes a patrol to watch the western cove while Asha returns to stabilize the beacon with her new lens segment.",
+            "The smugglers arrive after midnight and walk into a prepared net of lantern signals and waiting hands."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The arrests are quiet and decisive.",
+            "By dawn, the harbor is safer than it has been in years."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pays the tinker nothing beyond the truth, and she keeps the lighthouse burning cleanly through the storm.",
+            "She learns that refusing to be used can be an act of service."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "open_package",
+        "text": "Bring the maps to the harbor master and expose the scheme."
+      }
+    },
+    {
+      "id": "keep_maps",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha hides the papers in her coat and returns to the tower.",
+            "She installs the new lens segment and watches the beam strengthen as dusk falls."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "After dark, she follows the maps alone to a marked storage nook in the cliff.",
+            "She finds a cache of oil and spare coils, enough to keep the lighthouse running for weeks."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "But she also finds a second ledger with names of harbor families who have been pressured into silence.",
+            "The knowledge burns in her hands."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha keeps the beacon lit through the storm using the stolen supplies.",
+            "At dawn, she finally takes the ledger to Soren, accepting that she cannot fix a community’s fear by herself."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "open_package",
+        "text": "Keep the maps, find the cache, and try to solve the problem yourself first."
+      }
+    },
+    {
+      "id": "reflect_sails",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha rigs reflective panels and canvas ‘sails’ along the cliff face, angled toward the channel.",
+            "They catch the weak lighthouse beam and throw it outward in broader, softer flashes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The light is not perfect, but it is visible.",
+            "Several captains later say they followed the reflected shimmer like a thread through a needle."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The storm still frightens the harbor, yet no one is lost.",
+            "At dawn, the sails flap in tatters, and Asha is proud of the ingenuity that carried the night."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "When Marek returns, he studies the rigging and laughs once, surprised.",
+            "He tells Asha that a keeper’s duty is not to have ideal tools, but to make the sea readable."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "makeshift",
+        "text": "Rig reflective sails and panels to amplify the weak beam."
+      }
+    },
+    {
+      "id": "signal_fires",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha piles driftwood on the cliff edge and lights signal fires, hoping the flames will replace the failing beacon.",
+            "The wind feeds the fire hungrily, and sparks scatter into dry grass near the path."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Within minutes, a thin line of flame begins racing along the hillside.",
+            "Asha stomps and smothers where she can, but the storm gusts turn her effort into a losing battle."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Harbor crews rush up with blankets and buckets, fighting fire in the rain.",
+            "The hillside burns in patches all night, and the lighthouse is left unattended for long stretches."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No ship wrecks, but the island wakes to blackened ground and the bitter smell of smoke.",
+            "Asha has tried to replace one danger with another, and she will carry the lesson for a long time."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "makeshift",
+        "text": "Light signal fires on the cliff to guide ships by flame."
+      }
+    }
+  ]
+}

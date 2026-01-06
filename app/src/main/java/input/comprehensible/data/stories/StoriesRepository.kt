@@ -4,7 +4,6 @@ import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryChoice
 import input.comprehensible.data.stories.model.StoryElement
-import input.comprehensible.data.stories.model.StoryParentChoice
 import input.comprehensible.data.stories.model.StoryPart
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryChoiceData
@@ -141,7 +140,9 @@ class StoriesRepository @Inject constructor(
     ): Flow<List<StoryData>> = storiesLocalDataSource
         .getStories(learningLanguage = language)
         .map { stories ->
-            stories.sortedByDescending { it.id }
+            stories
+                .sortedByDescending { it.id }
+                .sortedByDescending { it.id.length }
         }
 
     private fun getTranslations(
@@ -162,18 +163,18 @@ class StoriesRepository @Inject constructor(
             lastChosenPartId = storyInfo.lastChosenPartId,
         )
 
-        val parts = path.map { partId ->
+        val parts = path.mapIndexed { i, partId ->
             val learningPart = requireNotNull(partsById[partId]) {
                 "Story $id is missing part with id $partId"
             }
             val translationPart = requireNotNull(translation.partsById[partId]) {
                 "Story $id translation is missing part with id $partId"
             }
-
+            val nextPartId = path.getOrNull(i + 1)
             learningPart.toStoryPart(
                 storyId = id,
                 translation = translationPart,
-                chosenChoiceId = storyInfo.lastChosenPartId,
+                chosenChoiceId = nextPartId,
                 learningLanguage = learningLanguage,
                 translationsLanguage = translationsLanguage,
                 children = childrenByParentId[partId].orEmpty(),

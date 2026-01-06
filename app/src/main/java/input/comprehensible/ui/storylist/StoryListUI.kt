@@ -185,7 +185,7 @@ private fun FeatureImage(
                 .clip(CircleShape),
             bitmap = image,
             contentDescription = contentDescription,
-            contentScale = ContentScale.FillHeight,
+            contentScale = ContentScale.Crop,
         )
     }
 }

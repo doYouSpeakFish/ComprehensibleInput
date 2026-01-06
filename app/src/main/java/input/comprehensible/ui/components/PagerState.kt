@@ -27,7 +27,7 @@ fun rememberPagerState(
         onNewPageSettled(state.settledPage)
     }
     LaunchedEffect(pageToScrollTo) {
-        if (pageToScrollTo != null) {
+        if (pageToScrollTo != null && pageToScrollTo >= 0 && pageToScrollTo < pageCount()) {
             state.animateScrollToPage(pageToScrollTo)
         }
     }

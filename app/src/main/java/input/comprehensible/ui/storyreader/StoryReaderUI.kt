@@ -20,8 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
@@ -66,7 +64,6 @@ import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 
 /**
  * A screen for reading a story.
@@ -222,6 +219,7 @@ private fun StoryPage(
 
     LaunchedEffect(pageIndex, currentlyVisiblePageIndex) {
         when {
+            listState.layoutInfo.totalItemsCount == 0 -> {}
             pageIndex < currentlyVisiblePageIndex -> listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
             pageIndex > currentlyVisiblePageIndex -> listState.scrollToItem(0)
         }
