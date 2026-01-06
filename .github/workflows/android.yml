@@ -24,6 +24,7 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
+          .gradle/configuration-cache
         key: ${{ github.repository }}-gradle-cache
 
     - name: set up JDK 21
