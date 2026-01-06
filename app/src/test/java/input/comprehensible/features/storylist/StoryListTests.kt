@@ -100,6 +100,25 @@ class StoryListTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `stories without featured images are filtered out`() = testRule.runTest {
+        // GIVEN a list of stories where one has no image available
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val storyWithoutImage = stories.first()
+        storiesData.removeImagesForStory(story = storyWithoutImage)
+
+        // WHEN the story list is opened
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // THEN the story missing an image does not appear, but others do
+            assertStoryIsNotVisible(storyWithoutImage)
+            assertStoryTitleIsVisible(stories[1].germanTitle)
+        }
+    }
+
+    @Test
     fun `Story text matches learning language setting`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories

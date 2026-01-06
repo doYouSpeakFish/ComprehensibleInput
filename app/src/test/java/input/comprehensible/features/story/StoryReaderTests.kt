@@ -453,4 +453,22 @@ class StoryReaderTests {
             assertErrorDialogIsShown()
         }
     }
+
+    @Test
+    fun `story shows error when an image cannot be loaded`() = testRule.runTest {
+        // GIVEN a story where images fail to load
+        val stories = SampleStoriesData.listOf100Stories
+        storiesData.setLocalStories(stories)
+        val story = stories.first()
+        storiesData.removeImagesForStory(story = story)
+
+        // WHEN the story reader is opened
+        goToStoryReader(story.id)
+        awaitIdle()
+
+        onStoryReader {
+            // THEN an error dialog is shown
+            assertErrorDialogIsShown()
+        }
+    }
 }

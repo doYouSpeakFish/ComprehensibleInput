@@ -18,6 +18,7 @@ import javax.inject.Singleton
 class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource {
     var stories = mapOf<String, List<StoryData>>()
     var storyLoadDelayMillis: Long = 0L
+    var storyIdsWithoutImages: Set<String> = emptySet()
 
     override suspend fun getStory(id: String, language: String): StoryData? {
         if (storyLoadDelayMillis > 0L) {
@@ -30,8 +31,10 @@ class FakeStoriesLocalDataSource @Inject constructor() : StoriesLocalDataSource 
         emit(stories[learningLanguage] ?: emptyList())
     }
 
-    override suspend fun loadStoryImage(storyId: String, path: String): Bitmap? =
-        Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+    override suspend fun loadStoryImage(storyId: String, path: String): Bitmap? {
+        if (storyId in storyIdsWithoutImages) return null
+        return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+    }
 }
 
 @Module
