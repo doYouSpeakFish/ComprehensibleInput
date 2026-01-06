@@ -15,8 +15,6 @@ plugins {
     alias(libs.plugins.room) apply false
 }
 
-//val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
 dependencies {
     detektPlugins(libs.detekt.formatting)
     detektPlugins(libs.detekt.compose.rules)
