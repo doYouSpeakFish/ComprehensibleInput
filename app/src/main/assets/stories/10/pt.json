@@ -1,0 +1,2429 @@
+{
+  "id": "10",
+  "title": "O Farol Mecânico",
+  "startPartId": "start",
+  "featuredImagePath": "1",
+  "parts": [
+    {
+      "id": "start",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha viveu toda a sua vida na Ilha Clifftop, onde o mar nunca fica verdadeiramente calmo.",
+            "Ela é a aprendiz do faroleiro, responsável por dar corda ao núcleo do relógio e limpar as grandes lentes de vidro."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No primeiro dia dos vendavais de inverno, o horizonte adquire a cor da ardósia molhada.",
+            "Os barcos de pesca correm em direção ao porto e as gaivotas voam baixo como se o céu estivesse pesado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ao meio-dia, Guardião Marek pressiona uma chave de latão na palma da mão de Asha e parte para o continente em busca de suprimentos.",
+            "Ele diz a ela para manter a luz acesa até ele retornar, não importa o tempo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No final da tarde, o farol começa a soar errado.",
+            "Em vez de um tique-taque suave e confiante, o mecanismo gagueja e estala, como um relógio com areia nos dentes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha sobe a escada em espiral e sente a torre estremecer sob um Uma rajada de vento.",
+            "A sala da lanterna tem um leve cheiro de óleo quente, e a lente lança um brilho cansado e irregular no vidro."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Então, de algum lugar abaixo das tábuas do piso, ela ouve um segundo ritmo.",
+            "É um tique-taque mais profundo, vindo dos túneis de serviço selados que Marek nunca deixa os visitantes verem."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A noite está chegando rapidamente e os navios confiarão no farol para encontrar o canal seguro.",
+            "Asha tem que escolher onde passar o resto da luz do dia."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lantern_room",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha vai direto para a sala da lanterna, onde fica o coração do farol.",
+            "A lente gira, mas hesita a cada poucos segundos, como se estivesse pegando alguma coisa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Se ela conseguir estabilizar a luz antes do anoitecer, a tempestade será apenas barulho e chuva.",
+            "Se ela não puder, o recife abaixo da Ilha Clifftop coletará destroços da mesma forma que uma rede coleta peixes."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Suba até a sala das lanternas e examine o farol."
+      }
+    },
+    {
+      "id": "tunnels",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha se ajoelha e encontra o anel de ferro colocado no chão da sala da lanterna.",
+            "Com um puxão forte, ela levanta a escotilha que leva aos túneis de serviço."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O ar frio sobe de baixo, úmido com sal e pedra.",
+            "O tique-taque mais profundo é agora mais alto, como um segundo relógio escondido nos ossos da torre."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela acende sua pequena lanterna e desce na escuridão.",
+            "A escadaria termina em um cruzamento onde divergem três passagens."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Abra a escotilha do chão e siga o estranho tique-taque abaixo."
+      }
+    },
+    {
+      "id": "harbor_master",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que o problema é grande demais para ser resolvido sozinha.",
+            "Ela veste o casaco, corre pelo caminho do penhasco e se dirige ao porto escritório."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O vento sopra sal em seu rosto e faz seus olhos lacrimejarem.",
+            "No porto, as cordas rangem, os mastros balançam e todos observam o céu escurecer."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O Mestre do Porto, Soren, levanta os olhos de uma pilha de cartas de marés quando ela irrompe pela porta.",
+            "Ele escuta sem interromper, depois contrai a mandíbula como se estivesse esperando por esse dia."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Corra até o capitão do porto e peça ajuda."
+      }
+    },
+    {
+      "id": "lens_inspect",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha se inclina para perto do grande Fresnel. lente.",
+            "A granulação fina penetrou nos dentes de latão ao redor da base, e o vidro mostra listras fracas onde o spray secou."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A lente é delicada, mas implacável.",
+            "Um ajuste ruim pode fazer a luz oscilar, e um prisma rachado pode espalhar o feixe em fragmentos inúteis."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Inspecione a lente e suas engrenagens quanto a danos."
+      }
+    },
+    {
+      "id": "coil_check",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha se move para o núcleo mecânico: um tambor de molas, pesos e bobinas de cobre que armazenam e liberam energia constante.",
+            "Um invólucro de bobina é quente ao toque, e uma linha fina de fuligem marca sua borda."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Se a bobina falhar, o farol desaparecerá muito antes da meia-noite.",
+            "Substituí-lo pode consertar tudo, mas levará um tempo que ela pode não ter."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Verifique as bobinas de alimentação e o núcleo do relógio."
+      }
+    },
+    {
+      "id": "sea_watch",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Antes de tocar em qualquer coisa, Asha caminha até a janela voltada para o mar.",
+            "O canal já está agitado e velas distantes parecem papel rasgado sob o vento crescente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Uma luz que falha no momento errado pode ser pior do que nenhuma luz.",
+            "Se o perigo já estiver próximo, ela pode precisar avisar os navios primeiro e consertar depois."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Olhe para o mar e decida o que deve acontecer primeiro."
+      }
+    },
+    {
+      "id": "polish",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mistura uma pequena quantidade de solvente, do tipo que Marek usa no latão uma vez por mês.",
+            "Ela limpa o compartimento da lente com cuidado e depois lustra o anel de engrenagem até que os dentes brilhem."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "À medida que a sujeira desaparece, ela percebe uma gravação superficial na borda interna.",
+            "Não é uma marca de fabricante; parece um conjunto de instruções, arranhadas por uma mão paciente."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lens_inspect",
+        "text": "Limpe e dê polimento ao anel da lente para remover a sujeira."
+      }
+    },
+    {
+      "id": "gear_adjust",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha aperta com mais força e tenta um ajuste cuidadoso no tensor da engrenagem.",
+            "A lente gira suavemente por três rotações e a esperança cresce em seu peito."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Então o mecanismo desliza com um estalo metálico afiado.",
+            "Um dente na engrenagem motriz se rompe e desliza pelo chão como uma moeda caída."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A lente ainda gira, mas agora fica presa na parte quebrada. ponto, sacudindo a viga cada vez que ela passa.",
+            "Asha tem que decidir se improvisa ou abandona essa abordagem."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lens_inspect",
+        "text": "Ajuste a tensão da engrenagem da lente para interromper a hesitação."
+      }
+    },
+    {
+      "id": "consult_archives",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha reconhece o padrão da tradição do antigo guardião.",
+            "Ela encontra o armário de diário de bordo surrado de Marek e tira um diagrama de manutenção dobrado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A gravura corresponde a uma sequência de calibração esquecida, destinada às noites em que o ar está espesso com sal.",
+            "Ela o segue passo a passo, afrouxando um parafuso, apertando outro e redefinindo o rastreamento da lente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando ela libera o freio, a lente desliza sem gaguejar.",
+            "Ao anoitecer, o feixe varre o canal com um pulso constante e brilhante que corta as primeiras folhas de chuva."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando Marek retorna, a tempestade já está forte, mas o farol permanece firme.",
+            "Asha conta a ele sobre a gravura escondida, e ele acena com a cabeça como se a própria torre finalmente a tivesse aceitado."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "polish",
+        "text": "Use a gravação para encontrar a calibração correta e redefinir a lente."
+      }
+    },
+    {
+      "id": "pocket_note",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memoriza as instruções rabiscadas e decide que não pode perder tempo perseguindo velhos mistérios.",
+            "Ela termina a limpeza e, em seguida, força a lente a se mover com um ajuste rápido."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O feixe permanece estável por uma hora, mas quando a tempestade chega, o ar fica espesso e o vidro começa a embaçar.",
+            "Sem a sequência de calibração completa, a lente desliza novamente e a luz fica irregular."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Os navios no canal lentamente se arrastam, e alguns voltam para trás. em vez de arriscar os recifes.",
+            "O farol não falha completamente, mas a noite é tensa e incerta."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando Marek regressa, fica aliviado ao encontrar a torre ainda acesa, mas repara nos olhos cansados de Asha.",
+            "Ela percebe que por vezes o atalho mais seguro ainda é uma aposta."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "polish",
+        "text": "Ignore a gravação e conte com uma limpeza rápida e pequenos ajustes."
+      }
+    },
+    {
+      "id": "improvise_gear",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha encontra o dente da engrenagem partido e compara-o com a lacuna que falta.",
+            "De uma lata de peças sobressalentes, ela seleciona um calço de latão. e o arquiva em um substituto grosseiro."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela coloca o calço no lugar com um pequeno martelo e uma oração, depois reativa o acionamento.",
+            "A lente não se encaixa mais, embora emita um leve som áspero a cada rotação."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A luz resiste ao pior do vendaval, mas ao amanhecer o calço já está se esgotando.",
+            "Asha comprou a ilha em uma noite segura e ela sabe qual será o trabalho de amanhã."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "gear_adjust",
+        "text": "Improvise um dente substituto e mantenha a lente girando."
+      }
+    },
+    {
+      "id": "seek_help_from_lens",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que o dano é muito arriscado para ser consertado sozinho.",
+            "Ela trava o freio da sala da lanterna para evitar mais triturações e desce as escadas correndo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No porto, ela encontra um engenheiro aposentado que já fez manutenção em torres costeiras.",
+            "Ele concorda em subir com ela imediatamente, reclamando sobre tempestades e jovens tratadores que não devem ser deixados sozinhos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Juntos, eles trocam o equipamento danificado por um sobressalente adequado e realinham a unidade.",
+            "Os custos de reparo. Asha, seu orgulho e um pote de limões em conserva da despensa do porto, mas a trave volta a ficar firme."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando a tempestade finalmente começa, o canal está vazio de destroços.",
+            "Asha descobre que pedir ajuda pode ser uma habilidade tão importante quanto qualquer ferramenta."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "gear_adjust",
+        "text": "Pare o mecanismo e procure um ajudante qualificado para um reparo adequado."
+      }
+    },
+    {
+      "id": "replace_coil",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha abre o compartimento da bobina e vê o problema imediatamente.",
+            "Uma rachadura fina corre ao longo do revestimento, e o isolamento tem um leve cheiro de queimado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek mantém bobinas sobressalentes na oficina dois andares abaixo.",
+            "Se ela puder recuperar uma e instalá-la antes do anoitecer, o farol deverá durar tudo. noite."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "coil_check",
+        "text": "Substitua a bobina rachada por uma sobressalente da oficina."
+      }
+    },
+    {
+      "id": "dim_light",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha fecha o alojamento da bobina sem abri-lo mais.",
+            "Uma substituição completa pode funcionar, mas também pode provocar uma falha se ela se apressar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Em vez disso, ela decide racionar a energia.",
+            "Se ela diminuir a intensidade da lâmpada e usar sinais manuais, ela pode esticar a bobina durante as piores horas."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "coil_check",
+        "text": "Mantenha a bobina no lugar e racione a energia para durar a noite toda."
+      }
+    },
+    {
+      "id": "storm_path",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O caminho mais rápido para a oficina é uma passarela externa que envolve a torre.",
+            "Ela fica exposta ao vento, mas economiza preciosos minutos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha sobe na passarela e a rajada quase lhe rouba o fôlego.",
+            "A chuva faz-lhe sentir as bochechas e o mar lá em baixo ruge como se estivesse a tentar escalar o penhasco."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "replace_coil",
+        "text": "Pegue a passarela externa para chegar rapidamente à oficina."
+      }
+    },
+    {
+      "id": "safe_stairs",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha escolhe as escadas interiores.",
+            "São mais lentas, mas as paredes de pedra bloqueiam o pior do vento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A antiga alvenaria da torre mantém o som da tempestade à distância.",
+            "Quando ela chega à oficina porta, ela está úmida, mas firme."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A maçaneta não gira.",
+            "A oficina está trancada."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "replace_coil",
+        "text": "Utilize as escadas interiores e chegue à oficina em segurança."
+      }
+    },
+    {
+      "id": "aid_bird",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No meio da passarela, Asha encontra uma gaivota presa em um pedaço de linha de pesca.",
+            "O pássaro bate as asas fracamente, preso contra a grade pelo vento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha poderia libertá-lo, ou ela poderia continuar se movendo e confiar que a natureza se resolveria.",
+            "Mas a linha está cortando a perna da gaivota, e a tempestade não é suave."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela se ajoelha, aperta os dedos dormentes de frio e finalmente quebra a linha. livre.",
+            "A gaivota salta uma vez, depois se lança no vendaval e desaparece no cinza."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Minutos depois, a mesma gaivota volta e grita bruscamente, depois dispara em direção a uma escotilha de manutenção que Asha nunca notou.",
+            "Lá dentro, ela encontra um esconderijo seco de bobinas sobressalentes e frascos de óleo selados deixados pelos tratadores anteriores."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Com a sobressalente em mãos, ela substitui a bobina rachada antes do sol completamente desaparece.",
+            "Naquela noite, o farol brilha forte e Asha dorme com o som de uma batida de asas agradecida em sua memória."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "storm_path",
+        "text": "Pare para libertar a gaivota emaranhada."
+      }
+    },
+    {
+      "id": "hurry",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha abaixa a cabeça e se força a se mover mais rápido.",
+            "O vento bate em seu lado, e a passarela fica escorregadia sob suas botas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela alcança o corrimão, mas sua luva escorrega.",
+            "Seu joelho bate no ferro com força suficiente para fazer sua visão ficar branca."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela consegue. para rastejar de volta para dentro da torre, tremendo de dor.",
+            "A bobina ainda precisa ser substituída, mas agora cada passo é lento e preciso."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando ela instala uma sobressalente, a lâmpada já está apagando.",
+            "O farol não apaga completamente, mas fica fraco, e a noite parece mais longa do que deveria."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "storm_path",
+        "text": "Ignore a gaivota e corra para a oficina."
+      }
+    },
+    {
+      "id": "pick_lock",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha examina a fechadura da oficina.",
+            "É antiga, mas foi reforçada recentemente, como se alguém quisesse que ela resistisse mais do que à curiosidade casual."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela pega um fio fino de seu kit de lanterna e o enfia no buraco da fechadura.",
+            "Depois de vários segundos tensos, os botões cederam com um clique suave."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A porta se abre para uma sala que cheira a óleo de lamparina e lona molhada.",
+            "As caixas estão empilhadas onde as ferramentas deveriam estar, e nenhuma delas traz a marca de um fabricante."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "safe_stairs",
+        "text": "Abra a fechadura e entre na oficina."
+      }
+    },
+    {
+      "id": "fetch_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide não forçar nada.",
+            "Marek mantém a chave da oficina em sua cabana, na base da porta. a torre."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela desce as escadas correndo, atravessa o pátio e encontra o gancho da chave vazio.",
+            "Em seu lugar há uma nota, escrita com a caligrafia cuidadosa de Marek: “Se a oficina estiver trancada, verifique a caverna de maré. Confie na maré baixa.’"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A nota é perturbadora, mas também é específica.",
+            "Asha pode segui-la ou pode revistar a cabana e regressar o mais rapidamente possível."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "safe_stairs",
+        "text": "Deixe a fechadura em paz e procure a chave da oficina."
+      }
+    },
+    {
+      "id": "confront_smugglers",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha passa entre os caixotes e chama, exigindo saber quem os guardou aqui.",
+            "Uma sombra move-se por trás de uma lona, e um homem com uma faca marítima no cinto emerge, assustado e zangado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ele não está. sozinha.",
+            "Aparecem outros dois, e a sala subitamente parece demasiado pequena para a coragem de Asha."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Agarram-lhe a lanterna e amarram-lhe as mãos, avisando-a para ficar quieta até o barco chegar.",
+            "Mas as tempestades tornam os horários pouco fiáveis."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Uma hora mais tarde, o Mestre do Porto Soren e dois marinheiros forçam a porta da oficina e encontram-na viva.",
+            "Os contrabandistas escapam para os túneis, mas a bobina sobressalente que Asha avistou no canto é suficiente para manter o farol aceso."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A luz se mantém e o porto inicia uma busca ao amanhecer.",
+            "Asha descobre que a bravura sem um plano ainda pode custar mais do que ela espera."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "pick_lock",
+        "text": "Confronte quem está usando a oficina."
+      }
+    },
+    {
+      "id": "hide_listen",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha se esconde atrás de uma pilha de caixotes e prende a respiração.",
+            "Lá fora, passos se aproximam e vozes baixas passam pela porta, como se os alto-falantes presumissem que a torre está vazia."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela ouve datas, marés e uma menção a um “canal tranquilo” abaixo do penhasco.",
+            "Uma voz queixa-se de que o faroleiro se tornou “muito cuidadoso” ao trancar as portas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando as vozes desaparecem, Asha pega uma pequena bobina de uma prateleira de ferramentas e fecha a porta novamente.",
+            "Ela corre para o escritório do porto, repete o que ouviu e entrega a bobina a Soren como prova de que a torre foi comprometida."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Naquela noite, o farol permanece aceso e, pouco antes da meia-noite, um barco patrulha intercepta um esquife perto do penhasco.",
+            "De manhã, o porto está cansado, mas seguro, e Asha sente o alívio de ter agido sem ser vista."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "pick_lock",
+        "text": "Esconda, ouça e reúna informações antes de agir."
+      }
+    },
+    {
+      "id": "tide_cave",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha segue o caminho do penhasco até uma enseada estreita que só aparece na maré baixa.",
+            "Uma boca rasa de caverna se abre entre rochas escuras, respirando ar frio e cheiro de algas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Lá dentro, ela encontra uma caixa de ferro acorrentada a um parafuso.",
+            "A corrente está enferrujada o suficiente para quebrar com o esforço, mas o mar já está voltando para a entrada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A caixa pode conter peças sobressalentes ou algo totalmente diferente.",
+            "Asha tem que escolher quanto risco correr enquanto a maré volta."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "fetch_key",
+        "text": "Siga a nota de Marek e procure na caverna da maré."
+      }
+    },
+    {
+      "id": "return_with_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha vasculha rapidamente a casa e encontra uma chave reserva escondida dentro de uma lata de farinha.",
+            "Ela retorna à oficina, destranca a porta e localiza uma bobina substituta lacrada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A instalação é difícil, mas familiar.",
+            "Quando a nova bobina se encaixa no lugar, a lâmpada brilha como se estivesse prendendo a respiração."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A tempestade chega com força total depois de escurecer, mas o farol permanece estável até de manhã.",
+            "Asha não sabe por que Marek escondeu uma chave em uma lata de farinha, mas decide perguntar diretamente a ele."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "fetch_key",
+        "text": "Ignore a nota, encontre uma chave reserva e volte para substituir a bobina."
+      }
+    },
+    {
+      "id": "take_battery",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha quebra a corrente enferrujada e abre a caixa de ferro.",
+            "Dentro há uma velha bateria auxiliar, embrulhada em oleado, junto com uma bolsa com fusíveis sobressalentes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela pega tudo e se vira para sair, mas uma onda invade a caverna e encharca suas botas.",
+            "A água sobe rapidamente e a boca estreita da caverna se transforma em uma garganta de espuma rosnante."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha luta por um ponto de apoio, mas a maré que retorna a prende contra a água. rochas por tempo suficiente para minar suas forças.",
+            "Ela só escapa abandonando a bateria pesada e rastejando machucada e tremendo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De volta à torre, ela consegue um reparo parcial, mas o farol enfraquece durante a noite.",
+            "A lição é dura e imediata: o mar sempre cobra o que é devido."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tide_cave",
+        "text": "Quebre a corrente, pegue a bateria pesada e tente fugir da maré."
+      }
+    },
+    {
+      "id": "retreat",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha marca a entrada da caverna com uma tira de pano brilhante e decide não jogar sua vida contra a água.",
+            "Ela retorna para a água. torre com as mãos vazias, mas com um plano claro."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "No escritório do porto, ela convence Soren a emprestar seus dois marinheiros e um carrinho de mão na próxima maré baixa.",
+            "Juntos, eles recuperam a caixa de ferro com segurança e levam a bateria auxiliar até o penhasco."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A bateria mantém a lâmpada estável durante as horas mais longas da tempestade.",
+            "De manhã, Soren agradece silenciosamente a Asha por escolher a paciência em vez do orgulho."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tide_cave",
+        "text": "Marque o local, recue e retorne com ajuda na próxima maré baixa."
+      }
+    },
+    {
+      "id": "manual_shutter",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha escurece a lâmpada para reduzir a tensão sobre o orgulho. bobina.",
+            "Em seguida, ela puxa a alavanca do obturador manual que controla um feixe estreito através da lente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando ela avista um barco de pesca lutando no canal, ela sinaliza com flashes constantes que apontam em direção à água segura.",
+            "O barco responde com uma lanterna própria e segue sua orientação."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol não é tão brilhante quanto deveria ser, mas é inteligente, falando em padrões em vez de força bruta.",
+            "Ao amanhecer, a bobina está quase gasta, mas não um quebrou no recife."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Os braços de Asha doem por causa do funcionamento da veneziana e seus olhos ardem de ver o mar a noite toda.",
+            "Mas ela cumpriu sua promessa, e a ilha parece menos solitária à luz da manhã."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "dim_light",
+        "text": "Diminua a intensidade da lâmpada e guie os navios com sinais de obturador manual."
+      }
+    },
+    {
+      "id": "close_night",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha diminui ainda mais a intensidade da lâmpada, esperando que os navios se abriguem no porto até que a tempestade passe.",
+            "Ela fecha a veneziana e deixa o facho repousar, salvando cada curva possível da primavera."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Por um tempo, o canal parece vazio.",
+            "Depois ela ouve um som. um estalo distante, não um trovão, mas madeira contra pedra."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "À primeira luz, os destroços chegam à enseada abaixo do penhasco.",
+            "Nenhuma vida é perdida, mas um barco da família está arruinado e o porto está mais silencioso do que o normal."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha ajuda a arrastar madeiras das rochas e não consegue encarar o proprietário.",
+            "Ela entende agora que a segurança requer orientação, mesmo quando a orientação é cansativa."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "dim_light",
+        "text": "Feche a veneziana para economizar energia e esperar que os navios permaneçam no porto."
+      }
+    },
+    {
+      "id": "flare",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha avista um barco baixo e apagado cortando em direção ao recife. linha.",
+            "Ele se move com confiança, como se conhecesse a água pela memória e não pela luz."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela dispara um sinalizador de alerta da janela.",
+            "O arco vermelho assobia ao vento e transforma brevemente o mar em um campo de metal em movimento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O barco se afasta imediatamente e desaparece na neblina da tempestade.",
+            "Asha não consegue dizer se evitou um acidente ou interrompeu algo deliberado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol permanece funcional o suficiente para o noite, e o porto permanece seguro.",
+            "No entanto, o barco apagado permanece nos seus pensamentos como uma pergunta sem resposta."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "sea_watch",
+        "text": "Lance um sinalizador para alertar um barco apagado para longe dos recifes."
+      }
+    },
+    {
+      "id": "track",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mantém a lanterna fraca e observa o barco apagado em vez de se anunciar.",
+            "Ele não se dirige de todo para o canal."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela se inclina em direção à sombra do penhasco, onde uma estreita enseada se esconde sob a face oeste do farol.",
+            "Nenhum capitão honesto escolhe aquela água durante uma tempestade."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pode seguir a pé ao longo do caminho do penhasco ou pode se apresentar ao porto imediatamente e ficar com o farol.",
+            "Ambas as escolhas acarretam seus próprios riscos."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "sea_watch",
+        "text": "Rastreie o barco apagado e veja para onde ele vai."
+      }
+    },
+    {
+      "id": "follow_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha trava o freio da sala da lanterna e desce rapidamente, mantendo seus passos silenciosos.",
+            "Lá fora, ela segue o caminho do penhasco em direção à enseada oeste, usando relâmpagos para cronometrar seu movimento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Abaixo, o barco entra em uma fenda entre as rochas.",
+            "As figuras descarregam algo pesado, movendo-se com velocidade praticada."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "track",
+        "text": "Siga o barco até a enseada oeste."
+      }
+    },
+    {
+      "id": "report_harbor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que o farol não pode ser deixado sem supervisão.",
+            "Ela escreve uma breve nota com a direção do barco e a envia com um mensageiro da casa mais próxima."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O Mestre do Porto Soren mobiliza uma patrulha enquanto Asha fica com o farol.",
+            "A tempestade torna a perseguição difícil, mas a patrulha encontra novos rastos e cordas escondidas na enseada ocidental."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nada é apreendido naquela noite, mas o porto começa a observar o penhasco com nova atenção.",
+            "Asha mantém a luz acesa e a ilha aprende a procurar ameaças tanto da terra como do mar."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "track",
+        "text": "Informe o movimento do barco ao porto e fique atento ao farol."
+      }
+    },
+    {
+      "id": "sneak_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha aproxima-se, ficando atrás de rochas escorregadias.",
+            "Ela ouve os homens falarem. sobre como armazenar carga na oficina do farol e usar a tempestade como cobertura."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Uma pedra se move sob sua bota.",
+            "Uma das figuras se vira e o facho de uma lanterna aponta para seu esconderijo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha corre e um grito a segue contra o vento.",
+            "Ela chega à torre sem fôlego e tranca a porta por dentro."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Os contrabandistas não invadem, mas o mecanismo do farol é sabotado antes do amanhecer e as calhas das lâmpadas ficam quebradas por uma hora perigosa.",
+            "O porto sobrevive à noite, mas Asha entende que chamou a atenção sem conseguir ajuda."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "follow_cove",
+        "text": "Aproxime-se para saber o que as figuras estão fazendo."
+      }
+    },
+    {
+      "id": "retreat_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que já viu o suficiente.",
+            "Ela recua pelo caminho do penhasco e depois corre para o escritório do porto sem olhar para trás."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren organiza uma pequena equipe para se aproximar da enseada oeste por cima.",
+            "Eles chegam e descobrem que o barco já desapareceu, mas recuperam um livro-razão caído embrulhado em oleado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O livro-razão lista datas, marés e locais codificados que correspondem aos terrenos do farol.",
+            "Com as provas em mãos, o porto inicia uma investigação formal e a vantagem do sigilo dos contrabandistas é quebrada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol permanece aceso durante a tempestade.",
+            "Asha termina a noite abalada, mas satisfeita, sabendo que escolheu o caminho que protegeu os outros."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "follow_cove",
+        "text": "Recue e relate imediatamente, em vez de arriscar um confronto."
+      }
+    },
+    {
+      "id": "left_passage",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha segue pela passagem da esquerda, onde a pedra está úmida e o ar tem gosto de ferrugem.",
+            "O tique-taque fica irregular, como se algo aqui embaixo estivesse lutando para marcar o tempo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A passagem se abre para uma câmara baixa com uma poça rasa no chão.",
+            "Uma prateleira de madeira contém um diário manchado de água e uma pequena chave de latão."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Pegue a passagem da esquerda em direção ao tique-taque irregular."
+      }
+    },
+    {
+      "id": "right_passage",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pega a passagem certa e o ar fica mais quente.",
+            "O cheiro de óleo de lamparina fica mais forte a cada passo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "À frente, a luz vaza por baixo de uma porta que não deveria existir em um túnel de serviço vedado.",
+            "Vozes murmuram do outro lado e o som do tique-taque é substituído por um trabalho silencioso."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Pegue a passagem certa em direção ao cheiro de óleo e vozes fracas."
+      }
+    },
+    {
+      "id": "return_up",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha hesita no cruzamento e decide que os túneis são uma distração.",
+            "Ela volta para a sala da lanterna, determinada a resolver tudo de cima."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mas o tique-taque mais profundo continua sob seus pés, e o mecanismo da torre nunca se estabiliza totalmente.",
+            "À meia-noite, a bobina superaquece, a luz diminui e um banco de neblina surge vindo do norte."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nenhum navio está perdido, mas o porto passa uma noite assustadora soando buzinas e mantendo a posição.",
+            "De manhã, Asha olha para a escotilha e sabe que escolheu o conforto em vez das respostas."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Volte e resolva os problemas do farol sem entrar nos túneis."
+      }
+    },
+    {
+      "id": "read_journal",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha abre o diário com cuidado, mantendo-o longe da escotilha. poça.",
+            "As páginas pertencem a um guardião de décadas atrás, escritas em linhas limpas que cheiram levemente a fumaça."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O guardião descreve um “regulador de pêndulo” abaixo da sala da lanterna que suaviza a rotação do farol em condições climáticas adversas.",
+            "Ele avisa que se o governador sair do alinhamento, toda a luz irá falhar, não importa quão limpa a lente esteja."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A entrada final termina com uma instrução simples: coloque o pêndulo no ferro marque e ouça o tique verdadeiro.",
+            "Asha pode seguir as instruções ou pode continuar procurando quem está usando esses túneis."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "left_passage",
+        "text": "Leia o diário manchado de água na prateleira."
+      }
+    },
+    {
+      "id": "grab_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha guarda a chave de latão e se move mais fundo na passagem.",
+            "O túnel se estreita e termina em uma porta de metal com uma fechadura que combina com o formato da chave."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O tique-taque é alto aqui, como um batimento cardíaco preso atrás de ferro.",
+            "Asha pode usar a chave ou pode deixar a porta intocada e volte para a junção."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "left_passage",
+        "text": "Pegue a chave de latão e continue pela passagem."
+      }
+    },
+    {
+      "id": "reset_pendulum",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha segue as instruções do diário e encontra o regulador do pêndulo montado em um pedestal de pedra.",
+            "Uma haste de latão balança lentamente, mas está fora do centro, raspando levemente contra um trilho-guia."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela empurra o conjunto até que a haste se alinhe com a marca de ferro descrita no diário.",
+            "O raspar para e o tiquetaque fica uniforme e calmo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando ela retorna para a sala da lanterna, a lente a rotação é suave, como se a torre tivesse exalado.",
+            "Ao anoitecer o farol brilha com um ritmo constante que atravessa a tempestade."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha fecha a escotilha e mantém o diário seguro para Marek ler.",
+            "Alguns segredos, ela percebe, não devem ficar esquecidos."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "read_journal",
+        "text": "Reinicie o regulador do pêndulo conforme as instruções do diário."
+      }
+    },
+    {
+      "id": "look_culprit",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha deixa o governador sozinho e continua andando, procurando sinais de uso recente.",
+            "Ela encontra pegadas na poeira úmida e uma mancha de óleo fresco na parede."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Atrás de uma pedra solta, a água do mar escorre em um riacho fino, alimentando a poça na câmara.",
+            "O vazamento é pequeno agora, mas vai piorar à medida que a pressão da tempestade aumenta."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pode tentar tapar o vazamento imediatamente, ou ela pode correr em busca de ferramentas e correr o risco de a água se espalhar.",
+            "Os túneis de repente parecem menos história e mais como uma armadilha."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "read_journal",
+        "text": "Ignore o diário e procure quem esteve aqui."
+      }
+    },
+    {
+      "id": "plug_leak",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha coloca um pano na abertura atrás da pedra e prende-o firmemente com uma tábua lascada.",
+            "Por um momento, o vazamento diminui para um gotejamento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Então uma escotilha se abre atrás dela, e alguém pragueja ao ver o plugue improvisado.",
+            "Asha se vira e vê um contrabandista com uma lanterna e uma expressão dura."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ele derruba a lanterna dela e a empurra em direção à parede, alertando-a para não interferir.",
+            "Asha escapa de volta para a torre abalada, e o governador permanece desalinhado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol treme durante a noite, e o porto passa horas em alerta máximo.",
+            "Asha sobrevive, mas os contrabandistas agora sabem que ela viu os túneis."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "look_culprit",
+        "text": "Tente tapar o vazamento antes que piore."
+      }
+    },
+    {
+      "id": "run_help",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que precisa de ferramentas adequadas e outro par de mãos.",
+            "Ela corre de volta para a escotilha e sobe as escadas, subindo os degraus de dois em dois."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando ela retorna com cunhas e selante, o vazamento se espalhou em um riacho raso.",
+            "A poça na câmara agora chega até os tornozelos e o ar está mais frio."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela diminui a velocidade da água, mas a câmara do governador ficou úmida e o carrapato permanece irregular.",
+            "A luz do farol se mantém, mas treme sempre que o vento bate forte."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De manhã, Asha está exausta e zangada consigo mesma por ter deixado o problema sozinho.",
+            "Ela entende que algumas falhas são criadas pela hesitação e não pela ação."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "look_culprit",
+        "text": "Corra em busca de ferramentas e retorne com um selo adequado."
+      }
+    },
+    {
+      "id": "use_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha desliza a chave de latão na fechadura.",
+            "Ela gira com uma facilidade surpreendente, como se a porta tivesse foi aberta recentemente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Atrás da porta há uma sala de controle apertada com um segundo conjunto de pesos e um pequeno dispositivo de sinalização conectado à torre.",
+            "Um gráfico de papel na parede marca os horários das marés e a enseada oeste em lápis vermelho."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha percebe que esta sala pode enviar um sinal para além da ilha, mas também pode alertar quem a configurou.",
+            "Ela tem que escolher que mensagem enviar, se houver."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "grab_key",
+        "text": "Use a chave de latão para abrir a porta de metal trancada."
+      }
+    },
+    {
+      "id": "leave_door",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha se afasta da fechadura trancada. porta e retorna ao cruzamento.",
+            "Os túneis parecem muito incertos, e ela teme se perder ou ficar presa abaixo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela sobe novamente e se concentra na sala das lanternas, fazendo apenas pequenos ajustes.",
+            "O tique-taque mais profundo continua abaixo dela, inalterado."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol dura a maior parte da noite, mas seu ritmo nunca se torna totalmente estável.",
+            "Ao amanhecer, Asha ainda tem perguntas e nenhuma resposta, apenas a certeza de que a torre esconde mais do que poeira e pedra."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "grab_key",
+        "text": "Deixe a porta trancada em paz e volte para o farol acima."
+      }
+    },
+    {
+      "id": "send_distress",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha ajusta o dispositivo de sinalização para o canal de emergência usado pelas estações costeiras.",
+            "Ela envia uma mensagem concisa: falha mecânica, possível atividade ilegal, piora das condições de tempestade."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dentro de uma hora, o barco patrulha do porto reconhece o sinal.",
+            "Eles não conseguem chegar à ilha imediatamente devido ao mar agitado, mas começam a observar a enseada ocidental a uma distância segura."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha retorna à sala das lanternas e redefine os pesos usando o regulador secundário da sala de controle.",
+            "O farol se estabiliza e a presença da patrulha desencoraja qualquer pouso noturno."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De manhã, a tempestade passou e os contrabandistas desapareceram da costa.",
+            "O farol permanece aceso e descomprometido, e Asha transformou o sigilo em responsabilidade."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "use_key",
+        "text": "Envie um sinal oficial de socorro e segurança para a patrulha do porto."
+      }
+    },
+    {
+      "id": "send_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha sintoniza o dispositivo para uma frequência privada que Marek mostrou uma vez ela, destinada a mensagens de guardião para guardião.",
+            "Ela envia um código simples: a torre tem uma sala escondida e alguém a está usando."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A resposta vem mais rápido do que ela espera.",
+            "Marek responde que retornará imediatamente e diz a ela para ficar sozinha na sala da lanterna até que ele chegue."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha não consegue dizer se a urgência é protetora ou de medo.",
+            "Enquanto a tempestade atinge a torre, ela espera, ouvindo o tique-taque que ela faz conseguiu restaurar usando os pesos secundários."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando Marek finalmente chega, encharcado e pálido, ele olha para o gráfico da sala de controle sem surpresa.",
+            "Asha deve decidir se confia nele o que encontrou."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "use_key",
+        "text": "Envie uma mensagem codificada diretamente para Marek e espere por ele."
+      }
+    },
+    {
+      "id": "trust_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha escolhe a confiança.",
+            "Ela conta tudo a Marek: o gráfico de marés, as marcas vermelhas e as vozes que ouviu acima."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek senta-se pesadamente em uma caixa e admite que foi ameaçado.",
+            "Contrabandistas aprendeu sua rota continental e exigiu acesso à torre em troca de deixar as famílias do porto em paz."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Juntos, Asha e Marek alteram o mecanismo para que a sala de controle oculta não possa substituir a sala das lanternas novamente.",
+            "Eles enviam um segundo sinal honesto a Soren com os detalhes do contrabando."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "As prisões acontecem semanas depois, quando o mar está mais calmo e as evidências estão prontas.",
+            "Asha mantém a luz acesa todas as noites, sabendo que ela ajudou acabar com um perigo silencioso sem quebrar a torre."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "send_mentor",
+        "text": "Confie em Marek e compartilhe tudo o que você encontrou."
+      }
+    },
+    {
+      "id": "accuse_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O medo de Asha se transforma em suspeita.",
+            "Ela diz a Marek que acha que ele está envolvido e se recusa a entregar a chave."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O rosto de Marek se contrai, não com raiva, mas com algo parecido com tristeza.",
+            "Ele diz que a cautela dela é justa, depois se vira e sai da sala de controle sem dizer mais uma palavra."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tranca a porta e sinaliza para a patrulha do porto, descrevendo a sala e seu mapa.",
+            "A patrulha não pode agir no auge da situação. tempestade, mas registam o seu depoimento e depois começam a observar os movimentos de Marek."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol sobrevive à noite, mas o guardião e o aprendiz já não partilham uma confiança fácil.",
+            "Asha ganha segurança à custa da certeza, e o farol fica mais frio mesmo quando a lâmpada está acesa."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "send_mentor",
+        "text": "Acuse Marek e guarde a chave, depois alerte o porto por conta própria."
+      }
+    },
+    {
+      "id": "steal_oil",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha encosta o ouvido à porta e ouve homens a falar sobre “óleo de lanterna” e “armazenamento silencioso”.",
+            "Se os contrabandistas têm abastecimentos baixos. aqui, ela pode usá-los para manter o farol funcionando."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela abre a porta com a largura de um dedo e entra em uma sala iluminada cheia de barris.",
+            "Ninguém a nota a princípio."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela pode pegar apenas uma pequena quantidade sem ser vista, ou pode tentar mover um barril cheio e resolver o problema de forma decisiva.",
+            "De qualquer forma, ela corre o risco de ser pega no subsolo."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Entre na sala iluminada e tente levar óleo para o farol."
+      }
+    },
+    {
+      "id": "set_trap",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que a informação não é suficiente; ela precisa de controle.",
+            "Ela monta uma linha tripla simples usando uma campainha e um carrilhão de latão de seu kit de lanterna."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Depois ela se retira para a sombra e espera.",
+            "Quando a porta se abre, o carrilhão toca bruscamente e vozes assustadas praguejam de surpresa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha usa a confusão para correr de volta para a escotilha e fechá-la por cima.",
+            "Ela prende a escotilha com uma barra de ferro, prendendo os contrabandistas. a rede de túneis."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Com os homens contidos, ela se concentra nos reparos da sala das lanternas e mantém o farol estável durante a noite.",
+            "Ao amanhecer, o Mestre do Porto Soren chega com os guardas e assume a custódia dos homens presos sem lutar."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Prepare uma armadilha para detectar e conter quem está usando os túneis."
+      }
+    },
+    {
+      "id": "back_away",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha decide que as vozes são perigosas demais para serem enfrentadas sozinhas.",
+            "Ela recua silenciosamente, apaga a lanterna para esconder o brilho e retorna ao cruzamento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando ela sobe de volta para a sala das lanternas, a lanterna O mecanismo do farol ainda falha e a tempestade está quase chegando.",
+            "Sem provas ou peças sobressalentes, ela só pode fazer pequenos ajustes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol dura, mas é irregular, e a noite é repleta de escuta ansiosa pelo som de pedra contra o casco.",
+            "De manhã, Asha sabe que evitou o perigo imediato, deixando uma ameaça maior sem solução."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Afaste-se da porta e evite contato com as vozes."
+      }
+    },
+    {
+      "id": "small_can",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha enche uma pequena lata com óleo de lâmpada e a esconde debaixo dela. casaco.",
+            "Ela sai da sala tão silenciosamente quanto entrou, com o coração batendo forte nos ouvidos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Na sala da lanterna, ela enche o queimador e ajusta o pavio para uma chama mais limpa.",
+            "A luz brilha e se estabiliza, garantindo horas de segurança."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Os contrabandistas só percebem o que foi levado de manhã.",
+            "A essa altura, a tempestade já passou e a patrulha de Soren está procurando acesso no penhasco. pontos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha manteve o farol aceso com os suprimentos do próprio inimigo.",
+            "Parece uma pequena justiça, mas ela sabe que é apenas o começo de um acerto de contas maior."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "steal_oil",
+        "text": "Pegue uma pequena quantidade de óleo e saia sem ser notado."
+      }
+    },
+    {
+      "id": "full_barrel",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tenta rolar um barril cheio em direção ao túnel.",
+            "É mais pesado do que ela espera, e as aduelas de madeira gemem enquanto se movem."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Uma voz estala do outro lado da sala, exigindo saber quem está lá.",
+            "Luz da lanterna se aproxima dela e as sombras se tornam nítidas nos rostos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha corre, mas o túnel é estreito e as suas botas batem nas pedras.",
+            "As mãos agarram-lhe o casaco e ela é arrastada de volta para a sala de petróleo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Os contrabandistas amarram-na e ameaçam o farol se ela der um alarme.",
+            "Ela só é libertada depois da tempestade, e o farol brilha durante a noite sob o seu controlo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nenhum navio se perde, mas o porto sussurra sobre a luz estranha e fraca no penhasco.",
+            "Asha sobrevive, e ela jura que esta torre não será usada contra suas próprias águas novamente."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "steal_oil",
+        "text": "Tente rolar um barril cheio para resolver o problema de uma vez."
+      }
+    },
+    {
+      "id": "crew_help",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha diz a Soren que ela precisa de mãos, ferramentas e alguém que conheça máquinas.",
+            "Soren acena com a cabeça e chama voluntários, mas a tempestade deixa todos cautelosos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Duas opções se apresentam: um engenheiro aposentado com reputação de precisão, ou um grupo de marinheiros ávidos que podem se mover rápido.",
+            "Asha tem que escolher quem escalará o farol com ela."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "harbor_master",
+        "text": "Peça ao capitão do porto para enviar uma equipe de reparos ao farol."
+      }
+    },
+    {
+      "id": "quiet",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha hesita em mencionar o estranho tique-taque e a sugestão de atividade oculta.",
+            "Ela diz a Soren apenas que o farol está falhando e que ela pode precisar de peças."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren oferece ajuda de qualquer maneira, mas sua atenção está dividida pelos preparativos para a tempestade.",
+            "Asha pode ir ao mercado para encontrar o que precisa, ou ela pode tentar uma solução improvisada usando o que quer que esteja na torre."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "harbor_master",
+        "text": "Mantenha os detalhes em segredo e resolva o problema sem envolver todo o porto."
+      }
+    },
+    {
+      "id": "engineer_rowan",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren envia o Engenheiro Rowan, um homem de cabelos grisalhos que antes cuidava das bóias do canal.",
+            "Rowan chega com um rolo de ferramentas de couro e uma expressão cuidadosa e nada impressionada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Na sala da lanterna, Rowan ouve o tique-taque gaguejante e imediatamente pergunta quem está acessando a oficina.",
+            "Sua pergunta faz a pele de Asha arrepiar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rowan pode se concentrar primeiro no farol ou pode perseguir o indício de atividade ilegal enquanto ainda há luz do dia.",
+            "Asha deve escolher o que importa. mais agora."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "crew_help",
+        "text": "Traga o Engenheiro Rowan para fazer um reparo técnico cuidadoso."
+      }
+    },
+    {
+      "id": "volunteers",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren reúne três marinheiros que se voluntariam para ajudar, todos com braços fortes e sorrisos rápidos.",
+            "Eles carregam bobinas, óleo e cordas penhasco acima, como se a velocidade por si só pudesse derrotar o clima."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Na sala das lanternas, os marinheiros conversam entre si, cada um oferecendo uma solução diferente.",
+            "Asha percebe que deve organizá-los com disciplina ou deixá-los correr e torcer pelo melhor."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "crew_help",
+        "text": "Pegue os voluntários ansiosos e avance rápido."
+      }
+    },
+    {
+      "id": "beacon_first",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha diz a Rowan que o farol vem primeiro.",
+            "Rowan grunhe em aprovação e começa a trabalhar com movimentos limpos e eficientes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ele substitui a bobina com defeito, recoloca os pesos e realinha a pista de engrenagens.",
+            "Ao anoitecer, o farol brilha continuamente na tempestade."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rowan menciona que a fechadura da oficina foi adulterada, mas ele não a persegue no escuro.",
+            "Os contrabandistas, se existirem, permanecerão incontestados esta noite."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O porto sobrevive ao vendaval sem incidentes.",
+            "No silêncio que se segue, Asha e Soren começam a planear uma inspeção diurna de todos os túneis e eclusas da ilha."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "engineer_rowan",
+        "text": "Priorize o reparo do farol e deixe qualquer investigação para depois."
+      }
+    },
+    {
+      "id": "investigate_first",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha não pode ignorar as suspeitas de Rowan.",
+            "Ela concorda em investigar a oficina e os túneis enquanto ainda há luz."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Eles encontram caixotes de contrabando e uma tabela de marés escondida, o suficiente para confirmar o contrabando.",
+            "Mas a busca custa tempo e a bobina falha completamente antes de terminarem o vendaval. reparos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A patrulha de Soren mantém os navios no porto a noite toda usando buzinas e bandeiras de sinalização.",
+            "Não há naufrágios, mas as tripulações de pesca perdem uma noite de trabalho e reclamam da torre escura."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ao amanhecer, os contrabandistas são presos e o porto fica mais seguro a longo prazo.",
+            "Asha fica pesando a segurança imediata contra a segurança futura, sabendo que escolheu uma em vez da outra."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "engineer_rowan",
+        "text": "Investigue os sinais suspeitos antes de reparar o farol."
+      }
+    },
+    {
+      "id": "assign_tasks",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha levanta a voz sobre o vento e atribui funções.",
+            "Um marinheiro enrola o núcleo, outro prepara a bobina de reposição e o outro fica de guarda na escada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Com todos concentrados, o reparo se torna ordenado.",
+            "A nova bobina assenta corretamente, os pesos são equilibrados e a rotação da lente é suavizada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol brilha intensamente na tempestade, e os voluntários olham para Asha com novo respeito.",
+            "Soren mais tarde conta a ela. que liderança não é volume, mas direção."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando Marek retorna, ele encontra uma torre em funcionamento e um aprendiz que aprendeu a comandar uma sala.",
+            "O farol parece ter futuro novamente."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "volunteers",
+        "text": "Organize os voluntários cuidadosamente e atribua tarefas claras."
+      }
+    },
+    {
+      "id": "rush_tasks",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha deixa os marinheiros trabalharem como quiserem, esperando que a velocidade supere a confusão.",
+            "Duas mãos alcançam o mesmo ferrolho, e um marinheiro enrola o núcleo enquanto o outro ainda está ajustando a tensão."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Um barulho alto ecoa pelo mesmo parafuso. sala das lanternas enquanto um peso sai do trilho.",
+            "A lente estremece, a lâmpada crepita e a fumaça se espalha pelo ar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Eles conseguem evitar um incêndio, mas o farol fica instável por horas.",
+            "Soren puxa os voluntários para trás antes que alguém se machuque."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Naquela noite, o farol brilha de forma fraca e irregular.",
+            "Asha aprende, dolorosamente, que a pressa não é um substituto para coordenação."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "volunteers",
+        "text": "Deixe os voluntários apressarem o trabalho e torcer para que tudo dê certo."
+      }
+    },
+    {
+      "id": "market",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha dirige-se para a pequena rua do mercado onde os comerciantes vendem corda, óleo e metal recuperado.",
+            "O vento já fechou a maioria das barracas, mas um vagão permanece aberto sob uma lona."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Um funileiro viajante oferece segmentos de lentes polidas e fio de cobre.",
+            "Ele afirma que pode vender a Asha exatamente o que ela precisa para manter o farol forte durante a tempestade."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pode pagar moedas que ela realmente não tem ou pode negociar um tipo diferente de preço.",
+            "Qualquer escolha poderia manter o farol vivo esta noite."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "quiet",
+        "text": "Vá ao mercado para comprar ou trocar peças."
+      }
+    },
+    {
+      "id": "makeshift",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha retorna à torre e faz um inventário do que ela tem: corda, lona e alguns painéis reflexivos usados para manutenção.",
+            "Nenhuma bobina sobressalente aparece e o estoque de óleo é menor do que Marek prometeu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Se ela não conseguir restaurar o farol completamente, ela ainda pode tentar criar orientação.",
+            "Ela pode equipar velas reflexivas para capturar o feixe fraco da lâmpada, ou ela pode acender fogueiras de sinalização no penhasco."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "quiet",
+        "text": "Tente uma solução improvisada usando apenas o que já está na torre."
+      }
+    },
+    {
+      "id": "buy_lens",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha gasta quase todas as suas moedas economizadas em um segmento de lente de reposição e um rolo de fio isolado.",
+            "O funileiro aceita o dinheiro sem sorrir e desaparece antes que a chuva se transforme em granizo."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "De volta à sala das lanternas, Asha troca o segmento nublado pelo novo e reforça o invólucro da bobina com o novo fio.",
+            "A luz torna-se mais brilhante e mais constante quase imediatamente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol resiste à tempestade e os navios passam pelo canal sem incidentes.",
+            "Mas nas semanas seguintes, Asha faz turnos adicionais no porto para pagar o que gastou."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela manteve o mar seguro e pagou por isso honestamente.",
+            "O custo é real, mas não parece arrependimento."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "market",
+        "text": "Compre as peças imediatamente, mesmo que isso esvazie suas economias."
+      }
+    },
+    {
+      "id": "barter",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha diz ao funileiro que não pode pagar integralmente. moeda.",
+            "Ele estuda o rosto dela e diz que fará a troca, mas apenas se ela fizer uma pequena entrega para ele esta noite."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O pacote está embrulhado em oleado e selado com cera.",
+            "Ele insiste que ela o entregue na enseada oeste depois do anoitecer, quando a maré está boa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pode concordar e pegar as peças, ou ela pode recusar e encontrar outro caminho.",
+            "Os olhos do funileiro permanecem calmos de qualquer maneira, como se ele já soubesse a resposta."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "market",
+        "text": "Negocie com o funileiro em vez de pagar a moeda inteira."
+      }
+    },
+    {
+      "id": "deliver_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha aceita a troca e leva as peças junto com o pacote lacrado.",
+            "No caminho de volta para a torre, o pacote parece mais pesado do que seu tamanho deveria permitir."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Na sala das lanternas, o novo segmento de lente ajudaria imediatamente, mas o prazo de entrega está próximo.",
+            "Asha decide consertar rapidamente, depois segue para a enseada."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Antes de sair, ela percebe que o selo de cera traz um símbolo que corresponde às marcas que ela viu no contrabando. caixas.",
+            "Asha pode abrir o pacote e saber o que ela está carregando, ou pode entregá-lo fechado conforme combinado."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "barter",
+        "text": "Concorde com a entrega em troca de peças."
+      }
+    },
+    {
+      "id": "refuse",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha recusa a entrega.",
+            "O funileiro encolhe os ombros, cobre seus bens e diz a ela para manter seu farol aquecido."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando Asha retorna à torre, o mercado está fechado e a tempestade está chegando.",
+            "Ela tenta pequenos reparos com suprimentos limitados."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol luta através do noite e desaparece por uma hora perigosa perto da meia-noite.",
+            "Nenhum navio naufraga, mas os nervos do porto estão à flor da pele pela manhã."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha pergunta-se o que é que o funileiro ofereceu a alguém menos cauteloso.",
+            "A ilha permanece segura, mas a sensação de estar a ser observado não desaparece."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "barter",
+        "text": "Recuse a troca e volte para a torre sem peças novas."
+      }
+    },
+    {
+      "id": "open_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha quebra o selo de cera e desdobra o oleado.",
+            "Dentro não há uma ferramenta ou uma bugiganga, mas um pacote fino de papéis: tabelas de marés, esboços de canais, e uma lista de valores de pagamento."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Os documentos mapeiam a enseada oeste e o terreno do farol com detalhes cuidadosos.",
+            "Asha percebe que foi solicitada a entregar instruções, não mercadorias."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ela pode alertar o porto imediatamente ou pode guardar os mapas e usá-los para encontrar ela mesma o esconderijo dos contrabandistas.",
+            "Qualquer escolha mudará o desenrolar desta noite."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "deliver_package",
+        "text": "Abra o pacote e veja o que você está sendo solicitado a carregar."
+      }
+    },
+    {
+      "id": "deliver_unopened",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mantém o pacote lacrado e o entrega na enseada oeste após o anoitecer.",
+            "Um sinal de lanterna responde das rochas, e um homem pega o pacote sem falar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha retorna à torre e instala o segmento de lente do funileiro.",
+            "O farol melhora, mas o ato da entrega fica em seu estômago como uma pedra."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dias depois, Soren menciona o estranho tráfego de barcos perto do penhasco e pergunta se Asha percebeu qualquer coisa.",
+            "Asha não diz nada e odeia o silêncio que escolheu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "O farol continua funcional, mas Asha sente-se cúmplice de algo que não compreende.",
+            "Ela salvou navios, mas pôs em perigo a confiança."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "deliver_package",
+        "text": "Entregue o pacote fechado e concentre-se em manter o farol funcionando."
+      }
+    },
+    {
+      "id": "alert_from_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha leva os papéis directamente ao Capitão do Porto Soren.",
+            "Ele lê-os uma vez, depois novamente mais lentamente, e o seu rosto endurece de certeza."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren organiza uma patrulha para vigiar a enseada ocidental enquanto Asha retorna para estabilizar o farol com seu novo segmento de lente.",
+            "Os contrabandistas chegam depois da meia-noite e entram em uma rede preparada de sinais de lanternas e mãos de espera."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "As prisões são silenciosas e decisivas.",
+            "Ao amanhecer, o porto está mais seguro do que nunca."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha não paga ao funileiro nada além da verdade, e ela mantém o farol aceso de forma limpa durante a tempestade.",
+            "Ela aprende que recusar ser usado pode seja um ato de serviço."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "open_package",
+        "text": "Leve os mapas ao capitão do porto e exponha o esquema."
+      }
+    },
+    {
+      "id": "keep_maps",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha esconde os papéis em seu casaco e retorna para a torre.",
+            "Ela instala o novo segmento de lente e observa o feixe se fortalecer à medida que o anoitecer cai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Depois de escurecer, ela segue os mapas sozinha até um local de armazenamento marcado no penhasco.",
+            "Ela encontra um esconderijo de óleo e bobinas sobressalentes, o suficiente para manter o farol funcionando por semanas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mas ela também encontra um segundo livro-razão com nomes de famílias do porto que foram pressionadas ao silêncio.",
+            "O conhecimento queima em suas mãos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mantém o farol aceso durante a tempestade usando os suprimentos roubados.",
+            "Ao amanhecer, ela finalmente leva o livro-razão para Soren, aceitando que não pode resolver o medo de uma comunidade sozinha."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "open_package",
+        "text": "Guarde os mapas, encontre a cache e tente primeiro resolver o problema sozinho."
+      }
+    },
+    {
+      "id": "reflect_sails",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha monta painéis reflexivos e 'velas' de lona ao longo da face do penhasco, voltadas para o penhasco. canal.",
+            "Eles captam o feixe fraco do farol e o lançam para fora em flashes mais amplos e suaves."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A luz não é perfeita, mas é visível.",
+            "Vários capitães dizem mais tarde que seguiram o brilho refletido como um fio através de uma agulha."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "A tempestade ainda assusta o porto, mas ninguém está perdido.",
+            "Ao amanhecer, as velas se agitam em farrapos e Asha se orgulha da engenhosidade que carregou o canal. noite."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Quando Marek regressa, estuda o cordame e ri uma vez, surpreendido.",
+            "Ele diz a Asha que o dever de um guardião não é ter as ferramentas ideais, mas sim tornar o mar legível."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "makeshift",
+        "text": "Instale velas e painéis refletivos para amplificar o feixe fraco."
+      }
+    },
+    {
+      "id": "signal_fires",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha empilha madeira flutuante na borda do penhasco e acende sinalizadores de fogo, esperando que as chamas substituam o farol avariado.",
+            "O vento alimenta o fogo avidamente e as faíscas espalham-se pela relva seca perto do caminho."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dentro Em poucos minutos, uma fina linha de chamas começa a correr ao longo da encosta.",
+            "Asha pisa e sufoca onde pode, mas as rajadas de tempestade transformam seu esforço em uma batalha perdida."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "As tripulações do porto correm com cobertores e baldes, combatendo o fogo na chuva.",
+            "A encosta queima em manchas durante toda a noite, e o farol é deixado sem vigilância por longos períodos."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Nenhum navio naufraga, mas a ilha acorda em solo enegrecido e o cheiro amargo de fumaça.",
+            "Asha tentou substituir um perigo por outro e ela carregará a lição por muito tempo."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "makeshift",
+        "text": "Sinal luminoso dispara no penhasco para guiar os navios pelas chamas."
+      }
+    }
+  ]
+}
