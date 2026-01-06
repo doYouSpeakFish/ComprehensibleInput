@@ -37,6 +37,11 @@ class StoriesTestData @Inject constructor(
         storiesLocalDataSource.storyLoadDelayMillis = delayMillis
     }
 
+    fun removeImagesForStory(story: TestStory) {
+        storiesLocalDataSource.storyIdsWithoutImages =
+            storiesLocalDataSource.storyIdsWithoutImages + story.id
+    }
+
     private fun removeStoryForLanguage(languageCode: String, story: TestStory) {
         storiesLocalDataSource.stories = storiesLocalDataSource.stories
             .mapValues { (language, storyData) ->
