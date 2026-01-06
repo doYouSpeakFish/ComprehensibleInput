@@ -1,0 +1,2429 @@
+{
+  "id": "10",
+  "title": "Mercusuar Jarum Jam",
+  "startPartId": "start",
+  "featuredImagePath": "1",
+  "parts": [
+    {
+      "id": "start",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha telah menjalani seluruh hidupnya di Clifftop Isle, tempat laut tidak pernah benar-benar tenang.",
+            "Dia adalah murid penjaga mercusuar, yang bertanggung jawab untuk memutar inti jarum jam dan membersihkan lensa kaca besar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pada hari pertama angin kencang musim dingin, cakrawala berubah warna menjadi batu basah.",
+            "Perahu nelayan bergegas menuju pelabuhan, dan burung camar terbang rendah seolah-olah langit semakin berat."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pada siang hari, Penjaga Marek menekan kunci kuningan ke telapak tangan Asha dan pergi ke daratan untuk mengambil perbekalan.",
+            "Dia menyuruhnya untuk menjaga lampu tetap stabil sampai dia kembali, tidak peduli bagaimana cuacanya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Menjelang sore, mercusuar mulai berbunyi salah.",
+            "Alih-alih berdetak mulus dan percaya diri, mekanismenya malah tersendat-sendat dan berbunyi klik, seperti jam tangan dengan pasir di giginya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menaiki tangga spiral dan merasakan menara bergetar di bawah a hembusan angin.",
+            "Ruang lentera sedikit berbau minyak panas, dan lensa memancarkan kilau yang lelah dan tidak merata ke seluruh kaca."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kemudian, dari suatu tempat di bawah papan lantai, dia mendengar ritme kedua.",
+            "Ini adalah detak yang lebih dalam, datang dari terowongan layanan tertutup yang tidak pernah diizinkan Marek untuk dilihat pengunjung."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Malam akan segera tiba, dan kapal akan bergantung pada suar untuk menemukan jalur aman.",
+            "Asha harus memilih ke mana harus memilih ke mana harus pergi menghabiskan sisa siang hari."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lantern_room",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha langsung menuju ruang lentera, tempat jantung mercusuar berada.",
+            "Lensanya berputar, namun ragu-ragu setiap beberapa detik, seolah menangkap sesuatu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Jika dia bisa menstabilkan cahaya sebelum senja, badai hanya akan berupa kebisingan dan hujan.",
+            "Jika dia tidak bisa, terumbu di bawah Clifftop Isle akan mengumpulkan bangkai kapal seperti jaring mengumpulkan ikan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Naik ke ruang lentera dan periksa suar."
+      }
+    },
+    {
+      "id": "tunnels",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha berlutut dan menemukan cincin besi dipasang di lantai ruang lentera.",
+            "Dengan tarikan yang kuat, dia mengangkat palka yang mengarah ke terowongan servis."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Udara dingin naik dari bawah, lembap karena garam dan batu.",
+            "Detak yang lebih dalam sekarang lebih keras, seperti jam kedua yang tersembunyi di tulang menara."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia menyalakan lentera kecilnya dan turun ke dalam kegelapan.",
+            "Tangga berakhir di persimpangan di mana tiga jalur berbeda."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Buka palka lantai dan ikuti detak aneh di bawah."
+      }
+    },
+    {
+      "id": "harbor_master",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan bahwa masalahnya terlalu besar untuk diselesaikan sendirian.",
+            "Dia mengenakan mantelnya, berlari menuruni jalan tebing, dan menuju pelabuhan kantor."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Angin menghempaskan garam ke wajahnya dan membuat matanya berair.",
+            "Di pelabuhan, tali berderit, tiang bergoyang, dan semua orang menyaksikan langit yang semakin gelap."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kepala Pelabuhan Soren mendongak dari tumpukan grafik pasang surut ketika dia menerobos pintu.",
+            "Dia mendengarkan tanpa menyela, lalu mengatupkan rahang seolah dia telah menunggu hari ini."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "start",
+        "text": "Jalankan ke master pelabuhan dan minta bantuan."
+      }
+    },
+    {
+      "id": "lens_inspect",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mencondongkan tubuh ke dekat Fresnel yang agung lensa.",
+            "Pasir halus telah masuk ke dalam gigi kuningan di sekitar alasnya, dan kaca menunjukkan garis-garis samar tempat semprotan telah mengering."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Lensa halus namun tak kenal ampun.",
+            "Penyesuaian yang buruk dapat membuat cahaya bergoyang, dan prisma yang retak dapat menyebarkan sinar menjadi pecahan yang tidak berguna."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Periksa lensa dan roda gigi dari kerusakan."
+      }
+    },
+    {
+      "id": "coil_check",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bergerak ke inti jarum jam: drum pegas, pemberat, dan kumparan tembaga yang menyimpan dan melepaskan tenaga tetap.",
+            "Satu selubung koil terasa hangat saat disentuh, dan garis tipis jelaga menandai tepinya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Jika koil gagal, suar akan memudar jauh sebelum tengah malam.",
+            "Menggantinya bisa memperbaiki segalanya, tapi itu akan memakan waktu yang mungkin tidak dia miliki."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Periksa kumparan listrik dan inti jarum jam."
+      }
+    },
+    {
+      "id": "sea_watch",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sebelum menyentuh apa pun, Asha melangkah ke jendela ke arah laut.",
+            "Saluran sudah kasar, dan layar di kejauhan terlihat seperti kertas robek tertiup angin."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Lampu yang terputus-putus pada saat yang salah bisa lebih buruk daripada tidak ada lampu sama sekali.",
+            "Jika bahaya sudah dekat, dia mungkin perlu memperingatkan kapal terlebih dahulu dan memperbaikinya nanti."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lantern_room",
+        "text": "Lihatlah ke laut dan putuskan apa yang harus terjadi terlebih dahulu."
+      }
+    },
+    {
+      "id": "polish",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mencampurkan sedikit pelarut, jenis yang digunakan Marek pada kuningan sebulan sekali.",
+            "Dia menyeka wadah lensa dengan hati-hati, lalu memoles cincin roda gigi hingga giginya bersinar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat kotoran terangkat, dia melihat ukiran dangkal di bagian dalam pelek.",
+            "Itu bukan tanda pembuat; terlihat seperti serangkaian petunjuk arah, tergores oleh tangan yang sabar."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lens_inspect",
+        "text": "Bersihkan dan poles cincin lensa untuk menghilangkan pasir."
+      }
+    },
+    {
+      "id": "gear_adjust",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengencangkan cengkeramannya dan mencoba menyesuaikan dengan hati-hati pada penegang roda gigi.",
+            "Lensa berputar dengan mulus selama tiga putaran, dan harapan muncul di dadanya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kemudian mekanismenya tergelincir dengan bunyi logam yang tajam.",
+            "Satu gigi pada roda gigi penggerak terlepas dan melayang di lantai seperti koin yang terjatuh."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Lensa masih berputar, tetapi sekarang menangkap di titik patah, menyentak balok setiap kali melewatinya.",
+            "Asha harus memutuskan apakah akan berimprovisasi atau mengabaikan pendekatan ini."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "lens_inspect",
+        "text": "Sesuaikan ketegangan roda gigi lensa untuk menghentikan keragu-raguan."
+      }
+    },
+    {
+      "id": "consult_archives",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengenali pola dari pengetahuan penjaga lama.",
+            "Dia menemukan lemari buku catatan Marek yang sudah usang dan mengeluarkan diagram perawatan yang terlipat."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ukirannya cocok dengan urutan kalibrasi yang terlupakan, dimaksudkan untuk malam hari ketika udara kental dengan garam.",
+            "Dia mengikutinya langkah demi langkah, melonggarkan satu sekrup, mengencangkan yang lain, dan mengatur ulang jalur lensa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat dia melepaskan rem, lensa meluncur tanpa tersendat.",
+            "Saat senja, sinar menyapu saluran dengan denyut yang stabil dan terang yang menembus lembaran pertama hujan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat Marek kembali, badai sudah mengamuk, tapi mercusuar tetap kokoh.",
+            "Asha memberitahunya tentang ukiran tersembunyi, dan dia mengangguk seolah menara itu sendiri akhirnya menerimanya."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "polish",
+        "text": "Gunakan ukiran untuk menemukan kalibrasi yang benar dan mengatur ulang lensa."
+      }
+    },
+    {
+      "id": "pocket_note",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengingat petunjuk yang tergores dan memutuskan bahwa dia tidak bisa meluangkan waktu untuk mengejar misteri lama.",
+            "Dia menyelesaikan pembersihan, lalu memaksa lensa bergerak dengan penyesuaian cepat."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sinar stabil selama satu jam, namun saat badai tiba, udara menjadi tebal dan kaca mulai berkabut.",
+            "Tanpa urutan kalibrasi penuh, lensa tergelincir lagi, dan cahaya menjadi tidak merata."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dikirim dalam saluran lambat hingga merangkak, dan beberapa berbaliklah daripada mengambil risiko terhadap terumbu karang.",
+            "Mercusuar tidak mati total, namun malam terasa tegang dan tidak menentu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat Marek kembali, dia lega karena menaranya masih menyala, namun dia melihat mata Asha yang lelah.",
+            "Dia menyadari bahwa terkadang jalan pintas teraman masih berupa pertaruhan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "polish",
+        "text": "Abaikan ukirannya dan andalkan pembersihan cepat dan sedikit penyesuaian."
+      }
+    },
+    {
+      "id": "improvise_gear",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menemukan gigi roda gigi yang patah dan mengukurnya dengan celah yang hilang.",
+            "Dari kaleng suku cadang, dia memilih kuningan shim dan memasukkannya ke dalam pengganti yang kasar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia memasang shim ke tempatnya dengan palu kecil dan berdoa, lalu mengaktifkan kembali drive.",
+            "Lensa tidak lagi terkunci, meskipun mengeluarkan suara serak samar pada setiap putaran."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Cahaya bertahan melewati badai terburuk, tetapi saat fajar, shim sudah menipis.",
+            "Asha telah membeli pulau itu pada suatu malam yang aman, dan dia tahu pekerjaan apa yang akan dilakukan besok. menjadi."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "gear_adjust",
+        "text": "Lakukan improvisasi pada gigi pengganti dan pertahankan putaran lensa."
+      }
+    },
+    {
+      "id": "seek_help_from_lens",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan bahwa kerusakannya terlalu berisiko untuk ditambal sendirian.",
+            "Dia mengunci rem ruang lentera untuk mencegah gesekan lebih lanjut dan berlari menuruni tangga."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di pelabuhan, dia menemukan seorang pensiunan insinyur yang pernah memperbaiki menara pantai.",
+            "Dia setuju untuk segera mendaki bersamanya, menggerutu tentang badai dan penjaga muda yang tidak boleh ditinggalkan sendirian."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Bersama-sama, mereka menukar perlengkapan yang rusak dengan perlengkapan cadangan yang tepat dan menyelaraskan kembali berkendara.",
+            "Perbaikannya membuat Asha kehilangan harga dirinya dan sebotol lemon yang diawetkan dari dapur pelabuhan, tapi sinarnya menjadi stabil kembali."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ketika badai akhirnya pecah, saluran tersebut kosong dari puing-puing.",
+            "Asha belajar bahwa meminta bantuan bisa menjadi keterampilan yang sama pentingnya dengan alat apa pun."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "gear_adjust",
+        "text": "Hentikan mekanismenya dan temukan penolong yang terampil untuk perbaikan yang tepat."
+      }
+    },
+    {
+      "id": "replace_coil",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha membuka wadah koil dan langsung melihat masalahnya.",
+            "Retak tipis menjalar di sepanjang wadah, dan isolasi berbau samar terbakar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek menyimpan gulungan cadangan di bengkel dua lantai di bawahnya.",
+            "Jika dia dapat mengambil satu dan memasangnya sebelum senja, suar akan bertahan selamanya malam."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "coil_check",
+        "text": "Ganti koil yang retak dengan cadangan dari bengkel."
+      }
+    },
+    {
+      "id": "dim_light",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menutup rumah koil tanpa membukanya lebih jauh.",
+            "Penggantian penuh mungkin berhasil, tetapi mungkin juga memicu kegagalan jika dia terburu-buru."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sebaliknya, dia memutuskan untuk menjatah daya.",
+            "Jika dia meredupkan lampu dan menggunakan sinyal manual, dia mungkin akan meregangkan koil melalui jam-jam terburuk."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "coil_check",
+        "text": "Jaga agar koil tetap di tempatnya dan jatah daya agar bertahan semalaman."
+      }
+    },
+    {
+      "id": "storm_path",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rute tercepat ke bengkel adalah catwalk eksterior yang membungkus menara.",
+            "Terkena angin, tapi ini menghemat menit-menit yang berharga."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha melangkah ke atas catwalk dan hembusan angin hampir mencuri napasnya.",
+            "Hujan menusuk pipinya, dan laut di bawah menderu seolah mencoba memanjat tebing."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "replace_coil",
+        "text": "Ambil catwalk eksterior untuk mencapai bengkel dengan cepat."
+      }
+    },
+    {
+      "id": "safe_stairs",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memilih tangga bagian dalam.",
+            "Lebih lambat, tapi dinding batu menghalangi angin terburuk."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Batu tua menara menahan suara badai dari kejauhan.",
+            "Pada saat dia mencapainya pintu bengkel, dia lembab tapi kakinya mantap."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pegangannya tidak berputar.",
+            "Bengkel terkunci."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "replace_coil",
+        "text": "Gunakan tangga interior dan capai bengkel dengan aman."
+      }
+    },
+    {
+      "id": "aid_bird",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di tengah jalan melintasi catwalk, Asha menemukan seekor burung camar terjerat tali pancing.",
+            "Burung itu mengepak lemah, terjepit di pagar oleh angin."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bisa membebaskannya, atau dia bisa terus bergerak dan percaya bahwa alam akan mengatur dirinya sendiri.",
+            "Namun tali tersebut memotong kaki camar, dan badainya tidak lembut."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia berlutut, jari-jarinya mati rasa karena kedinginan, dan akhirnya melepaskan tali itu.",
+            "Burung camar melompat sekali, lalu meluncur ke tengah badai dan menghilang ke dalam abu-abu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Beberapa menit kemudian, camar yang sama berputar ke belakang dan berseru dengan tajam, lalu melesat menuju pintu pemeliharaan yang tidak pernah diperhatikan Asha.",
+            "Di dalam, dia menemukan simpanan kering berisi gulungan cadangan dan botol minyak tertutup yang ditinggalkan oleh penjaga sebelumnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dengan cadangan di tangannya, dia mengganti kumparan yang retak sebelum matahari benar-benar menghilang.",
+            "Malam itu mercusuar menyala kuat, dan Asha tidur dengan suara kepakan sayap penuh syukur dalam ingatannya."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "storm_path",
+        "text": "Berhenti untuk membebaskan camar yang kusut."
+      }
+    },
+    {
+      "id": "hurry",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menundukkan kepalanya dan memaksa dirinya untuk bergerak lebih cepat.",
+            "Angin menerpa sisi tubuhnya, dan catwalk menjadi licin di bawah sepatu botnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia meraih pagar, tapi sarung tangannya tergelincir.",
+            "Lututnya membentur besi dengan cukup keras hingga membuat pandangannya memutih."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia berhasil merangkak kembali ke dalam menara, gemetar kesakitan.",
+            "Kumparannya masih perlu diganti, tetapi sekarang setiap langkahnya lambat dan tajam."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat dia memasang lampu cadangan, lampunya sudah padam.",
+            "Suarnya tidak padam sepenuhnya, tapi melemah, dan malam terasa lebih lama dari yang seharusnya."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "storm_path",
+        "text": "Abaikan camar itu dan cepatlah ke bengkel."
+      }
+    },
+    {
+      "id": "pick_lock",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memeriksa kunci bengkel.",
+            "Itu sudah tua, tetapi baru-baru ini diperkuat, seolah-olah seseorang menginginkannya untuk melawan lebih dari sekadar rasa ingin tahu biasa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia mengambil kawat tipis dari perlengkapan lenteranya dan memasukkannya ke dalam lubang kunci.",
+            "Setelah beberapa detik yang menegangkan, gelas-gelas itu berbunyi klik pelan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pintu terbuka ke ruangan yang berbau minyak lampu dan kanvas basah.",
+            "Peti ditumpuk di tempat peralatan seharusnya berada, dan tidak ada satu pun peti yang membawa stempel pembuat."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "safe_stairs",
+        "text": "Pilih kunci dan masuk ke bengkel."
+      }
+    },
+    {
+      "id": "fetch_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan untuk tidak memaksakan apa pun.",
+            "Marek menyimpan kunci bengkel di pondoknya di dasar menara."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia berlari menuruni tangga, melintasi halaman, dan menemukan gantungan kunci kosong.",
+            "Sebagai gantinya ada sebuah catatan, ditulis dengan tangan hati-hati Marek: 'Jika bengkel terkunci, periksa gua air pasang. Percayalah pada air yang rendah.’"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Catatan itu meresahkan, tapi juga spesifik.",
+            "Asha bisa mengikutinya, atau dia bisa menggeledah pondok dan kembali secepat mungkin."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "safe_stairs",
+        "text": "Biarkan gemboknya dan cari kunci bengkelnya."
+      }
+    },
+    {
+      "id": "confront_smugglers",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha melangkah di antara peti-peti itu dan berteriak, menuntut untuk mengetahui siapa yang menyimpannya di sini.",
+            "Sebuah bayangan bergeser di balik lembaran kanvas, dan seorang pria dengan pisau laut di ikat pinggangnya muncul, kaget dan marah."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia tidak sendirian.",
+            "Dua orang lainnya muncul, dan ruangan itu tiba-tiba terasa terlalu kecil untuk keberanian Asha."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mereka merampas lenteranya dan mengikat tangannya, memperingatkan dia untuk tetap diam sampai kapal mereka tiba.",
+            "Tetapi badai membuat jadwal tidak dapat diandalkan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Satu jam kemudian, Kepala Pelabuhan Soren dan dua pelaut memaksa pintu bengkel dan menemukannya dalam keadaan hidup.",
+            "Para penyelundup melarikan diri ke dalam terowongan, namun kumparan cadangan Asha terlihat di sudut cukup untuk membuat suar tetap menyala."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Lampu tetap menyala, dan pelabuhan memulai pencarian saat fajar.",
+            "Asha belajar bahwa keberanian tanpa rencana masih membutuhkan biaya lebih dari yang dia harapkan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "pick_lock",
+        "text": "Hadapi siapa pun yang menggunakan bengkel tersebut."
+      }
+    },
+    {
+      "id": "hide_listen",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menyelinap ke balik tumpukan peti dan menahan napas.",
+            "Di luar, langkah kaki mendekat, dan suara pelan melewati pintu seolah-olah pengeras suara menganggap menara itu kosong."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia mendengar tanggal, pasang surut, dan penyebutan 'saluran sepi' di bawah tebing.",
+            "Satu suara mengeluh bahwa penjaga mercusuar menjadi 'terlalu berhati-hati' dalam mengunci pintu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat suara-suara itu memudar, Asha mengambil satu kumparan kecil dari sebuah rak perkakas dan menutup pintunya lagi.",
+            "Dia berlari ke kantor pelabuhan, mengulangi apa yang dia dengar, dan menyerahkan kumparan kepada Soren sebagai bukti bahwa menara telah dirusak."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Malam itu suar tetap terang, dan sebelum tengah malam sebuah kapal patroli mencegat perahu di dekat tebing.",
+            "Di pagi hari, pelabuhan lelah tetapi aman, dan Asha merasa lega karena telah bertindak tanpa terlihat."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "pick_lock",
+        "text": "Sembunyikan, dengarkan, dan kumpulkan informasi sebelum bertindak."
+      }
+    },
+    {
+      "id": "tide_cave",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengikuti jalan tebing hingga ke jalan sempit pintu masuk yang hanya muncul saat air surut.",
+            "Mulut gua yang dangkal terbuka di antara bebatuan gelap, menghirup udara dingin dan bau rumput laut."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di dalam, dia menemukan sebuah kotak besi yang dirantai ke baut cincin.",
+            "Rantainya cukup berkarat sehingga sulit untuk putus, tetapi laut sudah merayap kembali ke pintu masuk."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kotak itu mungkin berisi suku cadang, atau bisa juga berisi sesuatu yang lain.",
+            "Asha harus memilih seberapa besar risiko yang akan diambil sementara itu air pasang kembali."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "fetch_key",
+        "text": "Ikuti catatan Marek dan cari di gua air pasang."
+      }
+    },
+    {
+      "id": "return_with_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mencari pondok dengan cepat dan menemukan kunci cadangan yang tersembunyi di dalam kaleng tepung.",
+            "Dia kembali ke bengkel, membuka kunci pintu, dan menemukan kumparan pengganti yang tersegel."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pemasangannya sulit, namun familier.",
+            "Saat kumparan baru terpasang pada tempatnya, lampu menyala seolah-olah menahan napas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Badai datang penuh setelah gelap, namun suar tetap stabil sampai pagi.",
+            "Asha tidak tahu kenapa Marek menyembunyikan kunci di kaleng tepung, tapi dia memutuskan akan menanyakannya langsung."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "fetch_key",
+        "text": "Abaikan catatan tersebut, cari kunci cadangan, dan kembalikan untuk mengganti koil."
+      }
+    },
+    {
+      "id": "take_battery",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutus rantai yang berkarat dan membuka kotak besinya.",
+            "Di dalamnya ada baterai bekas, terbungkus kain minyak, dan sekantong sekring cadangan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia mengambil semuanya dan berbalik untuk pergi, tapi gelombang melonjak ke dalam gua dan membasahi sepatu botnya.",
+            "Air naik dengan cepat, dan mulut gua yang sempit menjadi kerongkongan busa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha berjuang untuk mendapatkan pijakan, tetapi arus balik menjepitnya melawan bebatuan cukup lama untuk menguras kekuatannya.",
+            "Dia lolos hanya dengan meninggalkan baterai yang berat dan merangkak keluar dengan memar dan menggigil."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat kembali ke menara, dia melakukan perbaikan sebagian, tetapi suar melemah dalam semalam.",
+            "Pelajarannya keras dan langsung: laut selalu menagih utangnya."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tide_cave",
+        "text": "Putuskan rantainya, ambil baterai yang berat, dan cobalah berlari lebih cepat dari arus."
+      }
+    },
+    {
+      "id": "retreat",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menandai pintu masuk gua dengan sehelai kain cerah dan memutuskan untuk tidak mempertaruhkan nyawanya melawan air.",
+            "Dia kembali ke menara dengan tangan kosong tetapi rencana yang jelas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di kantor pelabuhan, dia meyakinkan Soren untuk meminjamkan dua pelaut dan kereta tangan saat air surut berikutnya.",
+            "Bersama-sama, mereka mengambil kotak besi dengan aman dan membawa baterai tambahan ke atas tebing."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Baterai tersebut menjaga lampu tetap stabil selama berjam-jam badai.",
+            "Di pagi hari, Soren diam-diam berterima kasih kepada Asha karena telah memilih kesabaran daripada kesombongan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tide_cave",
+        "text": "Tandai lokasi, mundur, dan kembali dengan bantuan saat air surut berikutnya."
+      }
+    },
+    {
+      "id": "manual_shutter",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha meredupkan lampu untuk mengurangi tekanan pada kumparan.",
+            "Kemudian dia menarik tuas penutup manual yang mengontrol sinar sempit melalui lensa."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat dia melihat perahu nelayan kesulitan di saluran, dia memberi sinyal dengan kilatan stabil yang mengarah ke air yang aman.",
+            "Perahu menjawab dengan lenteranya sendiri dan mengikuti petunjuknya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mercusuar tidak seterang yang seharusnya, tapi cerdas, berbicara dalam pola, bukan kekuatan mentah.",
+            "Saat fajar, kumparan sudah menyala hampir habis, namun belum ada yang berhasil menembus karang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Lengan Asha terasa sakit karena penutup jendela, dan matanya terasa panas karena memandangi laut sepanjang malam.",
+            "Tapi dia menepati janjinya, dan pulau itu tidak lagi terasa sepi di cahaya pagi."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "dim_light",
+        "text": "Redupkan lampu dan pandu kapal dengan sinyal rana manual."
+      }
+    },
+    {
+      "id": "close_night",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha meredupkan lampu lebih jauh, berharap kapal-kapal akan berlindung di pelabuhan hingga badai berlalu.",
+            "Dia menutup penutupnya dan membiarkan sinarnya beristirahat, menyelamatkan setiap belokan mata air yang mungkin terjadi."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Untuk beberapa saat, saluran terlihat kosong.",
+            "Kemudian dia mendengar suara retakan di kejauhan, bukan guntur melainkan suara kayu yang bertabrakan dengan batu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat fajar menyingsing, puing-puing tersapu ke lubang masuk di bawah tebing.",
+            "Tidak ada nyawa yang hilang, namun perahu keluarga hancur, dan pelabuhan lebih sepi dari biasanya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha membantu menyeret kayu dari bebatuan dan tidak bisa menatap mata pemiliknya.",
+            "Dia sekarang mengerti bahwa keselamatan membutuhkan bimbingan, bahkan ketika panduan itu melelahkan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "dim_light",
+        "text": "Tutup penutupnya untuk menghemat daya dan berharap kapal tetap berada di pelabuhan."
+      }
+    },
+    {
+      "id": "flare",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha melihat perahu yang rendah dan gelap memotong ke arah garis karang.",
+            "Ia bergerak dengan percaya diri, seolah-olah ia mengetahui air melalui ingatan, bukan melalui cahaya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia menembakkan suar peringatan dari jendela.",
+            "Busur merah mendesis ke arah angin dan sebentar mengubah laut menjadi ladang logam yang bergerak."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Perahu segera membelok dan menghilang ke dalam kabut badai.",
+            "Asha tidak bisa memastikan apakah dia telah mencegah kecelakaan atau mengganggu sesuatu yang disengaja."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "The mercusuar tetap cukup berfungsi pada malam hari, dan pelabuhan tetap aman.",
+            "Namun perahu yang gelap itu tetap melekat dalam pikirannya seperti pertanyaan yang belum terjawab."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "sea_watch",
+        "text": "Luncurkan suar untuk memperingatkan perahu yang gelap agar menjauh dari terumbu karang."
+      }
+    },
+    {
+      "id": "track",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha terus meredupkan lentera dan mengawasi perahu yang gelap itu alih-alih mengumumkan dirinya sendiri.",
+            "Ia tidak menuju saluran sama sekali."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sudutnya mengarah ke bayangan tebing, tempat sebuah teluk sempit tersembunyi di bawah sisi barat mercusuar.",
+            "Tidak ada kapten yang jujur yang memilih air itu saat badai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bisa berjalan kaki menyusuri jalur tebing, atau dia bisa melapor ke pelabuhan segera dan tetap berada di dekat suar.",
+            "Kedua pilihan tersebut memiliki risiko masing-masing."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "sea_watch",
+        "text": "Lacak perahu yang gelap dan lihat kemana perginya."
+      }
+    },
+    {
+      "id": "follow_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengunci rem ruang lentera dan turun dengan cepat, menjaga langkahnya tetap tenang.",
+            "Di luar, dia mengikuti jalur tebing menuju teluk barat, menggunakan kilatan petir untuk mengukur pergerakannya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di bawah, perahu masuk ke celah di antara bebatuan.",
+            "Sosok-sosok sedang menurunkan sesuatu yang berat, bergerak dengan kecepatan yang terlatih."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "track",
+        "text": "Ikuti perahu ke teluk barat."
+      }
+    },
+    {
+      "id": "report_harbor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan bahwa mercusuar tidak dapat dibiarkan tanpa pengawasan.",
+            "Dia menulis catatan singkat dengan arah perahu dan mengirimkannya bersama seorang pelari dari pondok terdekat."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kepala Pelabuhan Soren mengerahkan patroli sementara Asha tetap berada di dekat suar.",
+            "Badai membuat pengejaran menjadi sulit, namun patroli menemukan jejak baru dan tali tersembunyi di teluk barat."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Tidak ada yang disita malam itu, namun pelabuhan mulai mengawasi tebing dengan perhatian baru.",
+            "Asha terus menyalakan lampu, dan pulau itu belajar untuk mencari ancaman dari darat maupun laut."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "track",
+        "text": "Laporkan pergerakan kapal ke pelabuhan dan tetap di dekat suar."
+      }
+    },
+    {
+      "id": "sneak_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha merayap mendekat, tetap berada di balik batu-batu besar yang licin karena cipratan air.",
+            "Dia mendengar para pria berbicara tentang menyimpan kargo di bengkel mercusuar dan menggunakan badai sebagai perlindungan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sebuah batu bergeser di bawah sepatu botnya.",
+            "Salah satu sosok itu berbalik, dan sorotan lentera menyapu ke tempat persembunyiannya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha berlari, dan sebuah teriakan mengikutinya menuju angin.",
+            "Dia mencapai menara dengan terengah-engah dan mengunci pintu dari dalam."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Para penyelundup tidak menerobos masuk, namun mekanisme mercusuar disabotase sebelum fajar, dan lampu mati selama jam-jam berbahaya.",
+            "Pelabuhan bertahan di malam hari, namun Asha menyadari bahwa dia telah menarik perhatian tanpa mendapatkan bantuan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "follow_cove",
+        "text": "Menyelinap lebih dekat untuk mengetahui apa yang sedang dilakukan sosok-sosok tersebut."
+      }
+    },
+    {
+      "id": "retreat_cove",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan bahwa dia sudah cukup melihat.",
+            "Dia mundur di sepanjang jalan tebing, lalu berlari ke kantor pelabuhan tanpa menoleh ke belakang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren membentuk tim kecil untuk mendekati teluk barat dari di atas.",
+            "Mereka tiba dan menemukan perahu sudah hilang, tapi mereka menemukan buku besar yang terjatuh dan terbungkus kain minyak."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Buku besar mencantumkan tanggal, pasang surut, dan kode lokasi yang cocok dengan dasar mercusuar.",
+            "Dengan bukti di tangan, pelabuhan memulai penyelidikan formal, dan keuntungan kerahasiaan para penyelundup pun terpecahkan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar tetap menyala melewati badai.",
+            "Asha mengakhiri malam dengan terguncang namun puas, mengetahui bahwa dia memilih jalan yang melindungi orang lain."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "follow_cove",
+        "text": "Mundur dan segera lapor, daripada mengambil risiko konfrontasi."
+      }
+    },
+    {
+      "id": "left_passage",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengambil jalan kiri, di mana batu lembab dan udara terasa karat.",
+            "Detaknya semakin tidak merata, seolah-olah ada sesuatu di sini yang berjuang untuk menjaga waktu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Jalan itu terbuka ke ruang rendah dengan genangan air dangkal di lantai.",
+            "Rak kayu berisi jurnal yang ternoda air dan kunci kuningan kecil."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Ambil jalan kiri menuju detak yang tidak rata."
+      }
+    },
+    {
+      "id": "right_passage",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengambil jalan yang benar, dan udara menjadi lebih hangat.",
+            "Bau minyak lampu semakin kuat setiap langkahnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di depan, cahaya merembes di bawah pintu yang seharusnya tidak ada dalam terowongan layanan tertutup.",
+            "Suara-suara bergumam di sisi lain, dan suara detak digantikan oleh pekerjaan yang tenang."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Ambil jalan kanan menuju bau minyak dan suara samar."
+      }
+    },
+    {
+      "id": "return_up",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha ragu-ragu di persimpangan dan memutuskan bahwa terowongan adalah gangguan.",
+            "Dia naik kembali ke ruang lentera, bertekad untuk menyelesaikan semuanya dari atas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Namun detak yang lebih dalam terus berlanjut di bawah kakinya, dan mekanisme menara tidak pernah berhenti sepenuhnya.",
+            "Pada tengah malam kumparan menjadi terlalu panas, lampu meredup, dan kumpulan kabut bergulung dari utara."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Tidak ada kapal yang hilang, tetapi pelabuhan menghabiskan malam yang menakutkan dengan membunyikan klakson dan menahan posisi.",
+            "Di pagi hari, Asha menatap ke arah palka dan tahu dia memilih kenyamanan daripada jawaban."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "tunnels",
+        "text": "Kembali dan tangani masalah mercusuar tanpa memasuki terowongan."
+      }
+    },
+    {
+      "id": "read_journal",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha membuka jurnal dengan hati-hati, menjauhkannya dari pintu. genangan air.",
+            "Halaman-halaman itu milik penjaga dari beberapa dekade yang lalu, ditulis dengan garis-garis rapi yang sedikit berbau asap."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Penjaga menggambarkan 'pengatur pendulum' di bawah ruang lentera yang memperlancar perputaran suar dalam cuaca buruk.",
+            "Dia memperingatkan bahwa jika pengatur tidak sejajar, seluruh cahaya akan tersendat, tidak peduli seberapa bersih lensanya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Entri terakhir diakhiri dengan instruksi sederhana: setel ulang pendulum di tanda besi, lalu dengarkan tanda centang yang sebenarnya.",
+            "Asha dapat mengikuti instruksi, atau dia dapat terus mencari siapa pun yang telah menggunakan terowongan ini."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "left_passage",
+        "text": "Baca jurnal berlumuran air di rak."
+      }
+    },
+    {
+      "id": "grab_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengantongi kunci kuningan dan bergerak lebih jauh ke dalam lorong.",
+            "Terowongan itu menyempit dan berakhir di pintu besi dengan kunci yang sesuai dengan bentuk kuncinya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Detaknya keras di sini, seperti detak jantung yang terperangkap di balik besi.",
+            "Asha bisa menggunakan kunci itu, atau dia bisa meninggalkannya. pintu tak tersentuh dan kembali ke persimpangan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "left_passage",
+        "text": "Ambil kunci kuningan dan lanjutkan menyusuri lorong."
+      }
+    },
+    {
+      "id": "reset_pendulum",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengikuti petunjuk jurnal dan menemukan pengatur pendulum dipasang di atas alas batu.",
+            "Sebuah batang kuningan berayun perlahan, namun tidak berada di tengah, sedikit menggesek rel pemandu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia mendorong rakitan tersebut hingga batang tersebut sejajar dengan tanda besi yang dijelaskan dalam jurnal.",
+            "Gesekan berhenti, dan detaknya menjadi merata dan tenang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat dia kembali menuju ruang lentera, perputaran lensa mulus, seolah menara telah dihembuskan.",
+            "Saat senja, suar bersinar dengan ritme mantap yang membawa melewati badai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menutup palka dan menyimpan jurnal itu dengan aman untuk dibaca Marek.",
+            "Beberapa rahasia, dia sadari, tidak dimaksudkan untuk terus dilupakan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "read_journal",
+        "text": "Setel ulang pengatur pendulum sesuai instruksi jurnal."
+      }
+    },
+    {
+      "id": "look_culprit",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha meninggalkan gubernur sendirian dan terus berjalan, mencari tanda-tanda penggunaan baru-baru ini.",
+            "Dia menemukan jejak kaki di debu basah dan noda minyak segar di dinding."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di balik batu lepas, air laut merembes dalam aliran tipis, memberi makan genangan air di dalam ruangan.",
+            "Kebocoran saat ini sudah kecil, namun akan semakin parah seiring meningkatnya tekanan badai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bisa segera menutup kebocoran tersebut, atau dia bisa lari mencari peralatan dan berisiko menyebabkan air menyebar.",
+            "Terowongan itu tiba-tiba terasa tidak seperti sejarah lagi dan lebih seperti jebakan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "read_journal",
+        "text": "Abaikan jurnal itu dan cari siapa saja yang pernah ke sini."
+      }
+    },
+    {
+      "id": "plug_leak",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memasukkan kain ke dalam celah di belakang batu dan menutupnya erat-erat dengan papan pecah.",
+            "Untuk sesaat, kebocorannya melambat hingga menetes."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kemudian palka terbuka. di belakangnya, dan seseorang mengumpat saat melihat sumbat improvisasi.",
+            "Asha berbalik dan melihat seorang penyelundup dengan lentera dan ekspresi keras."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia menjatuhkan lenteranya ke samping dan mendorongnya ke dinding, memperingatkan dia untuk tidak ikut campur.",
+            "Asha melarikan diri kembali ke menara dalam keadaan terguncang, dan gubernur tetap tidak sejajar."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar bergetar sepanjang malam, dan pelabuhan menghabiskan waktu berjam-jam di tempat tinggi waspada.",
+            "Asha selamat, tapi para penyelundup sekarang tahu dia telah melihat terowongan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "look_culprit",
+        "text": "Coba tutup kebocorannya sebelum bertambah parah."
+      }
+    },
+    {
+      "id": "run_help",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan dia membutuhkan peralatan yang tepat dan sepasang tangan lagi.",
+            "Dia berlari kembali ke pintu palka dan menaiki tangga, mengambil langkah dua sekaligus."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat dia kembali dengan membawa irisan dan penutup, kebocoran telah menyebar ke sungai yang dangkal.",
+            "Genangan air di dalam ruangan sekarang setinggi mata kaki, dan udara lebih dingin."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia memperlambat air, tapi ruang gubernur menjadi lembap, dan detaknya tetap tidak merata.",
+            "Lampu mercusuar tetap menyala, namun bergetar setiap kali angin bertiup kencang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di pagi hari, Asha kelelahan dan marah pada dirinya sendiri karena meninggalkan masalahnya tanpa pengawasan.",
+            "Dia memahami bahwa beberapa kegagalan disebabkan oleh keragu-raguan, bukan tindakan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "look_culprit",
+        "text": "Jalankan untuk mencari peralatan dan kembalikan dengan segel yang tepat."
+      }
+    },
+    {
+      "id": "use_key",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memasukkan kunci kuningan ke dalam gembok.",
+            "Kunci itu berputar dengan sangat mudah, seolah-olah pintu telah dibuka baru-baru ini."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di luar pintu terdapat ruang kontrol sempit dengan set beban kedua dan perangkat sinyal kecil yang dihubungkan ke menara.",
+            "Bagan kertas di dinding menandai waktu pasang surut dan teluk barat dengan pensil merah."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menyadari ruangan ini dapat mengirim sinyal ke luar pulau, tetapi juga dapat mengingatkan siapa pun yang mengaturnya.",
+            "Dia harus memilih pesan apa yang akan dikirim, jika ada."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "grab_key",
+        "text": "Gunakan kunci kuningan untuk membuka pintu besi yang terkunci."
+      }
+    },
+    {
+      "id": "leave_door",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mundur dari pintu yang terkunci dan kembali ke persimpangan.",
+            "Terowongan terasa terlalu tidak pasti, dan dia takut tersesat atau terjebak di bawah."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia naik kembali dan fokus pada ruang lentera, hanya melakukan sedikit penyesuaian.",
+            "Detak yang lebih dalam terus berlanjut di bawahnya, tidak berubah."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar menyala hampir sepanjang malam, tetapi ritmenya tidak pernah sepenuhnya stabil.",
+            "Saat fajar, Asha masih memiliki pertanyaan dan tidak ada jawaban, hanya suara kepastian bahwa menara itu menyembunyikan lebih dari debu dan batu."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "grab_key",
+        "text": "Tinggalkan pintu yang terkunci dan kembali ke mercusuar di atas."
+      }
+    },
+    {
+      "id": "send_distress",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memasang perangkat sinyal ke saluran darurat yang digunakan oleh stasiun pantai.",
+            "Dia mengirim pesan singkat: kerusakan mekanis, kemungkinan aktivitas ilegal, kondisi badai memburuk."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dalam satu jam, kapal patroli pelabuhan mengenali sinyal tersebut.",
+            "Mereka tidak dapat langsung mencapai pulau di tengah laut yang ganas, tetapi mereka mulai mengawasi teluk barat dari jarak yang aman."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha kembali ke ruang lentera dan menyetel ulang beban menggunakan pengatur sekunder di ruang kendali.",
+            "Suar menjadi stabil, dan kehadiran patroli mencegah pendaratan malam hari."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pada pagi hari, badai telah berlalu dan para penyelundup telah menghilang dari pantai.",
+            "Mercusuar menyala tanpa kompromi, dan Asha telah mengubah kerahasiaan menjadi akuntabilitas."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "use_key",
+        "text": "Kirim sinyal marabahaya dan keamanan resmi ke patroli pelabuhan."
+      }
+    },
+    {
+      "id": "send_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menyetel perangkat ke frekuensi pribadi yang pernah ditunjukkan Marek dia, dimaksudkan untuk pesan penjaga-ke-penjaga.",
+            "Dia mengirimkan kode sederhana: menara memiliki ruang tersembunyi, dan seseorang telah menggunakannya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Respon datang lebih cepat dari yang dia harapkan.",
+            "Marek menjawab bahwa dia akan segera kembali dan menyuruhnya untuk tinggal sendirian di ruang lentera sampai dia tiba."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tidak bisa membedakan apakah urgensinya adalah untuk melindungi atau menakutkan.",
+            "Saat badai menerjang menara, dia menunggu, mendengarkan tanda centang genap yang berhasil dia pulihkan menggunakan bobot sekunder."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ketika Marek akhirnya tiba, basah kuyup dan pucat, dia melihat peta ruang kendali tanpa terkejut.",
+            "Asha harus memutuskan apakah akan memercayainya dengan apa yang dia temukan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "use_key",
+        "text": "Kirim pesan berkode langsung ke Marek dan tunggu dia."
+      }
+    },
+    {
+      "id": "trust_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memilih kepercayaan.",
+            "Dia menceritakan segalanya kepada Marek: grafik pasang surut air laut, tanda merah, dan suara-suara yang dia dengar di atas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Marek duduk dengan berat di atas peti dan mengakui bahwa dia pernah melakukannya. terancam.",
+            "Penyelundup mengetahui rute daratannya dan meminta akses ke menara dengan imbalan meninggalkan keluarga pelabuhan sendirian."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Bersama-sama, Asha dan Marek mengubah mekanisme sehingga ruang kendali tersembunyi tidak dapat mengambil alih ruang lentera lagi.",
+            "Mereka mengirim sinyal kedua yang jujur kepada Soren dengan rincian penyelundupan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Penangkapan terjadi beberapa minggu kemudian, ketika laut lebih tenang dan bukti sudah siap.",
+            "Asha terus menyalakan lampu setiap malam sementara itu, mengetahui dia telah membantu mengakhiri bahaya tanpa menghancurkan menara."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "send_mentor",
+        "text": "Percayai Marek dan bagikan semua yang Anda temukan."
+      }
+    },
+    {
+      "id": "accuse_mentor",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ketakutan Asha mengeras menjadi kecurigaan.",
+            "Dia memberi tahu Marek bahwa dia mengira dia terlibat, dan dia menolak menyerahkan kuncinya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Wajah Marek menegang, bukan karena marah tetapi karena sesuatu seperti kesedihan.",
+            "Dia bilang kehati-hatiannya adil, lalu berbalik dan meninggalkan ruang kendali tanpa berkata apa-apa lagi."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengunci pintu dan memberi isyarat kepada patroli pelabuhan, menjelaskan ruangan dan petanya.",
+            "Patroli tidak bisa bertindak di dalam puncak badai, namun mereka mencatat pernyataannya dan mulai mengamati pergerakan Marek setelahnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar bertahan di malam hari, namun penjaga dan pekerja magang tidak lagi bisa dipercaya.",
+            "Asha mendapatkan keselamatan dengan mengorbankan kepastian, dan mercusuar terasa lebih dingin bahkan saat lampunya terang."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "send_mentor",
+        "text": "Tuduh Marek dan simpan kuncinya, lalu beri tahu pelabuhan sendiri."
+      }
+    },
+    {
+      "id": "steal_oil",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menempelkan telinganya ke pintu dan mendengar pria berbicara tentang 'minyak lentera' dan 'penyimpanan yang tenang'.",
+            "Jika penyelundup punya perbekalan di sini, dia mungkin menggunakannya untuk menjaga mercusuar tetap menyala."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia membuka pintu selebar jari dan menyelinap ke dalam ruangan terang yang penuh dengan tong.",
+            "Awalnya tidak ada yang memperhatikannya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia hanya dapat mengambil sejumlah kecil tanpa terlihat, atau dia dapat mencoba memindahkan satu tong penuh dan menyelesaikan masalah dengan tegas.",
+            "Bagaimanapun, dia berisiko terjebak di bawah tanah."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Masuk ke ruangan yang terang dan coba ambil minyak untuk mercusuar."
+      }
+    },
+    {
+      "id": "set_trap",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan bahwa informasi saja tidak cukup; dia butuh kendali.",
+            "Dia memasang tripline sederhana menggunakan kawat bel dan lonceng kuningan dari perlengkapan lenteranya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kemudian dia mundur ke dalam bayangan dan menunggu.",
+            "Saat pintu terbuka, bel berbunyi tajam, dan suara-suara terkejut mengumpat karena terkejut."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memanfaatkan kebingungannya untuk berlari kembali ke pintu palka dan membantingnya hingga tertutup dari atas.",
+            "Dia menutup palka dengan batang besi, menjebak para penyelundup di dalam jaringan terowongan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat para lelaki ditahan, dia berfokus pada perbaikan ruang lentera dan menjaga suar tetap stabil sepanjang malam.",
+            "Saat fajar, Kepala Pelabuhan Soren tiba dengan penjaga dan menahan orang-orang yang terjebak tanpa perlawanan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Pasang jebakan untuk mendeteksi dan menahan siapa pun yang menggunakan terowongan."
+      }
+    },
+    {
+      "id": "back_away",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memutuskan bahwa suara-suara itu terlalu berbahaya untuk dihadapi sendirian.",
+            "Dia mundur dengan tenang, mematikan lenteranya untuk menyembunyikan cahayanya, dan kembali ke persimpangan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat dia naik kembali ke ruang lentera, mekanisme mercusuar berhenti tergagap, dan badai hampir menimpanya.",
+            "Tanpa bukti atau suku cadang, dia hanya bisa melakukan sedikit penyesuaian."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar tetap menyala, namun tidak rata, dan malam dipenuhi kegelisahan mendengarkan suara batu menghantam lambung kapal.",
+            "Di pagi hari, Asha tahu dia telah menghindari bahaya sementara meninggalkan ancaman yang lebih besar yang belum terselesaikan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "right_passage",
+        "text": "Mundur dari pintu dan hindari kontak dengan suara-suara tersebut."
+      }
+    },
+    {
+      "id": "small_can",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mengisi kaleng kecil dengan minyak lampu dan menyembunyikannya di bawahnya mantel.",
+            "Dia meninggalkan ruangan sepelan saat dia masuk, jantungnya terdengar nyaring di telinganya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di ruang lentera, dia menyalakan kompor dan mengatur sumbu agar nyala api lebih bersih.",
+            "Lampu menjadi terang dan stabil, membeli keamanan selama berjam-jam."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Para penyelundup tidak pernah menyadari apa yang telah diambil sampai pagi.",
+            "Pada saat itu, badai telah berlalu dan patroli Soren sedang mencari akses ke tebing poin."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha terus menyalakan suar dengan perbekalan musuh.",
+            "Rasanya seperti keadilan kecil, tapi dia tahu ini hanyalah awal dari perhitungan yang lebih besar."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "steal_oil",
+        "text": "Ambil sedikit minyak dan biarkan tanpa diketahui."
+      }
+    },
+    {
+      "id": "full_barrel",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha mencoba menggulingkan satu tong penuh ke arah terowongan.",
+            "Ini lebih berat dari yang dia perkirakan, dan tongkat kayu mengerang saat bergeser."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sebuah suara terdengar dari seberang ruangan, menuntut untuk mengetahui siapa yang ada di sana. di sana.",
+            "Cahaya lentera berayun ke arahnya, dan bayangan menajam di wajah."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha berlari, tapi terowongannya sempit dan sepatu botnya terciprat ke batu.",
+            "Tangan meraih mantelnya, dan dia diseret kembali ke ruang minyak."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Para penyelundup mengikatnya dan mengancam mercusuar jika dia membunyikan alarm.",
+            "Dia dilepaskan hanya setelah badai, dan suar menyala rendah sepanjang malam di bawah kendali mereka."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Tidak ada kapal yang hilang, tetapi pelabuhan berbisik tentang cahaya aneh dan lemah di kapal tebing.",
+            "Asha selamat, dan dia bersumpah bahwa menara ini tidak akan digunakan lagi di perairannya sendiri."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "steal_oil",
+        "text": "Cobalah untuk memutar satu barel penuh untuk menyelesaikan masalah sekaligus."
+      }
+    },
+    {
+      "id": "crew_help",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memberi tahu Soren bahwa dia membutuhkan tangan, peralatan, dan seseorang yang memahami permesinan.",
+            "Soren mengangguk dan memanggil sukarelawan, tetapi badai membuat semua orang berhati-hati."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Ada dua pilihan yang muncul: pensiunan insinyur dengan reputasi presisi, atau sekelompok pelaut bersemangat yang bisa bergerak cepat.",
+            "Asha harus memilih siapa memanjat mercusuar bersamanya."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "harbor_master",
+        "text": "Mintalah Syahbandar untuk mengirim kru perbaikan ke mercusuar."
+      }
+    },
+    {
+      "id": "quiet",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha ragu-ragu menyebutkan detak aneh dan petunjuk aktivitas tersembunyi.",
+            "Dia hanya memberi tahu Soren bahwa suarnya rusak dan dia mungkin memerlukan suku cadang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren tetap menawarkan bantuan, tetapi perhatiannya terbagi oleh persiapan badai.",
+            "Asha bisa pergi ke pasar untuk mencari apa yang dia butuhkan, atau dia bisa mencoba perbaikan darurat menggunakan apa pun yang ada di menara."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "harbor_master",
+        "text": "Jaga kerahasiaan detailnya dan tangani masalahnya tanpa melibatkan seluruh pelabuhan."
+      }
+    },
+    {
+      "id": "engineer_rowan",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren mengirim Insinyur Rowan, pria berambut abu-abu yang pernah merawat pelampung saluran.",
+            "Rowan datang dengan gulungan perkakas kulit dan ekspresi hati-hati dan tidak terkesan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di ruang lentera, Rowan mendengarkan bunyi tik yang tergagap dan langsung bertanya siapa yang mengakses bengkel.",
+            "Pertanyaannya membuat kulit Asha tertusuk-tusuk."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rowan bisa fokus pada suar dulu, atau dia bisa mengejar petunjuk aktivitas ilegal saat berada di sana masih siang hari.",
+            "Asha harus memilih hal yang paling penting saat ini."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "crew_help",
+        "text": "Bawa Insinyur Rowan untuk melakukan perbaikan teknis secara hati-hati."
+      }
+    },
+    {
+      "id": "volunteers",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren mengumpulkan tiga pelaut yang dengan sukarela membantu, semuanya bertangan kuat dan tersenyum cepat.",
+            "Mereka membawa gulungan, minyak, dan tali ke atas tebing seolah kecepatan saja dapat mengalahkan cuaca."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di ruang lentera, para pelaut berbicara satu sama lain, masing-masing menawarkan solusi yang berbeda.",
+            "Asha menyadari bahwa dia harus mengatur mereka dengan disiplin atau membiarkan mereka terburu-buru dan berharap yang terbaik."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "crew_help",
+        "text": "Ambil sukarelawan yang bersemangat dan bergerak cepat."
+      }
+    },
+    {
+      "id": "beacon_first",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memberi tahu Rowan bahwa suar datang pertama.",
+            "Rowan mendengus setuju dan mulai bekerja dengan gerakan yang bersih dan efisien."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia mengganti kumparan yang rusak, memasang kembali pemberat, dan menyelaraskan kembali jalur roda gigi.",
+            "Saat senja, mercusuar terus bersinar di tengah badai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Rowan menyebutkan bahwa kunci bengkel telah dirusak, tetapi dia tidak mengejarnya dalam kegelapan.",
+            "Para penyelundup, jika mereka ada, pergi tak tertandingi malam ini."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pelabuhan selamat dari badai tanpa insiden.",
+            "Dalam keheningan setelahnya, Asha dan Soren mulai merencanakan inspeksi siang hari di setiap terowongan dan kunci di pulau itu."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "engineer_rowan",
+        "text": "Prioritaskan perbaikan suar dan tinggalkan penyelidikan apa pun untuk nanti."
+      }
+    },
+    {
+      "id": "investigate_first",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tidak bisa mengabaikan kecurigaan Rowan.",
+            "Dia setuju untuk menyelidiki bengkel dan terowongan selagi masih ada cahaya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mereka menemukan peti selundupan dan peta pasang surut tersembunyi, cukup untuk memastikan penyelundupan.",
+            "Tetapi pencarian dilakukan. membutuhkan waktu, dan kumparan gagal sepenuhnya sebelum perbaikan selesai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Patroli Soren menjaga kapal di pelabuhan sepanjang malam menggunakan klakson dan bendera sinyal.",
+            "Tidak ada kapal yang karam, tetapi kru nelayan kehilangan pekerjaan malam itu dan mengomel tentang menara yang gelap."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat fajar, penyelundup ditangkap, dan pelabuhan menjadi lebih aman dalam jangka panjang.",
+            "Asha harus mempertimbangkan keselamatan langsung dibandingkan keselamatan di masa depan, karena mengetahui bahwa dia memilih salah satu dari yang lain."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "engineer_rowan",
+        "text": "Selidiki tanda-tanda yang mencurigakan sebelum memperbaiki suar."
+      }
+    },
+    {
+      "id": "assign_tasks",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha meninggikan suaranya mengatasi angin dan menetapkan peran.",
+            "Seorang pelaut memutar inti, satu menyiapkan kumparan pengganti, dan satu lagi berjaga di tangga."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dengan semua orang fokus, perbaikan menjadi teratur.",
+            "Gulungan baru terpasang dengan benar, bobotnya seimbang, dan perputaran lensa menjadi mulus."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar menyala terang di tengah badai, dan para sukarelawan melihat Asha dengan yang baru rasa hormat.",
+            "Soren kemudian memberitahunya bahwa kepemimpinan bukanlah volume tetapi arah."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat Marek kembali, dia menemukan menara yang berfungsi dan seorang magang yang telah belajar cara memimpin sebuah ruangan.",
+            "Mercusuar terasa seperti memiliki masa depan lagi."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "volunteers",
+        "text": "Atur sukarelawan dengan hati-hati dan tetapkan tugas yang jelas."
+      }
+    },
+    {
+      "id": "rush_tasks",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha membiarkan para pelaut bekerja sesuka mereka, berharap kecepatan akan melebihi kebingungan.",
+            "Dua tangan meraih baut yang sama, dan satu pelaut memutar inti sementara yang lain masih menyesuaikan bautnya. ketegangan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suara keras menggema di ruang lentera saat ada beban yang terlepas dari jalurnya.",
+            "Lensa bergetar, lampu berhamburan, dan asap mengepul ke udara."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mereka berhasil mencegah kebakaran, namun suar tidak stabil selama berjam-jam.",
+            "Soren menarik para sukarelawan kembali sebelum ada yang terluka."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Malam itu mercusuar menyala redup dan tidak rata.",
+            "Asha belajar, sayangnya, ketergesaan bukanlah pengganti koordinasi."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "volunteers",
+        "text": "Biarkan para sukarelawan mempercepat pekerjaan mereka dan berharap hal ini bisa terwujud."
+      }
+    },
+    {
+      "id": "market",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menuju ke jalan pasar kecil tempat para pedagang menjual tali, minyak, dan logam bekas.",
+            "Angin telah membuat sebagian besar kios tutup, tetapi satu gerobak masih terbuka di bawah terpal."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Seorang pengotak keliling menawarkan segmen lensa yang dipoles dan kawat tembaga.",
+            "Dia mengklaim bahwa dia dapat menjual kepada Asha apa yang dia butuhkan untuk menjaga suar tetap kuat melewati badai."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bisa membayar dengan koin yang sebenarnya tidak dia miliki, atau dia bisa menawar harga lain.",
+            "Pilihan mana pun bisa membuat mercusuar tetap hidup malam ini."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "quiet",
+        "text": "Pergi ke pasar untuk membeli atau menukar suku cadang."
+      }
+    },
+    {
+      "id": "makeshift",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha kembali ke menara dan menginventarisasi apa yang dia miliki: tali, kanvas, dan beberapa panel reflektif yang digunakan untuk pemeliharaan.",
+            "Tidak ada kumparan cadangan yang muncul, dan stok minyak lebih sedikit dari yang dijanjikan Marek."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Jika dia tidak dapat memulihkan suar sepenuhnya, dia masih bisa mencoba membuatnya bimbingan.",
+            "Dia dapat memasang layar reflektif untuk menangkap sinar lampu yang lemah, atau dia dapat menyalakan sinyal api di tebing."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "quiet",
+        "text": "Coba perbaikan darurat hanya dengan menggunakan apa yang sudah ada di menara."
+      }
+    },
+    {
+      "id": "buy_lens",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menghabiskan hampir seluruh koin yang disimpannya untuk membeli segmen lensa pengganti dan gulungan kawat berinsulasi.",
+            "Si pengotak-atik menerima uang itu tanpa senyuman dan menghilang sebelum hujan berubah menjadi hujan es."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Kembali ke ruang lentera, Asha menukar segmen yang mendung dengan yang baru dan memperkuatnya selubung kumparan dengan kawat.",
+            "Cahaya menjadi lebih terang dan stabil hampir seketika."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Suar bertahan melewati badai, dan kapal melewati saluran tersebut tanpa insiden.",
+            "Tetapi pada minggu-minggu berikutnya, Asha bekerja shift ekstra di pelabuhan untuk membayar kembali apa yang telah dia keluarkan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia menjaga laut tetap aman, dan dia membayarnya dengan jujur.",
+            "Biayanya nyata, namun tidak terasa seperti penyesalan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "market",
+        "text": "Belilah suku cadangnya langsung, meskipun itu menghabiskan tabungan Anda."
+      }
+    },
+    {
+      "id": "barter",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menceritakan kepada si pengotak-atik dia tidak bisa membayar koin penuh.",
+            "Dia mengamati wajahnya dan mengatakan dia akan berdagang, tetapi hanya jika dia melakukan pengiriman kecil untuknya malam ini."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Paket itu dibungkus dengan kain minyak dan disegel dengan lilin.",
+            "Dia bersikeras agar dia mengirimkannya ke teluk barat setelah senja, ketika air pasang sedang pasang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bisa setuju dan mengambil bagiannya, atau dia bisa menolak dan mencari cara lain.",
+            "Mata si penggertak tetap tenang, seolah-olah dia sudah tahu jawabannya."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "market",
+        "text": "Barter dengan orang yang mengotak-atik alih-alih membayar koin penuh."
+      }
+    },
+    {
+      "id": "deliver_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menerima perdagangan tersebut dan mengambil bagian-bagiannya beserta paket yang tersegel.",
+            "Dalam perjalanan kembali ke menara, paket tersebut terasa lebih berat dari ukurannya yang seharusnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Di ruang lentera, segmen lensa baru akan segera membantu, tetapi batas waktu pengiriman sudah dekat.",
+            "Asha memutuskan untuk segera memperbaiki, lalu menuju teluk."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Sebelum pergi, dia melihat segel lilin memiliki simbol yang cocok dengan tanda yang dia lihat di barang selundupan. peti.",
+            "Asha dapat membuka paket dan mengetahui apa yang dibawanya, atau dia dapat mengirimkannya tanpa dibuka sesuai kesepakatan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "barter",
+        "text": "Setuju dengan pengiriman dengan imbalan suku cadang."
+      }
+    },
+    {
+      "id": "refuse",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menolak pengiriman.",
+            "Si pengotak-atik mengangkat bahu, menutupi barang-barangnya, dan menyuruhnya untuk menjaga mercusuarnya tetap hangat."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Pada saat Asha kembali ke menara, pasar tutup dan badai akan datang sepenuhnya.",
+            "Dia mencoba perbaikan kecil dengan persediaan terbatas."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            " suar berjuang sepanjang malam dan memudar pada saat-saat berbahaya menjelang tengah malam.",
+            "Tidak ada kapal yang karam, tetapi saraf pelabuhan tegang di pagi hari."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha bertanya-tanya apa yang ditawarkan si pengotak-atik kepada seseorang yang kurang berhati-hati.",
+            "Pulau itu tetap aman, tetapi perasaan diawasi tidak memudar."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "barter",
+        "text": "Tolak perdagangan dan kembali ke menara tanpa suku cadang baru."
+      }
+    },
+    {
+      "id": "open_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha membuka segel lilin dan membuka kain minyak.",
+            "Di dalamnya tidak ada alat atau pernak-pernik, melainkan bungkusan tipis dari makalah: peta pasang surut air laut, sketsa saluran, dan daftar jumlah pembayaran."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Surat kabar tersebut memetakan teluk barat dan area mercusuar dengan cermat.",
+            "Asha menyadari bahwa dia diminta untuk memberikan instruksi, bukan barang."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dia dapat segera memberi tahu pelabuhan, atau dia dapat menyimpan peta tersebut dan menggunakannya untuk menemukan sendiri tempat persembunyian para penyelundup.",
+            "Pilihan mana pun akan mengubah bagaimana kejadian malam ini."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "deliver_package",
+        "text": "Buka paketnya dan lihat apa yang diminta untuk Anda bawa."
+      }
+    },
+    {
+      "id": "deliver_unopened",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menyimpan paket itu dalam keadaan tersegel dan mengirimkannya ke teluk barat setelah senja.",
+            "Sinyal lentera menjawab dari bebatuan, dan seorang pria mengambil paket itu tanpa berbicara."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha kembali ke menara dan memasang segmen lensa pengotak-atik.",
+            "Suarnya membaik, tapi tindakan pengirimannya terhenti di perutnya seperti batu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Beberapa hari kemudian, Soren menyebutkan lalu lintas perahu yang aneh di dekat tebing dan bertanya apakah Asha memperhatikannya. apa pun.",
+            "Asha tidak mengatakan apa-apa dan membenci keheningan yang dipilihnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Mercusuar tetap berfungsi, namun Asha merasa terlibat dalam sesuatu yang tidak dia mengerti.",
+            "Dia telah menyelamatkan kapal, tapi dia membahayakan kepercayaan."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "deliver_package",
+        "text": "Kirimkan paket dalam keadaan belum dibuka dan fokuslah untuk menjaga suar tetap berjalan."
+      }
+    },
+    {
+      "id": "alert_from_package",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha membawa surat-surat itu langsung ke Syahbandar Soren.",
+            "Dia membacanya sekali, lalu lagi dengan lebih lambat, dan wajahnya mengeras dengan pasti."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Soren mengatur patroli untuk mengamati teluk barat sementara Asha kembali untuk menstabilkan suar dengan segmen lensa barunya.",
+            "Para penyelundup tiba setelah tengah malam dan berjalan ke jaringan sinyal lentera dan tangan yang menunggu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Penangkapan dilakukan secara diam-diam dan tegas.",
+            "Saat fajar, pelabuhan menjadi lebih aman dibandingkan tahun-tahun sebelumnya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha tidak membayar apa pun kepada pengotak-atik tersebut selain kebenaran, dan dia menjaga mercusuar tetap menyala dengan bersih melewati badai.",
+            "Dia mengetahui hal itu menolak untuk digunakan bisa menjadi tindakan pengabdian."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "open_package",
+        "text": "Bawa peta tersebut ke syahbandar dan paparkan skemanya."
+      }
+    },
+    {
+      "id": "keep_maps",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menyembunyikan kertas-kertas itu di dalam mantelnya dan kembali ke menara.",
+            "Dia memasang segmen lensa baru dan melihat sinarnya menguat saat senja tiba."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Setelah gelap, dia mengikuti peta sendirian ke sudut penyimpanan yang ditandai di tebing.",
+            "Dia menemukan simpanan minyak dan gulungan cadangan, cukup untuk membuat mercusuar tetap beroperasi selama berminggu-minggu."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Namun dia juga menemukan buku besar kedua berisi nama-nama keluarga pelabuhan yang terpaksa bungkam.",
+            "Pengetahuan membara di tangannya."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menyalakan suar di tengah badai menggunakan perbekalan yang dicuri.",
+            "Saat fajar, dia akhirnya membawa buku besar itu ke Soren, menerima bahwa dia tidak bisa mengatasi ketakutan masyarakat sendirian."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "open_package",
+        "text": "Simpan petanya, temukan cachenya, dan coba selesaikan sendiri masalahnya terlebih dahulu."
+      }
+    },
+    {
+      "id": "reflect_sails",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha memasang panel reflektif dan ‘layar’ kanvas di sepanjang permukaan tebing, miring ke arah tebing saluran.",
+            "Mereka menangkap sinar mercusuar yang lemah dan melemparkannya ke luar dalam kilatan yang lebih lebar dan lebih lembut."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Cahayanya tidak sempurna, tetapi terlihat.",
+            "Beberapa kapten kemudian mengatakan bahwa mereka mengikuti pantulan kilau seperti benang menembus jarum."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Badai masih menakutkan di pelabuhan, namun tidak ada yang hilang.",
+            "Saat fajar, layar mengepak compang-camping, dan Asha bangga dengan kecerdikan yang membawa mercusuar malam."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Saat Marek kembali, dia mempelajari tali-temali dan tertawa sekali, terkejut.",
+            "Dia memberi tahu Asha bahwa tugas seorang penjaga bukanlah untuk memiliki peralatan yang ideal, tetapi membuat laut dapat dibaca."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "makeshift",
+        "text": "Pasang layar dan panel reflektif untuk memperkuat sinar lemah."
+      }
+    },
+    {
+      "id": "signal_fires",
+      "content": [
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Asha menumpuk kayu apung di tepi tebing dan menyalakan lampu untuk menandakan kebakaran, berharap nyala api akan menggantikan suar yang mati.",
+            "Angin memberi makan api dengan lahap, dan percikan api berhamburan ke rumput kering di dekat kapal. jalan setapak."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Dalam beberapa menit, garis api tipis mulai berkobar di sepanjang lereng bukit.",
+            "Asha menghentakkan kaki dan mencekiknya sebisa mungkin, namun hembusan badai mengubah usahanya menjadi kekalahan."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Awak pelabuhan bergegas membawa selimut dan ember, memadamkan api di tengah hujan.",
+            "Lereng bukit terbakar sepanjang malam, dan mercusuar dibiarkan tanpa pengawasan dalam waktu lama."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "sentences": [
+            "Tidak ada kapal yang karam, tapi pulau itu terbangun dengan tanah yang menghitam dan bau asap yang pahit.",
+            "Asha telah mencoba mengganti satu bahaya dengan bahaya lainnya, dan dia akan membawa pelajaran tersebut dalam waktu yang lama."
+          ]
+        }
+      ],
+      "choice": {
+        "parentPartId": "makeshift",
+        "text": "Sinyal cahaya menyala di tebing untuk memandu kapal melewati api."
+      }
+    }
+  ]
+}
