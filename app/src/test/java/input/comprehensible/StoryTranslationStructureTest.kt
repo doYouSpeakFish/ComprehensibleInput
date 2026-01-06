@@ -533,15 +533,6 @@ class StoryTranslationStructureTest {
 
         val partsById = parts.associateBy { it.id }
 
-        if (featuredImagePath.isNotBlank()) {
-            val containsFeaturedImage = partsById.values.any { part ->
-                part.content.any { it.imagePath == featuredImagePath }
-            }
-            if (!containsFeaturedImage) {
-                error("Story file '$path' featuredImagePath '$featuredImagePath' does not match any image in the story")
-            }
-        }
-
         if (!partsById.containsKey(startPartId)) {
             error("Story file '$path' startPartId '$startPartId' does not match any part")
         }

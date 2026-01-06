@@ -174,6 +174,7 @@ class StoryReaderViewModel @Inject constructor(
      */
     fun onChoiceSelected(targetPartId: String) {
         viewModelScope.launch {
+            selectedTextState.value = null
             partIdToScrollTo.value = targetPartId
             storiesRepository.updateStoryChoice(
                 id = id,
@@ -224,7 +225,6 @@ private fun List<StoryChoice>.toChoicesUiState(
         options = map { choice ->
             choice.toChoiceUiState(
                 onChoiceSelected = onChoiceSelected,
-                isChosen = choice.isChosen,
             )
         }
     )
@@ -232,7 +232,6 @@ private fun List<StoryChoice>.toChoicesUiState(
 
 private fun StoryChoice.toChoiceUiState(
     onChoiceSelected: (String) -> Unit,
-    isChosen: Boolean,
 ) = StoryContentPartUiState.Choices.Option(
     id = targetPartId,
     text = text,
