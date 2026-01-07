@@ -138,6 +138,7 @@ android {
 
 dependencies {
     implementation(project(":test"))
+    implementation(project(":feature:stories"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -86,7 +86,7 @@ subprojects {
     }
 
     tasks.withType<Detekt>().configureEach {
-        jvmTarget = "17"
+        jvmTarget = "21"
         setSource(files(projectDir))
         include("**/*.kt", "**/*.kts")
         exclude("**/build/**")

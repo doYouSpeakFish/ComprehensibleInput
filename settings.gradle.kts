@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "ComprehensibleInput"
 include(":app")
 include(":test")
+include(":data:stories")
+include(":feature:stories")

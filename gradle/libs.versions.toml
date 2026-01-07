@@ -27,6 +27,7 @@ detekt = "1.23.8"
 composeRules = "0.5.3"
 kover = "0.9.4"
 androidxTestCore = "1.7.0"
+material = "1.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +73,7 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
