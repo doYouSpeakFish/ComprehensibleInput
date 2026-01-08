@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import input.comprehensible.ui.components.animations.defaultEnterTransition
 import input.comprehensible.ui.components.animations.defaultExitTransition
 import input.comprehensible.ui.components.animations.defaultPopEnterTransition
@@ -26,10 +27,12 @@ fun NavGraphBuilder.storyReader(
         exitTransition = defaultExitTransition,
         popEnterTransition = defaultPopEnterTransition,
         popExitTransition = defaultPopExitTransition,
-    ) {
+    ) { backStackEntry ->
+        val args = backStackEntry.toRoute<StoryReaderRoute>()
         StoryReader(
             modifier = Modifier.fillMaxSize(),
             onErrorDismissed = onErrorDismissed,
+            storyId = args.storyId
         )
     }
 }

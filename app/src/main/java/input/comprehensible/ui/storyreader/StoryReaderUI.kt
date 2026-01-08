@@ -54,7 +54,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.R
 import input.comprehensible.ui.components.rememberPagerState
@@ -72,9 +71,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun StoryReader(
     modifier: Modifier = Modifier,
-    viewModel: StoryReaderViewModel = viewModel {
-        StoryReaderViewModel(createSavedStateHandle())
-    },
+    storyId: String,
+    viewModel: StoryReaderViewModel = viewModel { StoryReaderViewModel(storyId) },
     onErrorDismissed: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)

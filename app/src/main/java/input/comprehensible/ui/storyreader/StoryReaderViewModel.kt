@@ -1,6 +1,5 @@
 package input.comprehensible.ui.storyreader
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.stories.StoriesRepository
@@ -26,15 +25,11 @@ import kotlinx.coroutines.launch
  * A view model for providing the data for a story to the UI.
  */
 class StoryReaderViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val storyId: String,
     private val storiesRepository: StoriesRepository = StoriesRepository(),
     getStoryUseCase: GetStoryUseCase = GetStoryUseCase(),
 ) : ViewModel() {
-    private val id: String = requireNotNull(savedStateHandle["storyId"]) {
-        "Story opened without an explicit story ID"
-    }
-
-    private val story = getStoryUseCase(id = id)
+    private val story = getStoryUseCase(id = storyId)
     private val content = story
         .map {
             (it as? StoryResult.Success)?.story
@@ -148,7 +143,7 @@ class StoryReaderViewModel(
     fun onStoryLocationUpdated(elementIndex: Int) {
         viewModelScope.launch {
             storiesRepository.updateStoryPosition(
-                id = id,
+                id = storyId,
                 storyPosition = elementIndex,
             )
         }
@@ -160,7 +155,7 @@ class StoryReaderViewModel(
     fun onCurrentPartChanged(partId: String) {
         viewModelScope.launch {
             storiesRepository.updateStoryPart(
-                id = id,
+                id = storyId,
                 partId = partId,
             )
         }
@@ -174,7 +169,7 @@ class StoryReaderViewModel(
             selectedTextState.value = null
             partIdToScrollTo.value = targetPartId
             storiesRepository.updateStoryChoice(
-                id = id,
+                id = storyId,
                 partId = targetPartId,
             )
         }
