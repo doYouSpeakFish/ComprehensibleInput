@@ -100,8 +100,20 @@ jobs:
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
 
+    - name: AVD cache
+      uses: actions/cache@v4
+      id: avd-cache
+      with:
+        path: |
+          ~/.android/avd/*
+          ~/.android/adb*
+        key: ${{ github.repository }}-avd-cache
+
     - name: Run instrumented tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 36
+        force-avd-creation: false
+        emulator-options: -no-snapshot-save -no-window -noaudio -no-boot-anim -camera-back none
+        disable-animations: true
         script: ./gradlew connectedAndroidTest
