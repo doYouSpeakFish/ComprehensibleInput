@@ -1,18 +1,10 @@
 package input.comprehensible.data.sources
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
-import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSourceModule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class FakeLanguageSettingsLocalDataSource @Inject constructor() : LanguageSettingsLocalDataSource {
+class FakeLanguageSettingsLocalDataSource : LanguageSettingsLocalDataSource {
     private val _learningLanguage = MutableStateFlow("de")
     private val _translationsLanguage = MutableStateFlow("en")
 
@@ -26,17 +18,4 @@ class FakeLanguageSettingsLocalDataSource @Inject constructor() : LanguageSettin
     override suspend fun setTranslationLanguage(language: String) {
         _translationsLanguage.value = language
     }
-}
-
-@Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [LanguageSettingsLocalDataSourceModule::class]
-)
-interface FakeLanguageSettingsLocalDataSourceModule {
-    @Binds
-    @Singleton
-    fun provideLanguageSettingsLocalDataSource(
-        fakeLanguageSettingsLocalDataSource: FakeLanguageSettingsLocalDataSource,
-    ): LanguageSettingsLocalDataSource
 }

@@ -3,7 +3,6 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.hilt)
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
@@ -23,8 +22,6 @@ kover {
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
                     "input.comprehensible.di",
-                    "hilt_aggregated_deps",
-                    "dagger.hilt.internal.aggregatedroot.codegen",
                 )
                 classes(
                     "input.comprehensible.App",
@@ -39,16 +36,10 @@ kover {
                     "input.comprehensible.data.stories.StoriesDao_Impl",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
-                    "input.comprehensible.*.*_Factory",
-                    "input.comprehensible.*.*_Provide*",
-                    "input.comprehensible.*.*_HiltModules*",
-                    "input.comprehensible.Hilt_*",
-                    "input.comprehensible.*.Hilt_*",
                 )
                 annotatedBy(
                     "input.comprehensible.util.DefaultPreview",
                     "androidx.compose.ui.tooling.preview.Preview",
-                    "dagger.Module",
                 )
             }
         }
@@ -150,9 +141,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.icons)
-    implementation(libs.hilt)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.coroutines)
     implementation(libs.timber)
     implementation(libs.serialization.json)
@@ -162,20 +150,16 @@ dependencies {
     implementation(libs.androidx.dataStore)
     implementation(libs.bundles.androidx.room)
 
-    ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
-    testImplementation(libs.hilt.android.testing)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit)
-
-    kspTest(libs.hilt.compiler)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)

@@ -2,7 +2,6 @@ package input.comprehensible.ui.storylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesListResult
 import input.comprehensible.ui.components.LanguageSelection
@@ -11,15 +10,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * A ViewModel for the StoryList screen.
  */
-@HiltViewModel
-class StoryListViewModel @Inject constructor(
-    private val languageSettingsRepository: LanguageSettingsRepository,
-    getStoriesListUseCase: GetStoriesListUseCase,
+class StoryListViewModel(
+    private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
+    getStoriesListUseCase: GetStoriesListUseCase = GetStoriesListUseCase(),
 ) : ViewModel() {
     val state = combine(
         getStoriesListUseCase(),

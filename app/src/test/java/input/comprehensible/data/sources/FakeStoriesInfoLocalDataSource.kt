@@ -1,21 +1,13 @@
 package input.comprehensible.data.sources
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
-import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoModule
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDataSource {
+class FakeStoriesInfoLocalDataSource : StoriesInfoLocalDataSource {
     private val stories = MutableStateFlow<Map<String, StoryEntity>>(emptyMap())
 
     override suspend fun insertStory(story: StoryEntity) {
@@ -52,17 +44,4 @@ class FakeStoriesInfoLocalDataSource @Inject constructor() : StoriesInfoLocalDat
             current + (id to newStoryInfo)
         }
     }
-}
-
-@Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [StoriesInfoModule::class]
-)
-interface FakeStoriesInfoLocalDataSourceModule {
-    @Binds
-    @Singleton
-    fun provideStoriesInfoLocalDataSource(
-        fakeStoriesLocalDataSource: FakeStoriesInfoLocalDataSource
-    ): StoriesInfoLocalDataSource
 }

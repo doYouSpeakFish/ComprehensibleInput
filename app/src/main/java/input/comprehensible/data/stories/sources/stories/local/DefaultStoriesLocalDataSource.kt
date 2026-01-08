@@ -3,8 +3,8 @@ package input.comprehensible.data.stories.sources.stories.local
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import dagger.hilt.android.qualifiers.ApplicationContext
-import input.comprehensible.di.IoDispatcher
+import input.comprehensible.di.ApplicationProvider
+import input.comprehensible.di.IoDispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,15 +14,14 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * Default implementation of [StoriesLocalDataSource] that provides the story content.
  */
 @OptIn(ExperimentalSerializationApi::class)
-class DefaultStoriesLocalDataSource @Inject constructor(
-    @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
-    @param:ApplicationContext private val context: Context,
+class DefaultStoriesLocalDataSource(
+    private val dispatcher: CoroutineDispatcher = IoDispatcherProvider(),
+    private val context: Context = ApplicationProvider(),
 ) : StoriesLocalDataSource {
     override suspend fun getStory(
         id: String,

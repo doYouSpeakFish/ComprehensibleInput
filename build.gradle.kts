@@ -4,7 +4,6 @@ import io.gitlab.arturbosch.detekt.Detekt
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.hilt) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.aboutLibraries) apply false
@@ -42,8 +41,6 @@ kover {
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
                     "input.comprehensible.di",
-                    "hilt_aggregated_deps",
-                    "dagger.hilt.internal.aggregatedroot.codegen",
                 )
                 classes(
                     "input.comprehensible.App",
@@ -58,16 +55,10 @@ kover {
                     "input.comprehensible.data.stories.StoriesDao_Impl",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
-                    "input.comprehensible.*.*_Factory",
-                    "input.comprehensible.*.*_Provide*",
-                    "input.comprehensible.*.*_HiltModules*",
-                    "input.comprehensible.Hilt_*",
-                    "input.comprehensible.*.Hilt_*",
                 )
                 annotatedBy(
                     "input.comprehensible.util.DefaultPreview",
                     "androidx.compose.ui.tooling.preview.Preview",
-                    "dagger.Module",
                 )
             }
         }

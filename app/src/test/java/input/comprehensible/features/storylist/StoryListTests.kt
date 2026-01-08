@@ -2,12 +2,9 @@ package input.comprehensible.features.storylist
 
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.captureScreenWithTheme
-import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.features.story.onStoryReader
 import input.comprehensible.runTest
@@ -17,29 +14,23 @@ import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import javax.inject.Inject
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-@HiltAndroidTest
 @Config(
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
-    application = HiltTestApplication::class,
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class StoryListTests(private val themeMode: ThemeMode) {
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this, themeMode)
-
-    @Inject
-    lateinit var storiesData: StoriesTestData
+    val testRule = ComprehensibleInputTestRule(themeMode)
 
     @OptIn(ExperimentalRoborazziApi::class)
     @Test
     fun `story list screenshot`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryList()
         awaitIdle()
@@ -52,7 +43,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     @Test
     fun `first story can be selected`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryList()
         runCurrent()
@@ -70,7 +61,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     @Test
     fun `last story can be selected`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryList()
         runCurrent()
@@ -89,7 +80,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     @Test
     fun `images are shown for stories in the list`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryList()
         runCurrent()
@@ -103,9 +94,9 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `stories without featured images are filtered out`() = testRule.runTest {
         // GIVEN a list of stories where one has no image available
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val storyWithoutImage = stories.first()
-        storiesData.removeImagesForStory(story = storyWithoutImage)
+        removeImagesForStory(story = storyWithoutImage)
 
         // WHEN the story list is opened
         goToStoryList()
@@ -122,7 +113,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `Story text matches learning language setting`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is shown
         goToStoryList()
         awaitIdle()
@@ -149,7 +140,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `Story title shown in learning language setting`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is shown
         goToStoryList()
         awaitIdle()
@@ -171,7 +162,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `Translation text matches translation language setting`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is shown
         goToStoryList()
         awaitIdle()
@@ -201,7 +192,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `changing the translation language keeps learning separate`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is shown
         goToStoryList()
         awaitIdle()
@@ -243,7 +234,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `changing the learning language keeps translations separate`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is shown
         goToStoryList()
         awaitIdle()
@@ -285,9 +276,9 @@ class StoryListTests(private val themeMode: ThemeMode) {
     fun `stories without translations are hidden from the list`() = testRule.runTest {
         // GIVEN two stories in the library
         val stories = SampleStoriesData.listOf100Stories.take(2)
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the first story is missing an English translation
-        storiesData.hideTranslationForStory("en", stories.first())
+        hideTranslationForStory("en", stories.first())
 
         // WHEN the reader opens the story list
         goToStoryList()

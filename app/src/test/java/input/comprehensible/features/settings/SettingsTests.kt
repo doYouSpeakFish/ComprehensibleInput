@@ -1,10 +1,7 @@
 package input.comprehensible.features.settings
 
 import android.os.Build
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
-import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
 import input.comprehensible.features.softwarelicences.onSoftwareLicences
 import input.comprehensible.features.storylist.onStoryList
@@ -15,29 +12,23 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
-@HiltAndroidTest
 @Config(
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
-    application = HiltTestApplication::class,
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SettingsTests {
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this)
-
-    @Inject
-    lateinit var storiesTestData: StoriesTestData
+    val testRule = ComprehensibleInputTestRule()
 
     @Test
     fun `settings screen shows software licences option`() = testRule.runTest {
         // GIVEN a full library of stories is available for readers
         val stories = SampleStoriesData.listOf100Stories
-        storiesTestData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is open
         goToStoryList()
         awaitIdle()
@@ -60,7 +51,7 @@ class SettingsTests {
     fun `software licences link opens the software licences screen`() = testRule.runTest {
         // GIVEN a full library of stories is available for readers
         val stories = SampleStoriesData.listOf100Stories
-        storiesTestData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is open
         goToStoryList()
         awaitIdle()
@@ -87,7 +78,7 @@ class SettingsTests {
     fun `navigate up returns to the story list`() = testRule.runTest {
         // GIVEN a full library of stories is available for readers
         val stories = SampleStoriesData.listOf100Stories
-        storiesTestData.setLocalStories(stories)
+        setLocalStories(stories)
         // AND the story list is open
         goToStoryList()
         awaitIdle()

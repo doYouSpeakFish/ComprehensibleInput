@@ -13,20 +13,18 @@ import input.comprehensible.data.stories.sources.stories.local.StoryPartData
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.getOrCreateStory
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import input.comprehensible.util.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * A repository for stories.
  */
 @Suppress("TooManyFunctions")
-@Singleton
-class StoriesRepository @Inject constructor(
+class StoriesRepository(
     private val storiesLocalDataSource: StoriesLocalDataSource,
     private val storiesInfoLocalDataSource: StoriesInfoLocalDataSource,
 ) {
@@ -330,6 +328,13 @@ class StoriesRepository @Inject constructor(
         return StoryElement.Image(
             contentDescription = contentDescription,
             bitmap = bitmap,
+        )
+    }
+
+    companion object : Singleton<StoriesRepository>() {
+        override fun create() = StoriesRepository(
+            storiesLocalDataSource = StoriesLocalDataSource(),
+            storiesInfoLocalDataSource = StoriesInfoLocalDataSource(),
         )
     }
 }
