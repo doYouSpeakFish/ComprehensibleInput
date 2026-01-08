@@ -14,38 +14,6 @@ plugins {
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
-kover {
-    reports {
-        filters {
-            excludes {
-                packages(
-                    "input.comprehensible.data.stories.sources",
-                    "input.comprehensible.data.languages.sources",
-                    "input.comprehensible.di",
-                )
-                classes(
-                    "input.comprehensible.App",
-                    "input.comprehensible.MainActivity",
-                    "input.comprehensible.data.AppDb",
-                    "input.comprehensible.BuildConfig",
-                    "input.comprehensible.*.BuildConfig",
-                    "comprehensible.test.BuildConfig",
-                    "input.comprehensible.ComposableSingletons*",
-                    "input.comprehensible.data.AppDb_Impl",
-                    "input.comprehensible.data.languages.LanguagesDao_Impl",
-                    "input.comprehensible.data.stories.StoriesDao_Impl",
-                    "input.comprehensible.data.AppDb_Impl*",
-                    "input.comprehensible.*.ComposableSingletons*",
-                )
-                annotatedBy(
-                    "input.comprehensible.util.DefaultPreview",
-                    "androidx.compose.ui.tooling.preview.Preview",
-                )
-            }
-        }
-    }
-}
-
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 val hasKeystore = keystorePropertiesFile.exists()
@@ -124,6 +92,38 @@ android {
     }
     room {
         schemaDirectory("$projectDir/schemas")
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                packages(
+                    "input.comprehensible.data.stories.sources",
+                    "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.di",
+                )
+                classes(
+                    "input.comprehensible.App",
+                    "input.comprehensible.MainActivity",
+                    "input.comprehensible.data.AppDb",
+                    "input.comprehensible.BuildConfig",
+                    "input.comprehensible.*.BuildConfig",
+                    "comprehensible.test.BuildConfig",
+                    "input.comprehensible.ComposableSingletons*",
+                    "input.comprehensible.data.AppDb_Impl",
+                    "input.comprehensible.data.languages.LanguagesDao_Impl",
+                    "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.AppDb_Impl*",
+                    "input.comprehensible.*.ComposableSingletons*",
+                )
+                annotatedBy(
+                    "input.comprehensible.util.DefaultPreview",
+                    "androidx.compose.ui.tooling.preview.Preview",
+                )
+            }
+        }
     }
 }
 
