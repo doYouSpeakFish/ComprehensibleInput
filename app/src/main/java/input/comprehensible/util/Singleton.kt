@@ -1,5 +1,7 @@
 package input.comprehensible.util
 
+import java.util.concurrent.ConcurrentHashMap
+
 /**
  * An abstract class that can be extended by the companion object of a class to turn it into
  * a singleton that can be retrieved using a normal no argument constructor.
@@ -96,13 +98,15 @@ abstract class InjectedSingleton<T> : Singleton<T>() {
  * instance of the singleton.
  */
 object SingletonStore {
-    private val singletons = mutableMapOf<Singleton<*>, Any?>()
+    private val singletons = ConcurrentHashMap<Singleton<*>, Any?>()
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> getOrPut(key: Singleton<T>, initializer: () -> T) =
-        singletons.getOrPut(key, initializer) as T
-
-    fun clear() {
-        singletons.clear()
+    fun <T> getOrPut(key: Singleton<T>, initializer: () -> T): T {
+        if (singletons.containsKey(key)) return singletons[key] as T
+        synchronized(key) {
+            return singletons.getOrPut(key, initializer) as T
+        }
     }
+
+    fun clear() = singletons.clear()
 }
