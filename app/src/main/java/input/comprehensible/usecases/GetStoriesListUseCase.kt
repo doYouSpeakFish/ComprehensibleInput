@@ -7,14 +7,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import javax.inject.Inject
 
 /**
  * A use case for getting the list of stories.
  */
-class GetStoriesListUseCase @Inject constructor(
-    private val languageSettingsRepository: LanguageSettingsRepository,
-    private val storiesRepository: StoriesRepository,
+class GetStoriesListUseCase(
+    private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
+    private val storiesRepository: StoriesRepository = StoriesRepository(),
 ) {
     /**
      * Gets the list of stories.

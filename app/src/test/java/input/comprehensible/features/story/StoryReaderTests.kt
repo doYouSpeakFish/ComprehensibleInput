@@ -2,12 +2,8 @@ package input.comprehensible.features.story
 
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
-import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.sample.SampleStoriesData
-import input.comprehensible.data.sample.TestStoryPart
 import input.comprehensible.data.sample.filterParagraphs
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
@@ -17,14 +13,11 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
-@HiltAndroidTest
 @Config(
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
-    application = HiltTestApplication::class,
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -32,15 +25,12 @@ import javax.inject.Inject
 class StoryReaderTests {
 
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this)
-
-    @Inject
-    lateinit var storiesData: StoriesTestData
+    val testRule = ComprehensibleInputTestRule()
 
     @Test
     fun `story reader screenshot`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryReader(stories.first().id)
         awaitIdle()
@@ -55,9 +45,9 @@ class StoryReaderTests {
     @Test
     fun `story reader error screenshot`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val story = stories.first()
-        storiesData.hideTranslationForStory(languageCode = "en", story = story)
+        hideTranslationForStory(languageCode = "en", story = story)
 
         goToStoryReader(story.id)
         awaitIdle()
@@ -70,7 +60,7 @@ class StoryReaderTests {
     @Test
     fun `story title is shown`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryReader(stories.first().id)
         runCurrent()
@@ -83,7 +73,7 @@ class StoryReaderTests {
     @Test
     fun `story content is shown`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         goToStoryReader(stories.last().id)
         runCurrent()
@@ -96,7 +86,7 @@ class StoryReaderTests {
     @Test
     fun `first image for story is shown`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
 
         val story = stories.first()
         goToStoryReader(story.id)
@@ -111,7 +101,7 @@ class StoryReaderTests {
     fun `the story can be switched from German to English`() = testRule.runTest {
         // GIVEN a German story is open
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         goToStoryReader(stories.first().id)
         runCurrent()
         awaitIdle()
@@ -132,7 +122,7 @@ class StoryReaderTests {
     fun `the story can be switched from English to German`() = testRule.runTest {
         // GIVEN a German story is open
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         goToStoryReader(stories.first().id)
         awaitIdle()
 
@@ -154,7 +144,7 @@ class StoryReaderTests {
     fun `the story choices can be switched from German to English`() = testRule.runTest {
         // GIVEN a German story with choices is open
         val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
+        setLocalStories(listOf(story))
 
         goToStoryReader(story.id)
         awaitIdle()
@@ -181,7 +171,7 @@ class StoryReaderTests {
     fun `the story choices can be switched from English to German`() = testRule.runTest {
         // GIVEN a German story with choices is open
         val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
+        setLocalStories(listOf(story))
 
         goToStoryReader(story.id)
         awaitIdle()
@@ -205,12 +195,11 @@ class StoryReaderTests {
     @Test
     fun `choosing a path opens the next part on a new page`() = testRule.runTest {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
+        setLocalStories(listOf(story))
 
         val startSentence = story.parts.first().content.filterParagraphs().first().germanSentences.first()
         val keepChoicePart = story.getPart("keep_key")
         val keepChoiceId = keepChoicePart.id
-        val keepChoiceText = keepChoicePart.choice!!.textByLanguage.getValue("de")
         val newPathSentence = keepChoicePart.content.filterParagraphs().first().germanSentences.first()
 
         // GIVEN the first part of the story is visible
@@ -232,7 +221,7 @@ class StoryReaderTests {
     @Test
     fun `choices stay available when paging backwards`() = testRule.runTest {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
+        setLocalStories(listOf(story))
 
         val keepChoicePart = story.getPart("keep_key")
         val keepChoiceId = keepChoicePart.id
@@ -270,7 +259,7 @@ class StoryReaderTests {
     fun `the title can be switched from German to English`() = testRule.runTest {
         // GIVEN a German story is open
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         goToStoryReader(stories.first().id)
         awaitIdle()
 
@@ -286,7 +275,7 @@ class StoryReaderTests {
     fun `the title can be switched from English to German`() = testRule.runTest {
         // GIVEN a German story is open
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         goToStoryReader(stories.first().id)
         awaitIdle()
 
@@ -303,7 +292,7 @@ class StoryReaderTests {
     @Test
     fun `Partially read story opens at correct position`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val story = stories.first()
         val sentence = story.paragraphs[3].germanSentences[9]
 
@@ -333,12 +322,11 @@ class StoryReaderTests {
     @Test
     fun `the chosen path is remembered`() = testRule.runTest {
         val story = SampleStoriesData.chooseYourOwnAdventureStory
-        storiesData.setLocalStories(listOf(story))
+        setLocalStories(listOf(story))
 
         val startSentence = story.parts.first().content.filterParagraphs().first().germanSentences.first()
         val keepChoicePart = story.getPart("keep_key")
         val keepChoiceId = keepChoicePart.id
-        val keepChoiceText = keepChoicePart.choice!!.textByLanguage.getValue("de")
         val newPathSentence = keepChoicePart.content.filterParagraphs().first().germanSentences.first()
 
         // GIVEN a story with a decision point
@@ -377,8 +365,8 @@ class StoryReaderTests {
     @Test
     fun `story shows loading indicator while story loads`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
-        storiesData.delayStoryLoads(delayMillis = 1_000L)
+        setLocalStories(stories)
+        delayStoryLoads(delayMillis = 1_000L)
 
         // WHEN the story reader is opened
         goToStoryReader(stories.first().id)
@@ -392,9 +380,9 @@ class StoryReaderTests {
     @Test
     fun `story shows error when learning story is missing`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val story = stories.first()
-        storiesData.hideStoryForLanguage(languageCode = "de", story = story)
+        hideStoryForLanguage(languageCode = "de", story = story)
 
         // GIVEN the user is reading in German with English translations
         goToStoryList()
@@ -423,9 +411,9 @@ class StoryReaderTests {
     @Test
     fun `story shows error when translation is missing`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val story = stories.first()
-        storiesData.hideTranslationForStory(languageCode = "en", story = story)
+        hideTranslationForStory(languageCode = "en", story = story)
 
         // GIVEN a story with a missing translation
         goToStoryReader(story.id)
@@ -440,9 +428,9 @@ class StoryReaderTests {
     @Test
     fun `story shows error when translation sentences mismatch`() = testRule.runTest {
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val story = stories.first()
-        storiesData.mismatchTranslationForStory(languageCode = "en", story = story)
+        mismatchTranslationForStory(languageCode = "en", story = story)
 
         // GIVEN a story with mismatched translation content
         goToStoryReader(story.id)
@@ -458,9 +446,9 @@ class StoryReaderTests {
     fun `story shows error when an image cannot be loaded`() = testRule.runTest {
         // GIVEN a story where images fail to load
         val stories = SampleStoriesData.listOf100Stories
-        storiesData.setLocalStories(stories)
+        setLocalStories(stories)
         val story = stories.first()
-        storiesData.removeImagesForStory(story = story)
+        removeImagesForStory(story = story)
 
         // WHEN the story reader is opened
         goToStoryReader(story.id)

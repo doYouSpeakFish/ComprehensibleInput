@@ -34,8 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import input.comprehensible.extensions.isCompact
 import input.comprehensible.ui.components.LanguageSelection
@@ -49,7 +49,7 @@ internal fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (id: String) -> Unit,
     onSettingsClick: () -> Unit,
-    viewModel: StoryListViewModel = hiltViewModel(),
+    viewModel: StoryListViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
     StoryListScreen(

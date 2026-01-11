@@ -4,17 +4,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import input.comprehensible.data.AppDb
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import input.comprehensible.util.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Singleton
 
 @Dao
 interface StoriesInfoLocalDataSource {
@@ -60,6 +55,8 @@ interface StoriesInfoLocalDataSource {
         id: String,
         lastChosenPartId: String,
     )
+
+    companion object : InjectedSingleton<StoriesInfoLocalDataSource>()
 }
 
 fun StoriesInfoLocalDataSource.getOrCreateStory(
@@ -72,12 +69,3 @@ fun StoriesInfoLocalDataSource.getOrCreateStory(
     }
     .filterNotNull()
     .distinctUntilChanged()
-
-@Module
-@InstallIn(SingletonComponent::class)
-class StoriesInfoModule {
-    @Provides
-    @Singleton
-    fun provideStoriesInfoLocalDataSource(appDb: AppDb): StoriesInfoLocalDataSource =
-        appDb.getStoriesInfoDao()
-}

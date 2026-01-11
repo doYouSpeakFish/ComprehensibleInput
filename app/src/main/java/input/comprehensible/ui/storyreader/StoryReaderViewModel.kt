@@ -1,9 +1,7 @@
 package input.comprehensible.ui.storyreader
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import input.comprehensible.data.stories.StoriesRepository
 import input.comprehensible.data.stories.StoryResult
 import input.comprehensible.data.stories.model.Story
@@ -22,22 +20,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * A view model for providing the data for a story to the UI.
  */
-@HiltViewModel
-class StoryReaderViewModel @Inject constructor(
-    private val storiesRepository: StoriesRepository,
-    getStoryUseCase: GetStoryUseCase,
-    savedStateHandle: SavedStateHandle
+class StoryReaderViewModel(
+    private val storyId: String,
+    private val storiesRepository: StoriesRepository = StoriesRepository(),
+    getStoryUseCase: GetStoryUseCase = GetStoryUseCase(),
 ) : ViewModel() {
-    private val id: String = requireNotNull(savedStateHandle["storyId"]) {
-        "Story opened without an explicit story ID"
-    }
-
-    private val story = getStoryUseCase(id = id)
+    private val story = getStoryUseCase(id = storyId)
     private val content = story
         .map {
             (it as? StoryResult.Success)?.story
@@ -72,7 +64,7 @@ class StoryReaderViewModel @Inject constructor(
         }
     }.stateIn(
         viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
+        started = SharingStarted.Lazily,
         initialValue = Loading
     )
 
@@ -151,7 +143,7 @@ class StoryReaderViewModel @Inject constructor(
     fun onStoryLocationUpdated(elementIndex: Int) {
         viewModelScope.launch {
             storiesRepository.updateStoryPosition(
-                id = id,
+                id = storyId,
                 storyPosition = elementIndex,
             )
         }
@@ -163,7 +155,7 @@ class StoryReaderViewModel @Inject constructor(
     fun onCurrentPartChanged(partId: String) {
         viewModelScope.launch {
             storiesRepository.updateStoryPart(
-                id = id,
+                id = storyId,
                 partId = partId,
             )
         }
@@ -177,7 +169,7 @@ class StoryReaderViewModel @Inject constructor(
             selectedTextState.value = null
             partIdToScrollTo.value = targetPartId
             storiesRepository.updateStoryChoice(
-                id = id,
+                id = storyId,
                 partId = targetPartId,
             )
         }

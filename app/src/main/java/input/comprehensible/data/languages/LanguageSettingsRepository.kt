@@ -1,15 +1,13 @@
 package input.comprehensible.data.languages
 
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
+import input.comprehensible.util.Singleton
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * A repository for storing the user's language settings.
  */
-@Singleton
-class LanguageSettingsRepository @Inject constructor(
+class LanguageSettingsRepository(
     private val languageSettingsLocalDataSource: LanguageSettingsLocalDataSource,
 ) {
     /**
@@ -45,5 +43,11 @@ class LanguageSettingsRepository @Inject constructor(
             languageSettingsLocalDataSource.setLearningLanguage(oldTranslationLanguage)
         }
         languageSettingsLocalDataSource.setTranslationLanguage(language)
+    }
+
+    companion object : Singleton<LanguageSettingsRepository>() {
+        override fun create() = LanguageSettingsRepository(
+            languageSettingsLocalDataSource = LanguageSettingsLocalDataSource()
+        )
     }
 }

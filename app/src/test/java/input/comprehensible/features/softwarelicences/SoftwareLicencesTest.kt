@@ -2,8 +2,6 @@ package input.comprehensible.features.softwarelicences
 
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.captureScreenWithTheme
@@ -16,17 +14,15 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-@HiltAndroidTest
 @Config(
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
-    application = HiltTestApplication::class,
     qualifiers = "w360dp-h640dp-mdpi",
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SoftwareLicencesTest(private val themeMode: ThemeMode) {
     @get:Rule
-    val testRule = ComprehensibleInputTestRule(this, themeMode)
+    val testRule = ComprehensibleInputTestRule(themeMode)
 
     @Test
     fun `about libraries software licence is shown in the list`() = testRule.runTest {

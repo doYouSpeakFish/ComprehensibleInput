@@ -4,6 +4,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
+import input.comprehensible.data.StoriesTestData
+import input.comprehensible.data.sample.TestStory
 import input.comprehensible.ui.ComprehensibleInputApp
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -20,6 +22,7 @@ class ComprehensibleInputTestScope(
 ) {
     private var isAppUiLaunched = false
     private lateinit var navController: TestNavHostController
+    private val storiesTestData = StoriesTestData()
 
     fun launchAppUi() {
         if (!isAppUiLaunched) {
@@ -62,6 +65,30 @@ class ComprehensibleInputTestScope(
     suspend fun awaitIdle() {
         testScope.runCurrent()
         composeRule.awaitIdle()
+    }
+
+    fun setLocalStories(stories: List<TestStory>) {
+        storiesTestData.setLocalStories(stories)
+    }
+
+    fun removeImagesForStory(story: TestStory) {
+        storiesTestData.removeImagesForStory(story)
+    }
+
+    fun hideTranslationForStory(languageCode: String, story: TestStory) {
+        storiesTestData.hideTranslationForStory(languageCode, story)
+    }
+
+    fun delayStoryLoads(delayMillis: Long) {
+        storiesTestData.delayStoryLoads(delayMillis)
+    }
+
+    fun mismatchTranslationForStory(languageCode: String, story: TestStory) {
+        storiesTestData.mismatchTranslationForStory(languageCode, story)
+    }
+
+    fun hideStoryForLanguage(languageCode: String, story: TestStory) {
+        storiesTestData.hideStoryForLanguage(languageCode, story)
     }
 }
 
