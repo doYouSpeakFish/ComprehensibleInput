@@ -89,6 +89,7 @@ android {
     }
     sourceSets {
         getByName("test").assets.srcDir("$projectDir/schemas")
+        getByName("debug").assets.srcDirs(files("$projectDir/schemas"))
     }
     room {
         schemaDirectory("$projectDir/schemas")
@@ -159,12 +160,12 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit)
+    testImplementation(libs.androidx.room.testing)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.androidx.test.core)
 
     debugImplementation(libs.androidx.ui.tooling)

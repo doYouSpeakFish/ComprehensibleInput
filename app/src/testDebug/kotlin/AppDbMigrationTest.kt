@@ -1,5 +1,3 @@
-package input.comprehensible
-
 import androidx.room.Room
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
