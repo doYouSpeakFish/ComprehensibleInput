@@ -57,7 +57,7 @@ jobs:
       run: ./gradlew assemble
 
     - name: Run tests with coverage
-      run: ./gradlew koverXmlReport
+      run: ./gradlew koverXmlReportDebug
 
     - name: Add coverage report to PR
       if: ${{ github.event_name == 'pull_request' }}
