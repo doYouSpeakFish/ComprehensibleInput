@@ -1,7 +1,5 @@
 package input.comprehensible.util
 
-import java.util.concurrent.ConcurrentHashMap
-
 /**
  * An abstract class that can be extended by the companion object of a class to turn it into
  * a singleton that can be retrieved using a normal no argument constructor.
@@ -28,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
  * }
  * ```
  */
-abstract class Singleton<T> {
+abstract class Singleton<T : Any> {
     /**
      * Creates a new instance of the singleton.
      */
@@ -78,7 +76,7 @@ abstract class Singleton<T> {
  * }
  * ```
  */
-abstract class InjectedSingleton<T> : Singleton<T>() {
+abstract class InjectedSingleton<T : Any> : Singleton<T>() {
     private lateinit var initializer: () -> T
 
     /**
@@ -98,15 +96,27 @@ abstract class InjectedSingleton<T> : Singleton<T>() {
  * instance of the singleton.
  */
 object SingletonStore {
-    private val singletons = ConcurrentHashMap<Singleton<*>, Any?>()
+    @Volatile
+    private var singletons = mapOf<Singleton<*>, Any?>()
 
-    @Suppress("UNCHECKED_CAST")
-    fun <T> getOrPut(key: Singleton<T>, initializer: () -> T): T {
-        if (singletons.containsKey(key)) return singletons[key] as T
-        synchronized(key) {
-            return singletons.getOrPut(key, initializer) as T
-        }
+    /**
+     * Clears the singleton store. Intended to be called at the end of a test to clear the singleton
+     * store ready for the next test to run with fresh instances of singletons.
+     */
+    fun clear() = synchronized(SingletonStore) { singletons = emptyMap() }
+
+    internal fun <T : Any> getOrPut(
+        key: Singleton<T>,
+        initializer: () -> T
+    ): T = get(key) ?: synchronized(key) {
+        get(key) ?: initializer().also { put(key, it) }
     }
 
-    fun clear() = singletons.clear()
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Any> get(key: Singleton<T>) = singletons[key] as T?
+
+    private fun put(
+        key: Singleton<*>,
+        value: Any?
+    ) = synchronized(SingletonStore) { singletons += key to value }
 }
