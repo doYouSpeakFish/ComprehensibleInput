@@ -22,18 +22,11 @@ abstract class AppDb : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: AppDb? = null
-        fun getInstance(context: Context): AppDb {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
-        }
-
-        private fun buildDatabase(context: Context): AppDb {
-            return Room.databaseBuilder(
-                context,
-                AppDb::class.java,
-                "app-db"
-            ).build()
+        fun getInstance(context: Context) = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: Room
+                .databaseBuilder<AppDb>(context = context, name = "app-db")
+                .build()
+                .also { INSTANCE = it }
         }
     }
 }
