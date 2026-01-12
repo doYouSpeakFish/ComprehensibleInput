@@ -12,7 +12,6 @@ composeNavigation = "2.9.6"
 robolectric = "4.16"
 coroutines = "1.10.2"
 timber = "5.0.1"
-appcompat = "1.7.1"
 navigationTesting = "2.9.6"
 serialization-json = "1.9.0"
 aboutLibraries = "13.2.1"
@@ -25,7 +24,6 @@ detekt = "1.23.8"
 composeRules = "0.5.3"
 kover = "0.9.4"
 androidxTestCore = "1.7.0"
-material = "1.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,7 +48,6 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization-json" }
 aboutLibraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutLibraries" }
@@ -66,7 +63,6 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
