@@ -6,11 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import input.comprehensible.di.IoDispatcherProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = "language_settings"
-)
 private val LEARNING_LANGUAGE = stringPreferencesKey("learning_language")
 private val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
 
@@ -20,6 +20,10 @@ private val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
 class DefaultLanguageSettingsLocalDataSource(
     private val context: Context,
 ) : LanguageSettingsLocalDataSource {
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "language_settings",
+        scope = CoroutineScope(IoDispatcherProvider() + SupervisorJob()),
+    )
 
     override val learningLanguage = context.dataStore.data
         .map { it[LEARNING_LANGUAGE] ?: "de" }
