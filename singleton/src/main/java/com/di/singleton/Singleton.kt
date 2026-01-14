@@ -93,7 +93,9 @@ abstract class InjectedSingleton<T : Any> : Singleton<T>() {
         }
     }
 
-    override fun create() = getInstanceFromStore()
+    override fun create() = requireNotNull(getInstanceFromStore()) {
+        "Singleton ${this::class.java.simpleName} has not been injected"
+    }
 
     @OptIn(InternalApi::class)
     private fun storeInitializerIfAbsent(
@@ -143,7 +145,7 @@ object SingletonInitializerStore {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any> getInstance(key: Singleton<T>) = initializers.getValue(key).invoke() as T
+    fun <T : Any> getInstance(key: Singleton<T>) = get(key)?.invoke()
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : Any> get(key: Singleton<T>) = initializers[key] as (() -> T)?
