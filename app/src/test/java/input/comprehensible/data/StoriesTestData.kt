@@ -9,10 +9,9 @@ import input.comprehensible.data.stories.sources.stories.local.StoryChoiceData
 import input.comprehensible.data.stories.sources.stories.local.StoryData
 import input.comprehensible.data.stories.sources.stories.local.StoryElementData
 import input.comprehensible.data.stories.sources.stories.local.StoryPartData
-import input.comprehensible.util.Singleton
 
 class StoriesTestData(
-    private val storiesLocalDataSource: FakeStoriesLocalDataSource,
+    private val storiesLocalDataSource: FakeStoriesLocalDataSource = FakeStoriesLocalDataSource(),
 ) {
     fun setLocalStories(stories: List<TestStory>) {
         val germanStories = stories.map { it.toStoryData(title = it.germanTitle, languageCode = "de") }
@@ -159,12 +158,6 @@ class StoriesTestData(
         return StoryChoiceData(
             text = text,
             parentPartId = parentPartId,
-        )
-    }
-
-    companion object : Singleton<StoriesTestData>() {
-        override fun create() = StoriesTestData(
-            storiesLocalDataSource = FakeStoriesLocalDataSource()
         )
     }
 }

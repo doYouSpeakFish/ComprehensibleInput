@@ -129,6 +129,7 @@ kover {
 }
 
 dependencies {
+    implementation(project(":singleton"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -151,6 +152,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
+    testImplementation(project(":test:singleton"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

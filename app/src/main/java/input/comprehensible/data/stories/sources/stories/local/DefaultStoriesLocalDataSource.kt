@@ -3,6 +3,7 @@ package input.comprehensible.data.stories.sources.stories.local
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import input.comprehensible.di.ApplicationProvider
 import input.comprehensible.di.IoDispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ import timber.log.Timber
  */
 @OptIn(ExperimentalSerializationApi::class)
 class DefaultStoriesLocalDataSource(
-    private val context: Context,
+    private val context: Context = ApplicationProvider(),
     private val dispatcher: CoroutineDispatcher = IoDispatcherProvider(),
 ) : StoriesLocalDataSource {
     override suspend fun getStory(

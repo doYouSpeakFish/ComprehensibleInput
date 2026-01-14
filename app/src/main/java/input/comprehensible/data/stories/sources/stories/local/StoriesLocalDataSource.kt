@@ -1,7 +1,7 @@
 package input.comprehensible.data.stories.sources.stories.local
 
 import android.graphics.Bitmap
-import input.comprehensible.util.InjectedSingleton
+import com.di.singleton.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

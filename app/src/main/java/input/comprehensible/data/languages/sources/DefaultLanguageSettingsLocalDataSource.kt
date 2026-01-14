@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import input.comprehensible.di.ApplicationProvider
 import input.comprehensible.di.IoDispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -18,7 +19,7 @@ private val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
  * The default implementation of [LanguageSettingsLocalDataSource].
  */
 class DefaultLanguageSettingsLocalDataSource(
-    private val context: Context,
+    private val context: Context = ApplicationProvider(),
 ) : LanguageSettingsLocalDataSource {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         name = "language_settings",
