@@ -50,6 +50,7 @@ class SoftwareLicencesTest(private val themeMode: ThemeMode) {
     }
 
     companion object {
+        @Suppress("unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "theme = {0}")
         fun parameters() = ThemeMode.entries.map { arrayOf(it) }
