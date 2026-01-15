@@ -47,6 +47,7 @@ kover {
                     "input.comprehensible.App",
                     "input.comprehensible.MainActivity",
                     "input.comprehensible.data.AppDb",
+                    $$"input.comprehensible.data.AppDb$Companion",
                     "input.comprehensible.BuildConfig",
                     "input.comprehensible.*.BuildConfig",
                     "comprehensible.test.BuildConfig",
@@ -61,6 +62,7 @@ kover {
                     "input.comprehensible.util.DefaultPreview",
                     "androidx.compose.ui.tooling.preview.Preview",
                 )
+                androidGeneratedClasses()
             }
         }
     }
