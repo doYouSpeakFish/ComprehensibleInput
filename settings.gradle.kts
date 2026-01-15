@@ -12,7 +12,9 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()
@@ -21,3 +23,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComprehensibleInput"
 include(":app")
+include(":singleton")
+include(":test:singleton")

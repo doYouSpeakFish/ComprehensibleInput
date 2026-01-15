@@ -1,5 +1,6 @@
 package input.comprehensible.features.storylist
 
+import android.app.Application
 import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import input.comprehensible.ComprehensibleInputTestRule
@@ -20,6 +21,7 @@ import org.robolectric.annotation.GraphicsMode
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
     qualifiers = "w360dp-h640dp-mdpi",
+    application = Application::class,
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class StoryListTests(private val themeMode: ThemeMode) {
@@ -293,6 +295,7 @@ class StoryListTests(private val themeMode: ThemeMode) {
     }
 
     companion object {
+        @Suppress("unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "theme = {0}")
         fun parameters() = ThemeMode.entries.map { arrayOf(it) }

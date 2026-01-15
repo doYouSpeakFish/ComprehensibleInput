@@ -1,9 +1,9 @@
 package input.comprehensible.data.sources
 
 import android.graphics.Bitmap
+import com.di.singleton.Singleton
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryData
-import input.comprehensible.util.Singleton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

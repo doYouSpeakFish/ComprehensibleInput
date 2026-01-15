@@ -1,5 +1,6 @@
 package input.comprehensible
 
+import android.app.Application
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.navigation.compose.ComposeNavigator
@@ -35,10 +36,11 @@ class ComprehensibleInputTestScope(
     private val darkTheme: Boolean,
 ) {
     private var isAppUiLaunched = false
-    private val storiesTestData = StoriesTestData()
 
+    private val storiesTestData = StoriesTestData()
+    private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
-        .inMemoryDatabaseBuilder<AppDb>(context = ApplicationProvider.getApplicationContext())
+        .inMemoryDatabaseBuilder<AppDb>(context = appContext)
         .setQueryCoroutineContext(context = dispatcher)
         .build()
 
@@ -57,12 +59,13 @@ class ComprehensibleInputTestScope(
         }
 
     init {
+        input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
         IoDispatcherProvider.inject { dispatcher }
         AppScopeProvider.inject { testScope }
         StoriesLocalDataSource.inject { FakeStoriesLocalDataSource() }
         LanguageSettingsLocalDataSource.inject {
-            DefaultLanguageSettingsLocalDataSource(context = ApplicationProvider.getApplicationContext())
+            DefaultLanguageSettingsLocalDataSource(context = appContext)
         }
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
     }

@@ -108,7 +108,7 @@ kover {
                 classes(
                     "input.comprehensible.App",
                     "input.comprehensible.MainActivity",
-                    "input.comprehensible.data.AppDb",
+                    "input.comprehensible.data.AppDb*",
                     "input.comprehensible.BuildConfig",
                     "input.comprehensible.*.BuildConfig",
                     "comprehensible.test.BuildConfig",
@@ -123,12 +123,14 @@ kover {
                     "input.comprehensible.util.DefaultPreview",
                     "androidx.compose.ui.tooling.preview.Preview",
                 )
+                androidGeneratedClasses()
             }
         }
     }
 }
 
 dependencies {
+    implementation(project(":singleton"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -151,6 +153,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
+    testImplementation(project(":test:singleton"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

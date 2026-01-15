@@ -1,5 +1,6 @@
 package input.comprehensible.features.settings
 
+import android.app.Application
 import android.os.Build
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.sample.SampleStoriesData
@@ -18,6 +19,7 @@ import org.robolectric.annotation.GraphicsMode
     manifest = Config.NONE,
     sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
     qualifiers = "w360dp-h640dp-mdpi",
+    application = Application::class,
 )
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SettingsTests {

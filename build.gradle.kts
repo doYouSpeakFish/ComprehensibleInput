@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.room) apply false
+    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 
 dependencies {
@@ -46,6 +47,7 @@ kover {
                     "input.comprehensible.App",
                     "input.comprehensible.MainActivity",
                     "input.comprehensible.data.AppDb",
+                    $$"input.comprehensible.data.AppDb$Companion",
                     "input.comprehensible.BuildConfig",
                     "input.comprehensible.*.BuildConfig",
                     "comprehensible.test.BuildConfig",
@@ -60,6 +62,7 @@ kover {
                     "input.comprehensible.util.DefaultPreview",
                     "androidx.compose.ui.tooling.preview.Preview",
                 )
+                androidGeneratedClasses()
             }
         }
     }

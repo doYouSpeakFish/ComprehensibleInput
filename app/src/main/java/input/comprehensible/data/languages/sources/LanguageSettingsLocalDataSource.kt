@@ -1,6 +1,6 @@
 package input.comprehensible.data.languages.sources
 
-import input.comprehensible.util.InjectedSingleton
+import com.di.singleton.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
 
 /**

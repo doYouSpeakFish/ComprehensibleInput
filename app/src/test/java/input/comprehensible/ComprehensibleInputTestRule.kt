@@ -2,9 +2,9 @@ package input.comprehensible
 
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.di.singleton.SingletonTestRule
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.RoborazziRule
-import input.comprehensible.util.SingletonStore
 import kotlinx.coroutines.test.StandardTestDispatcher
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -41,18 +41,21 @@ class ComprehensibleInputTestRule(
         ),
     )
 
+    private val singletonTestRule = SingletonTestRule()
+
     override fun apply(base: Statement, description: Description): Statement {
         val testSetupStatement = object : Statement() {
             override fun evaluate() {
                 Timber.plant(Timber.DebugTree())
                 ShadowLog.stream = System.out
                 base.evaluate()
-                SingletonStore.clear()
             }
         }
 
+        val singletonTestRuleStatement = singletonTestRule.apply(testSetupStatement, description)
+
         composeRule = createComposeRule(dispatcher)
-        val composeRuleStatement = composeRule.apply(testSetupStatement, description)
+        val composeRuleStatement = composeRule.apply(singletonTestRuleStatement, description)
 
         return roborazziRule.apply(composeRuleStatement, description)
     }

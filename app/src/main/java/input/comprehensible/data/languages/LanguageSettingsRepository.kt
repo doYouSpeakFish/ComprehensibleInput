@@ -1,7 +1,7 @@
 package input.comprehensible.data.languages
 
+import com.di.singleton.Singleton
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
-import input.comprehensible.util.Singleton
 import kotlinx.coroutines.flow.first
 
 /**
