@@ -101,7 +101,7 @@ abstract class InjectedSingleton<T : Any> : Singleton<T>() {
     private fun storeInitializerIfAbsent(
         key: Singleton<T>,
         initializer: () -> T,
-    ) = SingletonInitializerStore.putIfAbsent(key, initializer)
+    ): (() -> T)? = SingletonInitializerStore.putIfAbsent(key, initializer)
 
     @OptIn(InternalApi::class)
     private fun getInstanceFromStore() = SingletonInitializerStore.getInstance(this)
@@ -141,7 +141,9 @@ object SingletonInitializerStore {
         key: Singleton<T>,
         initializer: () -> T,
     ): (() -> T)? = get(key) ?: synchronized(key) {
-        get(key).also { put(key, initializer) }
+        get(key)?.let { return it }
+        put(key, initializer)
+        return null
     }
 
     @Suppress("UNCHECKED_CAST")
