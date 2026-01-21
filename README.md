@@ -1,7 +1,9 @@
+<a href="https://play.google.com/store/apps/details?id=in.comprehensible" target="_blank">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://playbadges.pavi2410.com/badge/full?id=in.comprehensible&theme=dark">
   <img alt="PlayBadges Card Folo" src="https://playbadges.pavi2410.com/badge/full?id=in.comprehensible">
 </picture>
+</a>
 
 # Comprehensible Input
 
