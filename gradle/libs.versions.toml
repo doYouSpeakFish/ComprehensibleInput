@@ -9,11 +9,11 @@ lifecycleRuntime = "2.10.0"
 activityCompose = "1.12.2"
 composeBom = "2026.01.00"
 composeNavigation = "2.9.6"
-robolectric = "4.16"
+robolectric = "4.16.1"
 coroutines = "1.10.2"
 timber = "5.0.1"
 navigationTesting = "2.9.6"
-serialization-json = "1.9.0"
+serialization-json = "1.10.0"
 aboutLibraries = "13.2.1"
 roborazzi = "1.56.0"
 adaptiveAndroid = "1.2.0"
@@ -25,6 +25,7 @@ composeRules = "0.5.3"
 kover = "0.9.4"
 androidxTestCore = "1.7.0"
 jetbrainsKotlinJvm = "2.3.0"
+ktin = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,6 +65,8 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
+ktin-core = { group = "io.github.doyouspeakfish.ktin", name = "core", version.ref = "ktin" }
+ktin-test = { group = "io.github.doyouspeakfish.ktin", name = "test", version.ref = "ktin" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]

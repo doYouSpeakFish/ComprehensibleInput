@@ -2,9 +2,9 @@ package input.comprehensible
 
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.di.singleton.SingletonTestRule
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.RoborazziRule
+import com.ktin.KTinTestRule
 import kotlinx.coroutines.test.StandardTestDispatcher
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -41,7 +41,7 @@ class ComprehensibleInputTestRule(
         ),
     )
 
-    private val singletonTestRule = SingletonTestRule()
+    private val singletonTestRule = KTinTestRule()
 
     override fun apply(base: Statement, description: Description): Statement {
         val testSetupStatement = object : Statement() {
