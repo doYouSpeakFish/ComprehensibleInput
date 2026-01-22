@@ -15,8 +15,8 @@ import input.comprehensible.data.sample.TestStory
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
-import input.comprehensible.di.AppScopeProvider
-import input.comprehensible.di.IoDispatcherProvider
+import input.comprehensible.di.AppScope
+import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -61,8 +61,8 @@ class ComprehensibleInputTestScope(
     init {
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
-        IoDispatcherProvider.inject { dispatcher }
-        AppScopeProvider.inject { testScope }
+        IoDispatcher.inject { dispatcher }
+        AppScope.inject { testScope }
         StoriesLocalDataSource.inject { FakeStoriesLocalDataSource() }
         LanguageSettingsLocalDataSource.inject {
             DefaultLanguageSettingsLocalDataSource(context = appContext)
