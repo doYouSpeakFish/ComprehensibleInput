@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
-import com.di.singleton.InjectedSingleton
+import com.ktin.InjectedSingleton
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

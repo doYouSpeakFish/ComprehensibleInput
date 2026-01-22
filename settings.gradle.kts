@@ -23,5 +23,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComprehensibleInput"
 include(":app")
-include(":singleton")
-include(":test:singleton")

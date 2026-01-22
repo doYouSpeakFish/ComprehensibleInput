@@ -1,6 +1,6 @@
 package input.comprehensible.data.stories
 
-import com.di.singleton.Singleton
+import com.ktin.Singleton
 import input.comprehensible.data.stories.model.StoriesList
 import input.comprehensible.data.stories.model.Story
 import input.comprehensible.data.stories.model.StoryChoice

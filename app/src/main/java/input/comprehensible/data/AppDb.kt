@@ -4,7 +4,7 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.di.singleton.Singleton
+import com.ktin.Singleton
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import input.comprehensible.di.ApplicationProvider

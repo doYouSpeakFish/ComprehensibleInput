@@ -1,6 +1,6 @@
 package input.comprehensible.di
 
 import android.app.Application
-import com.di.singleton.InjectedSingleton
+import com.ktin.InjectedSingleton
 
 object ApplicationProvider : InjectedSingleton<Application>()

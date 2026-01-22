@@ -1,7 +1,7 @@
 package input.comprehensible.data.sources
 
 import android.graphics.Bitmap
-import com.di.singleton.Singleton
+import com.ktin.Singleton
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoryData
 import kotlinx.coroutines.delay

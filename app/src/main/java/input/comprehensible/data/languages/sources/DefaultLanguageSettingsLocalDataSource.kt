@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import input.comprehensible.di.ApplicationProvider
-import input.comprehensible.di.IoDispatcherProvider
+import input.comprehensible.di.IoDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.map
@@ -23,7 +23,7 @@ class DefaultLanguageSettingsLocalDataSource(
 ) : LanguageSettingsLocalDataSource {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         name = "language_settings",
-        scope = CoroutineScope(IoDispatcherProvider() + SupervisorJob()),
+        scope = CoroutineScope(IoDispatcher() + SupervisorJob()),
     )
 
     override val learningLanguage = context.dataStore.data

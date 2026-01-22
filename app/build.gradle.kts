@@ -130,7 +130,6 @@ kover {
 }
 
 dependencies {
-    implementation(project(":singleton"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -150,10 +149,10 @@ dependencies {
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.dataStore)
     implementation(libs.bundles.androidx.room)
+    implementation(libs.ktin.core)
 
     ksp(libs.androidx.room.compiler)
 
-    testImplementation(project(":test:singleton"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)
@@ -163,6 +162,7 @@ dependencies {
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit)
     testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.ktin.test)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
