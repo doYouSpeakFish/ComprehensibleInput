@@ -3,7 +3,6 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.aboutLibraries) apply false
@@ -12,7 +11,6 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.room) apply false
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 
 dependencies {
