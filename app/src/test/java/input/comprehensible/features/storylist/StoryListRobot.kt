@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
@@ -131,6 +132,26 @@ class StoryListRobot(
         composeTestRule
             .onNodeWithText(title)
             .assertExists()
+    }
+
+    fun startTextAdventure() {
+        composeTestRule
+            .onNodeWithTag("text_adventure_start_button")
+            .performScrollTo()
+            .performClick()
+    }
+
+    fun assertTextAdventureIsVisible(title: String) {
+        composeTestRule
+            .onNodeWithText(title)
+            .assertIsDisplayed()
+    }
+
+    fun selectTextAdventure(title: String) {
+        composeTestRule
+            .onNodeWithText(title)
+            .performScrollTo()
+            .performClick()
     }
 }
 

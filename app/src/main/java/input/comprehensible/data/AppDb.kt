@@ -4,21 +4,33 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.ktin.Singleton
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventureConverters
+import input.comprehensible.data.textadventures.sources.local.TextAdventureEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.di.ApplicationProvider
 
 @Database(
-    entities = [StoryEntity::class],
-    version = 3,
+    entities = [
+        StoryEntity::class,
+        TextAdventureEntity::class,
+        TextAdventureMessageEntity::class,
+    ],
+    version = 4,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4),
     ]
 )
+@TypeConverters(TextAdventureConverters::class)
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
+    abstract fun getTextAdventuresDao(): TextAdventuresLocalDataSource
 
     companion object : Singleton<AppDb>() {
         override fun create() = Room
