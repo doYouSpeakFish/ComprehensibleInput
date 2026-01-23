@@ -1,4 +1,4 @@
-package input.comprehensible.ui.storylist
+package input.comprehensible.ui.textadventure
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
@@ -11,27 +11,20 @@ import input.comprehensible.ui.components.animations.defaultPopExitTransition
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object StoryListRoute
+data object TextAdventureRoute
 
-/**
- * Adds the story list screen to the navigation graph.
- */
-fun NavGraphBuilder.storyList(
-    onStorySelected: (String) -> Unit,
-    onSettingsClick: () -> Unit,
-    onTextAdventureClick: () -> Unit,
+fun NavGraphBuilder.textAdventure(
+    onNavigateUp: () -> Unit,
 ) {
-    composable<StoryListRoute>(
+    composable<TextAdventureRoute>(
         enterTransition = defaultEnterTransition,
         exitTransition = defaultExitTransition,
         popEnterTransition = defaultPopEnterTransition,
         popExitTransition = defaultPopExitTransition,
     ) {
-        StoryListScreen(
+        TextAdventureScreen(
             modifier = Modifier.fillMaxSize(),
-            onStorySelected = onStorySelected,
-            onSettingsClick = onSettingsClick,
-            onTextAdventureClick = onTextAdventureClick,
+            onNavigateUp = onNavigateUp,
         )
     }
 }

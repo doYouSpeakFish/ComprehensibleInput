@@ -21,6 +21,10 @@
     <string name="language_selector_select_translation_language_content_description">Pilih bahasa untuk terjemahan. Saat ini menerjemahkan ke %1$s</string>
     <string name="top_bar_language_picker_translations_label">Terjemahan</string>
     <string name="top_bar_language_picker_learning_label">Pembelajaran</string>
+    <string name="text_adventure_button_description">Petualangan teks</string>
+    <string name="text_adventure_title">Petualangan teks</string>
+    <string name="text_adventure_input_hint">Tanggapi petualangan</string>
+    <string name="text_adventure_send">Kirim</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Ketuk kalimat apa pun untuk menerjemahkannya</item>
         <item>Yah, hampir semua kalimat</item>

@@ -116,6 +116,7 @@ kover {
                     "input.comprehensible.data.AppDb_Impl",
                     "input.comprehensible.data.languages.LanguagesDao_Impl",
                     "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.textadventure.sources.remote.DefaultTextAdventureRemoteDataSource",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
                 )
