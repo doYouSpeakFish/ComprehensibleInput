@@ -10,21 +10,31 @@ data class StoryListUiState(
     val learningLanguage: LanguageSelection?,
     val translationLanguage: LanguageSelection?,
     val languagesAvailable: List<LanguageSelection>,
-    val stories: List<StoryListItem>,
+    val items: List<StoryListItem>,
 ) {
     /**
-     * A story list item.
+     * A list item in the story list.
      */
-    data class StoryListItem(
-        val id: String,
-        val title: String,
-        val subtitle: String,
-        val featuredImage: Bitmap,
-    )
+    sealed interface StoryListItem {
+        data class Story(
+            val id: String,
+            val title: String,
+            val subtitle: String,
+            val featuredImage: Bitmap,
+        ) : StoryListItem
+
+        data class TextAdventure(
+            val id: String,
+            val title: String,
+            val isComplete: Boolean,
+        ) : StoryListItem
+
+        data object StartTextAdventure : StoryListItem
+    }
 
     companion object {
         val INITIAL = StoryListUiState(
-            stories = emptyList(),
+            items = emptyList(),
             learningLanguage = null,
             translationLanguage = null,
             languagesAvailable = emptyList()
