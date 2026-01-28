@@ -18,9 +18,17 @@ data class TextAdventure(
 data class TextAdventureMessage(
     val id: String,
     val sender: TextAdventureMessageSender,
+    val paragraphs: List<TextAdventureParagraph>,
+    val isEnding: Boolean,
+)
+
+/**
+ * A paragraph inside a text adventure message.
+ */
+data class TextAdventureParagraph(
+    val id: String,
     val sentences: List<String>,
     val translatedSentences: List<String>,
-    val isEnding: Boolean,
 )
 
 /**

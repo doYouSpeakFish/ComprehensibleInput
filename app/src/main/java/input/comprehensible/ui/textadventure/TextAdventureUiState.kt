@@ -16,6 +16,7 @@ sealed interface TextAdventureUiState {
 
     data class SelectedText(
         val messageId: String,
+        val paragraphIndex: Int,
         val sentenceIndex: Int,
         val isTranslated: Boolean,
     )
@@ -26,7 +27,7 @@ sealed interface TextAdventureMessageUiState {
 
     data class Ai(
         override val id: String,
-        val content: StoryContentPartUiState.Paragraph,
+        val paragraphs: List<StoryContentPartUiState.Paragraph>,
         val isEnding: Boolean,
     ) : TextAdventureMessageUiState
 

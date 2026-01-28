@@ -63,7 +63,7 @@ private fun TextAdventureScreen(
     onNavigateUp: () -> Unit,
     onInputChanged: (String) -> Unit,
     onSendMessage: () -> Unit,
-    onSentenceSelected: (messageId: String, sentenceIndex: Int) -> Unit,
+    onSentenceSelected: (messageId: String, paragraphIndex: Int, sentenceIndex: Int) -> Unit,
     state: TextAdventureUiState,
 ) {
     Scaffold(
@@ -110,7 +110,7 @@ private fun TextAdventureScreen(
 private fun TextAdventureMessages(
     modifier: Modifier = Modifier,
     state: TextAdventureUiState.Loaded,
-    onSentenceSelected: (messageId: String, sentenceIndex: Int) -> Unit,
+    onSentenceSelected: (messageId: String, paragraphIndex: Int, sentenceIndex: Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
@@ -142,24 +142,30 @@ private fun TextAdventureMessages(
 private fun AiMessage(
     message: TextAdventureMessageUiState.Ai,
     selectedText: TextAdventureUiState.SelectedText?,
-    onSentenceSelected: (messageId: String, sentenceIndex: Int) -> Unit,
+    onSentenceSelected: (messageId: String, paragraphIndex: Int, sentenceIndex: Int) -> Unit,
 ) {
-    val selectedSentenceIndex =
-        selectedText?.sentenceIndex?.takeIf { selectedText.messageId == message.id }
-    val isSelectionTranslated =
-        selectedText?.isTranslated?.takeIf { selectedText.messageId == message.id } ?: false
     Surface(
         modifier = Modifier.fillMaxWidth(),
         tonalElevation = 1.dp,
         shape = MaterialTheme.shapes.large,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            StoryContentPart(
-                state = message.content,
-                selectedSentenceIndex = selectedSentenceIndex,
-                isSelectionTranslated = isSelectionTranslated,
-                onSentenceSelected = { onSentenceSelected(message.id, it) },
-            )
+            message.paragraphs.forEachIndexed { paragraphIndex, paragraph ->
+                val isSelectedParagraph = selectedText?.messageId == message.id &&
+                    selectedText.paragraphIndex == paragraphIndex
+                val selectedSentenceIndex =
+                    selectedText?.sentenceIndex?.takeIf { isSelectedParagraph }
+                val isSelectionTranslated =
+                    selectedText?.isTranslated?.takeIf { isSelectedParagraph } ?: false
+                StoryContentPart(
+                    state = paragraph,
+                    selectedSentenceIndex = selectedSentenceIndex,
+                    isSelectionTranslated = isSelectionTranslated,
+                    onSentenceSelected = { sentenceIndex ->
+                        onSentenceSelected(message.id, paragraphIndex, sentenceIndex)
+                    },
+                )
+            }
             if (message.isEnding) {
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
@@ -243,15 +249,17 @@ fun TextAdventurePreview() {
             onNavigateUp = {},
             onInputChanged = {},
             onSendMessage = {},
-            onSentenceSelected = { _, _ -> },
+            onSentenceSelected = { _, _, _ -> },
             state = TextAdventureUiState.Loaded(
                 title = "Mountain Path",
                 messages = listOf(
                     TextAdventureMessageUiState.Ai(
                         id = "ai-1",
-                        content = StoryContentPartUiState.Paragraph(
-                            sentences = listOf("You find a fork in the trail."),
-                            translatedSentences = listOf("Encuentras una bifurcación en el camino."),
+                        paragraphs = listOf(
+                            StoryContentPartUiState.Paragraph(
+                                sentences = listOf("You find a fork in the trail."),
+                                translatedSentences = listOf("Encuentras una bifurcación en el camino."),
+                            )
                         ),
                         isEnding = false,
                     ),

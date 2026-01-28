@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.textadventures.TextAdventureResult
 import input.comprehensible.data.textadventures.model.TextAdventureMessage
 import input.comprehensible.data.textadventures.model.TextAdventureMessageSender
+import input.comprehensible.data.textadventures.model.TextAdventureParagraph
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.usecases.ContinueTextAdventureUseCase
 import input.comprehensible.usecases.GetTextAdventureUseCase
@@ -58,15 +59,17 @@ class TextAdventureViewModel(
         }
     }
 
-    fun onSentenceSelected(messageId: String, sentenceIndex: Int) {
+    fun onSentenceSelected(messageId: String, paragraphIndex: Int, sentenceIndex: Int) {
         selectedText.update { selectedSentence ->
             if (selectedSentence?.messageId == messageId &&
+                selectedSentence.paragraphIndex == paragraphIndex &&
                 selectedSentence.sentenceIndex == sentenceIndex
             ) {
                 return@update selectedSentence.copy(isTranslated = !selectedSentence.isTranslated)
             }
             TextAdventureUiState.SelectedText(
                 messageId = messageId,
+                paragraphIndex = paragraphIndex,
                 sentenceIndex = sentenceIndex,
                 isTranslated = true,
             )
@@ -77,14 +80,16 @@ class TextAdventureViewModel(
 private fun TextAdventureMessage.toUiState(): TextAdventureMessageUiState = when (sender) {
     TextAdventureMessageSender.AI -> TextAdventureMessageUiState.Ai(
         id = id,
-        content = StoryContentPartUiState.Paragraph(
-            sentences = sentences,
-            translatedSentences = translatedSentences,
-        ),
+        paragraphs = paragraphs.map { it.toUiState() },
         isEnding = isEnding,
     )
     TextAdventureMessageSender.USER -> TextAdventureMessageUiState.User(
         id = id,
-        text = sentences.joinToString(" "),
+        text = paragraphs.flatMap { it.sentences }.joinToString(" "),
     )
 }
+
+private fun TextAdventureParagraph.toUiState() = StoryContentPartUiState.Paragraph(
+    sentences = sentences,
+    translatedSentences = translatedSentences,
+)

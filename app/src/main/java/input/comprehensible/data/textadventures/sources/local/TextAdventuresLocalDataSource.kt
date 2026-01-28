@@ -7,6 +7,7 @@ import androidx.room.Query
 import com.ktin.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
 
+@Suppress("TooManyFunctions")
 @Dao
 interface TextAdventuresLocalDataSource {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -14,6 +15,12 @@ interface TextAdventuresLocalDataSource {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messages: List<TextAdventureMessageEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertParagraphs(paragraphs: List<TextAdventureParagraphEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSentences(sentences: List<TextAdventureSentenceEntity>)
 
     @Query(
         """
@@ -61,15 +68,48 @@ interface TextAdventuresLocalDataSource {
 
     @Query(
         """
+            SELECT * FROM TextAdventureMessageEntity
+            WHERE adventureId = :adventureId
+            ORDER BY messageIndex ASC
+        """
+    )
+    suspend fun getMessagesSnapshot(adventureId: String): List<TextAdventureMessageEntity>
+
+    @Query(
+        """
+            SELECT * FROM TextAdventureMessageEntity
+            ORDER BY messageIndex ASC
+        """
+    )
+    fun getAllMessages(): Flow<List<TextAdventureMessageEntity>>
+
+    @Query(
+        """
+            SELECT * FROM TextAdventureParagraphEntity
+            WHERE adventureId = :adventureId
+            ORDER BY paragraphIndex ASC
+        """
+    )
+    fun getParagraphs(adventureId: String): Flow<List<TextAdventureParagraphEntity>>
+
+    @Query(
+        """
+            SELECT * FROM TextAdventureSentenceEntity
+            WHERE adventureId = :adventureId
+            ORDER BY sentenceIndex ASC
+        """
+    )
+    fun getSentences(adventureId: String): Flow<List<TextAdventureSentenceEntity>>
+
+    @Query(
+        """
             UPDATE TextAdventureEntity
-            SET isComplete = :isComplete,
-                updatedAt = :updatedAt
+            SET updatedAt = :updatedAt
             WHERE id = :id
         """
     )
-    suspend fun updateAdventureCompletion(
+    suspend fun updateAdventureUpdatedAt(
         id: String,
-        isComplete: Boolean,
         updatedAt: Long,
     )
 
