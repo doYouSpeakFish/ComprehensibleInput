@@ -49,6 +49,7 @@ internal fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (id: String) -> Unit,
     onSettingsClick: () -> Unit,
+    onTextAdventureClick: () -> Unit,
     viewModel: StoryListViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
@@ -56,6 +57,7 @@ internal fun StoryListScreen(
         modifier = modifier,
         onStorySelected = { onStorySelected(it.id) },
         onSettingsClick = onSettingsClick,
+        onTextAdventureClick = onTextAdventureClick,
         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
         onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
         state = state,
@@ -67,6 +69,7 @@ private fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (StoryListUiState.StoryListItem) -> Unit,
     onSettingsClick: () -> Unit,
+    onTextAdventureClick: () -> Unit,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     state: StoryListUiState,
@@ -75,6 +78,7 @@ private fun StoryListScreen(
     StoryListScaffold(
         modifier = modifier,
         onSettingsClick = onSettingsClick,
+        onTextAdventureClick = onTextAdventureClick,
         learningLanguage = state.learningLanguage,
         translationLanguage = state.translationLanguage,
         languagesAvailable = state.languagesAvailable,
@@ -113,6 +117,7 @@ private fun StoryListScreen(
 private fun StoryListScaffold(
     modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit,
+    onTextAdventureClick: () -> Unit,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
     learningLanguage: LanguageSelection?,
     translationLanguage: LanguageSelection?,
@@ -133,6 +138,7 @@ private fun StoryListScaffold(
                 onLanguageSelected = onLearningLanguageSelected,
                 onTranslationLanguageSelected = onTranslationLanguageSelected,
                 onSettingsClick = onSettingsClick,
+                onTextAdventureClick = onTextAdventureClick,
             )
         },
     ) { paddingValues ->
@@ -236,6 +242,7 @@ fun StoryListScreenPreview() {
         StoryListScreen(
             onStorySelected = {},
             onSettingsClick = {},
+            onTextAdventureClick = {},
             onLearningLanguageSelected = {},
             onTranslationLanguageSelected = {},
             state = StoryListUiState(

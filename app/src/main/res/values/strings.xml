@@ -21,6 +21,10 @@
     <string name="language_selector_select_translation_language_content_description">Select a language for translations. Currently translating into %1$s</string>
     <string name="top_bar_language_picker_translations_label">Translations</string>
     <string name="top_bar_language_picker_learning_label">Learning</string>
+    <string name="text_adventure_button_description">Text adventure</string>
+    <string name="text_adventure_title">Text adventure</string>
+    <string name="text_adventure_input_hint">Respond to the adventure</string>
+    <string name="text_adventure_send">Send</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Tap on any sentence to translate it</item>
         <item>Well, almost any sentence</item>
