@@ -9,7 +9,6 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageEntity
-import input.comprehensible.data.textadventures.sources.local.TextAdventureParagraphEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.di.ApplicationProvider
@@ -19,10 +18,9 @@ import input.comprehensible.di.ApplicationProvider
         StoryEntity::class,
         TextAdventureEntity::class,
         TextAdventureMessageEntity::class,
-        TextAdventureParagraphEntity::class,
         TextAdventureSentenceEntity::class,
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -37,6 +35,7 @@ abstract class AppDb : RoomDatabase() {
     companion object : Singleton<AppDb>() {
         override fun create() = Room
             .databaseBuilder<AppDb>(context = ApplicationProvider(), name = "app-db")
+            .addMigrations(TextAdventureMigration5To6())
             .build()
     }
 }

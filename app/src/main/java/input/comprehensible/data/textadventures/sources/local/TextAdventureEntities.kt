@@ -44,44 +44,14 @@ data class TextAdventureMessageEntity(
             childColumns = ["messageId"],
             onDelete = ForeignKey.CASCADE,
         ),
-        ForeignKey(
-            entity = TextAdventureEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["adventureId"],
-            onDelete = ForeignKey.CASCADE,
-        ),
     ],
-    indices = [Index("messageId"), Index("adventureId")],
-)
-data class TextAdventureParagraphEntity(
-    @PrimaryKey val id: String,
-    val adventureId: String,
-    val messageId: String,
-    val paragraphIndex: Int,
-)
-
-@Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = TextAdventureParagraphEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["paragraphId"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = TextAdventureEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["adventureId"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-    ],
-    indices = [Index("paragraphId"), Index("adventureId")],
+    indices = [Index("messageId")],
+    primaryKeys = ["messageId", "paragraphIndex", "sentenceIndex", "language"],
 )
 data class TextAdventureSentenceEntity(
-    @PrimaryKey val id: String,
-    val adventureId: String,
-    val paragraphId: String,
-    val language: String,
+    val messageId: String,
+    val paragraphIndex: Int,
     val sentenceIndex: Int,
+    val language: String,
     val text: String,
 )

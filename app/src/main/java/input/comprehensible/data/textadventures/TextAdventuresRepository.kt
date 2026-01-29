@@ -8,7 +8,6 @@ import input.comprehensible.data.textadventures.model.TextAdventureParagraph
 import input.comprehensible.data.textadventures.model.TextAdventureSummary
 import input.comprehensible.data.textadventures.sources.local.TextAdventureEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageEntity
-import input.comprehensible.data.textadventures.sources.local.TextAdventureParagraphEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
@@ -49,16 +48,14 @@ class TextAdventuresRepository(
     fun getAdventure(id: String): Flow<TextAdventureResult> = combine(
         localDataSource.getAdventure(id),
         localDataSource.getMessages(id),
-        localDataSource.getParagraphs(id),
         localDataSource.getSentences(id),
-    ) { adventure, messages, paragraphs, sentences ->
+    ) { adventure, messages, sentences ->
         if (adventure == null) {
             TextAdventureResult.Error
         } else {
             TextAdventureResult.Success(
                 adventure.toDomain(
                     messages = messages,
-                    paragraphs = paragraphs,
                     sentences = sentences,
                 )
             )
@@ -156,24 +153,23 @@ class TextAdventuresRepository(
 
     private fun TextAdventureEntity.toDomain(
         messages: List<TextAdventureMessageEntity>,
-        paragraphs: List<TextAdventureParagraphEntity>,
         sentences: List<TextAdventureSentenceEntity>,
     ): TextAdventure {
-        val sentencesByParagraph = sentences.groupBy { it.paragraphId }
-        val paragraphsByMessage = paragraphs
-            .groupBy { it.messageId }
-            .mapValues { (_, items) -> items.sortedBy { it.paragraphIndex } }
+        val sentencesByMessage = sentences.groupBy { it.messageId }
         val messageUi = messages.sortedBy { it.messageIndex }.map { message ->
-            val messageParagraphs = paragraphsByMessage[message.id].orEmpty()
-            message.toDomain(
-                paragraphs = messageParagraphs.map { paragraph ->
-                    paragraph.toDomain(
-                        sentences = sentencesByParagraph[paragraph.id].orEmpty(),
+            val messageSentences = sentencesByMessage[message.id].orEmpty()
+            val paragraphs = messageSentences
+                .groupBy { it.paragraphIndex }
+                .toSortedMap()
+                .map { (paragraphIndex, paragraphSentences) ->
+                    paragraphSentences.toDomain(
+                        messageId = message.id,
+                        paragraphIndex = paragraphIndex,
                         learningLanguage = learningLanguage,
                         translationLanguage = translationLanguage,
                     )
                 }
-            )
+            message.toDomain(paragraphs = paragraphs)
         }
         return TextAdventure(
             id = id,
@@ -194,16 +190,16 @@ class TextAdventuresRepository(
         isEnding = isEnding,
     )
 
-    private fun TextAdventureParagraphEntity.toDomain(
-        sentences: List<TextAdventureSentenceEntity>,
+    private fun List<TextAdventureSentenceEntity>.toDomain(
+        messageId: String,
+        paragraphIndex: Int,
         learningLanguage: String,
         translationLanguage: String,
     ): TextAdventureParagraph {
-        val sentencesByLanguage = sentences
-            .sortedBy { it.sentenceIndex }
+        val sentencesByLanguage = sortedBy { it.sentenceIndex }
             .groupBy { it.language }
         return TextAdventureParagraph(
-            id = id,
+            id = "$messageId-$paragraphIndex",
             sentences = sentencesByLanguage[learningLanguage].orEmpty().map { it.text },
             translatedSentences = sentencesByLanguage[translationLanguage].orEmpty().map { it.text },
         )
@@ -217,7 +213,6 @@ class TextAdventuresRepository(
         createdAt: Long,
     ) {
         val messageId = UUID.randomUUID().toString()
-        val paragraphId = UUID.randomUUID().toString()
         localDataSource.insertMessages(
             listOf(
                 TextAdventureMessageEntity(
@@ -230,22 +225,11 @@ class TextAdventuresRepository(
                 )
             )
         )
-        localDataSource.insertParagraphs(
-            listOf(
-                TextAdventureParagraphEntity(
-                    id = paragraphId,
-                    adventureId = adventureId,
-                    messageId = messageId,
-                    paragraphIndex = 0,
-                )
-            )
-        )
         localDataSource.insertSentences(
             listOf(
                 TextAdventureSentenceEntity(
-                    id = UUID.randomUUID().toString(),
-                    adventureId = adventureId,
-                    paragraphId = paragraphId,
+                    messageId = messageId,
+                    paragraphIndex = 0,
                     language = language,
                     sentenceIndex = 0,
                     text = message,
@@ -262,7 +246,6 @@ class TextAdventuresRepository(
         createdAt: Long,
     ) {
         val messageId = UUID.randomUUID().toString()
-        val paragraphId = UUID.randomUUID().toString()
         localDataSource.insertMessages(
             listOf(
                 TextAdventureMessageEntity(
@@ -275,23 +258,12 @@ class TextAdventuresRepository(
                 )
             )
         )
-        localDataSource.insertParagraphs(
-            listOf(
-                TextAdventureParagraphEntity(
-                    id = paragraphId,
-                    adventureId = adventureId,
-                    messageId = messageId,
-                    paragraphIndex = 0,
-                )
-            )
-        )
         val sentenceEntities = buildList {
             response.sentences.forEachIndexed { index, sentence ->
                 add(
                     TextAdventureSentenceEntity(
-                        id = UUID.randomUUID().toString(),
-                        adventureId = adventureId,
-                        paragraphId = paragraphId,
+                        messageId = messageId,
+                        paragraphIndex = 0,
                         language = languages.learningLanguage,
                         sentenceIndex = index,
                         text = sentence,
@@ -301,9 +273,8 @@ class TextAdventuresRepository(
             response.translatedSentences.forEachIndexed { index, sentence ->
                 add(
                     TextAdventureSentenceEntity(
-                        id = UUID.randomUUID().toString(),
-                        adventureId = adventureId,
-                        paragraphId = paragraphId,
+                        messageId = messageId,
+                        paragraphIndex = 0,
                         language = languages.translationLanguage,
                         sentenceIndex = index,
                         text = sentence,
@@ -339,18 +310,16 @@ private suspend fun buildHistory(
 ): List<TextAdventureHistoryMessage> {
     val messages = localDataSource.getMessagesSnapshot(adventureId)
         .sortedBy { it.messageIndex }
-    val paragraphsByMessage = localDataSource.getParagraphsSnapshot(adventureId)
-        .groupBy { it.messageId }
-    val sentencesByParagraph = localDataSource.getSentencesSnapshot(adventureId)
+    val sentencesByMessage = localDataSource.getSentencesSnapshot(adventureId)
         .filter { it.language == learningLanguage }
-        .groupBy { it.paragraphId }
+        .groupBy { it.messageId }
     return messages.mapNotNull { message ->
-        val text = paragraphsByMessage[message.id]
+        val text = sentencesByMessage[message.id]
             .orEmpty()
-            .sortedBy { it.paragraphIndex }
-            .mapNotNull { paragraph ->
-                val sentenceText = sentencesByParagraph[paragraph.id]
-                    .orEmpty()
+            .groupBy { it.paragraphIndex }
+            .toSortedMap()
+            .mapNotNull { (_, paragraphSentences) ->
+                val sentenceText = paragraphSentences
                     .sortedBy { it.sentenceIndex }
                     .joinToString(" ") { it.text.trim() }
                     .trim()

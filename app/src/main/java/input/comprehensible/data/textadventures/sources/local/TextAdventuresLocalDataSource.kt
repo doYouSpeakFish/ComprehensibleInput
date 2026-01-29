@@ -17,9 +17,6 @@ interface TextAdventuresLocalDataSource {
     suspend fun insertMessages(messages: List<TextAdventureMessageEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertParagraphs(paragraphs: List<TextAdventureParagraphEntity>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSentences(sentences: List<TextAdventureSentenceEntity>)
 
     @Query(
@@ -85,36 +82,24 @@ interface TextAdventuresLocalDataSource {
 
     @Query(
         """
-            SELECT * FROM TextAdventureParagraphEntity
-            WHERE adventureId = :adventureId
-            ORDER BY paragraphIndex ASC
-        """
-    )
-    fun getParagraphs(adventureId: String): Flow<List<TextAdventureParagraphEntity>>
-
-    @Query(
-        """
-            SELECT * FROM TextAdventureParagraphEntity
-            WHERE adventureId = :adventureId
-            ORDER BY paragraphIndex ASC
-        """
-    )
-    suspend fun getParagraphsSnapshot(adventureId: String): List<TextAdventureParagraphEntity>
-
-    @Query(
-        """
-            SELECT * FROM TextAdventureSentenceEntity
-            WHERE adventureId = :adventureId
-            ORDER BY sentenceIndex ASC
+            SELECT sentences.*
+            FROM TextAdventureSentenceEntity AS sentences
+            INNER JOIN TextAdventureMessageEntity AS messages
+                ON messages.id = sentences.messageId
+            WHERE messages.adventureId = :adventureId
+            ORDER BY sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
         """
     )
     fun getSentences(adventureId: String): Flow<List<TextAdventureSentenceEntity>>
 
     @Query(
         """
-            SELECT * FROM TextAdventureSentenceEntity
-            WHERE adventureId = :adventureId
-            ORDER BY sentenceIndex ASC
+            SELECT sentences.*
+            FROM TextAdventureSentenceEntity AS sentences
+            INNER JOIN TextAdventureMessageEntity AS messages
+                ON messages.id = sentences.messageId
+            WHERE messages.adventureId = :adventureId
+            ORDER BY sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
         """
     )
     suspend fun getSentencesSnapshot(adventureId: String): List<TextAdventureSentenceEntity>
