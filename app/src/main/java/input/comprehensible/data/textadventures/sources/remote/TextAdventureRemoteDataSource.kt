@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventures.sources.remote
 
 import com.ktin.InjectedSingleton
+import kotlinx.serialization.Serializable
 
 interface TextAdventureRemoteDataSource {
     suspend fun startAdventure(
@@ -14,6 +15,7 @@ interface TextAdventureRemoteDataSource {
         learningLanguage: String,
         translationsLanguage: String,
         userMessage: String,
+        history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse
 
     companion object : InjectedSingleton<TextAdventureRemoteDataSource>()
@@ -27,4 +29,13 @@ data class TextAdventureRemoteResponse(
     val sentences: List<String>,
     val translatedSentences: List<String>,
     val isEnding: Boolean,
+)
+
+/**
+ * A conversation history entry to provide context for the LLM.
+ */
+@Serializable
+data class TextAdventureHistoryMessage(
+    val role: String,
+    val text: String,
 )

@@ -11,6 +11,7 @@ import input.comprehensible.data.textadventures.sources.local.TextAdventureMessa
 import input.comprehensible.data.textadventures.sources.local.TextAdventureParagraphEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import kotlinx.coroutines.flow.Flow
@@ -127,6 +128,11 @@ class TextAdventuresRepository(
             learningLanguage = adventure.learningLanguage,
             translationsLanguage = adventure.translationLanguage,
             userMessage = userMessage,
+            history = buildHistory(
+                localDataSource = localDataSource,
+                adventureId = adventureId,
+                learningLanguage = adventure.learningLanguage,
+            ),
         )
         insertAiResponse(
             adventureId = adventureId,
@@ -324,6 +330,44 @@ class TextAdventuresRepository(
 sealed interface TextAdventuresListResult {
     data class Success(val adventures: List<TextAdventureSummary>) : TextAdventuresListResult
     object Error : TextAdventuresListResult
+}
+
+private suspend fun buildHistory(
+    localDataSource: TextAdventuresLocalDataSource,
+    adventureId: String,
+    learningLanguage: String,
+): List<TextAdventureHistoryMessage> {
+    val messages = localDataSource.getMessagesSnapshot(adventureId)
+        .sortedBy { it.messageIndex }
+    val paragraphsByMessage = localDataSource.getParagraphsSnapshot(adventureId)
+        .groupBy { it.messageId }
+    val sentencesByParagraph = localDataSource.getSentencesSnapshot(adventureId)
+        .filter { it.language == learningLanguage }
+        .groupBy { it.paragraphId }
+    return messages.mapNotNull { message ->
+        val text = paragraphsByMessage[message.id]
+            .orEmpty()
+            .sortedBy { it.paragraphIndex }
+            .mapNotNull { paragraph ->
+                val sentenceText = sentencesByParagraph[paragraph.id]
+                    .orEmpty()
+                    .sortedBy { it.sentenceIndex }
+                    .joinToString(" ") { it.text.trim() }
+                    .trim()
+                sentenceText.takeIf { it.isNotBlank() }
+            }
+            .joinToString("\n\n")
+            .trim()
+        text.takeIf { it.isNotBlank() }?.let {
+            TextAdventureHistoryMessage(
+                role = when (message.sender) {
+                    TextAdventureMessageSender.USER -> "user"
+                    TextAdventureMessageSender.AI -> "assistant"
+                },
+                text = it,
+            )
+        }
+    }
 }
 
 sealed interface TextAdventureResult {

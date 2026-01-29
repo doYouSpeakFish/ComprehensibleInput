@@ -1,6 +1,7 @@
 package input.comprehensible.data.sources
 
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 
 class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
@@ -32,6 +33,7 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         learningLanguage: String,
         translationsLanguage: String,
         userMessage: String,
+        history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse {
         val responses = responsesByAdventureId[adventureId]
             ?: error("No scripted responses available for adventure $adventureId")

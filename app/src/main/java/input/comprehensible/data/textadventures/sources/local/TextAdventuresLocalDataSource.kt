@@ -94,12 +94,30 @@ interface TextAdventuresLocalDataSource {
 
     @Query(
         """
+            SELECT * FROM TextAdventureParagraphEntity
+            WHERE adventureId = :adventureId
+            ORDER BY paragraphIndex ASC
+        """
+    )
+    suspend fun getParagraphsSnapshot(adventureId: String): List<TextAdventureParagraphEntity>
+
+    @Query(
+        """
             SELECT * FROM TextAdventureSentenceEntity
             WHERE adventureId = :adventureId
             ORDER BY sentenceIndex ASC
         """
     )
     fun getSentences(adventureId: String): Flow<List<TextAdventureSentenceEntity>>
+
+    @Query(
+        """
+            SELECT * FROM TextAdventureSentenceEntity
+            WHERE adventureId = :adventureId
+            ORDER BY sentenceIndex ASC
+        """
+    )
+    suspend fun getSentencesSnapshot(adventureId: String): List<TextAdventureSentenceEntity>
 
     @Query(
         """
