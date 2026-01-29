@@ -2,6 +2,7 @@ package input.comprehensible.data.textadventures.sources.local
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.MapInfo
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ktin.InjectedSingleton
@@ -19,22 +20,29 @@ interface TextAdventuresLocalDataSource {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSentences(sentences: List<TextAdventureSentenceEntity>)
 
-    @Query(
-        """
-            SELECT * FROM TextAdventureEntity
-            ORDER BY updatedAt DESC
-        """
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMessageAndSentences(
+        message: TextAdventureMessageEntity,
+        sentences: List<TextAdventureSentenceEntity>,
     )
-    fun getAdventures(): Flow<List<TextAdventureEntity>>
 
     @Query(
         """
-            SELECT * FROM TextAdventureEntity
-            WHERE id = :id
-            LIMIT 1
+            SELECT * FROM TextAdventureSummaryView
+            ORDER BY updatedAt DESC
         """
     )
-    fun getAdventure(id: String): Flow<TextAdventureEntity?>
+    fun getAdventureSummaries(): Flow<List<TextAdventureSummaryView>>
+
+    @Query(
+        """
+            SELECT * FROM TextAdventureMessageSentenceView
+            WHERE adventureId = :adventureId
+            ORDER BY messageIndex ASC, paragraphIndex ASC, sentenceIndex ASC
+        """
+    )
+    @MapInfo(keyColumn = "messageIndex")
+    fun getAdventureSentencesMap(adventureId: String): Flow<Map<Int, List<TextAdventureMessageSentenceView>>>
 
     @Query(
         """
@@ -85,9 +93,10 @@ interface TextAdventuresLocalDataSource {
             SELECT sentences.*
             FROM TextAdventureSentenceEntity AS sentences
             INNER JOIN TextAdventureMessageEntity AS messages
-                ON messages.id = sentences.messageId
-            WHERE messages.adventureId = :adventureId
-            ORDER BY sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
+                ON messages.adventureId = sentences.adventureId
+                AND messages.messageIndex = sentences.messageIndex
+            WHERE sentences.adventureId = :adventureId
+            ORDER BY sentences.messageIndex ASC, sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
         """
     )
     fun getSentences(adventureId: String): Flow<List<TextAdventureSentenceEntity>>
@@ -97,9 +106,10 @@ interface TextAdventuresLocalDataSource {
             SELECT sentences.*
             FROM TextAdventureSentenceEntity AS sentences
             INNER JOIN TextAdventureMessageEntity AS messages
-                ON messages.id = sentences.messageId
-            WHERE messages.adventureId = :adventureId
-            ORDER BY sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
+                ON messages.adventureId = sentences.adventureId
+                AND messages.messageIndex = sentences.messageIndex
+            WHERE sentences.adventureId = :adventureId
+            ORDER BY sentences.messageIndex ASC, sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
         """
     )
     suspend fun getSentencesSnapshot(adventureId: String): List<TextAdventureSentenceEntity>

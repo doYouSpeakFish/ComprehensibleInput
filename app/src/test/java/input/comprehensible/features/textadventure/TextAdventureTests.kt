@@ -29,7 +29,9 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
     @Test
     fun `text adventure can be played to completion`() = testRule.runTest {
         // GIVEN a text adventure with a scenario and responses
+        val adventureId = "adventure-1"
         val scenario = TextAdventureRemoteResponse(
+            adventureId = adventureId,
             title = "Harbor Mist",
             sentences = listOf("You arrive at a quiet harbor."),
             translatedSentences = listOf("Llegas a un puerto tranquilo."),
@@ -37,12 +39,14 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
         )
         val responses = listOf(
             TextAdventureRemoteResponse(
+                adventureId = adventureId,
                 title = "Harbor Mist",
                 sentences = listOf("A lantern flickers on the dock."),
                 translatedSentences = listOf("Una linterna parpadea en el muelle."),
                 isEnding = false,
             ),
             TextAdventureRemoteResponse(
+                adventureId = adventureId,
                 title = "Harbor Mist",
                 sentences = listOf("The fog lifts and the journey ends."),
                 translatedSentences = listOf("La niebla se disipa y el viaje termina."),
@@ -97,7 +101,9 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
     @Test
     fun `unfinished adventures can be resumed`() = testRule.runTest {
         // GIVEN a text adventure with a scenario and a follow-up
+        val adventureId = "adventure-2"
         val scenario = TextAdventureRemoteResponse(
+            adventureId = adventureId,
             title = "Forest Echoes",
             sentences = listOf("A trail winds into the forest."),
             translatedSentences = listOf("Un sendero se adentra en el bosque."),
@@ -105,6 +111,7 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
         )
         val responses = listOf(
             TextAdventureRemoteResponse(
+                adventureId = adventureId,
                 title = "Forest Echoes",
                 sentences = listOf("Birdsong follows you between the trees."),
                 translatedSentences = listOf("El canto de los pájaros te sigue entre los árboles."),

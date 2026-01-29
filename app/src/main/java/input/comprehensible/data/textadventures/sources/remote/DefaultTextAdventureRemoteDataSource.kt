@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.math.min
+import java.util.UUID
 
 class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     private val promptExecutor = simpleGoogleAIExecutor(BuildConfig.KOOG_API_KEY)
@@ -20,10 +21,10 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     }
 
     override suspend fun startAdventure(
-        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse = requestAdventureResponse(
+        adventureId = UUID.randomUUID().toString(),
         promptName = "text-adventure-start",
         systemPrompt = """
             You are a text adventure narrator.
@@ -34,7 +35,7 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
             Avoid markdown and keep punctuation natural for the language.
             The story should not end yet, so set isEnding to false.
         """.trimIndent(),
-        userPrompt = "Start a new adventure. Adventure ID: $adventureId.",
+        userPrompt = "Start a new adventure.",
     )
 
     override suspend fun respondToUser(
@@ -44,6 +45,7 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse = requestAdventureResponse(
+        adventureId = adventureId,
         promptName = "text-adventure-continue",
         systemPrompt = """
             You are a text adventure narrator continuing an ongoing story.
@@ -66,6 +68,7 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     )
 
     private suspend fun requestAdventureResponse(
+        adventureId: String,
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
@@ -79,6 +82,7 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         ).getOrThrow().data
         val normalizedCount = min(response.sentences.size, response.translatedSentences.size)
         return TextAdventureRemoteResponse(
+            adventureId = adventureId,
             title = response.title.trim(),
             sentences = response.sentences.take(normalizedCount).map { it.trim() },
             translatedSentences = response.translatedSentences.take(normalizedCount).map { it.trim() },

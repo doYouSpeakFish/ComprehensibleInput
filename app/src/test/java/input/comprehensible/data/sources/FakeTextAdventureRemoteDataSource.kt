@@ -18,12 +18,12 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     }
 
     override suspend fun startAdventure(
-        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse {
         val script = scriptedAdventures.removeFirstOrNull()
             ?: error("No scripted adventures available")
+        val adventureId = script.scenario.adventureId
         responsesByAdventureId[adventureId] = ArrayDeque(script.responses)
         return script.scenario
     }
