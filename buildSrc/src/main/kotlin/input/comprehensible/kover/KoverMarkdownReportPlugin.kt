@@ -3,6 +3,7 @@ package input.comprehensible.kover
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.configureEach
 import org.gradle.kotlin.dsl.register
 import org.gradle.api.tasks.Sync
 
@@ -35,6 +36,52 @@ class KoverMarkdownReportPlugin : Plugin<Project> {
             dependsOn(reportTask)
             generatedDir.set(extension.outputDir)
             snapshotDir.set(extension.snapshotDir)
+        }
+
+        registerVariantTasks(project, extension, "Debug")
+        registerVariantTasks(project, extension, "Release")
+    }
+
+    private fun registerVariantTasks(
+        project: Project,
+        extension: KoverMarkdownReportExtension,
+        variantName: String
+    ) {
+        val variantLowercase = variantName.lowercase()
+        val koverXmlTaskName = "koverXmlReport$variantName"
+        val reportTaskName = "koverMarkdownReport$variantName"
+        val outputDirProvider = project.layout.buildDirectory.dir("reports/kover/markdown/$variantLowercase")
+        val reportFileProvider = project.layout.buildDirectory.file("reports/kover/report$variantName.xml")
+        val snapshotDirProvider = project.layout.projectDirectory.dir("config/kover/markdown-snapshots/$variantLowercase")
+
+        val reportTask = project.tasks.register<GenerateKoverMarkdownReportTask>(reportTaskName) {
+            group = "verification"
+            description = "Generate markdown report from the Kover XML coverage output for $variantLowercase."
+            reportFile.set(reportFileProvider)
+            outputDir.set(outputDirProvider)
+            rootDir.set(project.layout.projectDirectory)
+            sourceRoots.set(extension.sourceRoots)
+            contextLines.set(extension.contextLines)
+        }
+
+        project.tasks.matching { it.name == koverXmlTaskName }.configureEach {
+            reportTask.configure { dependsOn(this@configureEach) }
+        }
+
+        project.tasks.register<Sync>("koverMarkdownSnapshot$variantName") {
+            group = "verification"
+            description = "Update the stored Kover markdown snapshot reports for $variantLowercase."
+            dependsOn(reportTask)
+            from(outputDirProvider)
+            into(snapshotDirProvider)
+        }
+
+        project.tasks.register<CompareKoverMarkdownSnapshotsTask>("koverMarkdownSnapshotCheck$variantName") {
+            group = "verification"
+            description = "Verify the Kover markdown snapshots for $variantLowercase."
+            dependsOn(reportTask)
+            generatedDir.set(outputDirProvider)
+            snapshotDir.set(snapshotDirProvider)
         }
     }
 
