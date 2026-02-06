@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.ksp)
@@ -21,6 +21,8 @@ val hasKeystore = keystorePropertiesFile.exists()
 if (hasKeystore) {
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 }
+
+aboutLibraries
 
 android {
     namespace = "input.comprehensible"
@@ -68,6 +70,7 @@ android {
     }
     kotlin {
         compilerOptions {
+            languageVersion = KotlinVersion.KOTLIN_2_3
             jvmTarget = JvmTarget.JVM_21
         }
     }
@@ -89,8 +92,8 @@ android {
         }
     }
     sourceSets {
-        getByName("test").assets.srcDir("$projectDir/schemas")
-        getByName("debug").assets.srcDirs(files("$projectDir/schemas"))
+        getByName("test").assets.directories.add("$projectDir/schemas")
+        getByName("debug").assets.directories.add("$projectDir/schemas")
     }
     room {
         schemaDirectory("$projectDir/schemas")
