@@ -2,13 +2,12 @@ package input.comprehensible.kover
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
@@ -23,10 +22,10 @@ import kotlin.io.path.exists
 import kotlin.io.path.isRegularFile
 
 abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
-    @get:InputFile
+    @get:InputFiles
     @get:Optional
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val reportFile: RegularFileProperty
+    abstract val reportFiles: ConfigurableFileCollection
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -44,7 +43,7 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        val report = reportFile.asFile.get()
+        val report = reportFiles.singleFile
         if (!report.exists()) {
             throw GradleException("Kover XML report not found at ${report.absolutePath}")
         }

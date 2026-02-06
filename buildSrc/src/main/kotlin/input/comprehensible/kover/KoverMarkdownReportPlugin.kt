@@ -3,7 +3,6 @@ package input.comprehensible.kover
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.configureEach
 import org.gradle.kotlin.dsl.register
 import org.gradle.api.tasks.Sync
 
@@ -15,7 +14,7 @@ class KoverMarkdownReportPlugin : Plugin<Project> {
         val reportTask = project.tasks.register<GenerateKoverMarkdownReportTask>("koverMarkdownReport") {
             group = "verification"
             description = "Generate markdown report from the Kover XML coverage output."
-            reportFile.set(extension.reportFile)
+            reportFiles.from(extension.reportFile)
             outputDir.set(extension.outputDir)
             rootDir.set(project.layout.projectDirectory)
             sourceRoots.set(extension.sourceRoots)
@@ -51,21 +50,21 @@ class KoverMarkdownReportPlugin : Plugin<Project> {
         val koverXmlTaskName = "koverXmlReport$variantName"
         val reportTaskName = "koverMarkdownReport$variantName"
         val outputDirProvider = project.layout.buildDirectory.dir("reports/kover/markdown/$variantLowercase")
-        val reportFileProvider = project.layout.projectDirectory.file("app/build/reports/kover/report$variantName.xml")
+        val reportFileProvider = project.layout.buildDirectory.file("reports/kover/report$variantName.xml")
         val snapshotDirProvider = project.layout.projectDirectory.dir("config/kover/markdown-snapshots/$variantLowercase")
 
         val reportTask = project.tasks.register<GenerateKoverMarkdownReportTask>(reportTaskName) {
             group = "verification"
             description = "Generate markdown report from the Kover XML coverage output for $variantLowercase."
-            reportFile.set(reportFileProvider)
+            reportFiles.from(reportFileProvider)
             outputDir.set(outputDirProvider)
             rootDir.set(project.layout.projectDirectory)
             sourceRoots.set(extension.sourceRoots)
             contextLines.set(extension.contextLines)
         }
 
-        project.tasks.matching { it.name == koverXmlTaskName }.configureEach {
-            reportTask.configure { dependsOn(this@configureEach) }
+        reportTask.configure {
+            dependsOn(project.tasks.named(koverXmlTaskName))
         }
 
         project.tasks.register<Sync>("koverMarkdownSnapshot$variantName") {
