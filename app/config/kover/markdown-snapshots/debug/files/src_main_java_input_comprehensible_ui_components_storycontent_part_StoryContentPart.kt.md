@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt
+# src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt
 
 **Key**
 
@@ -10,7 +10,8 @@
 
 ## Lines 44-48
 
-Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:44-48`
+Location:
+`src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:44-48`
 
 ```kotlin
 🟢   44 |     onChoiceTextSelected: (Int) -> Unit = {},
@@ -22,7 +23,8 @@ Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/par
 
 ## Lines 60-64
 
-Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:60-64`
+Location:
+`src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:60-64`
 
 ```kotlin
 🟢   60 |                 onOptionTextSelected = onChoiceTextSelected,
@@ -34,7 +36,8 @@ Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/par
 
 ## Lines 71-75
 
-Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:71-75`
+Location:
+`src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:71-75`
 
 ```kotlin
 ⚪   71 |     onSentenceSelected: (Int) -> Unit,
@@ -46,7 +49,8 @@ Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/par
 
 ## Lines 86-90
 
-Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:86-90`
+Location:
+`src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:86-90`
 
 ```kotlin
 🟢   86 |     modifier: Modifier = Modifier,
@@ -58,7 +62,8 @@ Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/par
 
 ## Lines 112-116
 
-Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:112-116`
+Location:
+`src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:112-116`
 
 ```kotlin
 ⚪  112 |     isSelectionTranslated: Boolean,
@@ -70,7 +75,8 @@ Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/par
 
 ## Lines 137-141
 
-Location: `app/src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:137-141`
+Location:
+`src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:137-141`
 
 ```kotlin
 ⚪  137 |     onOptionTextSelected: () -> Unit,

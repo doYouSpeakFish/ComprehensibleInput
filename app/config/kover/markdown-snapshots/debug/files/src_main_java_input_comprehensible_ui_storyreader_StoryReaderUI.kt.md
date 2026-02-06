@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt
+# src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 75-79
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:75-79`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:75-79`
 
 ```kotlin
 🟢   75 |     viewModel: StoryReaderViewModel = viewModel { StoryReaderViewModel(storyId) },
@@ -22,7 +22,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 101-105
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:101-105`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:101-105`
 
 ```kotlin
 ⚪  101 |     onPartScrolledTo: () -> Unit,
@@ -34,7 +34,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 127-131
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:127-131`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:127-131`
 
 ```kotlin
 ⚪  127 | 
@@ -46,7 +46,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 147-153
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:147-153`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:147-153`
 
 ```kotlin
 ⚪  147 |     onPartScrolledTo: () -> Unit,
@@ -60,7 +60,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 159-164
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:159-164`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:159-164`
 
 ```kotlin
 🟢  159 |         pageCount = { state.parts.size },
@@ -73,7 +73,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 171-175
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:171-175`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:171-175`
 
 ```kotlin
 🟢  171 |                 .testTag("story_reader_pager"),
@@ -85,7 +85,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 213-217
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:213-217`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:213-217`
 
 ```kotlin
 ⚪  213 |     pageIndex: Int,
@@ -97,7 +97,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 221-225
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:221-225`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:221-225`
 
 ```kotlin
 🟢  221 |     LaunchedEffect(pageIndex, currentlyVisiblePageIndex) {
@@ -109,7 +109,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 242-246
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:242-246`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:242-246`
 
 ```kotlin
 🟢  242 |         state = listState,
@@ -121,7 +121,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 269-277
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:269-277`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:269-277`
 
 ```kotlin
 🟢  269 |                 ?.takeIf {
@@ -137,7 +137,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 285-289
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:285-289`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:285-289`
 
 ```kotlin
 🟢  285 |                 selectedChoiceIndex = choiceSelectionIndex,
@@ -149,7 +149,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 294-303
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:294-303`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:294-303`
 
 ```kotlin
 🟢  294 |         }
@@ -166,7 +166,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 358-365
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:358-365`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:358-365`
 
 ```kotlin
 🟢  358 |                 .clickable(
@@ -181,7 +181,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.k
 
 ## Lines 370-374
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:370-374`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:370-374`
 
 ```kotlin
 ⚪  370 | @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt
+# src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 21-25
 
-Location: `app/src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt:21-25`
+Location: `src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt:21-25`
 
 ```kotlin
 ⚪   21 |     navController: NavHostController,

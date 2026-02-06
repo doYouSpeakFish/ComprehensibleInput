@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt
+# src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 55-59
 
-Location: `app/src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt:55-59`
+Location: `src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt:55-59`
 
 ```kotlin
 ⚪   55 |     onClick: () -> Unit,

@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/components/LanguageSelector.kt
+# src/main/java/input/comprehensible/ui/components/LanguageSelector.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 98-102
 
-Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:98-102`
+Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:98-102`
 
 ```kotlin
 ⚪   98 |     translationLanguage: LanguageSelection?,
@@ -22,7 +22,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector
 
 ## Lines 152-162
 
-Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:152-162`
+Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:152-162`
 
 ```kotlin
 ⚪  152 |     isMenuShown: Boolean,
@@ -40,7 +40,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector
 
 ## Lines 170-174
 
-Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:170-174`
+Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:170-174`
 
 ```kotlin
 ⚪  170 |                 ),
@@ -52,7 +52,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector
 
 ## Lines 232-236
 
-Location: `app/src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:232-236`
+Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:232-236`
 
 ```kotlin
 ⚪  232 |     languageSelection: LanguageSelection,

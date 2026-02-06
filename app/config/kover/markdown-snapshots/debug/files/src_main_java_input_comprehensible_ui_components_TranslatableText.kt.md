@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt
+# src/main/java/input/comprehensible/ui/components/TranslatableText.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 33-37
 
-Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt:33-37`
+Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:33-37`
 
 ```kotlin
 🟢   33 |         color = MaterialTheme.colorScheme.background,
@@ -22,7 +22,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText
 
 ## Lines 48-52
 
-Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt:48-52`
+Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:48-52`
 
 ```kotlin
 ⚪   48 | 
@@ -34,7 +34,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText
 
 ## Lines 64-68
 
-Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt:64-68`
+Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:64-68`
 
 ```kotlin
 🟢   64 |         color = MaterialTheme.colorScheme.background,
@@ -46,7 +46,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText
 
 ## Lines 85-89
 
-Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt:85-89`
+Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:85-89`
 
 ```kotlin
 ⚪   85 |     background: Color,
@@ -58,7 +58,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText
 
 ## Lines 105-111
 
-Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt:105-111`
+Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:105-111`
 
 ```kotlin
 🟢  105 |     translatedSentences,
@@ -72,7 +72,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText
 
 ## Lines 113-117
 
-Location: `app/src/main/java/input/comprehensible/ui/components/TranslatableText.kt:113-117`
+Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:113-117`
 
 ```kotlin
 🟢  113 |             val isSelected = selectedSentenceIndex == index

@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/components/PagerState.kt
+# src/main/java/input/comprehensible/ui/components/PagerState.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 24-32
 
-Location: `app/src/main/java/input/comprehensible/ui/components/PagerState.kt:24-32`
+Location: `src/main/java/input/comprehensible/ui/components/PagerState.kt:24-32`
 
 ```kotlin
 🟢   24 | ): PagerState {

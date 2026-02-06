@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/theme/Theme.kt
+# src/main/java/input/comprehensible/ui/theme/Theme.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 84-91
 
-Location: `app/src/main/java/input/comprehensible/ui/theme/Theme.kt:84-91`
+Location: `src/main/java/input/comprehensible/ui/theme/Theme.kt:84-91`
 
 ```kotlin
 ⚪   84 | 

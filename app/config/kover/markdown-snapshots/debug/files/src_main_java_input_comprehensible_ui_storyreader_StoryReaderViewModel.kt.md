@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt
+# src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 34-38
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:34-38`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:34-38`
 
 ```kotlin
 🟢   34 |         .map {
@@ -22,7 +22,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderView
 
 ## Lines 95-102
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:95-102`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:95-102`
 
 ```kotlin
 🟢   95 |         selectedTextState.update { selectedText ->
@@ -37,7 +37,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderView
 
 ## Lines 123-129
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:123-129`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:123-129`
 
 ```kotlin
 🟢  123 |         selectedTextState.update { selectedText ->

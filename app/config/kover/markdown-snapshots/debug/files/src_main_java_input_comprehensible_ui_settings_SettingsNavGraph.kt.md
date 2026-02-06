@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt
+# src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 22-26
 
-Location: `app/src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt:22-26`
+Location: `src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt:22-26`
 
 ```kotlin
 ⚪   22 |         )

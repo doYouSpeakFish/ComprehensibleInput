@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt
+# src/main/java/input/comprehensible/data/stories/StoriesRepository.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 61-71
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:61-71`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:61-71`
 
 ```kotlin
 🟢   61 |             StoriesListResult.Success(StoriesList(stories = storyListItems))
@@ -28,7 +28,7 @@ Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository
 
 ## Lines 163-171
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:163-171`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:163-171`
 
 ```kotlin
 ⚪  163 | 
@@ -44,7 +44,7 @@ Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository
 
 ## Lines 199-203
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:199-203`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:199-203`
 
 ```kotlin
 🟢  199 |             while (nextPartId != null) {
@@ -56,7 +56,7 @@ Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository
 
 ## Lines 216-227
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:216-227`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:216-227`
 
 ```kotlin
 🟢  216 |         val translatedChildrenById = translatedChildren.associateBy { it.id }
@@ -75,7 +75,7 @@ Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository
 
 ## Lines 232-237
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:232-237`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:232-237`
 
 ```kotlin
 ⚪  232 |         }
@@ -88,7 +88,7 @@ Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository
 
 ## Lines 275-280
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:275-280`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:275-280`
 
 ```kotlin
 🟢  275 |         return when (this) {
@@ -101,7 +101,7 @@ Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository
 
 ## Lines 342-346
 
-Location: `app/src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:342-346`
+Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:342-346`
 
 ```kotlin
 ⚪  342 | sealed interface StoriesListResult {

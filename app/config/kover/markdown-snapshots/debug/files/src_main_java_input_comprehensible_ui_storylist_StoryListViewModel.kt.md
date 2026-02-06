@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
+# src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 25-29
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:25-29`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:25-29`
 
 ```kotlin
 ⚪   25 |     ) { storiesResult, learningLanguage, translationsLanguage ->
@@ -22,7 +22,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListViewMode
 
 ## Lines 34-38
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:34-38`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:34-38`
 
 ```kotlin
 ⚪   34 |             }

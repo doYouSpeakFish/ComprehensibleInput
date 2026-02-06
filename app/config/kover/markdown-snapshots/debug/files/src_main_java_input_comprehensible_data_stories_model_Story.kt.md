@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/data/stories/model/Story.kt
+# src/main/java/input/comprehensible/data/stories/model/Story.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 28-35
 
-Location: `app/src/main/java/input/comprehensible/data/stories/model/Story.kt:28-35`
+Location: `src/main/java/input/comprehensible/data/stories/model/Story.kt:28-35`
 
 ```kotlin
 ⚪   28 | )

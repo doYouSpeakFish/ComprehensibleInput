@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt
+# src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 51-55
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:51-55`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:51-55`
 
 ```kotlin
 ⚪   51 |     onSettingsClick: () -> Unit,
@@ -22,7 +22,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:51
 
 ## Lines 71-75
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:71-75`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:71-75`
 
 ```kotlin
 ⚪   71 |     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
@@ -34,7 +34,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:71
 
 ## Lines 121-126
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:121-126`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:121-126`
 
 ```kotlin
 ⚪  121 |     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
@@ -47,7 +47,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:12
 
 ## Lines 151-155
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:151-155`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:151-155`
 
 ```kotlin
 ⚪  151 |     onClick: () -> Unit,
@@ -59,7 +59,7 @@ Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:15
 
 ## Lines 177-181
 
-Location: `app/src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:177-181`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:177-181`
 
 ```kotlin
 ⚪  177 |     image: ImageBitmap,

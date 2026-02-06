@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt
+# src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 29-41
 
-Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:29-41`
+Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:29-41`
 
 ```kotlin
 ⚪   29 | @Composable
@@ -30,7 +30,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt
 
 ## Lines 45-49
 
-Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:45-49`
+Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:45-49`
 
 ```kotlin
 ⚪   45 |         }
@@ -42,7 +42,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt
 
 ## Lines 61-65
 
-Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:61-65`
+Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:61-65`
 
 ```kotlin
 ⚪   61 |     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
@@ -54,7 +54,7 @@ Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt
 
 ## Lines 93-97
 
-Location: `app/src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:93-97`
+Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:93-97`
 
 ```kotlin
 ⚪   93 |     onNavigateUp: () -> Unit,

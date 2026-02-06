@@ -1,4 +1,4 @@
-# app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderNavigation.kt
+# src/main/java/input/comprehensible/ui/storyreader/StoryReaderNavigation.kt
 
 **Key**
 
@@ -10,7 +10,7 @@
 
 ## Lines 12-16
 
-Location: `app/src/main/java/input/comprehensible/ui/storyreader/StoryReaderNavigation.kt:12-16`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderNavigation.kt:12-16`
 
 ```kotlin
 ⚪   12 | import kotlinx.serialization.Serializable
