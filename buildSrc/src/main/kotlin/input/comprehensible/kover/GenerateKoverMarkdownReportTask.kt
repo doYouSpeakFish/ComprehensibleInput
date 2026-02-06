@@ -10,6 +10,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -23,6 +24,7 @@ import kotlin.io.path.isRegularFile
 
 abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
     @get:InputFile
+    @get:Optional
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val reportFile: RegularFileProperty
 
