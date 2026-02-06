@@ -19,6 +19,7 @@ class KoverMarkdownReportPlugin : Plugin<Project> {
             rootDir.set(project.layout.projectDirectory)
             sourceRoots.set(extension.sourceRoots)
             contextLines.set(extension.contextLines)
+            dependsOn(project.tasks.named("koverXmlReport"))
         }
         project.tasks.register<Sync>("koverMarkdownSnapshot") {
             group = "verification"
