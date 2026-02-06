@@ -51,7 +51,7 @@ class KoverMarkdownReportPlugin : Plugin<Project> {
         val koverXmlTaskName = "koverXmlReport$variantName"
         val reportTaskName = "koverMarkdownReport$variantName"
         val outputDirProvider = project.layout.buildDirectory.dir("reports/kover/markdown/$variantLowercase")
-        val reportFileProvider = project.layout.buildDirectory.file("reports/kover/report$variantName.xml")
+        val reportFileProvider = project.layout.projectDirectory.file("app/build/reports/kover/report$variantName.xml")
         val snapshotDirProvider = project.layout.projectDirectory.dir("config/kover/markdown-snapshots/$variantLowercase")
 
         val reportTask = project.tasks.register<GenerateKoverMarkdownReportTask>(reportTaskName) {
