@@ -7,6 +7,7 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
+
 ## Files with missing coverage
 
 - [src/main/java/input/comprehensible/data/stories/StoriesRepository.kt](files/src_main_java_input_comprehensible_data_stories_StoriesRepository.kt.md) (
