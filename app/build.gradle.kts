@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.room)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
+    id("input.comprehensible.kover-markdown-report")
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
