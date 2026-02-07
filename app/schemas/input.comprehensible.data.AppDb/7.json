@@ -1,0 +1,252 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "ca83e09cd8975795414bda8ff15d66d4",
+    "entities": [
+      {
+        "tableName": "StoryEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `partId` TEXT, `lastChosenPartId` TEXT DEFAULT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "partId",
+            "columnName": "partId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastChosenPartId",
+            "columnName": "lastChosenPartId",
+            "affinity": "TEXT",
+            "defaultValue": "NULL"
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "TextAdventureEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `learningLanguage` TEXT NOT NULL, `translationLanguage` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "learningLanguage",
+            "columnName": "learningLanguage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "translationLanguage",
+            "columnName": "translationLanguage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "TextAdventureMessageEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`adventureId` TEXT NOT NULL, `sender` TEXT NOT NULL, `isEnding` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `messageIndex` INTEGER NOT NULL, PRIMARY KEY(`adventureId`, `messageIndex`), FOREIGN KEY(`adventureId`) REFERENCES `TextAdventureEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "adventureId",
+            "columnName": "adventureId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sender",
+            "columnName": "sender",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isEnding",
+            "columnName": "isEnding",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageIndex",
+            "columnName": "messageIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "adventureId",
+            "messageIndex"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_TextAdventureMessageEntity_adventureId",
+            "unique": false,
+            "columnNames": [
+              "adventureId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_TextAdventureMessageEntity_adventureId` ON `${TABLE_NAME}` (`adventureId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "TextAdventureEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "adventureId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "TextAdventureSentenceEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`adventureId` TEXT NOT NULL, `messageIndex` INTEGER NOT NULL, `paragraphIndex` INTEGER NOT NULL, `sentenceIndex` INTEGER NOT NULL, `language` TEXT NOT NULL, `text` TEXT NOT NULL, PRIMARY KEY(`adventureId`, `messageIndex`, `paragraphIndex`, `sentenceIndex`, `language`), FOREIGN KEY(`adventureId`, `messageIndex`) REFERENCES `TextAdventureMessageEntity`(`adventureId`, `messageIndex`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "adventureId",
+            "columnName": "adventureId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageIndex",
+            "columnName": "messageIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paragraphIndex",
+            "columnName": "paragraphIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sentenceIndex",
+            "columnName": "sentenceIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "adventureId",
+            "messageIndex",
+            "paragraphIndex",
+            "sentenceIndex",
+            "language"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_TextAdventureSentenceEntity_adventureId_messageIndex",
+            "unique": false,
+            "columnNames": [
+              "adventureId",
+              "messageIndex"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_TextAdventureSentenceEntity_adventureId_messageIndex` ON `${TABLE_NAME}` (`adventureId`, `messageIndex`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "TextAdventureMessageEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "adventureId",
+              "messageIndex"
+            ],
+            "referencedColumns": [
+              "adventureId",
+              "messageIndex"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "viewName": "TextAdventureSummaryView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n        adventure.id AS adventureId,\n        adventure.title AS title,\n        adventure.learningLanguage AS learningLanguage,\n        adventure.translationLanguage AS translationLanguage,\n        adventure.updatedAt AS updatedAt,\n        COALESCE(latest.isEnding, 0) AS isComplete\n    FROM TextAdventureEntity AS adventure\n    LEFT JOIN TextAdventureMessageEntity AS latest\n        ON latest.adventureId = adventure.id\n        AND latest.messageIndex = (\n            SELECT MAX(messageIndex)\n            FROM TextAdventureMessageEntity\n            WHERE adventureId = adventure.id\n        )"
+      },
+      {
+        "viewName": "TextAdventureMessageSentenceView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n        adventure.id AS adventureId,\n        adventure.title AS title,\n        adventure.learningLanguage AS learningLanguage,\n        adventure.translationLanguage AS translationLanguage,\n        messages.messageIndex AS messageIndex,\n        messages.sender AS sender,\n        messages.isEnding AS isEnding,\n        sentences.paragraphIndex AS paragraphIndex,\n        sentences.sentenceIndex AS sentenceIndex,\n        sentences.language AS language,\n        sentences.text AS text\n    FROM TextAdventureEntity AS adventure\n    INNER JOIN TextAdventureMessageEntity AS messages\n        ON messages.adventureId = adventure.id\n    INNER JOIN TextAdventureSentenceEntity AS sentences\n        ON sentences.adventureId = messages.adventureId\n        AND sentences.messageIndex = messages.messageIndex"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ca83e09cd8975795414bda8ff15d66d4')"
+    ]
+  }
+}

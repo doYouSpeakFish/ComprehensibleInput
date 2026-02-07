@@ -21,6 +21,17 @@ val hasKeystore = keystorePropertiesFile.exists()
 if (hasKeystore) {
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 }
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties()
+val koogApiKey = if (localPropertiesFile.exists()) {
+    FileInputStream(localPropertiesFile).use { localProperties.load(it) }
+    localProperties.getProperty("koog.apiKey") ?: ""
+} else {
+    ""
+}
+val escapedKoogApiKey = koogApiKey
+    .replace("\\", "\\\\")
+    .replace("\"", "\\\"")
 
 android {
     namespace = "input.comprehensible"
@@ -32,6 +43,7 @@ android {
         targetSdk = 36
         versionCode = 9
         versionName = "0.6.0"
+        buildConfigField("String", "KOOG_API_KEY", "\"$escapedKoogApiKey\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -104,6 +116,7 @@ kover {
                 packages(
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.data.textadventures.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -151,6 +164,7 @@ dependencies {
     implementation(libs.androidx.dataStore)
     implementation(libs.bundles.androidx.room)
     implementation(libs.ktin.core)
+    implementation(libs.koog.agents.jvm)
 
     ksp(libs.androidx.room.compiler)
 
