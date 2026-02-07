@@ -39,16 +39,12 @@ class TextAdventuresRepository(
         }
 
     fun getAdventure(id: String): Flow<TextAdventureResult> = localDataSource
-        .getAdventureSentencesMap(id)
-        .map { messageMap ->
-            val rows = messageMap.values.flatten()
-            val adventure = rows.firstOrNull()
-            if (adventure == null) {
+        .getAdventureSentenceRows(id)
+        .map { rows ->
+            if (rows.isEmpty()) {
                 TextAdventureResult.Error
             } else {
-                TextAdventureResult.Success(
-                    adventure.toDomain(messageMap = messageMap)
-                )
+                TextAdventureResult.Success(rows.toDomain())
             }
         }
         .distinctUntilChanged()
@@ -228,11 +224,11 @@ private fun TextAdventureSummaryView.toSummary() = TextAdventureSummary(
     updatedAt = updatedAt,
 )
 
-private fun TextAdventureMessageSentenceView.toDomain(
-    messageMap: Map<Int, List<TextAdventureMessageSentenceView>>,
-): TextAdventure {
-    val messageUi = messageMap.keys.sorted().map { messageIndex ->
-        val messageRows = messageMap.getValue(messageIndex)
+private fun List<TextAdventureMessageSentenceView>.toDomain(): TextAdventure {
+    val adventure = first()
+    val messageGroups = groupBy { it.messageIndex }
+    val messageUi = messageGroups.keys.sorted().map { messageIndex ->
+        val messageRows = messageGroups.getValue(messageIndex)
         val paragraphs = messageRows
             .groupBy { it.paragraphIndex }
             .toSortedMap()
@@ -240,17 +236,17 @@ private fun TextAdventureMessageSentenceView.toDomain(
                 paragraphRows.toDomain(
                     messageIndex = messageIndex,
                     paragraphIndex = paragraphIndex,
-                    learningLanguage = learningLanguage,
-                    translationLanguage = translationLanguage,
+                    learningLanguage = adventure.learningLanguage,
+                    translationLanguage = adventure.translationLanguage,
                 )
             }
         messageRows.first().toMessageEntity().toDomain(paragraphs = paragraphs)
     }
     return TextAdventure(
-        id = adventureId,
-        title = title,
-        learningLanguage = learningLanguage,
-        translationLanguage = translationLanguage,
+        id = adventure.adventureId,
+        title = adventure.title,
+        learningLanguage = adventure.learningLanguage,
+        translationLanguage = adventure.translationLanguage,
         messages = messageUi,
         isComplete = messageUi.lastOrNull()?.isEnding == true,
     )

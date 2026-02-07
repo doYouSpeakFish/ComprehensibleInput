@@ -2,7 +2,6 @@ package input.comprehensible.data.textadventures.sources.local
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.MapInfo
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ktin.InjectedSingleton
@@ -41,8 +40,7 @@ interface TextAdventuresLocalDataSource {
             ORDER BY messageIndex ASC, paragraphIndex ASC, sentenceIndex ASC
         """
     )
-    @MapInfo(keyColumn = "messageIndex")
-    fun getAdventureSentencesMap(adventureId: String): Flow<Map<Int, List<TextAdventureMessageSentenceView>>>
+    fun getAdventureSentenceRows(adventureId: String): Flow<List<TextAdventureMessageSentenceView>>
 
     @Query(
         """
@@ -52,15 +50,6 @@ interface TextAdventuresLocalDataSource {
         """
     )
     suspend fun getAdventureSnapshot(id: String): TextAdventureEntity?
-
-    @Query(
-        """
-            SELECT * FROM TextAdventureMessageEntity
-            WHERE adventureId = :adventureId
-            ORDER BY messageIndex ASC
-        """
-    )
-    fun getMessages(adventureId: String): Flow<List<TextAdventureMessageEntity>>
 
     @Query(
         """
@@ -79,27 +68,6 @@ interface TextAdventuresLocalDataSource {
         """
     )
     suspend fun getMessagesSnapshot(adventureId: String): List<TextAdventureMessageEntity>
-
-    @Query(
-        """
-            SELECT * FROM TextAdventureMessageEntity
-            ORDER BY messageIndex ASC
-        """
-    )
-    fun getAllMessages(): Flow<List<TextAdventureMessageEntity>>
-
-    @Query(
-        """
-            SELECT sentences.*
-            FROM TextAdventureSentenceEntity AS sentences
-            INNER JOIN TextAdventureMessageEntity AS messages
-                ON messages.adventureId = sentences.adventureId
-                AND messages.messageIndex = sentences.messageIndex
-            WHERE sentences.adventureId = :adventureId
-            ORDER BY sentences.messageIndex ASC, sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
-        """
-    )
-    fun getSentences(adventureId: String): Flow<List<TextAdventureSentenceEntity>>
 
     @Query(
         """
