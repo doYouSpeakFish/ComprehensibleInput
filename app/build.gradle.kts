@@ -89,6 +89,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/io.netty.versions.properties"
             excludes += "META-INF/INDEX.LIST"
         }
     }
@@ -96,7 +98,10 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             all {
+                val robolectricRepo = file("${System.getProperty("user.home")}/.m2/repository")
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.systemProperties["robolectric.dependency.repo.id"] = "local"
+                it.systemProperties["robolectric.dependency.repo.url"] = robolectricRepo.toURI().toString()
             }
         }
     }

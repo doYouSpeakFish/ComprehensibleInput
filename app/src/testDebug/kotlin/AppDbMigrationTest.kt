@@ -1,8 +1,9 @@
-import androidx.room.Room
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import input.comprehensible.data.AppDb
+import input.comprehensible.data.TextAdventureMigration5To6
+import input.comprehensible.data.TextAdventureMigration6To7
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,23 +21,23 @@ class AppDbMigrationTest {
     @Test
     @Throws(IOException::class)
     fun migrateAll() {
-        // Create earliest version of the database.
-        helper.createDatabase(TEST_DB, 1).apply {
+        // Start from the schema just before the text-adventure migrations.
+        helper.createDatabase(TEST_DB, START_VERSION).apply {
             close()
         }
 
-        // Open latest version of the database. Room validates the schema
-        // once all migrations execute.
-        Room.databaseBuilder(
-            InstrumentationRegistry.getInstrumentation().targetContext,
-            AppDb::class.java,
+        helper.runMigrationsAndValidate(
             TEST_DB,
-        ).build().apply {
-            openHelper.writableDatabase.close()
-        }
+            END_VERSION,
+            true,
+            TextAdventureMigration5To6(),
+            TextAdventureMigration6To7(),
+        )
     }
 
     companion object {
         private const val TEST_DB = "migration-test"
+        private const val START_VERSION = 5
+        private const val END_VERSION = 7
     }
 }
