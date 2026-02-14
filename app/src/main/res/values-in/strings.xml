@@ -21,6 +21,13 @@
     <string name="language_selector_select_translation_language_content_description">Pilih bahasa untuk terjemahan. Saat ini menerjemahkan ke %1$s</string>
     <string name="top_bar_language_picker_translations_label">Terjemahan</string>
     <string name="top_bar_language_picker_learning_label">Pembelajaran</string>
+    <string name="text_adventure_title">Petualangan teks</string>
+    <string name="text_adventure_start_button">Mulai petualangan teks</string>
+    <string name="text_adventure_input_placeholder">Tanggapi ceritanya</string>
+    <string name="text_adventure_send_button">Kirim pesan</string>
+    <string name="text_adventure_list_in_progress">Petualangan teks · Sedang berlangsung</string>
+    <string name="text_adventure_list_complete">Petualangan teks · Selesai</string>
+    <string name="text_adventure_ending_label">Akhir</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Ketuk kalimat apa pun untuk menerjemahkannya</item>
         <item>Yah, hampir semua kalimat</item>

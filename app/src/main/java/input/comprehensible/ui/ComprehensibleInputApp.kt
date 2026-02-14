@@ -11,6 +11,8 @@ import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storylist.storyList
 import input.comprehensible.ui.storyreader.StoryReaderRoute
 import input.comprehensible.ui.storyreader.storyReader
+import input.comprehensible.ui.textadventure.TextAdventureRoute
+import input.comprehensible.ui.textadventure.textAdventure
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 
 /**
@@ -33,8 +35,11 @@ fun ComprehensibleInputApp(
             )
             storyList(
                 onStorySelected = { navController.navigate(StoryReaderRoute(storyId = it)) },
+                onTextAdventureSelected = { navController.navigate(TextAdventureRoute(adventureId = it)) },
+                onTextAdventureStarted = { navController.navigate(TextAdventureRoute(adventureId = it)) },
                 onSettingsClick = { navController.navigate(SettingsRoute) },
             )
+            textAdventure(onNavigateUp = { navController.popBackStack() })
         }
     }
 }

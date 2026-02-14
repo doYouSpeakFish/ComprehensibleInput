@@ -1,9 +1,10 @@
-package input.comprehensible.ui.storylist
+package input.comprehensible.ui.textadventure
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import input.comprehensible.ui.components.animations.defaultEnterTransition
 import input.comprehensible.ui.components.animations.defaultExitTransition
 import input.comprehensible.ui.components.animations.defaultPopEnterTransition
@@ -11,29 +12,24 @@ import input.comprehensible.ui.components.animations.defaultPopExitTransition
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object StoryListRoute
+data class TextAdventureRoute(
+    val adventureId: String,
+)
 
-/**
- * Adds the story list screen to the navigation graph.
- */
-fun NavGraphBuilder.storyList(
-    onStorySelected: (String) -> Unit,
-    onTextAdventureSelected: (String) -> Unit,
-    onTextAdventureStarted: (String) -> Unit,
-    onSettingsClick: () -> Unit,
+fun NavGraphBuilder.textAdventure(
+    onNavigateUp: () -> Unit,
 ) {
-    composable<StoryListRoute>(
+    composable<TextAdventureRoute>(
         enterTransition = defaultEnterTransition,
         exitTransition = defaultExitTransition,
         popEnterTransition = defaultPopEnterTransition,
         popExitTransition = defaultPopExitTransition,
-    ) {
-        StoryListScreen(
+    ) { backStackEntry ->
+        val args = backStackEntry.toRoute<TextAdventureRoute>()
+        TextAdventureScreen(
             modifier = Modifier.fillMaxSize(),
-            onStorySelected = onStorySelected,
-            onTextAdventureSelected = onTextAdventureSelected,
-            onSettingsClick = onSettingsClick,
-            onTextAdventureStarted = onTextAdventureStarted,
+            adventureId = args.adventureId,
+            onNavigateUp = onNavigateUp,
         )
     }
 }
