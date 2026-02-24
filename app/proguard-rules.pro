@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Ignore optional runtime integrations pulled in by Koog/server dependencies.
+-dontwarn io.micrometer.context.**
+-dontwarn javax.enterprise.inject.**
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.logging.log4j.**
+-dontwarn reactor.blockhound.integration.**

@@ -7,22 +7,42 @@ import androidx.room.RoomDatabase
 import com.ktin.Singleton
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventureEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageSentenceView
+import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
+import input.comprehensible.data.textadventures.sources.local.TextAdventureSummaryView
+import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.di.ApplicationProvider
 
 @Database(
-    entities = [StoryEntity::class],
-    version = 3,
+    entities = [
+        StoryEntity::class,
+        TextAdventureEntity::class,
+        TextAdventureMessageEntity::class,
+        TextAdventureSentenceEntity::class,
+    ],
+    views = [
+        TextAdventureSummaryView::class,
+        TextAdventureMessageSentenceView::class,
+    ],
+    version = 7,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4),
+        AutoMigration(from = 4, to = 5, spec = TextAdventureMigration4To5::class),
     ]
 )
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
+    abstract fun getTextAdventuresDao(): TextAdventuresLocalDataSource
 
     companion object : Singleton<AppDb>() {
         override fun create() = Room
             .databaseBuilder<AppDb>(context = ApplicationProvider(), name = "app-db")
+            .addMigrations(TextAdventureMigration5To6())
+            .addMigrations(TextAdventureMigration6To7())
             .build()
     }
 }

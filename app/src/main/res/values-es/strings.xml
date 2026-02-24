@@ -21,6 +21,13 @@
     <string name="language_selector_select_translation_language_content_description">Selecciona un idioma para traducciones. Actualmente traduciendo al %1$s</string>
     <string name="top_bar_language_picker_translations_label">Traducciones</string>
     <string name="top_bar_language_picker_learning_label">Aprendizaje</string>
+    <string name="text_adventure_title">Aventura de texto</string>
+    <string name="text_adventure_start_button">Iniciar aventura de texto</string>
+    <string name="text_adventure_input_placeholder">Responde a la historia</string>
+    <string name="text_adventure_send_button">Enviar mensaje</string>
+    <string name="text_adventure_list_in_progress">Aventura de texto · En curso</string>
+    <string name="text_adventure_list_complete">Aventura de texto · Finalizada</string>
+    <string name="text_adventure_ending_label">Final</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Toca cualquier oración para traducirla</item>
         <item>Bueno, casi cualquier oración</item>
