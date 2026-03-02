@@ -9,13 +9,16 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.data.textadventures.sources.remote.DefaultTextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
+import input.comprehensible.util.FeatureFlags
 
 object DataSourcesModule {
     fun inject() {
         StoriesInfoLocalDataSource.inject { AppDb.getInstance().getStoriesInfoDao() }
         StoriesLocalDataSource.inject { DefaultStoriesLocalDataSource() }
         LanguageSettingsLocalDataSource.inject { DefaultLanguageSettingsLocalDataSource() }
-        TextAdventuresLocalDataSource.inject { AppDb.getInstance().getTextAdventuresDao() }
-        TextAdventureRemoteDataSource.inject { DefaultTextAdventureRemoteDataSource() }
+        if (FeatureFlags().aiTextAdventuresEnabled) {
+            TextAdventuresLocalDataSource.inject { AppDb.getInstance().getTextAdventuresDao() }
+            TextAdventureRemoteDataSource.inject { DefaultTextAdventureRemoteDataSource() }
+        }
     }
 }

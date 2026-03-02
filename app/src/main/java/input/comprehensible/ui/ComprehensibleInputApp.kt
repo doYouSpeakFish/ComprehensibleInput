@@ -14,6 +14,7 @@ import input.comprehensible.ui.storyreader.storyReader
 import input.comprehensible.ui.textadventure.TextAdventureRoute
 import input.comprehensible.ui.textadventure.textAdventure
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
+import input.comprehensible.util.FeatureFlags
 
 /**
  * The root composable function for the app.
@@ -24,6 +25,7 @@ fun ComprehensibleInputApp(
     darkTheme: Boolean,
 ) {
     ComprehensibleInputTheme(darkTheme = darkTheme) {
+        val featureFlags = FeatureFlags()
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
@@ -35,11 +37,21 @@ fun ComprehensibleInputApp(
             )
             storyList(
                 onStorySelected = { navController.navigate(StoryReaderRoute(storyId = it)) },
-                onTextAdventureSelected = { navController.navigate(TextAdventureRoute(adventureId = it)) },
-                onTextAdventureStarted = { navController.navigate(TextAdventureRoute(adventureId = it)) },
+                onTextAdventureSelected = if (featureFlags.aiTextAdventuresEnabled) {
+                    { navController.navigate(TextAdventureRoute(adventureId = it)) }
+                } else {
+                    {}
+                },
+                onTextAdventureStarted = if (featureFlags.aiTextAdventuresEnabled) {
+                    { navController.navigate(TextAdventureRoute(adventureId = it)) }
+                } else {
+                    {}
+                },
                 onSettingsClick = { navController.navigate(SettingsRoute) },
             )
-            textAdventure(onNavigateUp = { navController.popBackStack() })
+            if (featureFlags.aiTextAdventuresEnabled) {
+                textAdventure(onNavigateUp = { navController.navigateUp() })
+            }
         }
     }
 }

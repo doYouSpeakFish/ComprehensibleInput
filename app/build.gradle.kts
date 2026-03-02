@@ -14,23 +14,19 @@ plugins {
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 val hasKeystore = keystorePropertiesFile.exists()
 if (hasKeystore) {
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 }
-val localPropertiesFile = rootProject.file("local.properties")
+
+val localPropertiesFile: File = rootProject.file("local.properties")
 val localProperties = Properties()
-val koogApiKey = if (localPropertiesFile.exists()) {
+if (localPropertiesFile.exists()) {
     FileInputStream(localPropertiesFile).use { localProperties.load(it) }
-    localProperties.getProperty("koog.apiKey") ?: ""
-} else {
-    ""
 }
-val escapedKoogApiKey = koogApiKey
-    .replace("\\", "\\\\")
-    .replace("\"", "\\\"")
+val koogApiKey = localProperties.getProperty("geminiApiKey") ?: ""
 
 android {
     namespace = "input.comprehensible"
@@ -42,7 +38,6 @@ android {
         targetSdk = 36
         versionCode = 9
         versionName = "0.6.0"
-        buildConfigField("String", "KOOG_API_KEY", "\"$escapedKoogApiKey\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -62,6 +57,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "KOOG_API_KEY", "\"$koogApiKey\"")
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(

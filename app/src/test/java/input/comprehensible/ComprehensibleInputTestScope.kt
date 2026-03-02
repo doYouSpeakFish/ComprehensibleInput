@@ -26,6 +26,7 @@ import input.comprehensible.ui.ComprehensibleInputApp
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
+import input.comprehensible.util.FeatureFlags
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,6 +67,9 @@ class ComprehensibleInputTestScope(
         }
 
     init {
+        FeatureFlags.inject {
+            FeatureFlags(aiTextAdventuresEnabled = true)
+        }
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
         IoDispatcher.inject { dispatcher }
