@@ -54,8 +54,8 @@ class TextAdventureViewModel(
         val message = inputText.value.trim()
         if (message.isBlank()) return
         viewModelScope.launch {
-            continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
             inputText.value = ""
+            continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
         }
     }
 
