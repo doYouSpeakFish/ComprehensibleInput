@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 12-16
 
 Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderNavigation.kt:12-16`
@@ -19,4 +18,3 @@ Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderNavigati
 ⚪   15 | data class StoryReaderRoute(
 🟢   16 |     val storyId: String
 ```
-

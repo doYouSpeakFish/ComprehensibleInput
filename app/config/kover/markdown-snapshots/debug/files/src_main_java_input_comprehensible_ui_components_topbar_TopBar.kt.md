@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 29-41
 
 Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:29-41`
@@ -51,16 +50,3 @@ Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:61-
 🟢   64 |     CenterAlignedTopAppBar(
 🟢   65 |         modifier = modifier,
 ```
-
-## Lines 93-97
-
-Location: `src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt:93-97`
-
-```kotlin
-⚪   93 |     onNavigateUp: () -> Unit,
-⚪   94 |     title: String,
-🟡   95 | ) {
-🟢   96 |     TopAppBar(
-🟢   97 |         modifier = modifier,
-```
-

@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 75-79
 
 Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:75-79`
@@ -190,4 +189,3 @@ Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:37
 🟢  373 |     BasicAlertDialog(onDismissRequest = onDismissRequest) {
 🟢  374 |         Surface(
 ```
-

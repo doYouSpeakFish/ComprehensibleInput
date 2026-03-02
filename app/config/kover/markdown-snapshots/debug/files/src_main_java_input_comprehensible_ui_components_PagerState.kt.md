@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 24-32
 
 Location: `src/main/java/input/comprehensible/ui/components/PagerState.kt:24-32`
@@ -23,4 +22,3 @@ Location: `src/main/java/input/comprehensible/ui/components/PagerState.kt:24-32`
 🟢   31 |             state.animateScrollToPage(pageToScrollTo)
 ⚪   32 |         }
 ```
-

@@ -16,6 +16,7 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.w3c.dom.Element
 import java.nio.file.Files
+import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.io.path.Path
 import kotlin.io.path.exists
@@ -200,8 +201,7 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
                 val symbol = status.symbol
                 val content = lines[lineNumber - 1]
                     .replace("\t", "    ")
-                    .replace("\r", "")
-                String.format("%s %4d | %s", symbol, lineNumber, content)
+                String.format(Locale.ENGLISH, "%s %4d | %s", symbol, lineNumber, content)
             }
             Snippet(
                 startLine = window.first,
@@ -218,7 +218,7 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
         val indexContent = buildString {
             appendLine("# Kover Markdown Coverage Report")
             appendLine()
-            appendLine(symbolKey())
+            appendSymbolKey()
             appendLine()
             appendLine("## Files with missing coverage")
             if (fileReports.isEmpty()) {
@@ -232,7 +232,7 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
                     appendLine("- [${report.relativePath}](files/$reportFileName) ($summary)")
                 }
             }
-        }
+        }.replace("\r\n", "\n")
         outputDirectory.resolve("index.md").writeText(indexContent)
 
         fileReports.forEach { report ->
@@ -240,9 +240,9 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
             val reportContent = buildString {
                 appendLine("# ${report.relativePath}")
                 appendLine()
-                appendLine(symbolKey())
-                appendLine()
+                appendSymbolKey()
                 report.snippets.forEach { snippet ->
+                    appendLine()
                     appendLine("## Lines ${snippet.startLine}-${snippet.endLine}")
                     appendLine()
                     appendLine("Location: `${report.relativePath}:${snippet.startLine}-${snippet.endLine}`")
@@ -250,14 +250,13 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
                     appendLine("```kotlin")
                     appendLine(snippet.content)
                     appendLine("```")
-                    appendLine()
                 }
-            }
+            }.replace("\r\n", "\n")
             filesDir.resolve(reportFileName).writeText(reportContent)
         }
     }
 
-    private fun symbolKey(): String = buildString {
+    private fun StringBuilder.appendSymbolKey() {
         appendLine("**Key**")
         appendLine()
         appendLine("- 🟢 Covered")

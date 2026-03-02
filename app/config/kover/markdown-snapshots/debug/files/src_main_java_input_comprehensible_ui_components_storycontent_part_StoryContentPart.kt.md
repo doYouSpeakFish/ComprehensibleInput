@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 44-48
 
 Location: `src/main/java/input/comprehensible/ui/components/storycontent/part/StoryContentPart.kt:44-48`
@@ -79,4 +78,3 @@ Location: `src/main/java/input/comprehensible/ui/components/storycontent/part/St
 🟢  140 |     val colorScheme = MaterialTheme.colorScheme
 🟢  141 |     val buttonContainerColor =
 ```
-

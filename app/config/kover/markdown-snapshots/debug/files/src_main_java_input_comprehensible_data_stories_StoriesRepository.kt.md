@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 61-71
 
 Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:61-71`
@@ -110,4 +109,3 @@ Location: `src/main/java/input/comprehensible/data/stories/StoriesRepository.kt:
 ⚪  345 | }
 ⚪  346 | 
 ```
-
