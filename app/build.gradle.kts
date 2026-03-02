@@ -61,6 +61,7 @@ android {
             buildConfigField("String", "KOOG_API_KEY", "\"$koogApiKey\"")
         }
         release {
+            buildConfigField("String", "KOOG_API_KEY", "\"\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
