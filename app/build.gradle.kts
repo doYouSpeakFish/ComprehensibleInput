@@ -98,10 +98,7 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             all {
-                val robolectricRepo = file("${System.getProperty("user.home")}/.m2/repository")
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
-                it.systemProperties["robolectric.dependency.repo.id"] = "local"
-                it.systemProperties["robolectric.dependency.repo.url"] = robolectricRepo.toURI().toString()
             }
         }
     }
