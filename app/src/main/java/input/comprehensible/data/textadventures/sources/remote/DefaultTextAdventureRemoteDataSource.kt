@@ -32,9 +32,9 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         promptName = "text-adventure-start",
         systemPrompt = """
             You are a text adventure narrator.
-            Generate the opening scene as 1 to 3 short sentences in $learningLanguage.
+            Generate the opening scene in $learningLanguage.
             Provide a short, evocative title for the adventure.
-            Provide translations of each sentence in $translationsLanguage with a matching count and order.
+            Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
             Do not include extra commentary outside the requested fields.
             Avoid markdown and keep punctuation natural for the language.
             The story should not end yet, so set isEnding to false.
@@ -54,8 +54,8 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         systemPrompt = """
             You are a text adventure narrator continuing an ongoing story.
             You will receive a JSON request containing the adventure context and chat history.
-            Respond to the player in 1 to 3 short sentences in $learningLanguage.
-            Provide translations of each sentence in $translationsLanguage with a matching count and order.
+            Respond to the player in $learningLanguage.
+            Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
             Keep the title consistent with the story so far.
             Do not include extra commentary outside the requested fields.
             Avoid markdown and keep punctuation natural for the language.
@@ -94,19 +94,31 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
             model = GoogleModels.Gemini2_5Pro,
         ).getOrThrow().data
 
-        check(response.sentences.size == response.translatedSentences.size) {
+        check(response.paragraphs.size == response.translatedParagraphs.size) {
             """
-                Text adventure sentence count mismatch:
-                    sentences=${response.sentences.size}
-                    translations=${response.translatedSentences.size}
+                Text adventure paragraph count mismatch:
+                    paragraphs=${response.paragraphs.size}
+                    translations=${response.translatedParagraphs.size}
             """.trimIndent()
+        }
+        val paragraphs = response.paragraphs.map { it.sentences }
+        val translatedParagraphs = response.translatedParagraphs.map { it.sentences }
+        paragraphs.forEachIndexed { index, sentences ->
+            val translatedSentences = translatedParagraphs[index]
+            check(sentences.size == translatedSentences.size) {
+                """
+                    Text adventure sentence count mismatch in paragraph $index:
+                        sentences=${sentences.size}
+                        translations=${translatedSentences.size}
+                """.trimIndent()
+            }
         }
 
         TextAdventureRemoteResponse(
             adventureId = adventureId,
             title = response.title.trim(),
-            sentences = response.sentences.map { it.trim() },
-            translatedSentences = response.translatedSentences.map { it.trim() },
+            sentences = paragraphs.flatten().map { it.trim() },
+            translatedSentences = translatedParagraphs.flatten().map { it.trim() },
             isEnding = response.isEnding,
         )
     }
@@ -118,12 +130,19 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     private data class TextAdventureStructuredResponse(
         @property:LLMDescription("Short, evocative title for the adventure.")
         val title: String,
-        @property:LLMDescription("Narration sentences in the learning language.")
-        val sentences: List<String>,
-        @property:LLMDescription("Translations matching the narration sentence order.")
-        val translatedSentences: List<String>,
+        @property:LLMDescription("Narration paragraphs in the learning language.")
+        val paragraphs: List<TextAdventureStructuredParagraph>,
+        @property:LLMDescription("Translated paragraphs matching the narration paragraph order.")
+        val translatedParagraphs: List<TextAdventureStructuredParagraph>,
         @property:LLMDescription("Whether the story ends after this response.")
         val isEnding: Boolean,
+    )
+
+    @Serializable
+    @LLMDescription("A paragraph containing narration sentences.")
+    private data class TextAdventureStructuredParagraph(
+        @property:LLMDescription("Sentences in the paragraph.")
+        val sentences: List<String>,
     )
 
     @Serializable
