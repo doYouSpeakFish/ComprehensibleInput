@@ -6,14 +6,18 @@ import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.structure.executeStructured
 import input.comprehensible.BuildConfig
+import input.comprehensible.util.runRetrying
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.math.min
+import timber.log.Timber
 import java.util.UUID
 
 class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
+    private companion object {
+        const val MAX_SENTENCE_MATCH_ATTEMPTS = 3
+    }
+
     private val promptExecutor = simpleGoogleAIExecutor(BuildConfig.KOOG_API_KEY)
     private val json = Json {
         encodeDefaults = true
@@ -72,7 +76,16 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
-    ): TextAdventureRemoteResponse {
+    ) = runRetrying(
+        maxRetries = MAX_SENTENCE_MATCH_ATTEMPTS,
+        onFailure = { retries, e ->
+            Timber.w(
+                e,
+                "Failed attempt to generate text adventure message with " +
+                        "${MAX_SENTENCE_MATCH_ATTEMPTS - retries} retries remaining"
+            )
+        }
+    ) {
         val response = promptExecutor.executeStructured<TextAdventureStructuredResponse>(
             prompt = prompt(promptName) {
                 system(systemPrompt)
@@ -80,15 +93,24 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
             },
             model = GoogleModels.Gemini2_5Pro,
         ).getOrThrow().data
-        val normalizedCount = min(response.sentences.size, response.translatedSentences.size)
-        return TextAdventureRemoteResponse(
+
+        check(response.sentences.size == response.translatedSentences.size) {
+            """
+                Text adventure sentence count mismatch:
+                    sentences=${response.sentences.size}
+                    translations=${response.translatedSentences.size}
+            """.trimIndent()
+        }
+
+        TextAdventureRemoteResponse(
             adventureId = adventureId,
             title = response.title.trim(),
-            sentences = response.sentences.take(normalizedCount).map { it.trim() },
-            translatedSentences = response.translatedSentences.take(normalizedCount).map { it.trim() },
+            sentences = response.sentences.map { it.trim() },
+            translatedSentences = response.translatedSentences.map { it.trim() },
             isEnding = response.isEnding,
         )
     }
+        .getOrThrow()
 
     @Serializable
     @SerialName("TextAdventureResponse")
