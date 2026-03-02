@@ -19,6 +19,7 @@ import java.nio.file.Files
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.io.path.Path
 import kotlin.io.path.exists
+import kotlin.io.path.invariantSeparatorsPathString
 import kotlin.io.path.isRegularFile
 
 abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
@@ -88,7 +89,9 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
                     continue
                 }
 
-                val relativePath = rootDir.asFile.get().toPath().relativize(sourcePath).toString()
+                val relativePath = rootDir.asFile.get().toPath()
+                    .relativize(sourcePath)
+                    .invariantSeparatorsPathString
                 val snippets = buildSnippets(
                     lines = lines,
                     coverageStatuses = coverageStatuses,
@@ -195,7 +198,9 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
             val formattedLines = snippetLines.joinToString("\n") { lineNumber ->
                 val status = coverageStatuses[lineNumber] ?: CoverageStatus.EXCLUDED
                 val symbol = status.symbol
-                val content = lines[lineNumber - 1].replace("\t", "    ")
+                val content = lines[lineNumber - 1]
+                    .replace("\t", "    ")
+                    .replace("\r", "")
                 String.format("%s %4d | %s", symbol, lineNumber, content)
             }
             Snippet(
