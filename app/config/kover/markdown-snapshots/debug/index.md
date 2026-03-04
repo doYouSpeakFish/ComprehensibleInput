@@ -29,4 +29,4 @@
 - [src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.kt](files/src_main_java_input_comprehensible_ui_textadventure_TextAdventureUI.kt.md) (missed 1, partial 6)
 - [src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt](files/src_main_java_input_comprehensible_ui_textadventure_TextAdventureViewModel.kt.md) (missed 3, partial 3)
 - [src/main/java/input/comprehensible/ui/theme/Theme.kt](files/src_main_java_input_comprehensible_ui_theme_Theme.kt.md) (missed 2, partial 1)
-- [src/main/java/input/comprehensible/util/RunRetrying.kt](files/src_main_java_input_comprehensible_util_RunRetrying.kt.md) (missed 7, partial 0)
+- [src/main/java/input/comprehensible/util/RunRetrying.kt](files/src_main_java_input_comprehensible_util_RunRetrying.kt.md) (missed 0, partial 4)
