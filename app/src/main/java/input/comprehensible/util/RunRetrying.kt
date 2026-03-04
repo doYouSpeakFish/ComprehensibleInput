@@ -11,9 +11,9 @@ inline fun <T, R> T.runRetrying(
     block: T.() -> R,
 ): Result<R> {
     var result = runCatching(block).onFailure { onFailure(0, it) }
-    for (i in 0 until maxRetries) {
+    for (retryCount in 1..maxRetries) {
         if (result.isSuccess) break
-        result = runCatching(block).onFailure { onFailure(i + 1, it) }
+        result = runCatching(block).onFailure { onFailure(retryCount, it) }
     }
     return result
 }
