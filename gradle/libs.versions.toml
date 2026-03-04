@@ -26,6 +26,7 @@ kover = "0.9.7"
 androidxTestCore = "1.7.0"
 jetbrainsKotlinJvm = "2.3.10"
 ktin = "1.0.1"
+koog = "0.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +68,7 @@ detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-form
 detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
 ktin-core = { group = "io.github.doyouspeakfish.ktin", name = "core", version.ref = "ktin" }
 ktin-test = { group = "io.github.doyouspeakfish.ktin", name = "test", version.ref = "ktin" }
+koog-agents-jvm = { group = "ai.koog", name = "koog-agents-jvm", version.ref = "koog" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]

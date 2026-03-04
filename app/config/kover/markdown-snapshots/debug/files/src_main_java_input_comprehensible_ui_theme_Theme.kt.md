@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 84-91
 
 Location: `src/main/java/input/comprehensible/ui/theme/Theme.kt:84-91`
@@ -22,4 +21,3 @@ Location: `src/main/java/input/comprehensible/ui/theme/Theme.kt:84-91`
 🟢   90 |     MaterialTheme(
 🟢   91 |         colorScheme = if (darkTheme) darkScheme else lightScheme,
 ```
-

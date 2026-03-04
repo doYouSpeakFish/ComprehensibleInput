@@ -1,0 +1,6 @@
+# An .aiignore file follows the same syntax as a .gitignore file.
+# .gitignore documentation: https://git-scm.com/docs/gitignore
+
+local.properties
+keystore.properties
+upload-keystore.jks

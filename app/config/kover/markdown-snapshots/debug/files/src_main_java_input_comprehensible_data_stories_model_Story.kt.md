@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 28-35
 
 Location: `src/main/java/input/comprehensible/data/stories/model/Story.kt:28-35`
@@ -22,4 +21,3 @@ Location: `src/main/java/input/comprehensible/data/stories/model/Story.kt:28-35`
 ⚪   34 | )
 ⚪   35 | 
 ```
-

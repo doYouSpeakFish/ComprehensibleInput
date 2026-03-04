@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 98-102
 
 Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:98-102`
@@ -61,4 +60,3 @@ Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:
 🟢  235 |     OutlinedIconButton(
 🟢  236 |         modifier = modifier,
 ```
-

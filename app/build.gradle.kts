@@ -15,12 +15,19 @@ plugins {
     id("input.comprehensible.kover-markdown-report")
 }
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 val hasKeystore = keystorePropertiesFile.exists()
 if (hasKeystore) {
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 }
+
+val localPropertiesFile: File = rootProject.file("local.properties")
+val localProperties = Properties()
+if (localPropertiesFile.exists()) {
+    FileInputStream(localPropertiesFile).use { localProperties.load(it) }
+}
+val koogApiKey = localProperties.getProperty("geminiApiKey") ?: ""
 
 android {
     namespace = "input.comprehensible"
@@ -51,7 +58,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "KOOG_API_KEY", "\"$koogApiKey\"")
+        }
         release {
+            buildConfigField("String", "KOOG_API_KEY", "\"\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -78,6 +89,9 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/io.netty.versions.properties"
+            excludes += "META-INF/INDEX.LIST"
         }
     }
     testOptions {
@@ -104,6 +118,7 @@ kover {
                 packages(
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.data.textadventures.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -151,6 +166,7 @@ dependencies {
     implementation(libs.androidx.dataStore)
     implementation(libs.bundles.androidx.room)
     implementation(libs.ktin.core)
+    implementation(libs.koog.agents.jvm)
 
     ksp(libs.androidx.room.compiler)
 

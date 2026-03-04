@@ -18,6 +18,8 @@ data object StoryListRoute
  */
 fun NavGraphBuilder.storyList(
     onStorySelected: (String) -> Unit,
+    onTextAdventureSelected: (String) -> Unit,
+    onTextAdventureStarted: (String) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     composable<StoryListRoute>(
@@ -29,7 +31,9 @@ fun NavGraphBuilder.storyList(
         StoryListScreen(
             modifier = Modifier.fillMaxSize(),
             onStorySelected = onStorySelected,
+            onTextAdventureSelected = onTextAdventureSelected,
             onSettingsClick = onSettingsClick,
+            onTextAdventureStarted = onTextAdventureStarted,
         )
     }
 }

@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 33-37
 
 Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:33-37`
@@ -81,4 +80,3 @@ Location: `src/main/java/input/comprehensible/ui/components/TranslatableText.kt:
 ⚪  116 |             } else {
 🟢  117 |                 sentence
 ```
-

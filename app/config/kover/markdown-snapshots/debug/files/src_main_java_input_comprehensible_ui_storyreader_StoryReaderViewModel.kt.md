@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 34-38
 
 Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewModel.kt:34-38`
@@ -48,4 +47,3 @@ Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderViewMode
 🟢  128 |                 return@update selectedChoice.copy(isTranslated = !selectedChoice.isTranslated)
 ⚪  129 |             }
 ```
-

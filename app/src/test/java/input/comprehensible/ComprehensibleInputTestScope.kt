@@ -9,18 +9,24 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
+import input.comprehensible.data.TextAdventuresTestData
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
+import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
+import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
+import input.comprehensible.util.FeatureFlags
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,6 +44,8 @@ class ComprehensibleInputTestScope(
     private var isAppUiLaunched = false
 
     private val storiesTestData = StoriesTestData()
+    private val fakeTextAdventureRemoteDataSource = FakeTextAdventureRemoteDataSource()
+    private val textAdventuresTestData = TextAdventuresTestData(fakeTextAdventureRemoteDataSource)
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
         .inMemoryDatabaseBuilder<AppDb>(context = appContext)
@@ -59,6 +67,9 @@ class ComprehensibleInputTestScope(
         }
 
     init {
+        FeatureFlags.inject {
+            FeatureFlags(aiTextAdventuresEnabled = true)
+        }
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
         IoDispatcher.inject { dispatcher }
@@ -68,6 +79,8 @@ class ComprehensibleInputTestScope(
             DefaultLanguageSettingsLocalDataSource(context = appContext)
         }
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
+        TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
+        TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
     }
 
     fun launchAppUi() {
@@ -130,6 +143,13 @@ class ComprehensibleInputTestScope(
 
     fun hideStoryForLanguage(languageCode: String, story: TestStory) {
         storiesTestData.hideStoryForLanguage(languageCode, story)
+    }
+
+    fun enqueueTextAdventure(
+        scenario: TextAdventureRemoteResponse,
+        responses: List<TextAdventureRemoteResponse>,
+    ) {
+        textAdventuresTestData.enqueueAdventure(scenario, responses)
     }
 
     internal fun close() {

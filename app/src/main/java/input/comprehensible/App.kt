@@ -4,6 +4,7 @@ import android.app.Application
 import input.comprehensible.di.ApplicationProvider
 import input.comprehensible.di.CoroutinesModule
 import input.comprehensible.di.DataSourcesModule
+import input.comprehensible.di.FeatureFlagsModule
 
 class App : Application() {
     override fun onCreate() {
@@ -13,6 +14,7 @@ class App : Application() {
 }
 
 fun Application.injectDependencies() {
+    FeatureFlagsModule.inject()
     ApplicationProvider.inject { this }
     CoroutinesModule.inject()
     DataSourcesModule.inject()

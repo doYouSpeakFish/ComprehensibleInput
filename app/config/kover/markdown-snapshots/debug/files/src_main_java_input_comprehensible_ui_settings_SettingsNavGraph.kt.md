@@ -7,7 +7,6 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-
 ## Lines 22-26
 
 Location: `src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt:22-26`
@@ -19,4 +18,3 @@ Location: `src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt:22
 ⚪   25 |         )
 ⚪   26 |     }
 ```
-
