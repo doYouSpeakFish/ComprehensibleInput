@@ -13,10 +13,11 @@ class StartTextAdventureUseCase(
     private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend operator fun invoke(): String {
+    suspend operator fun invoke(adventureId: String) {
         val learningLanguage = languageSettingsRepository.learningLanguage.first()
         val translationsLanguage = languageSettingsRepository.translationsLanguage.first()
-        return repository.startNewAdventure(
+        repository.startNewAdventure(
+            adventureId = adventureId,
             learningLanguage = learningLanguage,
             translationsLanguage = translationsLanguage,
         )

@@ -10,6 +10,7 @@ import input.comprehensible.usecases.GetStoriesListUseCase
 import input.comprehensible.usecases.GetTextAdventuresListUseCase
 import input.comprehensible.usecases.StartTextAdventureUseCase
 import input.comprehensible.util.FeatureFlags
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -110,9 +111,10 @@ class StoryListViewModel(
 
     fun onStartTextAdventure() {
         if (!featureFlags.aiTextAdventuresEnabled) return
+        val adventureId = UUID.randomUUID().toString()
         viewModelScope.launch {
-            val adventureId = startTextAdventureUseCase()
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
+            startTextAdventureUseCase(adventureId)
         }
     }
 }

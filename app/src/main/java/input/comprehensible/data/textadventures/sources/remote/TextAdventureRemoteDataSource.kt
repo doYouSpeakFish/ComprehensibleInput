@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 interface TextAdventureRemoteDataSource {
     suspend fun startAdventure(
+        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse

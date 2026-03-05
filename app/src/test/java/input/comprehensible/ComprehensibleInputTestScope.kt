@@ -20,6 +20,7 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
+import kotlinx.coroutines.CompletableDeferred
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
@@ -150,6 +151,10 @@ class ComprehensibleInputTestScope(
         responses: List<TextAdventureRemoteResponse>,
     ) {
         textAdventuresTestData.enqueueAdventure(scenario, responses)
+    }
+
+    fun holdTextAdventureResponses(): CompletableDeferred<Unit> {
+        return fakeTextAdventureRemoteDataSource.holdResponses()
     }
 
     internal fun close() {
