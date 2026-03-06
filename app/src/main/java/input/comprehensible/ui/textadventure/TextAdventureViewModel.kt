@@ -9,6 +9,7 @@ import input.comprehensible.data.textadventures.model.TextAdventureParagraph
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.usecases.ContinueTextAdventureUseCase
 import input.comprehensible.usecases.GetTextAdventureUseCase
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -77,6 +78,8 @@ class TextAdventureViewModel(
         viewModelScope.launch {
             try {
                 continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Timber.e(e, "Failed to send message for adventure %s", adventureId)
             }
@@ -87,6 +90,8 @@ class TextAdventureViewModel(
         viewModelScope.launch {
             try {
                 continueTextAdventureUseCase.retry(adventureId = adventureId)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Timber.e(e, "Failed to retry adventure %s", adventureId)
             }
