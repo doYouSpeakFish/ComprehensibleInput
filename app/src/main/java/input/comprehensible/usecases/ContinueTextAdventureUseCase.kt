@@ -11,4 +11,8 @@ class ContinueTextAdventureUseCase(
     suspend operator fun invoke(adventureId: String, userMessage: String) {
         repository.respondToAdventure(adventureId = adventureId, userMessage = userMessage)
     }
+
+    suspend fun retry(adventureId: String) {
+        repository.retryAdventureResponse(adventureId = adventureId)
+    }
 }

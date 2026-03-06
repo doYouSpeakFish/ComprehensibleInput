@@ -110,9 +110,10 @@ class StoryListViewModel(
 
     fun onStartTextAdventure() {
         if (!featureFlags.aiTextAdventuresEnabled) return
+        val adventureId = startTextAdventureUseCase.generateAdventureId()
         viewModelScope.launch {
-            val adventureId = startTextAdventureUseCase()
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
+            startTextAdventureUseCase(adventureId)
         }
     }
 }

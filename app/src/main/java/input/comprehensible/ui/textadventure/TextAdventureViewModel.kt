@@ -32,13 +32,30 @@ class TextAdventureViewModel(
     ) { adventureResult, selectedSentence, inputTextValue ->
         when (adventureResult) {
             TextAdventureResult.Error -> TextAdventureUiState.Error
-            is TextAdventureResult.Success -> TextAdventureUiState.Loaded(
-                title = adventureResult.adventure.title,
-                messages = adventureResult.adventure.messages.map { it.toUiState() },
-                selectedText = selectedSentence,
-                inputText = inputTextValue,
-                isInputEnabled = !adventureResult.adventure.isComplete,
-            )
+            TextAdventureResult.Loading -> TextAdventureUiState.Loading
+            is TextAdventureResult.Success -> {
+                val messages = adventureResult.adventure.messages.map { it.toUiState() }
+                val isGenerating = adventureResult.isGenerating
+                val lastMessage = adventureResult.adventure.messages.lastOrNull()
+                val lastMessageIsUser = lastMessage?.sender == TextAdventureMessageSender.USER
+                val showError = lastMessageIsUser && !isGenerating
+                val messagesWithStatus = buildList {
+                    addAll(messages)
+                    if (isGenerating) {
+                        add(TextAdventureMessageUiState.AiLoading(id = "loading"))
+                    } else if (showError) {
+                        add(TextAdventureMessageUiState.AiError(id = "error"))
+                    }
+                }
+                TextAdventureUiState.Loaded(
+                    title = adventureResult.adventure.title,
+                    messages = messagesWithStatus,
+                    selectedText = selectedSentence,
+                    inputText = inputTextValue,
+                    isInputEnabled = !adventureResult.adventure.isComplete,
+                    isSendEnabled = !isGenerating,
+                )
+            }
         }
     }.stateIn(
         viewModelScope,
@@ -56,6 +73,12 @@ class TextAdventureViewModel(
         viewModelScope.launch {
             inputText.value = ""
             continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+        }
+    }
+
+    fun onRetry() {
+        viewModelScope.launch {
+            continueTextAdventureUseCase.retry(adventureId = adventureId)
         }
     }
 

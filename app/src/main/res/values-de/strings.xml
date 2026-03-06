@@ -28,6 +28,8 @@
     <string name="text_adventure_list_in_progress">Textabenteuer · In Bearbeitung</string>
     <string name="text_adventure_list_complete">Textabenteuer · Abgeschlossen</string>
     <string name="text_adventure_ending_label">Ende</string>
+    <string name="text_adventure_error_message">Etwas ist schiefgelaufen. Tippe auf Wiederholen, um es erneut zu versuchen.</string>
+    <string name="text_adventure_retry_button">Wiederholen</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Tippen Sie auf einen Satz, um ihn zu übersetzen</item>
         <item>Naja, fast jeder Satz</item>

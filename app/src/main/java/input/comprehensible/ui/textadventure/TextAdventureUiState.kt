@@ -12,6 +12,7 @@ sealed interface TextAdventureUiState {
         val selectedText: SelectedText?,
         val inputText: String,
         val isInputEnabled: Boolean,
+        val isSendEnabled: Boolean,
     ) : TextAdventureUiState
 
     data class SelectedText(
@@ -34,5 +35,13 @@ sealed interface TextAdventureMessageUiState {
     data class User(
         override val id: String,
         val text: String,
+    ) : TextAdventureMessageUiState
+
+    data class AiLoading(
+        override val id: String,
+    ) : TextAdventureMessageUiState
+
+    data class AiError(
+        override val id: String,
     ) : TextAdventureMessageUiState
 }
