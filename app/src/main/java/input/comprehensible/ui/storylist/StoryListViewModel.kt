@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * A ViewModel for the StoryList screen.
@@ -113,7 +114,11 @@ class StoryListViewModel(
         val adventureId = startTextAdventureUseCase.generateAdventureId()
         viewModelScope.launch {
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
-            startTextAdventureUseCase(adventureId)
+            try {
+                startTextAdventureUseCase(adventureId)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to start text adventure %s", adventureId)
+            }
         }
     }
 }

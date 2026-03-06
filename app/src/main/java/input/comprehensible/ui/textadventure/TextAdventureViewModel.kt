@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TextAdventureViewModel(
     private val adventureId: String,
@@ -70,15 +71,25 @@ class TextAdventureViewModel(
     fun onSendMessage() {
         val message = inputText.value.trim()
         if (message.isBlank()) return
+        val currentState = state.value
+        if (currentState is TextAdventureUiState.Loaded && !currentState.isSendEnabled) return
+        inputText.value = ""
         viewModelScope.launch {
-            inputText.value = ""
-            continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            try {
+                continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to send message for adventure %s", adventureId)
+            }
         }
     }
 
     fun onRetry() {
         viewModelScope.launch {
-            continueTextAdventureUseCase.retry(adventureId = adventureId)
+            try {
+                continueTextAdventureUseCase.retry(adventureId = adventureId)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to retry adventure %s", adventureId)
+            }
         }
     }
 
