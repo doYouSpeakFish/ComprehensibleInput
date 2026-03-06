@@ -22,7 +22,7 @@
           },
           {
             "type": "command",
-            "command": "./gradlew koverMarkdownSnapshotDebug --console=plain 2>&1 | tail -n 40",
+            "command": "./gradlew koverMarkdownSnapshotDebug -PignoreTestFailures --console=plain 2>&1 | tail -n 40",
             "timeout": 600
           },
           {

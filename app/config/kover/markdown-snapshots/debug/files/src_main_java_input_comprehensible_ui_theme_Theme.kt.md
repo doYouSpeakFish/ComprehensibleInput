@@ -15,7 +15,7 @@ Location: `src/main/java/input/comprehensible/ui/theme/Theme.kt:84-91`
 ⚪   84 | 
 ⚪   85 | @Composable
 🔴   86 | fun ComprehensibleInputTheme(
-🔴   87 |     darkTheme: Boolean = isSystemInDarkTheme(),
+🟢   87 |     darkTheme: Boolean = isSystemInDarkTheme(),
 ⚪   88 |     content: @Composable() () -> Unit
 🟡   89 | ) {
 🟢   90 |     MaterialTheme(

@@ -100,6 +100,7 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.ignoreFailures = project.hasProperty("ignoreTestFailures") // allow kover to run even with test failures
             }
         }
     }
