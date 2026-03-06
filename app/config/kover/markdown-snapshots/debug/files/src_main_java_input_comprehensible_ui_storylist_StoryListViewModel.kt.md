@@ -65,9 +65,9 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
 🟢   75 |                 add(StoryListUiState.StoryListItem.StartTextAdventure)
 ```
 
-## Lines 113-126
+## Lines 113-124
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:113-126`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:113-124`
 
 ```kotlin
 ⚪  113 |     fun onStartTextAdventure() {
@@ -77,11 +77,9 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
 🟢  117 |             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
 ⚪  118 |             try {
 🟢  119 |                 startTextAdventureUseCase(adventureId)
-🟡  120 |             } catch (e: CancellationException) {
-🟢  121 |                 throw e
-🟡  122 |             } catch (e: Exception) {
-🟢  123 |                 Timber.e(e, "Failed to start text adventure %s", adventureId)
-⚪  124 |             }
-⚪  125 |         }
-⚪  126 |     }
+🟡  120 |             } catch (e: Exception) {
+🟢  121 |                 ensureActive()
+🟢  122 |                 Timber.e(e, "Failed to start text adventure %s", adventureId)
+⚪  123 |             }
+⚪  124 |         }
 ```

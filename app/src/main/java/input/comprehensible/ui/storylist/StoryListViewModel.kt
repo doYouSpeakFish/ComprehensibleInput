@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -117,9 +117,8 @@ class StoryListViewModel(
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
             try {
                 startTextAdventureUseCase(adventureId)
-            } catch (e: CancellationException) {
-                throw e
             } catch (e: Exception) {
+                ensureActive()
                 Timber.e(e, "Failed to start text adventure %s", adventureId)
             }
         }

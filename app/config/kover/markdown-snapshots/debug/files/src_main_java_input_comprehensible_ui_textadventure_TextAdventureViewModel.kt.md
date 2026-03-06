@@ -19,9 +19,9 @@ Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureView
 🟢   36 |             is TextAdventureResult.Success -> {
 ```
 
-## Lines 72-87
+## Lines 72-85
 
-Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt:72-87`
+Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt:72-85`
 
 ```kotlin
 ⚪   72 |     fun onSendMessage() {
@@ -33,45 +33,42 @@ Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureView
 🟢   78 |         viewModelScope.launch {
 ⚪   79 |             try {
 🟢   80 |                 continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
-🟡   81 |             } catch (e: CancellationException) {
-🟢   82 |                 throw e
-🟡   83 |             } catch (e: Exception) {
-🟢   84 |                 Timber.e(e, "Failed to send message for adventure %s", adventureId)
-⚪   85 |             }
-⚪   86 |         }
-⚪   87 |     }
+🟡   81 |             } catch (e: Exception) {
+🟢   82 |                 ensureActive()
+🟢   83 |                 Timber.e(e, "Failed to send message for adventure %s", adventureId)
+⚪   84 |             }
+⚪   85 |         }
 ```
 
-## Lines 89-99
+## Lines 88-97
 
-Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt:89-99`
+Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt:88-97`
 
 ```kotlin
-⚪   89 |     fun onRetry() {
-🟢   90 |         viewModelScope.launch {
-⚪   91 |             try {
-🟢   92 |                 continueTextAdventureUseCase.retry(adventureId = adventureId)
-🟡   93 |             } catch (e: CancellationException) {
-🟢   94 |                 throw e
-🟡   95 |             } catch (e: Exception) {
-🟢   96 |                 Timber.e(e, "Failed to retry adventure %s", adventureId)
-⚪   97 |             }
-⚪   98 |         }
-⚪   99 |     }
+⚪   88 |     fun onRetry() {
+🟢   89 |         viewModelScope.launch {
+⚪   90 |             try {
+🟢   91 |                 continueTextAdventureUseCase.retry(adventureId = adventureId)
+🟡   92 |             } catch (e: Exception) {
+🟢   93 |                 ensureActive()
+🟢   94 |                 Timber.e(e, "Failed to retry adventure %s", adventureId)
+⚪   95 |             }
+⚪   96 |         }
+⚪   97 |     }
 ```
 
-## Lines 101-116
+## Lines 99-114
 
-Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt:101-116`
+Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureViewModel.kt:99-114`
 
 ```kotlin
-⚪  101 |     fun onSentenceSelected(messageId: String, paragraphIndex: Int, sentenceIndex: Int) {
-🟢  102 |         selectedText.update { selectedSentence ->
-🟡  103 |             if (selectedSentence?.messageId == messageId &&
-🔴  104 |                 selectedSentence.paragraphIndex == paragraphIndex &&
-🔴  105 |                 selectedSentence.sentenceIndex == sentenceIndex
-⚪  106 |             ) {
-🔴  107 |                 return@update selectedSentence.copy(isTranslated = !selectedSentence.isTranslated)
-⚪  108 |             }
-🟢  109 |             TextAdventureUiState.SelectedText(
+⚪   99 |     fun onSentenceSelected(messageId: String, paragraphIndex: Int, sentenceIndex: Int) {
+🟢  100 |         selectedText.update { selectedSentence ->
+🟡  101 |             if (selectedSentence?.messageId == messageId &&
+🔴  102 |                 selectedSentence.paragraphIndex == paragraphIndex &&
+🔴  103 |                 selectedSentence.sentenceIndex == sentenceIndex
+⚪  104 |             ) {
+🔴  105 |                 return@update selectedSentence.copy(isTranslated = !selectedSentence.isTranslated)
+⚪  106 |             }
+🟢  107 |             TextAdventureUiState.SelectedText(
 ```
