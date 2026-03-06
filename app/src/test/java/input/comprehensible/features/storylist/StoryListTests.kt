@@ -275,6 +275,26 @@ class StoryListTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `starting a text adventure handles remote errors gracefully`() = testRule.runTest {
+        // GIVEN the remote source will fail when starting an adventure
+        setTextAdventureStartError(RuntimeException("Network error"))
+
+        // WHEN the reader opens the story list and starts a text adventure
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            startTextAdventure()
+        }
+        awaitIdle()
+
+        // THEN the app does not crash (the error is caught by the ViewModel)
+        // AND navigating back returns to the story list
+        navigateBack()
+        awaitIdle()
+    }
+
+    @Test
     fun `stories without translations are hidden from the list`() = testRule.runTest {
         // GIVEN two stories in the library
         val stories = SampleStoriesData.listOf100Stories.take(2)

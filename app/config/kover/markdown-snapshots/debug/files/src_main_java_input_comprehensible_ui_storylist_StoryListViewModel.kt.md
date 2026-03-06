@@ -12,14 +12,14 @@
 Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:34-41`
 
 ```kotlin
-⚪   34 | 
+⚪   34 |
 ⚪   35 |     private val textAdventuresFlow: Flow<TextAdventuresListResult> =
 🟡   36 |         if (featureFlags.aiTextAdventuresEnabled) {
 🟢   37 |             getTextAdventuresListUseCase()
 ⚪   38 |         } else {
 🔴   39 |             flowOf(TextAdventuresListResult.Success(emptyList()))
 ⚪   40 |         }
-⚪   41 | 
+⚪   41 |
 ```
 
 ## Lines 47-51
@@ -40,7 +40,7 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
 
 ```kotlin
 ⚪   56 |             }
-⚪   57 | 
+⚪   57 |
 🔴   58 |             StoriesListResult.Error -> emptyList()
 ⚪   59 |         }
 🟢   60 |         val adventureItems = when (adventuresResult) {
@@ -55,7 +55,7 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
 
 ```kotlin
 ⚪   67 |             }
-⚪   68 | 
+⚪   68 |
 🔴   69 |             TextAdventuresListResult.Error -> emptyList()
 ⚪   70 |         }
 🟢   71 |         val items = buildList {
@@ -65,14 +65,23 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt
 🟢   75 |                 add(StoryListUiState.StoryListItem.StartTextAdventure)
 ```
 
-## Lines 110-114
+## Lines 113-126
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:110-114`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:113-126`
 
 ```kotlin
-⚪  110 | 
-⚪  111 |     fun onStartTextAdventure() {
-🟡  112 |         if (!featureFlags.aiTextAdventuresEnabled) return
-🟢  113 |         viewModelScope.launch {
-🟢  114 |             val adventureId = startTextAdventureUseCase()
+⚪  113 |     fun onStartTextAdventure() {
+🟡  114 |         if (!featureFlags.aiTextAdventuresEnabled) return
+🟢  115 |         val adventureId = startTextAdventureUseCase.generateAdventureId()
+🟢  116 |         viewModelScope.launch {
+🟢  117 |             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
+⚪  118 |             try {
+🟢  119 |                 startTextAdventureUseCase(adventureId)
+🟡  120 |             } catch (e: CancellationException) {
+🟢  121 |                 throw e
+🟡  122 |             } catch (e: Exception) {
+🟢  123 |                 Timber.e(e, "Failed to start text adventure %s", adventureId)
+⚪  124 |             }
+⚪  125 |         }
+⚪  126 |     }
 ```

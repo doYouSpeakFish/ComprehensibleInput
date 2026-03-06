@@ -14,6 +14,9 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     private val scriptedAdventures = ArrayDeque<ScriptedAdventure>()
     private val responsesByAdventureId = mutableMapOf<String, ArrayDeque<TextAdventureRemoteResponse>>()
 
+    var startAdventureException: Exception? = null
+    var respondToUserException: Exception? = null
+
     fun enqueueAdventure(script: ScriptedAdventure) {
         scriptedAdventures.add(script)
     }
@@ -25,6 +28,7 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse {
+        startAdventureException?.let { throw it }
         val script = scriptedAdventures.removeFirstOrNull()
             ?: error("No scripted adventures available")
         responsesByAdventureId[adventureId] = ArrayDeque(script.responses)
@@ -38,6 +42,7 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse {
+        respondToUserException?.let { throw it }
         val responses = responsesByAdventureId[adventureId]
             ?: error("No scripted responses available for adventure $adventureId")
         return responses.removeFirstOrNull()

@@ -152,6 +152,14 @@ class ComprehensibleInputTestScope(
         textAdventuresTestData.enqueueAdventure(scenario, responses)
     }
 
+    fun setTextAdventureStartError(exception: Exception?) {
+        fakeTextAdventureRemoteDataSource.startAdventureException = exception
+    }
+
+    fun setTextAdventureRespondError(exception: Exception?) {
+        fakeTextAdventureRemoteDataSource.respondToUserException = exception
+    }
+
     internal fun close() {
         appDb.close()
     }
