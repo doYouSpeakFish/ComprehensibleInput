@@ -92,5 +92,5 @@ jobs:
         GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - name: Auto-fix CI failures
-      if: failure() && (startsWith(github.ref_name, 'claude') || startsWith(github.ref_name, 'dependabot'))
+      if: failure() && (startsWith(github.head_ref, 'claude/') || startsWith(github.head_ref, 'dependabot/'))
       run: gh pr comment -b "@claude Fix the CI failure"
