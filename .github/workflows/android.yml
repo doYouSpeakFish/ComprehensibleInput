@@ -90,3 +90,7 @@ jobs:
       env:
         PR_URL: ${{github.event.pull_request.html_url}}
         GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Auto-fix CI failures
+      if: failure() && (startsWith(github.ref_name, 'claude') || startsWith(github.ref_name, 'dependabot'))
+      run: gh pr comment -b "@claude Fix the CI failure"

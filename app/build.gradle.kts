@@ -1,3 +1,4 @@
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
@@ -111,6 +112,22 @@ android {
     }
 }
 
+@OptIn(ExperimentalRoborazziApi::class)
+roborazzi {
+    generateComposePreviewRobolectricTests {
+        enable = true
+        packages = listOf("input.comprehensible")
+        includePrivatePreviews = false
+        testerQualifiedClassName = "input.comprehensible.PreviewScreenshotTester"
+        robolectricConfig = mapOf(
+            "sdk" to "[34]",
+            "qualifiers" to "\"w360dp-h640dp-mdpi\"",
+            "application" to "android.app.Application::class",
+        )
+    }
+    outputDir.set(file("screenshots"))
+}
+
 kover {
     reports {
         filters {
@@ -178,6 +195,8 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit)
+    testImplementation(libs.roborazzi.compose.preview)
+    testImplementation(libs.composable.preview.scanner)
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.ktin.test)
 
