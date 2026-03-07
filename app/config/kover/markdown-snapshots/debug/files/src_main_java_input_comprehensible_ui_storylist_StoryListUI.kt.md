@@ -31,17 +31,16 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:91-95`
 🟢   95 |     StoryListScaffold(
 ```
 
-## Lines 159-164
+## Lines 159-163
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:159-164`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:159-163`
 
 ```kotlin
 ⚪  159 |     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
 ⚪  160 |     content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
 🟡  161 | ) {
-🟡  162 |     val columns = if (windowSizeClass.isCompact) 2 else 4
+🟢  162 |     val columns = if (windowSizeClass.isCompact) 2 else 4
 🟢  163 |     Scaffold(
-🟢  164 |         modifier = modifier,
 ```
 
 ## Lines 189-193
