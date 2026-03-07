@@ -16,7 +16,7 @@ There are subagent hooks set up to run these checks once the main Claude Code ag
 ## Architecture
 
 - **Layer boundaries**: ViewModels must never directly depend on Repositories. Always go through UseCases.
-- **Error handling**: Suspend function error handling (try/catch with CancellationException re-throw) belongs in UseCases, not ViewModels. ViewModels should delegate to UseCases without wrapping calls in try/catch.
+- **Error handling**: UseCases should be transparent and propagate exceptions (no try/catch). ViewModels catch exceptions at the `viewModelScope.launch` boundary with CancellationException re-throw. The UI state is data-driven through repository Flows (offline-first), so error states are derived from data, not exceptions.
 - **Offline-first**: Room DB is the source of truth. Remote data sources sync to local DB.
 - **Dependency injection**: Uses KTin with `Singleton`/`InjectedSingleton` patterns.
 

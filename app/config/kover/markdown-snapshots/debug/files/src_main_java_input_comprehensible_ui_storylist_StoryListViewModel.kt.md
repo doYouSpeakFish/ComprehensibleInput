@@ -7,85 +7,93 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 33-40
+## Lines 37-48
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:33-40`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:37-48`
 
 ```kotlin
-⚪   33 |
-⚪   34 |     private val textAdventuresFlow: Flow<TextAdventuresListResult> =
-🟡   35 |         if (featureFlags.aiTextAdventuresEnabled) {
-🟢   36 |             getTextAdventuresListUseCase()
-⚪   37 |         } else {
-🔴   38 |             flowOf(TextAdventuresListResult.Success(emptyList()))
-⚪   39 |         }
-⚪   40 |
+⚪   37 |
+⚪   38 |     private val textAdventuresFlow: Flow<TextAdventuresListResult> =
+🟡   39 |         if (featureFlags.aiTextAdventuresEnabled) {
+🟢   40 |             getTextAdventuresListUseCase()
+⚪   41 |         } else {
+🔴   42 |             flowOf(TextAdventuresListResult.Success(emptyList()))
+⚪   43 |         }
+⚪   44 |
 ```
 
-## Lines 45-49
+## Lines 55-59
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:45-49`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:55-59`
 
 ```kotlin
-⚪   45 |     ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
-🟢   46 |         val storyItems = when (storiesResult) {
-🟡   47 |             is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
-🟢   48 |                 StoryListUiState.StoryListItem.Story(
-🟢   49 |                     id = story.id,
+⚪   55 |     ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
+🟢   56 |         val storyItems = when (storiesResult) {
+🟡   57 |             is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
+🟢   58 |                 StoryListUiState.StoryListItem.Story(
+🟢   59 |                     id = story.id,
 ```
 
-## Lines 54-61
+## Lines 64-73
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:54-61`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:64-73`
 
 ```kotlin
-⚪   54 |             }
-⚪   55 |
-🔴   56 |             StoriesListResult.Error -> emptyList()
-⚪   57 |         }
-🟢   58 |         val adventureItems = when (adventuresResult) {
-🟡   59 |             is TextAdventuresListResult.Success -> adventuresResult.adventures.map { adventure ->
-🟢   60 |                 StoryListUiState.StoryListItem.TextAdventure(
-🟢   61 |                     id = adventure.id,
+⚪   64 |             }
+⚪   65 |
+🔴   66 |             StoriesListResult.Error -> emptyList()
+⚪   67 |         }
+🟢   68 |         val adventureItems = when (adventuresResult) {
+🟡   69 |             is TextAdventuresListResult.Success -> adventuresResult.adventures.map { adventure ->
+🟢   70 |                 StoryListUiState.StoryListItem.TextAdventure(
+🟢   71 |                     id = adventure.id,
 ```
 
-## Lines 65-73
+## Lines 75-83
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:65-73`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:75-83`
 
 ```kotlin
-⚪   65 |             }
-⚪   66 |
-🔴   67 |             TextAdventuresListResult.Error -> emptyList()
-⚪   68 |         }
-🟢   69 |         val items = buildList {
-🟢   70 |             addAll(storyItems)
-🟡   71 |             if (featureFlags.aiTextAdventuresEnabled) {
-🟢   72 |                 addAll(adventureItems)
-🟢   73 |                 add(StoryListUiState.StoryListItem.StartTextAdventure)
+⚪   75 |             }
+⚪   76 |
+🔴   77 |             TextAdventuresListResult.Error -> emptyList()
+⚪   78 |         }
+🟢   79 |         val items = buildList {
+🟢   80 |             addAll(storyItems)
+🟡   81 |             if (featureFlags.aiTextAdventuresEnabled) {
+🟢   82 |                 addAll(adventureItems)
+🟢   83 |                 add(StoryListUiState.StoryListItem.StartTextAdventure)
 ```
 
-## Lines 87-104
+## Lines 101-126
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:87-104`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:101-126`
 
 ```kotlin
-⚪   87 |     fun onLearningLanguageSelected(learningLanguage: LanguageSelection) {
-🟢   88 |         viewModelScope.launch {
-🟢   89 |             setLearningLanguageUseCase(learningLanguage.languageCode)
-⚪   90 |         }
-⚪   91 |     }
-⚪   92 |
-⚪   93 |     fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
-🟢   94 |         viewModelScope.launch {
-🟢   95 |             setTranslationLanguageUseCase(translationLanguage.languageCode)
-⚪   96 |         }
-⚪   97 |     }
-⚪   98 |
-⚪   99 |     fun onStartTextAdventure() {
-🟡  100 |         if (!featureFlags.aiTextAdventuresEnabled) return
-🟢  101 |         val adventureId = startTextAdventureUseCase.generateAdventureId()
+⚪  101 |     fun onLearningLanguageSelected(learningLanguage: LanguageSelection) {
 🟢  102 |         viewModelScope.launch {
-🟢  103 |             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
-🟢  104 |             startTextAdventureUseCase(adventureId)
+🟢  103 |             setLearningLanguageUseCase(learningLanguage.languageCode)
+⚪  104 |         }
+⚪  105 |     }
+⚪  106 |
+⚪  107 |     fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
+🟢  108 |         viewModelScope.launch {
+🟢  109 |             setTranslationLanguageUseCase(translationLanguage.languageCode)
+⚪  110 |         }
+⚪  111 |     }
+⚪  112 |
+⚪  113 |     fun onStartTextAdventure() {
+🟡  114 |         if (!featureFlags.aiTextAdventuresEnabled) return
+🟢  115 |         val adventureId = startTextAdventureUseCase.generateAdventureId()
+🟢  116 |         viewModelScope.launch {
+🟢  117 |             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
+🟢  118 |             try {
+🟢  119 |                 startTextAdventureUseCase(adventureId)
+🔴  120 |             } catch (e: CancellationException) {
+🔴  121 |                 throw e
+🟢  122 |             } catch (e: Exception) {
+🟢  123 |                 Timber.e(e, "Failed to start text adventure %s", adventureId)
+⚪  124 |             }
+⚪  125 |         }
+⚪  126 |     }
 ```

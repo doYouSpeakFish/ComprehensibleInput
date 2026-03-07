@@ -4,11 +4,10 @@ import input.comprehensible.data.languages.LanguageSettingsRepository
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Gets the user's language settings.
+ * Gets the user's translations language setting.
  */
-class GetLanguageSettingsUseCase(
+class GetTranslationsLanguageUseCase(
     private val repository: LanguageSettingsRepository = LanguageSettingsRepository(),
 ) {
-    val learningLanguage: Flow<String> = repository.learningLanguage
-    val translationsLanguage: Flow<String> = repository.translationsLanguage
+    operator fun invoke(): Flow<String> = repository.translationsLanguage
 }

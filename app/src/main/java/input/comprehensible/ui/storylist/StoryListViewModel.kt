@@ -5,13 +5,15 @@ import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.stories.StoriesListResult
 import input.comprehensible.data.textadventures.TextAdventuresListResult
 import input.comprehensible.ui.components.LanguageSelection
-import input.comprehensible.usecases.GetLanguageSettingsUseCase
+import input.comprehensible.usecases.GetLearningLanguageUseCase
 import input.comprehensible.usecases.GetStoriesListUseCase
 import input.comprehensible.usecases.GetTextAdventuresListUseCase
+import input.comprehensible.usecases.GetTranslationsLanguageUseCase
 import input.comprehensible.usecases.SetLearningLanguageUseCase
 import input.comprehensible.usecases.SetTranslationLanguageUseCase
 import input.comprehensible.usecases.StartTextAdventureUseCase
 import input.comprehensible.util.FeatureFlags
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,13 +22,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * A ViewModel for the StoryList screen.
  */
 class StoryListViewModel(
     private val featureFlags: FeatureFlags = FeatureFlags(),
-    getLanguageSettingsUseCase: GetLanguageSettingsUseCase = GetLanguageSettingsUseCase(),
+    getLearningLanguageUseCase: GetLearningLanguageUseCase = GetLearningLanguageUseCase(),
+    getTranslationsLanguageUseCase: GetTranslationsLanguageUseCase = GetTranslationsLanguageUseCase(),
     getStoriesListUseCase: GetStoriesListUseCase = GetStoriesListUseCase(),
     getTextAdventuresListUseCase: GetTextAdventuresListUseCase = GetTextAdventuresListUseCase(),
     private val setLearningLanguageUseCase: SetLearningLanguageUseCase = SetLearningLanguageUseCase(),
@@ -46,8 +50,8 @@ class StoryListViewModel(
     val state = combine(
         getStoriesListUseCase(),
         textAdventuresFlow,
-        getLanguageSettingsUseCase.learningLanguage,
-        getLanguageSettingsUseCase.translationsLanguage,
+        getLearningLanguageUseCase(),
+        getTranslationsLanguageUseCase(),
     ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
         val storyItems = when (storiesResult) {
             is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
@@ -111,7 +115,13 @@ class StoryListViewModel(
         val adventureId = startTextAdventureUseCase.generateAdventureId()
         viewModelScope.launch {
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
-            startTextAdventureUseCase(adventureId)
+            try {
+                startTextAdventureUseCase(adventureId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to start text adventure %s", adventureId)
+            }
         }
     }
 }
