@@ -84,16 +84,44 @@ jobs:
         path: app/build/test-results
         retention-days: 30
 
-    - name: Enable auto-merge for Dependabot PRs
+    - name: Check whether Dependabot is the only contributor
+      id: dependabot_only
       if: github.event.pull_request.user.login == 'dependabot[bot]'
+      run: |
+        set -euo pipefail
+
+        non_dependabot_count="$(
+          gh api \
+            repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits \
+            --paginate \
+            --jq '
+              [ .[]
+                | select(
+                    (.author == null) or
+                    (.author.login != "dependabot[bot]")
+                  )
+              ] | length
+            '
+        )"
+    
+        if [ "$non_dependabot_count" = "0" ]; then
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "ok=false" >> "$GITHUB_OUTPUT"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Enable auto-merge for Dependabot-only PRs
+      if: github.event.pull_request.user.login == 'dependabot[bot]' && steps.dependabot_only.outputs.ok == 'true'
       run: gh pr merge --auto --merge "$PR_URL"
       env:
-        PR_URL: ${{github.event.pull_request.html_url}}
-        GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Auto-fix CI failures
-      if: failure() && (startsWith(github.head_ref, 'claude/') || startsWith(github.head_ref, 'dependabot/'))
-      run: gh pr comment "$PR_URL" -b "@claude Fix the cause of the CI failure"
+      if: failure() && (startsWith(github.head_ref, 'codex/') || startsWith(github.head_ref, 'dependabot/'))
+      run: gh pr comment "$PR_URL" -b "@codex Fix the cause of the CI failure"
       env:
-        PR_URL: ${{github.event.pull_request.html_url}}
-        GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
