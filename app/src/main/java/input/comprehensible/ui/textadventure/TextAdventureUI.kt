@@ -133,6 +133,7 @@ private fun TextAdventureMessages(
                     onSentenceSelected = onSentenceSelected,
                 )
                 is TextAdventureMessageUiState.User -> UserMessage(message = message)
+                TextAdventureMessageUiState.Loading -> LoadingMessage()
             }
         }
     }
@@ -173,6 +174,26 @@ private fun AiMessage(
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun LoadingMessage() {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("text_adventure_message_loading"),
+        tonalElevation = 1.dp,
+        shape = MaterialTheme.shapes.large,
+    ) {
+        Box(
+            modifier = Modifier.padding(16.dp),
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp,
+            )
         }
     }
 }

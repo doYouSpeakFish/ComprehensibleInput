@@ -35,4 +35,8 @@ sealed interface TextAdventureMessageUiState {
         override val id: String,
         val text: String,
     ) : TextAdventureMessageUiState
+
+    data object Loading : TextAdventureMessageUiState {
+        override val id: String = "loading"
+    }
 }

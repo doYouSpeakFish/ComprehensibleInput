@@ -11,7 +11,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import timber.log.Timber
-import java.util.UUID
 
 class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     private companion object {
@@ -25,10 +24,11 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     }
 
     override suspend fun startAdventure(
+        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse = requestAdventureResponse(
-        adventureId = UUID.randomUUID().toString(),
+        adventureId = adventureId,
         promptName = "text-adventure-start",
         systemPrompt = """
             You are a text adventure narrator.

@@ -24,21 +24,31 @@ class TextAdventureViewModel(
     private val adventureFlow = getTextAdventureUseCase(adventureId)
     private val selectedText = MutableStateFlow<TextAdventureUiState.SelectedText?>(null)
     private val inputText = MutableStateFlow("")
+    private val isAwaitingResponse = MutableStateFlow(false)
 
     val state = combine(
         adventureFlow,
         selectedText,
         inputText,
-    ) { adventureResult, selectedSentence, inputTextValue ->
+        isAwaitingResponse,
+    ) { adventureResult, selectedSentence, inputTextValue, awaitingResponse ->
         when (adventureResult) {
+            TextAdventureResult.Loading -> TextAdventureUiState.Loading
             TextAdventureResult.Error -> TextAdventureUiState.Error
-            is TextAdventureResult.Success -> TextAdventureUiState.Loaded(
-                title = adventureResult.adventure.title,
-                messages = adventureResult.adventure.messages.map { it.toUiState() },
-                selectedText = selectedSentence,
-                inputText = inputTextValue,
-                isInputEnabled = !adventureResult.adventure.isComplete,
-            )
+            is TextAdventureResult.Success -> {
+                val messages = adventureResult.adventure.messages.map { it.toUiState() }
+                TextAdventureUiState.Loaded(
+                    title = adventureResult.adventure.title,
+                    messages = if (awaitingResponse) {
+                        messages + TextAdventureMessageUiState.Loading
+                    } else {
+                        messages
+                    },
+                    selectedText = selectedSentence,
+                    inputText = inputTextValue,
+                    isInputEnabled = !adventureResult.adventure.isComplete && !awaitingResponse,
+                )
+            }
         }
     }.stateIn(
         viewModelScope,
@@ -55,7 +65,12 @@ class TextAdventureViewModel(
         if (message.isBlank()) return
         viewModelScope.launch {
             inputText.value = ""
-            continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            isAwaitingResponse.value = true
+            try {
+                continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            } finally {
+                isAwaitingResponse.value = false
+            }
         }
     }
 

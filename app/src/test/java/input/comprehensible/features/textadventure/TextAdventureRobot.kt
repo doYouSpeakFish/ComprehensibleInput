@@ -54,6 +54,18 @@ class TextAdventureRobot(
             .onNodeWithTag("text_adventure_input")
             .assertIsDisplayed()
     }
+
+    fun assertMessageLoadingIsVisible() {
+        composeTestRule
+            .onNodeWithTag("text_adventure_message_loading")
+            .assertIsDisplayed()
+    }
+
+    fun assertMessageLoadingIsHidden() {
+        composeTestRule
+            .onAllNodesWithTag("text_adventure_message_loading")
+            .assertCountEquals(0)
+    }
 }
 
 suspend fun ComprehensibleInputTestScope.onTextAdventure(

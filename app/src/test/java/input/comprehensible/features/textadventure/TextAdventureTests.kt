@@ -2,6 +2,8 @@ package input.comprehensible.features.textadventure
 
 import android.app.Application
 import android.os.Build
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
@@ -152,6 +154,101 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
             assertMessageVisible("A trail winds into the forest.")
             assertMessageVisible("Birdsong follows you between the trees.")
             // AND the reader can keep responding
+            assertInputIsVisible()
+        }
+    }
+
+    @Test
+    fun `loading spinner is shown while starting a new adventure`() = testRule.runTest {
+        // GIVEN a text adventure with a delayed response
+        val adventureId = "adventure-3"
+        val scenario = TextAdventureRemoteResponse(
+            adventureId = adventureId,
+            title = "Ocean Depths",
+            sentences = listOf("Waves crash against the shore."),
+            translatedSentences = listOf("Las olas rompen contra la orilla."),
+            isEnding = false,
+        )
+        enqueueTextAdventure(scenario = scenario, responses = emptyList())
+        val gate = holdTextAdventureResponses()
+
+        // WHEN the reader starts a new text adventure
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            startTextAdventure()
+        }
+        awaitIdle()
+
+        // THEN the adventure screen shows a loading indicator
+        composeRule.onNodeWithTag("text_adventure_loading").assertIsDisplayed()
+
+        // WHEN the AI response arrives
+        gate.complete(Unit)
+        awaitIdle()
+
+        onTextAdventure {
+            // THEN the scenario is presented and loading is gone
+            assertMessageVisible("Waves crash against the shore.")
+            assertMessageLoadingIsHidden()
+        }
+    }
+
+    @Test
+    fun `loading spinner is shown while waiting for AI response`() = testRule.runTest {
+        // GIVEN a text adventure that is already loaded
+        val adventureId = "adventure-4"
+        val scenario = TextAdventureRemoteResponse(
+            adventureId = adventureId,
+            title = "Desert Sun",
+            sentences = listOf("Sand stretches to the horizon."),
+            translatedSentences = listOf("La arena se extiende hasta el horizonte."),
+            isEnding = false,
+        )
+        val responses = listOf(
+            TextAdventureRemoteResponse(
+                adventureId = adventureId,
+                title = "Desert Sun",
+                sentences = listOf("A mirage appears in the distance."),
+                translatedSentences = listOf("Un espejismo aparece en la distancia."),
+                isEnding = false,
+            ),
+        )
+        enqueueTextAdventure(scenario = scenario, responses = responses)
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            startTextAdventure()
+        }
+        awaitIdle()
+
+        // WHEN the reader sends a response while the AI is delayed
+        val gate = holdTextAdventureResponses()
+        onTextAdventure {
+            enterResponse("I walk toward it.")
+            sendResponse()
+        }
+        awaitIdle()
+
+        onTextAdventure {
+            // THEN the loading spinner is shown as a message
+            assertMessageLoadingIsVisible()
+            // AND the input is hidden while waiting
+            assertInputIsHidden()
+        }
+
+        // WHEN the AI response arrives
+        gate.complete(Unit)
+        awaitIdle()
+
+        onTextAdventure {
+            // THEN the response is shown and loading is gone
+            assertMessageVisible("A mirage appears in the distance.")
+            assertMessageLoadingIsHidden()
+            // AND the input is visible again
             assertInputIsVisible()
         }
     }

@@ -42,7 +42,7 @@ class TextAdventuresRepository(
         .getAdventureSentenceRows(id)
         .map { rows ->
             if (rows.isEmpty()) {
-                TextAdventureResult.Error
+                TextAdventureResult.Loading
             } else {
                 TextAdventureResult.Success(rows.toDomain())
             }
@@ -54,19 +54,20 @@ class TextAdventuresRepository(
     }
 
     suspend fun startNewAdventure(
+        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
-    ): String {
+    ) {
         val languages = TextAdventureLanguages(
             learningLanguage = learningLanguage,
             translationLanguage = translationsLanguage,
         )
         val response = remoteDataSource.startAdventure(
+            adventureId = adventureId,
             learningLanguage = learningLanguage,
             translationsLanguage = translationsLanguage,
         )
         val now = clock()
-        val adventureId = response.adventureId
         localDataSource.insertAdventure(
             TextAdventureEntity(
                 id = adventureId,
@@ -84,7 +85,6 @@ class TextAdventuresRepository(
             messageIndex = 0,
             createdAt = now,
         )
-        return adventureId
     }
 
     suspend fun respondToAdventure(adventureId: String, userMessage: String) {
@@ -323,5 +323,6 @@ private suspend fun buildHistory(
 
 sealed interface TextAdventureResult {
     data class Success(val adventure: TextAdventure) : TextAdventureResult
+    object Loading : TextAdventureResult
     object Error : TextAdventureResult
 }
