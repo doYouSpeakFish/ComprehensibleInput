@@ -26,7 +26,7 @@ kover = "0.9.7"
 androidxTestCore = "1.7.0"
 jetbrainsKotlinJvm = "2.3.10"
 ktin = "1.0.1"
-koog = "0.6.1"
+koog = "0.6.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
