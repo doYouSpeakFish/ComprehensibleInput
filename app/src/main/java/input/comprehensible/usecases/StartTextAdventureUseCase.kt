@@ -2,7 +2,6 @@ package input.comprehensible.usecases
 
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.data.textadventures.TextAdventuresRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 
 /**
@@ -12,11 +11,13 @@ class StartTextAdventureUseCase(
     private val repository: TextAdventuresRepository = TextAdventuresRepository(),
     private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
 ) {
-    @OptIn(ExperimentalCoroutinesApi::class)
-    suspend operator fun invoke(): String {
+    fun generateAdventureId(): String = repository.generateAdventureId()
+
+    suspend operator fun invoke(adventureId: String) {
         val learningLanguage = languageSettingsRepository.learningLanguage.first()
         val translationsLanguage = languageSettingsRepository.translationsLanguage.first()
-        return repository.startNewAdventure(
+        repository.startNewAdventure(
+            adventureId = adventureId,
             learningLanguage = learningLanguage,
             translationsLanguage = translationsLanguage,
         )

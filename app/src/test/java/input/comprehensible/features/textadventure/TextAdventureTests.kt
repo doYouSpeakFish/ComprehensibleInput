@@ -156,6 +156,99 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
         }
     }
 
+    @Test
+    fun `error is shown when sending a message fails`() = testRule.runTest {
+        // GIVEN a text adventure with a scenario
+        val adventureId = "adventure-error"
+        val scenario = TextAdventureRemoteResponse(
+            adventureId = adventureId,
+            title = "Storm Coast",
+            sentences = listOf("Waves crash against the cliffs."),
+            translatedSentences = listOf("Las olas rompen contra los acantilados."),
+            isEnding = false,
+        )
+        enqueueTextAdventure(scenario = scenario, responses = emptyList())
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            startTextAdventure()
+        }
+        awaitIdle()
+
+        onTextAdventure {
+            assertMessageVisible("Waves crash against the cliffs.")
+
+            // WHEN the remote source fails on the next response
+            setTextAdventureRespondError(RuntimeException("Network error"))
+            enterResponse("I climb the cliff.")
+            sendResponse()
+        }
+        awaitIdle()
+
+        onTextAdventure {
+            // THEN an error message is shown
+            assertErrorMessageVisible()
+        }
+    }
+
+    @Test
+    fun `retry works after a send failure`() = testRule.runTest {
+        // GIVEN a text adventure with a scenario and a response
+        val adventureId = "adventure-retry"
+        val scenario = TextAdventureRemoteResponse(
+            adventureId = adventureId,
+            title = "Desert Path",
+            sentences = listOf("Sand stretches in every direction."),
+            translatedSentences = listOf("La arena se extiende en todas direcciones."),
+            isEnding = false,
+        )
+        val responses = listOf(
+            TextAdventureRemoteResponse(
+                adventureId = adventureId,
+                title = "Desert Path",
+                sentences = listOf("An oasis appears ahead."),
+                translatedSentences = listOf("Un oasis aparece adelante."),
+                isEnding = true,
+            ),
+        )
+        enqueueTextAdventure(scenario = scenario, responses = responses)
+
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            startTextAdventure()
+        }
+        awaitIdle()
+
+        onTextAdventure {
+            assertMessageVisible("Sand stretches in every direction.")
+
+            // WHEN the remote source fails on the next response
+            setTextAdventureRespondError(RuntimeException("Network error"))
+            enterResponse("I walk forward.")
+            sendResponse()
+        }
+        awaitIdle()
+
+        onTextAdventure {
+            // THEN an error message is shown
+            assertErrorMessageVisible()
+
+            // WHEN the error is cleared and the reader taps retry
+            setTextAdventureRespondError(null)
+            tapRetry()
+        }
+        awaitIdle()
+
+        onTextAdventure {
+            // THEN the AI response is shown after retry
+            assertMessageVisible("An oasis appears ahead.")
+        }
+    }
+
     companion object {
         @Suppress("unused")
         @JvmStatic

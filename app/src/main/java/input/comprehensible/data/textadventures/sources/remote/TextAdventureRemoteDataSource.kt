@@ -4,7 +4,10 @@ import com.ktin.InjectedSingleton
 import kotlinx.serialization.Serializable
 
 interface TextAdventureRemoteDataSource {
+    fun generateAdventureId(): String
+
     suspend fun startAdventure(
+        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse

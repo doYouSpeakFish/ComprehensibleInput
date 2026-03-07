@@ -28,6 +28,8 @@
     <string name="text_adventure_list_in_progress">Aventura de texto · En curso</string>
     <string name="text_adventure_list_complete">Aventura de texto · Finalizada</string>
     <string name="text_adventure_ending_label">Final</string>
+    <string name="text_adventure_error_message">Algo salió mal. Toca reintentar para intentar de nuevo.</string>
+    <string name="text_adventure_retry_button">Reintentar</string>
     <string-array name="story_reader_tap_to_translate_explainer">
         <item>Toca cualquier oración para traducirla</item>
         <item>Bueno, casi cualquier oración</item>

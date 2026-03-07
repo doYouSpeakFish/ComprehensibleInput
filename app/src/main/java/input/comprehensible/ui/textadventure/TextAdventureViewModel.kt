@@ -9,12 +9,14 @@ import input.comprehensible.data.textadventures.model.TextAdventureParagraph
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.usecases.ContinueTextAdventureUseCase
 import input.comprehensible.usecases.GetTextAdventureUseCase
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TextAdventureViewModel(
     private val adventureId: String,
@@ -32,13 +34,30 @@ class TextAdventureViewModel(
     ) { adventureResult, selectedSentence, inputTextValue ->
         when (adventureResult) {
             TextAdventureResult.Error -> TextAdventureUiState.Error
-            is TextAdventureResult.Success -> TextAdventureUiState.Loaded(
-                title = adventureResult.adventure.title,
-                messages = adventureResult.adventure.messages.map { it.toUiState() },
-                selectedText = selectedSentence,
-                inputText = inputTextValue,
-                isInputEnabled = !adventureResult.adventure.isComplete,
-            )
+            TextAdventureResult.Loading -> TextAdventureUiState.Loading
+            is TextAdventureResult.Success -> {
+                val messages = adventureResult.adventure.messages.map { it.toUiState() }
+                val isGenerating = adventureResult.isGenerating
+                val lastMessage = adventureResult.adventure.messages.lastOrNull()
+                val lastMessageIsUser = lastMessage?.sender == TextAdventureMessageSender.USER
+                val showError = lastMessageIsUser && !isGenerating
+                val messagesWithStatus = buildList {
+                    addAll(messages)
+                    if (isGenerating) {
+                        add(TextAdventureMessageUiState.AiLoading(id = "loading"))
+                    } else if (showError) {
+                        add(TextAdventureMessageUiState.AiError(id = "error"))
+                    }
+                }
+                TextAdventureUiState.Loaded(
+                    title = adventureResult.adventure.title,
+                    messages = messagesWithStatus,
+                    selectedText = selectedSentence,
+                    inputText = inputTextValue,
+                    isInputEnabled = !adventureResult.adventure.isComplete,
+                    isSendEnabled = !isGenerating,
+                )
+            }
         }
     }.stateIn(
         viewModelScope,
@@ -53,9 +72,29 @@ class TextAdventureViewModel(
     fun onSendMessage() {
         val message = inputText.value.trim()
         if (message.isBlank()) return
+        val currentState = state.value
+        if (currentState is TextAdventureUiState.Loaded && !currentState.isSendEnabled) return
+        inputText.value = ""
         viewModelScope.launch {
-            inputText.value = ""
-            continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            try {
+                continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to send message for adventure %s", adventureId)
+            }
+        }
+    }
+
+    fun onRetry() {
+        viewModelScope.launch {
+            try {
+                continueTextAdventureUseCase.retry(adventureId = adventureId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to retry adventure %s", adventureId)
+            }
         }
     }
 

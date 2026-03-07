@@ -24,11 +24,14 @@ class DefaultTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         prettyPrint = true
     }
 
+    override fun generateAdventureId(): String = UUID.randomUUID().toString()
+
     override suspend fun startAdventure(
+        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse = requestAdventureResponse(
-        adventureId = UUID.randomUUID().toString(),
+        adventureId = adventureId,
         promptName = "text-adventure-start",
         systemPrompt = """
             You are a text adventure narrator.
