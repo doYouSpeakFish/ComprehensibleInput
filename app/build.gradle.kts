@@ -125,7 +125,6 @@ roborazzi {
             "application" to "android.app.Application::class",
         )
     }
-    outputDir.set(file("screenshots"))
 }
 
 kover {

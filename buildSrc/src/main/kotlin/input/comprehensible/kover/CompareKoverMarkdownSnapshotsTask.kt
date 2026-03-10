@@ -37,7 +37,11 @@ abstract class CompareKoverMarkdownSnapshotsTask : DefaultTask() {
             .intersect(snapshotFiles.keys)
             .filter { relativePath ->
                 !Files.readString(generatedFiles.getValue(relativePath))
-                    .contentEquals(Files.readString(snapshotFiles.getValue(relativePath)))
+                    .replace("\r\n", "\n")
+                    .contentEquals(
+                        Files.readString(snapshotFiles.getValue(relativePath))
+                            .replace("\r\n", "\n")
+                    )
             }
 
         if (missingInSnapshots.isNotEmpty() || missingInGenerated.isNotEmpty() || contentDifferences.isNotEmpty()) {
