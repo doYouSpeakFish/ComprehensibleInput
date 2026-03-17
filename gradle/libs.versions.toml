@@ -24,7 +24,7 @@ detekt = "1.23.8"
 composeRules = "0.5.6"
 kover = "0.9.7"
 androidxTestCore = "1.7.0"
-jetbrainsKotlinJvm = "2.3.10"
+jetbrainsKotlinJvm = "2.3.20"
 ktin = "1.0.1"
 koog = "0.6.1"
 
