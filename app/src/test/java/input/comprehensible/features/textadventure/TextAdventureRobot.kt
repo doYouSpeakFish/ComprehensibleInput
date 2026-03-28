@@ -54,6 +54,18 @@ class TextAdventureRobot(
             .onNodeWithTag("text_adventure_input")
             .assertIsDisplayed()
     }
+
+    fun assertErrorMessageVisible() {
+        composeTestRule
+            .onNodeWithText("Something went wrong", substring = true)
+            .assertIsDisplayed()
+    }
+
+    fun tapRetry() {
+        composeTestRule
+            .onNodeWithText("Retry")
+            .performClick()
+    }
 }
 
 suspend fun ComprehensibleInputTestScope.onTextAdventure(

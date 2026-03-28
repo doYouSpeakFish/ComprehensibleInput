@@ -5,14 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,7 +26,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +57,7 @@ fun TextAdventureScreen(
         onNavigateUp = onNavigateUp,
         onInputChanged = viewModel::onInputChanged,
         onSendMessage = viewModel::onSendMessage,
+        onRetry = viewModel::onRetry,
         onSentenceSelected = viewModel::onSentenceSelected,
         state = state,
     )
@@ -63,6 +69,7 @@ private fun TextAdventureScreen(
     onNavigateUp: () -> Unit,
     onInputChanged: (String) -> Unit,
     onSendMessage: () -> Unit,
+    onRetry: () -> Unit,
     onSentenceSelected: (messageId: String, paragraphIndex: Int, sentenceIndex: Int) -> Unit,
     state: TextAdventureUiState,
 ) {
@@ -80,6 +87,7 @@ private fun TextAdventureScreen(
                     inputText = state.inputText,
                     onInputChanged = onInputChanged,
                     onSendMessage = onSendMessage,
+                    isSendEnabled = state.isSendEnabled,
                 )
             }
         },
@@ -100,6 +108,7 @@ private fun TextAdventureScreen(
                     modifier = Modifier.fillMaxSize(),
                     state = state,
                     onSentenceSelected = onSentenceSelected,
+                    onRetry = onRetry,
                 )
             }
         }
@@ -111,11 +120,23 @@ private fun TextAdventureMessages(
     modifier: Modifier = Modifier,
     state: TextAdventureUiState.Loaded,
     onSentenceSelected: (messageId: String, paragraphIndex: Int, sentenceIndex: Int) -> Unit,
+    onRetry: () -> Unit,
 ) {
+    val listState = rememberLazyListState()
+    val currentMessages by rememberUpdatedState(state.messages)
+
+    LaunchedEffect(currentMessages.size) {
+        if (currentMessages.isNotEmpty()) {
+            // +1 for the title item at index 0
+            listState.animateScrollToItem(currentMessages.size)
+        }
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .testTag("text_adventure_messages"),
+        state = listState,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -133,6 +154,8 @@ private fun TextAdventureMessages(
                     onSentenceSelected = onSentenceSelected,
                 )
                 is TextAdventureMessageUiState.User -> UserMessage(message = message)
+                is TextAdventureMessageUiState.AiLoading -> AiLoadingMessage()
+                is TextAdventureMessageUiState.AiError -> AiErrorMessage(onRetry = onRetry)
             }
         }
     }
@@ -178,6 +201,60 @@ private fun AiMessage(
 }
 
 @Composable
+private fun AiLoadingMessage() {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("text_adventure_message_loading"),
+        tonalElevation = 1.dp,
+        shape = MaterialTheme.shapes.large,
+    ) {
+        Box(
+            modifier = Modifier.padding(16.dp),
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp,
+            )
+        }
+    }
+}
+
+@Composable
+private fun AiErrorMessage(onRetry: () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("text_adventure_message_error"),
+        tonalElevation = 1.dp,
+        shape = MaterialTheme.shapes.large,
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.text_adventure_error_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
+            )
+            IconButton(
+                modifier = Modifier.testTag("text_adventure_retry"),
+                onClick = onRetry,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = stringResource(R.string.text_adventure_retry_button),
+                    tint = MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun UserMessage(message: TextAdventureMessageUiState.User) {
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -200,6 +277,7 @@ private fun TextAdventureInput(
     inputText: String,
     onInputChanged: (String) -> Unit,
     onSendMessage: () -> Unit,
+    isSendEnabled: Boolean,
 ) {
     Surface(
         tonalElevation = 2.dp,
@@ -227,6 +305,7 @@ private fun TextAdventureInput(
                     .size(48.dp)
                     .testTag("text_adventure_send"),
                 onClick = onSendMessage,
+                enabled = isSendEnabled,
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -249,6 +328,7 @@ fun TextAdventurePreview() {
             onNavigateUp = {},
             onInputChanged = {},
             onSendMessage = {},
+            onRetry = {},
             onSentenceSelected = { _, _, _ -> },
             state = TextAdventureUiState.Loaded(
                 title = "Mountain Path",
@@ -271,6 +351,7 @@ fun TextAdventurePreview() {
                 selectedText = null,
                 inputText = "",
                 isInputEnabled = true,
+                isSendEnabled = true,
             ),
         )
     }

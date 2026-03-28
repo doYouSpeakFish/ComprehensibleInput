@@ -16,9 +16,12 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureHist
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import timber.log.Timber
 
 class TextAdventuresRepository(
@@ -26,6 +29,10 @@ class TextAdventuresRepository(
     private val remoteDataSource: TextAdventureRemoteDataSource,
     private val clock: () -> Long = { System.currentTimeMillis() },
 ) {
+    private val loadingAdventureIds = MutableStateFlow(emptySet<String>())
+
+    fun generateAdventureId(): String = remoteDataSource.generateAdventureId()
+
     fun getAdventures(): Flow<TextAdventuresListResult> = localDataSource
         .getAdventureSummaries()
         .map { summaries ->
@@ -38,15 +45,24 @@ class TextAdventuresRepository(
             emit(TextAdventuresListResult.Error)
         }
 
-    fun getAdventure(id: String): Flow<TextAdventureResult> = localDataSource
-        .getAdventureSentenceRows(id)
-        .map { rows ->
-            if (rows.isEmpty()) {
-                TextAdventureResult.Error
+    fun getAdventure(id: String): Flow<TextAdventureResult> = combine(
+        localDataSource.getAdventureSentenceRows(id),
+        loadingAdventureIds,
+    ) { rows, loadingIds ->
+        val isLoading = id in loadingIds
+        if (rows.isEmpty()) {
+            if (isLoading) {
+                TextAdventureResult.Loading
             } else {
-                TextAdventureResult.Success(rows.toDomain())
+                TextAdventureResult.Error
             }
+        } else {
+            TextAdventureResult.Success(
+                adventure = rows.toDomain(),
+                isGenerating = isLoading,
+            )
         }
+    }
         .distinctUntilChanged()
         .catch { throwable ->
         Timber.e(throwable, "Failed to load text adventure %s", id)
@@ -54,37 +70,42 @@ class TextAdventuresRepository(
     }
 
     suspend fun startNewAdventure(
+        adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
-    ): String {
+    ) {
         val languages = TextAdventureLanguages(
             learningLanguage = learningLanguage,
             translationLanguage = translationsLanguage,
         )
-        val response = remoteDataSource.startAdventure(
-            learningLanguage = learningLanguage,
-            translationsLanguage = translationsLanguage,
-        )
-        val now = clock()
-        val adventureId = response.adventureId
-        localDataSource.insertAdventure(
-            TextAdventureEntity(
-                id = adventureId,
-                title = response.title,
+        loadingAdventureIds.update { it + adventureId }
+        try {
+            val response = remoteDataSource.startAdventure(
+                adventureId = adventureId,
                 learningLanguage = learningLanguage,
-                translationLanguage = translationsLanguage,
-                createdAt = now,
-                updatedAt = now,
+                translationsLanguage = translationsLanguage,
             )
-        )
-        insertAiResponse(
-            adventureId = adventureId,
-            response = response,
-            languages = languages,
-            messageIndex = 0,
-            createdAt = now,
-        )
-        return adventureId
+            val now = clock()
+            localDataSource.insertAdventure(
+                TextAdventureEntity(
+                    id = adventureId,
+                    title = response.title,
+                    learningLanguage = learningLanguage,
+                    translationLanguage = translationsLanguage,
+                    createdAt = now,
+                    updatedAt = now,
+                )
+            )
+            insertAiResponse(
+                adventureId = adventureId,
+                response = response,
+                languages = languages,
+                messageIndex = 0,
+                createdAt = now,
+            )
+        } finally {
+            loadingAdventureIds.update { it - adventureId }
+        }
     }
 
     suspend fun respondToAdventure(adventureId: String, userMessage: String) {
@@ -105,28 +126,78 @@ class TextAdventuresRepository(
             messageIndex = nextIndex,
             createdAt = now,
         )
-        val response = remoteDataSource.respondToUser(
-            adventureId = adventureId,
-            learningLanguage = adventure.learningLanguage,
-            translationsLanguage = adventure.translationLanguage,
-            userMessage = userMessage,
-            history = buildHistory(
-                localDataSource = localDataSource,
+        loadingAdventureIds.update { it + adventureId }
+        try {
+            val response = remoteDataSource.respondToUser(
                 adventureId = adventureId,
                 learningLanguage = adventure.learningLanguage,
-            ),
+                translationsLanguage = adventure.translationLanguage,
+                userMessage = userMessage,
+                history = buildHistory(
+                    localDataSource = localDataSource,
+                    adventureId = adventureId,
+                    learningLanguage = adventure.learningLanguage,
+                ),
+            )
+            insertAiResponse(
+                adventureId = adventureId,
+                response = response,
+                languages = languages,
+                messageIndex = nextIndex + 1,
+                createdAt = now,
+            )
+            localDataSource.updateAdventureUpdatedAt(
+                id = adventureId,
+                updatedAt = now,
+            )
+        } finally {
+            loadingAdventureIds.update { it - adventureId }
+        }
+    }
+
+    suspend fun retryAdventureResponse(adventureId: String) {
+        val adventure = localDataSource.getAdventureSnapshot(adventureId) ?: run {
+            Timber.e("Text adventure %s not found when retrying", adventureId)
+            return
+        }
+        val languages = TextAdventureLanguages(
+            learningLanguage = adventure.learningLanguage,
+            translationLanguage = adventure.translationLanguage,
         )
-        insertAiResponse(
+        val latestMessageIndex = localDataSource.getLatestMessageIndex(adventureId) ?: run {
+            Timber.e("No messages found for text adventure %s when retrying", adventureId)
+            return
+        }
+        val history = buildHistory(
+            localDataSource = localDataSource,
             adventureId = adventureId,
-            response = response,
-            languages = languages,
-            messageIndex = nextIndex + 1,
-            createdAt = now,
+            learningLanguage = adventure.learningLanguage,
         )
-        localDataSource.updateAdventureUpdatedAt(
-            id = adventureId,
-            updatedAt = now,
-        )
+        val lastUserMessage = history.lastOrNull { it.role == "user" }?.text.orEmpty()
+        loadingAdventureIds.update { it + adventureId }
+        try {
+            val response = remoteDataSource.respondToUser(
+                adventureId = adventureId,
+                learningLanguage = adventure.learningLanguage,
+                translationsLanguage = adventure.translationLanguage,
+                userMessage = lastUserMessage,
+                history = history,
+            )
+            val now = clock()
+            insertAiResponse(
+                adventureId = adventureId,
+                response = response,
+                languages = languages,
+                messageIndex = latestMessageIndex + 1,
+                createdAt = now,
+            )
+            localDataSource.updateAdventureUpdatedAt(
+                id = adventureId,
+                updatedAt = now,
+            )
+        } finally {
+            loadingAdventureIds.update { it - adventureId }
+        }
     }
 
     private suspend fun insertUserMessage(
@@ -322,6 +393,10 @@ private suspend fun buildHistory(
 }
 
 sealed interface TextAdventureResult {
-    data class Success(val adventure: TextAdventure) : TextAdventureResult
+    data class Success(
+        val adventure: TextAdventure,
+        val isGenerating: Boolean,
+    ) : TextAdventureResult
+    object Loading : TextAdventureResult
     object Error : TextAdventureResult
 }
