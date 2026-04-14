@@ -2,11 +2,21 @@ plugins {
     application
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kover)
+    alias(libs.plugins.shadow.jar)
     id("input.comprehensible.kover-markdown-report")
 }
 
+group = "input.comprehensible"
+version = "0.0.1"
+
 application {
     mainClass = "input.comprehensible.backend.ApplicationKt"
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
+    }
 }
 
 dependencies {

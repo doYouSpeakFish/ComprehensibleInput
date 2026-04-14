@@ -26,9 +26,10 @@ kover = "0.9.8"
 androidxTestCore = "1.7.0"
 jetbrainsKotlinJvm = "2.3.20"
 ktin = "1.0.1"
-koog = "0.6.1"
-ktor = "3.1.3"
-logback = "1.5.20"
+koog = "0.8.0"
+ktor = "3.4.2"
+logback = "1.5.32"
+shadowJar = "9.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -93,3 +94,4 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+shadow-jar = { id = "com.gradleup.shadow", version.ref = "shadowJar" }
