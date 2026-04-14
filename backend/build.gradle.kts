@@ -1,7 +1,8 @@
 plugins {
+    application
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kover)
-    application
+    id("input.comprehensible.kover-markdown-report")
 }
 
 application {
