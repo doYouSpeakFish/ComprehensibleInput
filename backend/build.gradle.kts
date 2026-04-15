@@ -19,6 +19,15 @@ tasks.jar {
     }
 }
 
+kotlin {
+    jvmToolchain(25)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
 dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
