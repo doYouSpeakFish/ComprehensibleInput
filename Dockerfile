@@ -1,9 +1,9 @@
-FROM gradle:latest AS build
+FROM gradle:jdk21-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle :backend:shadowJar --no-daemon
+RUN gradle :backend:jar --no-daemon
 
-FROM amazoncorretto:25-alpine AS runtime
+FROM amazoncorretto:21-alpine AS runtime
 EXPOSE 8080
 RUN mkdir /app
 COPY --from=build /home/gradle/src/backend/build/libs/*.jar /app/comprehensible-input-backend.jar

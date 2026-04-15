@@ -25,10 +25,9 @@ composeRules = "0.5.7"
 kover = "0.9.8"
 androidxTestCore = "1.7.0"
 ktin = "1.0.1"
-koog = "0.8.0"
+koog = "0.6.1"
 ktor = "3.4.2"
 logback = "1.5.32"
-shadowJar = "9.4.1"
 ksp = "2.3.6"
 
 [libraries]
@@ -94,4 +93,3 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-shadow-jar = { id = "com.gradleup.shadow", version.ref = "shadowJar" }

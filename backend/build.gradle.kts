@@ -2,7 +2,6 @@ plugins {
     application
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kover)
-    alias(libs.plugins.shadow.jar)
     id("input.comprehensible.kover-markdown-report")
 }
 
@@ -14,18 +13,22 @@ application {
 }
 
 tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
-    }
+    manifest.attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
+    val dependencies = configurations
+        .runtimeClasspath
+        .get()
+        .map(::zipTree)
+    from(dependencies)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 kotlin {
-    jvmToolchain(25)
+    jvmToolchain(21)
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 dependencies {
