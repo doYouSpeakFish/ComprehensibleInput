@@ -50,13 +50,13 @@ jobs:
       run: ./gradlew assemble
 
     - name: Run tests with coverage
-      run: ./gradlew koverMarkdownSnapshotCheckDebug
+      run: ./gradlew koverMarkdownSnapshotCheck
 
     - name: Add coverage report to PR
       if: ${{ github.event_name == 'pull_request' }}
       uses: mi-kas/kover-report@v1
       with:
-        path: ${{ github.workspace }}/app/build/reports/kover/reportDebug.xml
+        path: ${{ github.workspace }}/app/build/reports/kover/report.xml
         title: Code Coverage
         update-comment: true
 

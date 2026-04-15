@@ -24,9 +24,11 @@ detekt = "1.23.8"
 composeRules = "0.5.7"
 kover = "0.9.8"
 androidxTestCore = "1.7.0"
-jetbrainsKotlinJvm = "2.3.20"
 ktin = "1.0.1"
 koog = "0.6.1"
+ktor = "3.4.2"
+logback = "1.5.32"
+ksp = "2.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +73,10 @@ detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", ver
 ktin-core = { group = "io.github.doyouspeakfish.ktin", name = "core", version.ref = "ktin" }
 ktin-test = { group = "io.github.doyouspeakfish.ktin", name = "test", version.ref = "ktin" }
 koog-agents-jvm = { group = "ai.koog", name = "koog-agents-jvm", version.ref = "koog" }
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktor" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm", version.ref = "ktor" }
+ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host-jvm", version.ref = "ktor" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
@@ -81,9 +87,9 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
-ksp = { id = "com.google.devtools.ksp", version = "2.3.6" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 room = { id = "androidx.room", version.ref = "room" }
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

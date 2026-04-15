@@ -51,6 +51,10 @@ abstract class GenerateKoverMarkdownReportTask : DefaultTask() {
         }
 
         val outputDirectory = outputDir.asFile.get()
+        if (outputDirectory.exists()) {
+            outputDirectory.deleteRecursively()
+
+        }
         outputDirectory.mkdirs()
 
         val sourceRootPaths = sourceRoots.get().map { it.asFile.toPath() }
