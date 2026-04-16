@@ -3,7 +3,7 @@ package input.comprehensible.backend.textadventure
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
-import ai.koog.prompt.structure.executeStructured
+import ai.koog.prompt.executor.model.executeStructured
 
 interface TextAdventureStructuredPromptExecutor {
     suspend fun executeResponse(
