@@ -2,6 +2,7 @@ plugins {
     application
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kover)
+    kotlin("plugin.serialization").version(libs.versions.kotlin.get())
     id("input.comprehensible.kover-markdown-report")
 }
 
@@ -13,12 +14,13 @@ application {
 }
 
 tasks.jar {
+    dependsOn(configurations.runtimeClasspath)
     manifest.attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
-    val dependencies = configurations
-        .runtimeClasspath
-        .get()
-        .map(::zipTree)
-    from(dependencies)
+    from(
+        configurations.runtimeClasspath.map { classpath ->
+            classpath.map(::zipTree)
+        }
+    )
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -32,8 +34,13 @@ java {
 }
 
 dependencies {
+    implementation(project(":textadventuremodels"))
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.koog.agents.jvm)
+    implementation(libs.serialization.json)
     runtimeOnly(libs.logback.classic)
 
     testImplementation(libs.junit)

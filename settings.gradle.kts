@@ -25,3 +25,4 @@ rootProject.name = "ComprehensibleInput"
 include(":app")
 
 include(":backend")
+include(":textadventuremodels")

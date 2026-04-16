@@ -162,6 +162,8 @@ kover {
 }
 
 dependencies {
+    implementation(project(":textadventuremodels"))
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -176,6 +178,10 @@ dependencies {
     implementation(libs.coroutines)
     implementation(libs.timber)
     implementation(libs.serialization.json)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.aboutLibraries.core)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.androidx.adaptive.android)
