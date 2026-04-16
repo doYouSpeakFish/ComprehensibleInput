@@ -9,4 +9,6 @@
 
 ## Files with missing coverage
 
-- [src/main/kotlin/input/comprehensible/backend/Application.kt](files/src_main_kotlin_input_comprehensible_backend_Application.kt.md) (missed 6, partial 0)
+- [src/main/kotlin/input/comprehensible/backend/Application.kt](files/src_main_kotlin_input_comprehensible_backend_Application.kt.md) (missed 20, partial 0)
+- [src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_TextAdventureGenerationService.kt.md) (missed 6, partial 3)
+- [src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureStructuredPromptExecutor.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_TextAdventureStructuredPromptExecutor.kt.md) (missed 8, partial 0)
