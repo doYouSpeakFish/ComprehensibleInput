@@ -12,13 +12,15 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+private const val TIMEOUT_MILLIS = 60_000L
+
 class DefaultTextAdventureRemoteDataSource(
     private val httpClient: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 60_000
+            requestTimeoutMillis = TIMEOUT_MILLIS
         }
     },
 ) : TextAdventureRemoteDataSource {
