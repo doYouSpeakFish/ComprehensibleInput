@@ -6,6 +6,7 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -24,6 +25,7 @@ class DefaultTextAdventureRemoteDataSource(
         install(HttpTimeout) {
             requestTimeoutMillis = TIMEOUT_MILLIS
         }
+        install(Logging)
     },
 ) : TextAdventureRemoteDataSource {
     override suspend fun startAdventure(
