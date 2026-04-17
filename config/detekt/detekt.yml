@@ -22,10 +22,7 @@ naming:
 
 style:
   MagicNumber:
-    ignorePropertyDeclaration: true
-    ignoreAnnotated:
-      - Composable
-      - Preview
+    active: false
   UnusedPrivateMember:
     ignoreAnnotated:
       - Preview
