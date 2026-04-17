@@ -28,7 +28,8 @@ val localProperties = Properties()
 if (localPropertiesFile.exists()) {
     FileInputStream(localPropertiesFile).use { localProperties.load(it) }
 }
-val koogApiKey = localProperties.getProperty("geminiApiKey") ?: ""
+val backendApiKey = localProperties.getProperty("backendApiKey")
+    ?: System.getenv("BACKEND_API_KEY") ?: ""
 
 android {
     namespace = "input.comprehensible"
@@ -60,10 +61,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "KOOG_API_KEY", "\"$koogApiKey\"")
+            buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
         }
         release {
-            buildConfigField("String", "KOOG_API_KEY", "\"\"")
+            buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -188,7 +189,6 @@ dependencies {
     implementation(libs.androidx.dataStore)
     implementation(libs.bundles.androidx.room)
     implementation(libs.ktin.core)
-    implementation(libs.koog.agents.jvm)
 
     ksp(libs.androidx.room.compiler)
 

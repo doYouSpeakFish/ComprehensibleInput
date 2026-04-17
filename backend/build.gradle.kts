@@ -39,6 +39,8 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.server.rate.limit)
+    implementation(libs.ktor.server.auth)
+    implementation(libs.ktor.server.auth.api.key)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koog.agents.jvm)
     implementation(libs.serialization.json)

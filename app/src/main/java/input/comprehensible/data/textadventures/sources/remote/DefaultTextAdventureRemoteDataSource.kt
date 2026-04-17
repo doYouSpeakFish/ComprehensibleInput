@@ -1,10 +1,12 @@
 package input.comprehensible.data.textadventures.sources.remote
 
+import input.comprehensible.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -28,6 +30,7 @@ class DefaultTextAdventureRemoteDataSource(
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse = httpClient.post("$BACKEND_BASE_URL/text-adventures/start") {
+        header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
         contentType(ContentType.Application.Json)
         setBody(
             StartTextAdventureRequest(
@@ -44,6 +47,7 @@ class DefaultTextAdventureRemoteDataSource(
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse = httpClient.post("$BACKEND_BASE_URL/text-adventures/respond") {
+        header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
         contentType(ContentType.Application.Json)
         setBody(
             ContinueTextAdventureRequest(
