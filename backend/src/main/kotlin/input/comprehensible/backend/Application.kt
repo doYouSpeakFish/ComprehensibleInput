@@ -1,24 +1,25 @@
 package input.comprehensible.backend
 
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.application.call
-import io.ktor.server.application.install
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.response.respondText
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.routing
 import input.comprehensible.backend.textadventure.DefaultTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.data.textadventures.sources.remote.ContinueTextAdventureRequest
 import input.comprehensible.data.textadventures.sources.remote.StartTextAdventureRequest
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.ratelimit.RateLimit
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
+import kotlin.time.Duration.Companion.minutes
 
 fun main() {
     val apiKey = requireNotNull(System.getenv(AI_API_KEY_ENV_VAR)?.takeIf { it.isNotBlank() }) {
@@ -47,6 +48,11 @@ fun Application.configureRouting(
 ) {
     install(ContentNegotiation) {
         json()
+    }
+    install(RateLimit) {
+        global {
+            rateLimiter(limit = 20, refillPeriod = 10.minutes)
+        }
     }
 
     routing {
