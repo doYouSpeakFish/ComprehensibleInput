@@ -31,7 +31,7 @@ logback = "1.5.32"
 ksp = "2.3.6"
 exposed = "0.61.0"
 mysql = "9.6.0"
-testcontainers = "2.0.5"
+h2 = "2.4.240"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -92,8 +92,7 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
 mysql-connector-j = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
-testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
-testcontainers-mysql = { group = "org.testcontainers", name = "testcontainers-mysql", version.ref = "testcontainers" }
+h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]

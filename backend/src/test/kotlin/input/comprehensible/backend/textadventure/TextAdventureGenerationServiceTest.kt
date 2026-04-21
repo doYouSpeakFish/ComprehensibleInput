@@ -13,7 +13,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.testcontainers.DockerClientFactory
 
 class TextAdventureGenerationServiceTest {
     private lateinit var database: Database
@@ -23,10 +22,6 @@ class TextAdventureGenerationServiceTest {
 
     @Before
     fun setUp() {
-        require(isDockerAvailable()) {
-            "Docker is required for MySQL Testcontainers tests"
-        }
-
         database = MySqlTestDatabase.connectAndInitialize()
         MySqlTestDatabase.reset(database)
         fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
@@ -183,11 +178,6 @@ class TextAdventureGenerationServiceTest {
     }
 }
 
-private fun isDockerAvailable(): Boolean = try {
-    DockerClientFactory.instance().isDockerAvailable
-} catch (_: Throwable) {
-    false
-}
 
 private fun runTest(block: suspend () -> Unit) {
     kotlinx.coroutines.runBlocking {

@@ -27,7 +27,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.testcontainers.DockerClientFactory
 
 class ApplicationTest {
     private lateinit var database: Database
@@ -37,10 +36,6 @@ class ApplicationTest {
 
     @Before
     fun setUp() {
-        require(isDockerAvailable()) {
-            "Docker is required for MySQL Testcontainers tests"
-        }
-
         database = MySqlTestDatabase.connectAndInitialize()
         MySqlTestDatabase.reset(database)
         fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
@@ -274,8 +269,3 @@ class ApplicationTest {
     }
 }
 
-private fun isDockerAvailable(): Boolean = try {
-    DockerClientFactory.instance().isDockerAvailable
-} catch (_: Throwable) {
-    false
-}

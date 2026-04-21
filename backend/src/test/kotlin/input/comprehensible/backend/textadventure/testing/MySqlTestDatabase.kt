@@ -7,22 +7,17 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.testcontainers.containers.MySQLContainer
 
 object MySqlTestDatabase {
-    private val mysqlContainer = MySQLContainer("mysql:8.4.6")
+    private const val jdbcUrl = "jdbc:h2:mem:text_adventure_test;MODE=MySQL;DB_CLOSE_DELAY=-1"
     private var initialized = false
 
     fun connectAndInitialize(): Database {
-        if (!mysqlContainer.isRunning) {
-            mysqlContainer.start()
-        }
-
         val database = Database.connect(
-            url = mysqlContainer.jdbcUrl,
-            user = mysqlContainer.username,
-            password = mysqlContainer.password,
-            driver = "com.mysql.cj.jdbc.Driver",
+            url = jdbcUrl,
+            user = "sa",
+            password = "",
+            driver = "org.h2.Driver",
         )
 
         if (!initialized) {
