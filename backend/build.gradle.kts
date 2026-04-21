@@ -44,8 +44,13 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koog.agents.jvm)
     implementation(libs.serialization.json)
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    runtimeOnly(libs.mysql.connector.j)
     runtimeOnly(libs.logback.classic)
 
     testImplementation(libs.junit)
     testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.testcontainers.core)
+    testImplementation(libs.testcontainers.mysql)
 }

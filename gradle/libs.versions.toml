@@ -29,6 +29,9 @@ koog = "0.8.0"
 ktor = "3.4.2"
 logback = "1.5.32"
 ksp = "2.3.6"
+exposed = "0.61.0"
+mysql = "9.3.0"
+testcontainers = "1.21.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -86,6 +89,11 @@ ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio-jvm", version.ref
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation-jvm", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
+exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
+mysql-connector-j = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
+testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
+testcontainers-mysql = { group = "org.testcontainers", name = "mysql", version.ref = "testcontainers" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
