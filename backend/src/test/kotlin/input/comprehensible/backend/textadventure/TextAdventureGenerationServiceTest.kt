@@ -11,7 +11,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Test
 import org.testcontainers.DockerClientFactory
@@ -24,7 +23,9 @@ class TextAdventureGenerationServiceTest {
 
     @Before
     fun setUp() {
-        assumeTrue("Docker is required for MySQL Testcontainers tests", isDockerAvailable())
+        require(isDockerAvailable()) {
+            "Docker is required for MySQL Testcontainers tests"
+        }
 
         database = MySqlTestDatabase.connectAndInitialize()
         MySqlTestDatabase.reset(database)
