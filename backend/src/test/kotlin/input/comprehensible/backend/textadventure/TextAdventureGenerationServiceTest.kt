@@ -1,17 +1,35 @@
 package input.comprehensible.backend.textadventure
 
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
+import input.comprehensible.backend.textadventure.testing.MySqlTestDatabase
 import input.comprehensible.data.textadventures.sources.remote.ContinueTextAdventureRequest
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class TextAdventureGenerationServiceTest {
-    private val fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
-    private val service = TextAdventureGenerationService(fakeExecutor)
+    private lateinit var database: Database
+    private lateinit var fakeExecutor: FakeTextAdventureStructuredPromptExecutor
+    private lateinit var service: TextAdventureGenerationService
     private val json = Json { ignoreUnknownKeys = true }
+
+    @Before
+    fun setUp() {
+        database = MySqlTestDatabase.connectAndInitialize()
+        MySqlTestDatabase.reset(database)
+        fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
+        service = TextAdventureGenerationService(
+            structuredPromptExecutor = fakeExecutor,
+            adventureRepository = DatabaseAdventureRepository(database = database),
+        )
+    }
 
     @Test
     fun `start adventure trims and flattens AI content`() = runTest {
@@ -43,6 +61,27 @@ class TextAdventureGenerationServiceTest {
         assertEquals(listOf("Primero.", "Segundo.", "Tercero."), response.translatedSentences)
         assertEquals(false, response.isEnding)
         assertEquals("text-adventure-start", fakeExecutor.invocations.single().promptName)
+
+        // THEN the adventure is persisted in MySQL using normalized rows.
+        transaction(database) {
+            val adventures = AdventuresTable.selectAll().toList()
+            assertEquals(1, adventures.size)
+            assertEquals(response.adventureId, adventures.single()[AdventuresTable.id])
+            assertEquals("Cavern Echoes", adventures.single()[AdventuresTable.title])
+
+            val messages = AdventureMessagesTable.selectAll().toList()
+            assertEquals(1, messages.size)
+            assertEquals(0, messages.single()[AdventureMessagesTable.messageIndex])
+            assertEquals(false, messages.single()[AdventureMessagesTable.isEnding])
+
+            val sentences = AdventureSentencesTable
+                .selectAll()
+                .orderBy(AdventureSentencesTable.paragraphIndex, SortOrder.ASC)
+                .orderBy(AdventureSentencesTable.sentenceIndex, SortOrder.ASC)
+                .orderBy(AdventureSentencesTable.language, SortOrder.ASC)
+                .toList()
+            assertEquals(6, sentences.size)
+        }
     }
 
     @Test
@@ -77,12 +116,17 @@ class TextAdventureGenerationServiceTest {
         val invocation = fakeExecutor.invocations.single()
         assertEquals("text-adventure-continue", invocation.promptName)
         assertTrue(invocation.systemPrompt.contains("continuing an ongoing story"))
-        val request = json.decodeFromString<ContinueTextAdventureRequest>(
-            invocation.userPrompt
-        )
+        val request = json.decodeFromString<ContinueTextAdventureRequest>(invocation.userPrompt)
         assertEquals("adv-1", request.adventureId)
         assertEquals("Go left", request.userMessage)
         assertEquals(2, request.history.size)
+
+        // THEN the latest adventure state is persisted in MySQL.
+        transaction(database) {
+            val messages = AdventureMessagesTable.selectAll().toList()
+            assertEquals(1, messages.size)
+            assertEquals("adv-1", messages.single()[AdventureMessagesTable.adventureId])
+        }
     }
 
     @Test
@@ -124,8 +168,16 @@ class TextAdventureGenerationServiceTest {
         assertEquals(listOf("One."), response.sentences)
         assertEquals(true, response.isEnding)
         assertEquals(2, fakeExecutor.invocations.size)
+
+        // THEN only one valid message is persisted.
+        transaction(database) {
+            val messages = AdventureMessagesTable.selectAll().toList()
+            assertEquals(1, messages.size)
+            assertEquals(true, messages.single()[AdventureMessagesTable.isEnding])
+        }
     }
 }
+
 
 private fun runTest(block: suspend () -> Unit) {
     kotlinx.coroutines.runBlocking {
