@@ -33,7 +33,7 @@ exposed = "0.61.0"
 mysql = "9.6.0"
 h2 = "2.4.240"
 cucumber = "7.34.3"
-junit-platform = "1.12.2"
+junit-platform = "6.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
