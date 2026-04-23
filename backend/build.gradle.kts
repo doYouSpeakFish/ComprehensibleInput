@@ -33,6 +33,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation(project(":textadventuremodels"))
     implementation(libs.ktor.server.core)
@@ -51,7 +55,10 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.cucumber.java)
-    testImplementation(libs.cucumber.junit)
+    testImplementation(libs.cucumber.junit.platform.engine)
+    testImplementation(libs.junit.platform.suite.api)
+    testRuntimeOnly(libs.junit.platform.suite.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.h2)
 }
