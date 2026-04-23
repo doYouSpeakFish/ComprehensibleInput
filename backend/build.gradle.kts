@@ -50,6 +50,8 @@ dependencies {
     runtimeOnly(libs.logback.classic)
 
     testImplementation(libs.junit)
+    testImplementation(libs.cucumber.java)
+    testImplementation(libs.cucumber.junit)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.h2)
 }

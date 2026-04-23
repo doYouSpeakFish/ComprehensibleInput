@@ -32,6 +32,7 @@ ksp = "2.3.6"
 exposed = "0.61.0"
 mysql = "9.6.0"
 h2 = "2.4.240"
+cucumber = "7.34.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -93,6 +94,8 @@ exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
 mysql-connector-j = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
 h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
+cucumber-java = { group = "io.cucumber", name = "cucumber-java", version.ref = "cucumber" }
+cucumber-junit = { group = "io.cucumber", name = "cucumber-junit", version.ref = "cucumber" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
