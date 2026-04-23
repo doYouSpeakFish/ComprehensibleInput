@@ -24,6 +24,23 @@ Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdvent
 ⚪  130 | 
 ```
 
+## Lines 133-142
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:133-142`
+
+```kotlin
+🟢  133 |         paragraphs.forEachIndexed { index, sentences ->
+🟢  134 |             val translatedSentences = translatedParagraphs[index]
+🟡  135 |             check(sentences.size == translatedSentences.size) {
+⚪  136 |                 """
+🔴  137 |                     Text adventure sentence count mismatch in paragraph $index:
+🔴  138 |                         sentences=${sentences.size}
+🔴  139 |                         translations=${translatedSentences.size}
+🔴  140 |                 """.trimIndent()
+⚪  141 |             }
+🟢  142 |         }
+```
+
 ## Lines 156-169
 
 Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:156-169`
@@ -35,11 +52,11 @@ Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdvent
 ⚪  159 |             try {
 🟢  160 |                 return block()
 ⚪  161 |             } catch (throwable: Throwable) {
-🟡  162 |                 if (attemptIndex == maxRetries - 1) {
+🔴  162 |                 if (attemptIndex == maxRetries - 1) {
 ⚪  163 |                     throw throwable
 ⚪  164 |                 }
 ⚪  165 |             }
-🟢  166 |         }
+🔴  166 |         }
 🔴  167 |         error("Unreachable")
 ⚪  168 |     }
 ⚪  169 | 

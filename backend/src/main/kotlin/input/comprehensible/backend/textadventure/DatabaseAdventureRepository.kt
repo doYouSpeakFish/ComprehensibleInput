@@ -5,15 +5,14 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureMess
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureParagraphRemoteResponse
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.LongColumnType
-import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
