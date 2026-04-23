@@ -28,7 +28,7 @@ ktin = "1.0.1"
 koog = "0.8.0"
 ktor = "3.4.2"
 logback = "1.5.32"
-ksp = "2.3.6"
+ksp = "2.3.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
