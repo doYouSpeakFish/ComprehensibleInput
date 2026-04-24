@@ -1,0 +1,49 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KOOG_API_KEY: ${KOOG_API_KEY:?Set KOOG_API_KEY in your environment}
+      APP_API_KEY: ${APP_API_KEY:-local-dev-api-key}
+      BACKEND_DATABASE_URL: jdbc:postgresql://postgres:5432/comprehensible_input
+      BACKEND_DATABASE_USER_FILE: /run/secrets/db_user
+      BACKEND_DATABASE_PASSWORD_FILE: /run/secrets/db_password
+    ports:
+      - "8080:8080"
+    secrets:
+      - db_user
+      - db_password
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: comprehensible_input
+      POSTGRES_USER_FILE: /run/secrets/db_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $(cat /run/secrets/db_user) -d comprehensible_input"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    secrets:
+      - db_user
+      - db_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+secrets:
+  db_user:
+    file: ./compose-secrets/db_user.txt
+  db_password:
+    file: ./compose-secrets/db_password.txt
+
+volumes:
+  postgres_data:

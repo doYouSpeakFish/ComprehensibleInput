@@ -8,8 +8,8 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object MySqlTestDatabase {
-    private const val jdbcUrl = "jdbc:h2:mem:text_adventure_test;MODE=MySQL;DB_CLOSE_DELAY=-1"
+object PostgreSqlTestDatabase {
+    private const val jdbcUrl = "jdbc:h2:mem:text_adventure_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1"
     private var initialized = false
 
     fun connectAndInitialize(): Database {

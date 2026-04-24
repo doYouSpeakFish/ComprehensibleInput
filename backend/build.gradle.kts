@@ -51,7 +51,8 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
-    runtimeOnly(libs.mysql.connector.j)
+    implementation(libs.flyway.core)
+    runtimeOnly(libs.postgresql)
     runtimeOnly(libs.logback.classic)
 
     testImplementation(libs.junit)

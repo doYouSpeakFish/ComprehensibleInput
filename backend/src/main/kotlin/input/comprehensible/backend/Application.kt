@@ -24,7 +24,9 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import java.io.File
 import kotlin.time.Duration.Companion.minutes
+import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 
 data class AppPrincipal(val key: String)
@@ -42,20 +44,18 @@ fun main() {
         ?.takeIf { it.isNotBlank() }
         ?: DEFAULT_DATABASE_URL
 
-    val databaseUser = requireNotNull(System.getenv(BACKEND_DATABASE_USER_ENV_VAR)?.takeIf { it.isNotBlank() }) {
-        "Missing required environment variable $BACKEND_DATABASE_USER_ENV_VAR. " +
-            "Set it before starting the backend."
-    }
-    val databasePassword = requireNotNull(
-        System.getenv(BACKEND_DATABASE_PASSWORD_ENV_VAR)?.takeIf { it.isNotBlank() }
-    ) {
-        "Missing required environment variable $BACKEND_DATABASE_PASSWORD_ENV_VAR. " +
-            "Set it before starting the backend."
-    }
+    val databaseUser = requireSecretValue(BACKEND_DATABASE_USER_ENV_VAR)
+    val databasePassword = requireSecretValue(BACKEND_DATABASE_PASSWORD_ENV_VAR)
+
+    migrateDatabase(
+        databaseUrl = databaseUrl,
+        databaseUser = databaseUser,
+        databasePassword = databasePassword,
+    )
 
     val database = Database.connect(
         url = databaseUrl,
-        driver = MYSQL_JDBC_DRIVER,
+        driver = POSTGRESQL_JDBC_DRIVER,
         user = databaseUser,
         password = databasePassword,
     )
@@ -78,6 +78,40 @@ fun main() {
             )
         },
     ).start(wait = true)
+}
+
+private fun migrateDatabase(
+    databaseUrl: String,
+    databaseUser: String,
+    databasePassword: String,
+) {
+    Flyway.configure()
+        .dataSource(databaseUrl, databaseUser, databasePassword)
+        .load()
+        .migrate()
+}
+
+
+private fun requireSecretValue(envVarName: String): String {
+    val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
+    if (directValue != null) {
+        return directValue
+    }
+
+    val fileEnvVarName = "${envVarName}_FILE"
+    val secretFilePath = System.getenv(fileEnvVarName)?.takeIf { it.isNotBlank() }
+    if (secretFilePath != null) {
+        val secretValue = File(secretFilePath).readText().trim()
+        require(secretValue.isNotEmpty()) {
+            "Environment variable $fileEnvVarName points to an empty file: $secretFilePath"
+        }
+        return secretValue
+    }
+
+    error(
+        "Missing required environment variable $envVarName. " +
+            "Set $envVarName directly or set ${envVarName}_FILE to a file containing the value."
+    )
 }
 
 fun Application.configureRouting(
@@ -163,5 +197,5 @@ private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"
 private const val BACKEND_DATABASE_URL_ENV_VAR = "BACKEND_DATABASE_URL"
 private const val BACKEND_DATABASE_USER_ENV_VAR = "BACKEND_DATABASE_USER"
 private const val BACKEND_DATABASE_PASSWORD_ENV_VAR = "BACKEND_DATABASE_PASSWORD"
-private const val DEFAULT_DATABASE_URL = "jdbc:mysql://localhost:3306/comprehensible_input"
-private const val MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver"
+private const val DEFAULT_DATABASE_URL = "jdbc:postgresql://localhost:5432/comprehensible_input"
+private const val POSTGRESQL_JDBC_DRIVER = "org.postgresql.Driver"

@@ -6,7 +6,7 @@ import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
-import input.comprehensible.backend.textadventure.testing.MySqlTestDatabase
+import input.comprehensible.backend.textadventure.testing.PostgreSqlTestDatabase
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import io.cucumber.java.Before
@@ -45,8 +45,8 @@ class TextAdventureApiStepDefinitions {
 
     @Before
     fun setUpScenario() {
-        database = MySqlTestDatabase.connectAndInitialize()
-        MySqlTestDatabase.reset(database)
+        database = PostgreSqlTestDatabase.connectAndInitialize()
+        PostgreSqlTestDatabase.reset(database)
         fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
         textAdventureService = TextAdventureGenerationService(
             structuredPromptExecutor = fakeExecutor,

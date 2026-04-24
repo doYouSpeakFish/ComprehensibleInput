@@ -27,6 +27,37 @@ The repository includes a JVM backend module at `:backend` with a single health 
 
 The service starts on `http://localhost:8080`.
 
+### Run backend + PostgreSQL with Docker Compose
+
+The Compose setup expects:
+
+- API key environment variable:
+  - `KOOG_API_KEY` (required)
+- DB credential secret files:
+  - `compose-secrets/db_user.txt`
+  - `compose-secrets/db_password.txt`
+
+You can create/update the secret files like this:
+
+```bash
+mkdir -p compose-secrets
+printf '%s\n' 'comprehensible_input' > compose-secrets/db_user.txt
+printf '%s\n' 'choose-a-strong-password' > compose-secrets/db_password.txt
+```
+
+Then start services:
+
+```bash
+export KOOG_API_KEY='your-koog-key'
+docker compose up --build
+```
+
+Optional backend API key override (defaults to `local-dev-api-key` if omitted):
+
+```bash
+export APP_API_KEY='your-app-api-key'
+```
+
 ### Health check
 
 ```bash
