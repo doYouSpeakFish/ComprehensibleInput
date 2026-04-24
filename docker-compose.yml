@@ -7,43 +7,57 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      KOOG_API_KEY: ${KOOG_API_KEY:?Set KOOG_API_KEY in your environment}
-      APP_API_KEY: ${APP_API_KEY:-local-dev-api-key}
+      KOOG_API_KEY_FILE: /run/secrets/koog_api_key
+      APP_API_KEY_FILE: /run/secrets/app_api_key
       BACKEND_DATABASE_URL: jdbc:postgresql://postgres:5432/comprehensible_input
-      BACKEND_DATABASE_USER_FILE: /run/secrets/db_user
-      BACKEND_DATABASE_PASSWORD_FILE: /run/secrets/db_password
+      BACKEND_DATABASE_USER_FILE: /run/secrets/db_app_user
+      BACKEND_DATABASE_PASSWORD_FILE: /run/secrets/db_app_password
+      BACKEND_MIGRATION_DATABASE_USER_FILE: /run/secrets/db_migration_user
+      BACKEND_MIGRATION_DATABASE_PASSWORD_FILE: /run/secrets/db_migration_password
     ports:
       - "8080:8080"
     secrets:
-      - db_user
-      - db_password
+      - koog_api_key
+      - app_api_key
+      - db_app_user
+      - db_app_password
+      - db_migration_user
+      - db_migration_password
 
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: comprehensible_input
-      POSTGRES_USER_FILE: /run/secrets/db_user
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_USER_FILE: /run/secrets/db_migration_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_migration_password
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $(cat /run/secrets/db_user) -d comprehensible_input"]
+      test: ["CMD-SHELL", "pg_isready -U $(cat /run/secrets/db_migration_user) -d comprehensible_input"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
     secrets:
-      - db_user
-      - db_password
+      - db_migration_user
+      - db_migration_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
 secrets:
-  db_user:
-    file: ./compose-secrets/db_user.txt
-  db_password:
-    file: ./compose-secrets/db_password.txt
+  koog_api_key:
+    file: ./compose-secrets/koog_api_key.txt
+  app_api_key:
+    file: ./compose-secrets/app_api_key.txt
+  db_app_user:
+    file: ./compose-secrets/db_app_user.txt
+  db_app_password:
+    file: ./compose-secrets/db_app_password.txt
+  db_migration_user:
+    file: ./compose-secrets/db_migration_user.txt
+  db_migration_password:
+    file: ./compose-secrets/db_migration_password.txt
 
 volumes:
   postgres_data:

@@ -29,34 +29,36 @@ The service starts on `http://localhost:8080`.
 
 ### Run backend + PostgreSQL with Docker Compose
 
-The Compose setup expects:
+The Compose setup uses Docker secrets for all sensitive values.
 
-- API key environment variable:
-  - `KOOG_API_KEY` (required)
-- DB credential secret files:
-  - `compose-secrets/db_user.txt`
-  - `compose-secrets/db_password.txt`
+Create/update these files before starting:
 
-You can create/update the secret files like this:
+- `compose-secrets/koog_api_key.txt`
+- `compose-secrets/app_api_key.txt`
+- `compose-secrets/db_app_user.txt`
+- `compose-secrets/db_app_password.txt`
+- `compose-secrets/db_migration_user.txt`
+- `compose-secrets/db_migration_password.txt`
+
+Example setup:
 
 ```bash
 mkdir -p compose-secrets
-printf '%s\n' 'comprehensible_input' > compose-secrets/db_user.txt
-printf '%s\n' 'choose-a-strong-password' > compose-secrets/db_password.txt
+printf '%s\n' 'replace-with-real-koog-api-key' > compose-secrets/koog_api_key.txt
+printf '%s\n' 'replace-with-real-app-api-key' > compose-secrets/app_api_key.txt
+printf '%s\n' 'comprehensible_app' > compose-secrets/db_app_user.txt
+printf '%s\n' 'replace-with-strong-app-password' > compose-secrets/db_app_password.txt
+printf '%s\n' 'comprehensible_migration' > compose-secrets/db_migration_user.txt
+printf '%s\n' 'replace-with-strong-migration-password' > compose-secrets/db_migration_password.txt
 ```
 
 Then start services:
 
 ```bash
-export KOOG_API_KEY='your-koog-key'
 docker compose up --build
 ```
 
-Optional backend API key override (defaults to `local-dev-api-key` if omitted):
-
-```bash
-export APP_API_KEY='your-app-api-key'
-```
+The backend runs Flyway migrations using the migration DB role and serves API traffic using the app DB role.
 
 ### Health check
 

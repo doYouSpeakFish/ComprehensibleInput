@@ -32,25 +32,27 @@ import org.jetbrains.exposed.sql.Database
 data class AppPrincipal(val key: String)
 
 fun main() {
-    val aiApiKey = requireNotNull(System.getenv(AI_API_KEY_ENV_VAR)?.takeIf { it.isNotBlank() }) {
-        "Missing required environment variable $AI_API_KEY_ENV_VAR. " +
-            "Set it before starting the backend."
-    }
-    val apiKey = requireNotNull(System.getenv(APP_API_KEY_ENV_VAR)?.takeIf { it.isNotBlank() }) {
-        "Missing required environment variable $APP_API_KEY_ENV_VAR. " +
-            "Set it before starting the backend."
-    }
+    val aiApiKey = requireSecretValue(AI_API_KEY_ENV_VAR)
+    val apiKey = requireSecretValue(APP_API_KEY_ENV_VAR)
     val databaseUrl = System.getenv(BACKEND_DATABASE_URL_ENV_VAR)
         ?.takeIf { it.isNotBlank() }
         ?: DEFAULT_DATABASE_URL
 
     val databaseUser = requireSecretValue(BACKEND_DATABASE_USER_ENV_VAR)
     val databasePassword = requireSecretValue(BACKEND_DATABASE_PASSWORD_ENV_VAR)
+    val migrationDatabaseUser = requireSecretValue(BACKEND_MIGRATION_DATABASE_USER_ENV_VAR)
+    val migrationDatabasePassword = requireSecretValue(BACKEND_MIGRATION_DATABASE_PASSWORD_ENV_VAR)
 
     migrateDatabase(
-        databaseUrl = databaseUrl,
-        databaseUser = databaseUser,
-        databasePassword = databasePassword,
+        config = MigrationConfig(
+            databaseUrl = databaseUrl,
+            migrationDatabaseUser = migrationDatabaseUser,
+            migrationDatabasePassword = migrationDatabasePassword,
+            migrationRole = migrationDatabaseUser,
+            migrationRolePassword = migrationDatabasePassword,
+            appRole = databaseUser,
+            appRolePassword = databasePassword,
+        )
     )
 
     val database = Database.connect(
@@ -80,17 +82,31 @@ fun main() {
     ).start(wait = true)
 }
 
-private fun migrateDatabase(
-    databaseUrl: String,
-    databaseUser: String,
-    databasePassword: String,
-) {
+
+private data class MigrationConfig(
+    val databaseUrl: String,
+    val migrationDatabaseUser: String,
+    val migrationDatabasePassword: String,
+    val migrationRole: String,
+    val migrationRolePassword: String,
+    val appRole: String,
+    val appRolePassword: String,
+)
+
+private fun migrateDatabase(config: MigrationConfig) {
     Flyway.configure()
-        .dataSource(databaseUrl, databaseUser, databasePassword)
+        .dataSource(config.databaseUrl, config.migrationDatabaseUser, config.migrationDatabasePassword)
+        .placeholders(
+            mapOf(
+                "migration_role" to config.migrationRole,
+                "migration_role_password" to config.migrationRolePassword,
+                "app_role" to config.appRole,
+                "app_role_password" to config.appRolePassword,
+            )
+        )
         .load()
         .migrate()
 }
-
 
 private fun requireSecretValue(envVarName: String): String {
     val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
@@ -197,5 +213,7 @@ private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"
 private const val BACKEND_DATABASE_URL_ENV_VAR = "BACKEND_DATABASE_URL"
 private const val BACKEND_DATABASE_USER_ENV_VAR = "BACKEND_DATABASE_USER"
 private const val BACKEND_DATABASE_PASSWORD_ENV_VAR = "BACKEND_DATABASE_PASSWORD"
+private const val BACKEND_MIGRATION_DATABASE_USER_ENV_VAR = "BACKEND_MIGRATION_DATABASE_USER"
+private const val BACKEND_MIGRATION_DATABASE_PASSWORD_ENV_VAR = "BACKEND_MIGRATION_DATABASE_PASSWORD"
 private const val DEFAULT_DATABASE_URL = "jdbc:postgresql://localhost:5432/comprehensible_input"
 private const val POSTGRESQL_JDBC_DRIVER = "org.postgresql.Driver"
