@@ -29,16 +29,14 @@ The service starts on `http://localhost:8080`.
 
 ### Run backend + PostgreSQL with Docker Compose
 
-The Compose setup uses Docker secrets for all sensitive values.
+The Compose setup uses Docker secrets for sensitive values.
 
 Create/update these files before starting:
 
 - `compose-secrets/koog_api_key.txt`
 - `compose-secrets/app_api_key.txt`
-- `compose-secrets/db_app_user.txt`
 - `compose-secrets/db_app_password.txt`
-- `compose-secrets/db_migration_user.txt`
-- `compose-secrets/db_migration_password.txt`
+- `compose-secrets/db_admin_password.txt`
 
 Example setup:
 
@@ -46,19 +44,28 @@ Example setup:
 mkdir -p compose-secrets
 printf '%s\n' 'replace-with-real-koog-api-key' > compose-secrets/koog_api_key.txt
 printf '%s\n' 'replace-with-real-app-api-key' > compose-secrets/app_api_key.txt
-printf '%s\n' 'comprehensible_app' > compose-secrets/db_app_user.txt
 printf '%s\n' 'replace-with-strong-app-password' > compose-secrets/db_app_password.txt
-printf '%s\n' 'comprehensible_migration' > compose-secrets/db_migration_user.txt
-printf '%s\n' 'replace-with-strong-migration-password' > compose-secrets/db_migration_password.txt
-```
-
-Then start services:
-
-```bash
+printf '%s\n' 'replace-with-strong-admin-password' > compose-secrets/db_admin_password.txt
 docker compose up --build
 ```
 
-The backend runs Flyway migrations using the migration DB role and serves API traffic using the app DB role.
+### Run backend with environment variables (without Docker secrets)
+
+For local development you can run the backend directly with environment variables (instead of `*_FILE` variables):
+
+```bash
+export KOOG_API_KEY='replace-with-real-koog-api-key'
+export APP_API_KEY='replace-with-real-app-api-key'
+export BACKEND_DATABASE_URL='jdbc:postgresql://localhost:5432/comprehensible_input'
+export BACKEND_DATABASE_USER='comprehensible_app'
+export BACKEND_DATABASE_PASSWORD='replace-with-strong-app-password'
+export BACKEND_DATABASE_ADMIN_USER='comprehensible_admin'
+export BACKEND_DATABASE_ADMIN_PASSWORD='replace-with-strong-admin-password'
+./gradlew :backend:run
+```
+
+`BACKEND_DATABASE_ADMIN_USER` / `BACKEND_DATABASE_ADMIN_PASSWORD` are used by Flyway migrations.
+`BACKEND_DATABASE_USER` / `BACKEND_DATABASE_PASSWORD` are used by the app at runtime.
 
 ### Health check
 

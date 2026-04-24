@@ -38,18 +38,20 @@ fun main() {
         ?.takeIf { it.isNotBlank() }
         ?: DEFAULT_DATABASE_URL
 
-    val databaseUser = requireSecretValue(BACKEND_DATABASE_USER_ENV_VAR)
+    val databaseUser = System.getenv(BACKEND_DATABASE_USER_ENV_VAR)
+        ?.takeIf { it.isNotBlank() }
+        ?: DEFAULT_APP_DATABASE_USER
     val databasePassword = requireSecretValue(BACKEND_DATABASE_PASSWORD_ENV_VAR)
-    val migrationDatabaseUser = requireSecretValue(BACKEND_MIGRATION_DATABASE_USER_ENV_VAR)
-    val migrationDatabasePassword = requireSecretValue(BACKEND_MIGRATION_DATABASE_PASSWORD_ENV_VAR)
+    val databaseAdminUser = System.getenv(BACKEND_DATABASE_ADMIN_USER_ENV_VAR)
+        ?.takeIf { it.isNotBlank() }
+        ?: DEFAULT_ADMIN_DATABASE_USER
+    val databaseAdminPassword = requireSecretValue(BACKEND_DATABASE_ADMIN_PASSWORD_ENV_VAR)
 
     migrateDatabase(
         config = MigrationConfig(
             databaseUrl = databaseUrl,
-            migrationDatabaseUser = migrationDatabaseUser,
-            migrationDatabasePassword = migrationDatabasePassword,
-            migrationRole = migrationDatabaseUser,
-            migrationRolePassword = migrationDatabasePassword,
+            migrationDatabaseUser = databaseAdminUser,
+            migrationDatabasePassword = databaseAdminPassword,
             appRole = databaseUser,
             appRolePassword = databasePassword,
         )
@@ -87,8 +89,6 @@ private data class MigrationConfig(
     val databaseUrl: String,
     val migrationDatabaseUser: String,
     val migrationDatabasePassword: String,
-    val migrationRole: String,
-    val migrationRolePassword: String,
     val appRole: String,
     val appRolePassword: String,
 )
@@ -98,8 +98,6 @@ private fun migrateDatabase(config: MigrationConfig) {
         .dataSource(config.databaseUrl, config.migrationDatabaseUser, config.migrationDatabasePassword)
         .placeholders(
             mapOf(
-                "migration_role" to config.migrationRole,
-                "migration_role_password" to config.migrationRolePassword,
                 "app_role" to config.appRole,
                 "app_role_password" to config.appRolePassword,
             )
@@ -213,7 +211,9 @@ private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"
 private const val BACKEND_DATABASE_URL_ENV_VAR = "BACKEND_DATABASE_URL"
 private const val BACKEND_DATABASE_USER_ENV_VAR = "BACKEND_DATABASE_USER"
 private const val BACKEND_DATABASE_PASSWORD_ENV_VAR = "BACKEND_DATABASE_PASSWORD"
-private const val BACKEND_MIGRATION_DATABASE_USER_ENV_VAR = "BACKEND_MIGRATION_DATABASE_USER"
-private const val BACKEND_MIGRATION_DATABASE_PASSWORD_ENV_VAR = "BACKEND_MIGRATION_DATABASE_PASSWORD"
+private const val BACKEND_DATABASE_ADMIN_USER_ENV_VAR = "BACKEND_DATABASE_ADMIN_USER"
+private const val BACKEND_DATABASE_ADMIN_PASSWORD_ENV_VAR = "BACKEND_DATABASE_ADMIN_PASSWORD"
 private const val DEFAULT_DATABASE_URL = "jdbc:postgresql://localhost:5432/comprehensible_input"
+private const val DEFAULT_APP_DATABASE_USER = "comprehensible_app"
+private const val DEFAULT_ADMIN_DATABASE_USER = "comprehensible_admin"
 private const val POSTGRESQL_JDBC_DRIVER = "org.postgresql.Driver"

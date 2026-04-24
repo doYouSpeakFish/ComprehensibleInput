@@ -5,12 +5,6 @@ BEGIN
     ELSE
         EXECUTE format('ALTER ROLE %I LOGIN PASSWORD %L', '${app_role}', '${app_role_password}');
     END IF;
-
-    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${migration_role}') THEN
-        EXECUTE format('CREATE ROLE %I LOGIN PASSWORD %L', '${migration_role}', '${migration_role_password}');
-    ELSE
-        EXECUTE format('ALTER ROLE %I LOGIN PASSWORD %L', '${migration_role}', '${migration_role_password}');
-    END IF;
 END
 $$;
 
@@ -61,11 +55,10 @@ CREATE INDEX IF NOT EXISTS idx_text_adventure_sentence_adventure_message
 
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO "${app_role}";
-GRANT USAGE, CREATE ON SCHEMA public TO "${migration_role}";
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE text_adventure TO "${app_role}";
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE text_adventure_message TO "${app_role}";
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE text_adventure_sentence TO "${app_role}";
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "${migration_role}" IN SCHEMA public
+ALTER DEFAULT PRIVILEGES FOR ROLE CURRENT_USER IN SCHEMA public
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO "${app_role}";
