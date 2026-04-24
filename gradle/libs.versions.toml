@@ -30,7 +30,8 @@ ktor = "3.4.3"
 logback = "1.5.32"
 ksp = "2.3.7"
 exposed = "0.61.0"
-mysql = "9.6.0"
+postgresql = "42.7.10"
+flyway = "12.4.0"
 h2 = "2.4.240"
 cucumber = "7.34.3"
 junit-platform = "6.0.3"
@@ -93,7 +94,8 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
-mysql-connector-j = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
+postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
+flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
 h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
 cucumber-java = { group = "io.cucumber", name = "cucumber-java", version.ref = "cucumber" }
 cucumber-junit-platform-engine = { group = "io.cucumber", name = "cucumber-junit-platform-engine", version.ref = "cucumber" }

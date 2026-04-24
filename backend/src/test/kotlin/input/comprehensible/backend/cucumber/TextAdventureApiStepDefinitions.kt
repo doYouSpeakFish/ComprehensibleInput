@@ -1,14 +1,16 @@
 package input.comprehensible.backend.cucumber
 
 import input.comprehensible.backend.configureRouting
+import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
-import input.comprehensible.backend.textadventure.testing.MySqlTestDatabase
+import input.comprehensible.backend.textadventure.testing.PostgreSqlTestDatabase
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
+import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -28,6 +30,7 @@ import io.ktor.server.testing.testApplication
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
@@ -45,8 +48,7 @@ class TextAdventureApiStepDefinitions {
 
     @Before
     fun setUpScenario() {
-        database = MySqlTestDatabase.connectAndInitialize()
-        MySqlTestDatabase.reset(database)
+        database = connectDatabase(PostgreSqlTestDatabase.createConfig())
         fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
         textAdventureService = TextAdventureGenerationService(
             structuredPromptExecutor = fakeExecutor,
@@ -56,6 +58,13 @@ class TextAdventureApiStepDefinitions {
         latestResponseBody = ""
         startedAdventureId = ""
         startedAssistantSentence = ""
+    }
+
+
+    @After
+    fun tearDownScenario() {
+        PostgreSqlTestDatabase.reset(database)
+        TransactionManager.closeAndUnregister(database)
     }
 
     @Given(
