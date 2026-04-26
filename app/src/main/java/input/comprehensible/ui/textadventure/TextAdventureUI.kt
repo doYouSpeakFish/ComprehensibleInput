@@ -1,14 +1,18 @@
 package input.comprehensible.ui.textadventure
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -116,13 +120,13 @@ private fun TextAdventureMessages(
         modifier = modifier
             .fillMaxSize()
             .testTag("text_adventure_messages"),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             Text(
                 text = state.title,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.displaySmall,
             )
         }
         items(state.messages, key = { it.id }) { message ->
@@ -146,7 +150,8 @@ private fun AiMessage(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        tonalElevation = 1.dp,
+        tonalElevation = 3.dp,
+        shadowElevation = 2.dp,
         shape = MaterialTheme.shapes.large,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -168,9 +173,14 @@ private fun AiMessage(
             }
             if (message.isEnding) {
                 Text(
-                    modifier = Modifier.padding(top = 12.dp),
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .padding(horizontal = 10.dp, vertical = 6.dp),
                     text = stringResource(R.string.text_adventure_ending_label),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
                 )
             }
         }
@@ -185,12 +195,12 @@ private fun UserMessage(message: TextAdventureMessageUiState.User) {
     ) {
         Text(
             modifier = Modifier
-                .clip(MaterialTheme.shapes.large)
-                .background(MaterialTheme.colorScheme.primary)
+                 .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp, bottomStart = 22.dp, bottomEnd = 8.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             text = message.text,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
 }
@@ -204,27 +214,29 @@ private fun TextAdventureInput(
     Surface(
         tonalElevation = 2.dp,
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.Bottom,
         ) {
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .testTag("text_adventure_input"),
                 value = inputText,
                 onValueChange = onInputChanged,
                 placeholder = {
                     Text(text = stringResource(R.string.text_adventure_input_placeholder))
                 },
+                shape = MaterialTheme.shapes.large,
                 maxLines = 4,
             )
             IconButton(
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .size(48.dp)
+                    .size(56.dp)
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
                     .testTag("text_adventure_send"),
                 onClick = onSendMessage,
                 colors = IconButtonDefaults.iconButtonColors(

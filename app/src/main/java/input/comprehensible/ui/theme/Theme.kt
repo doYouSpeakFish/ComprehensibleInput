@@ -2,9 +2,11 @@ package input.comprehensible.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -82,6 +84,14 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
+private val AppShapes = Shapes(
+    extraSmall = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+    small = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+    medium = androidx.compose.foundation.shape.RoundedCornerShape(22.dp),
+    large = androidx.compose.foundation.shape.RoundedCornerShape(28.dp),
+    extraLarge = androidx.compose.foundation.shape.RoundedCornerShape(36.dp),
+)
+
 @Composable
 fun ComprehensibleInputTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -90,7 +100,7 @@ fun ComprehensibleInputTheme(
     MaterialTheme(
         colorScheme = if (darkTheme) darkScheme else lightScheme,
         typography = AppTypography,
+        shapes = AppShapes,
         content = content
     )
 }
-

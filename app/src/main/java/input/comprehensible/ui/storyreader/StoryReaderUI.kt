@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +22,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -60,7 +60,6 @@ import input.comprehensible.ui.components.rememberPagerState
 import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
-import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -166,12 +165,12 @@ private fun StoryContent(
     Box(modifier) {
         HorizontalPager(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(horizontal = 12.dp, vertical = 8.dp)
                 .fillMaxSize()
                 .testTag("story_reader_pager"),
             state = pagerState,
             key = { index -> state.parts.getOrNull(index)?.id ?: index },
-            pageSpacing = 16.dp,
+            pageSpacing = 20.dp,
         ) { pageIndex ->
             StoryPage(
                 modifier = Modifier.fillMaxSize(),
@@ -351,10 +350,11 @@ private fun TranslateExplainer(
         Text(
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = CircleShape
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RectangleShape
                 )
-                .padding(vertical = 4.dp, horizontal = 12.dp)
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 16.dp)
                 .clickable(
                     onClick = onExplainerTapped,
                     enabled = timesExplainerTapped < explainerMessages.lastIndex,
@@ -362,7 +362,7 @@ private fun TranslateExplainer(
                 .animateContentSize(),
             text = explainerMessages.getOrElse(timesExplainerTapped) { explainerMessages.last() },
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
 }
@@ -375,8 +375,8 @@ private fun StoryReaderErrorDialog(onDismissRequest: () -> Unit) {
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .testTag("story_reader_error_dialog"),
-            shape = RoundedCornerShape(24.dp),
-            border = BorderStroke(1.dp, Color.Black),
+            shape = MaterialTheme.shapes.extraLarge,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             tonalElevation = 6.dp,
         ) {
             Column(
@@ -391,7 +391,7 @@ private fun StoryReaderErrorDialog(onDismissRequest: () -> Unit) {
                     contentDescription = stringResource(R.string.story_reader_error_dialog_content_description),
                     modifier = Modifier
                         .size(96.dp)
-                        .border(width = 1.dp, color = backgroundDark, shape = CircleShape)
+                        .border(width = 2.dp, color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop,
                 )

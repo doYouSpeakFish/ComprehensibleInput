@@ -1,6 +1,7 @@
 package input.comprehensible.ui.storylist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,11 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
@@ -29,7 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -47,7 +50,6 @@ import input.comprehensible.extensions.isCompact
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
-import input.comprehensible.ui.theme.backgroundDark
 import input.comprehensible.util.DefaultPreview
 
 @Composable
@@ -175,7 +177,16 @@ private fun StoryListScaffold(
         },
     ) { paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.surfaceContainerLow,
+                            MaterialTheme.colorScheme.surface,
+                        ),
+                    ),
+                ),
             content = {
                 content(paddingValues, columns)
             }
@@ -190,14 +201,17 @@ private fun StoryListItem(
     story: StoryListUiState.StoryListItem.Story,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         onClick = onClick,
+        shape = RoundedCornerShape(28.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         )
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FeatureImage(
@@ -216,20 +230,23 @@ private fun TextAdventureListItem(
     adventure: StoryListUiState.StoryListItem.TextAdventure,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         onClick = onClick,
+        shape = RoundedCornerShape(28.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         )
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .border(1.dp, color = backgroundDark, shape = CircleShape)
+                    .border(2.dp, color = MaterialTheme.colorScheme.primary, shape = CircleShape)
                     .clip(CircleShape)
                     .padding(24.dp),
                 contentAlignment = Alignment.Center,
@@ -237,7 +254,7 @@ private fun TextAdventureListItem(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
             TextAdventureTitle(adventure = adventure)
@@ -268,20 +285,25 @@ private fun StartTextAdventureItem(
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = modifier.testTag("text_adventure_start_button"),
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("text_adventure_start_button"),
         onClick = onClick,
+        shape = RoundedCornerShape(28.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
         )
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .border(1.dp, color = backgroundDark, shape = CircleShape)
+                    .border(2.dp, color = MaterialTheme.colorScheme.primary, shape = CircleShape)
                     .clip(CircleShape)
                     .padding(24.dp),
                 contentAlignment = Alignment.Center,
@@ -289,7 +311,7 @@ private fun StartTextAdventureItem(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
             StoryTitle(
@@ -310,7 +332,7 @@ private fun FeatureImage(
         Image(
             modifier = Modifier
                 .aspectRatio(1f)
-                .border(1.dp, color = backgroundDark, shape = CircleShape)
+                .border(2.dp, color = MaterialTheme.colorScheme.primary, shape = CircleShape)
                 .clip(CircleShape),
             bitmap = image,
             contentDescription = contentDescription,
@@ -343,7 +365,7 @@ private fun StoryTitle(
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 maxLines = 2,

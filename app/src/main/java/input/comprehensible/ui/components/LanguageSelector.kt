@@ -3,7 +3,6 @@ package input.comprehensible.ui.components
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +18,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -162,18 +161,19 @@ fun LanguageSelector(
         )
         DropdownMenu(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
                 .border(
                     width = 1.dp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(8.dp)
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = RoundedCornerShape(20.dp)
                 ),
             expanded = isMenuShown,
             onDismissRequest = { onMenuShownChanged(false) },
         ) {
             Text(
-                modifier = Modifier.padding(8.dp),
-                text = title
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                text = title,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             DropdownMenuItem(
                 text = { Text(text = stringResource(languageSelection.languageName)) },
@@ -232,7 +232,7 @@ private fun LanguageToggleButton(
     languageSelection: LanguageSelection,
     contentDescription: String,
 ) {
-    OutlinedIconButton(
+    FilledTonalIconButton(
         modifier = modifier,
         shape = CircleShape,
         onClick = onClick
