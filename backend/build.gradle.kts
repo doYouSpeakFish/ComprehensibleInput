@@ -20,7 +20,6 @@ tasks.jar {
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("")
     manifest.attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
     mergeServiceFiles {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
