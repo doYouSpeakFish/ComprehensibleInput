@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
+    alias(libs.plugins.shadow)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
     id("input.comprehensible.kover-markdown-report")
 }
@@ -15,14 +16,14 @@ application {
 }
 
 tasks.jar {
-    dependsOn(configurations.runtimeClasspath)
+    enabled = false
+}
+
+tasks.shadowJar {
     manifest.attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
-    from(
-        configurations.runtimeClasspath.map { classpath ->
-            classpath.map(::zipTree)
-        }
-    )
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    mergeServiceFiles {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
 }
 
 kotlin {
@@ -52,6 +53,7 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.flyway.core)
+    runtimeOnly(libs.flyway.database.postgresql)
     runtimeOnly(libs.postgresql)
     runtimeOnly(libs.logback.classic)
 
