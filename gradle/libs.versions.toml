@@ -35,6 +35,7 @@ flyway = "12.4.0"
 h2 = "2.4.240"
 cucumber = "7.34.3"
 junit-platform = "6.0.3"
+shadow = "9.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -96,6 +97,7 @@ exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
+flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
 cucumber-java = { group = "io.cucumber", name = "cucumber-java", version.ref = "cucumber" }
 cucumber-junit-platform-engine = { group = "io.cucumber", name = "cucumber-junit-platform-engine", version.ref = "cucumber" }
@@ -118,3 +120,4 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

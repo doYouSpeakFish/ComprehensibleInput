@@ -1,7 +1,7 @@
 FROM gradle:jdk21-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle :backend:jar --no-daemon
+RUN gradle :backend:shadowJar --no-daemon
 
 FROM amazoncorretto:21-alpine AS runtime
 EXPOSE 8080
