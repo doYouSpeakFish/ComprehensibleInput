@@ -134,6 +134,8 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
         with:
@@ -158,7 +160,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Load docker secrets
+      - name: Load Docker secrets
         run: |
           echo $KOOG_API_KEY > compose-secrets/koog_api_key.txt
           echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
