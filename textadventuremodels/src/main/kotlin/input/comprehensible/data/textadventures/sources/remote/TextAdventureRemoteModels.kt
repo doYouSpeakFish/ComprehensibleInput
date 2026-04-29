@@ -15,6 +15,31 @@ data class TextAdventureRemoteResponse(
 )
 
 /**
+ * Stored messages for a previously generated text adventure.
+ */
+@Serializable
+data class TextAdventureMessagesRemoteResponse(
+    val adventureId: String,
+    val title: String,
+    val learningLanguage: String,
+    val translationsLanguage: String,
+    val messages: List<TextAdventureMessageRemoteResponse>,
+)
+
+@Serializable
+data class TextAdventureMessageRemoteResponse(
+    val sender: String,
+    val isEnding: Boolean,
+    val paragraphs: List<TextAdventureParagraphRemoteResponse>,
+)
+
+@Serializable
+data class TextAdventureParagraphRemoteResponse(
+    val sentences: List<String>,
+    val translatedSentences: List<String>,
+)
+
+/**
  * A conversation history entry to provide context for the LLM.
  */
 @Serializable
