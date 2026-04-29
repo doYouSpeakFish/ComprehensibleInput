@@ -38,6 +38,12 @@ jobs:
           UPLOAD_KEYSTORE_FILE_BASE64: ${{ secrets.UPLOAD_KEYSTORE_FILE_BASE64 }}
           UPLOAD_KEYSTORE_PROPERTIES_BASE64: ${{ secrets.UPLOAD_KEYSTORE_PROPERTIES_BASE64 }}
 
+      - name: Add Google Services JSON
+        run: |
+          echo $GOOGLE_SERVICES_JSON > app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -84,6 +90,17 @@ jobs:
           name: screenshot-diff-test-results
           path: app/build/test-results
           retention-days: 30
+
+      - name: Deliver android app via firebase
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir ./service-account
+          echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
+          echo $APP_TESTERS > testers.txt
+          ./gradlew assembleRelease appDistributionUploadRelease
+        env:
+          FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
+          APP_TESTERS: ${{ secrets.APP_TESTERS }}
 
   build-and-test-backend:
     runs-on: ubuntu-latest

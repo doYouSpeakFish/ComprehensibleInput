@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.room) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.app.distribution) apply false
 }
 
 dependencies {
