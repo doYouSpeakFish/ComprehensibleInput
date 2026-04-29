@@ -36,6 +36,8 @@ h2 = "2.4.240"
 cucumber = "7.34.3"
 junit-platform = "6.0.3"
 shadow = "9.0.0"
+firebaseAppDist = "5.2.1"
+googleServices = "4.4.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -121,3 +123,5 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppDist" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

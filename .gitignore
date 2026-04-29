@@ -16,3 +16,5 @@ local.properties
 # Local Docker Compose secrets
 /compose-secrets/*
 !/compose-secrets/.gitkeep
+/testers.txt
+/service-account/
