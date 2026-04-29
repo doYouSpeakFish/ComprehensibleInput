@@ -31,7 +31,7 @@ class DefaultTextAdventureRemoteDataSource(
     override suspend fun startAdventure(
         learningLanguage: String,
         translationsLanguage: String,
-    ): TextAdventureRemoteResponse = httpClient.post("$BACKEND_BASE_URL/text-adventures/start") {
+    ): TextAdventureRemoteResponse = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/text-adventures/start") {
         header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
         contentType(ContentType.Application.Json)
         setBody(
@@ -48,7 +48,7 @@ class DefaultTextAdventureRemoteDataSource(
         translationsLanguage: String,
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
-    ): TextAdventureRemoteResponse = httpClient.post("$BACKEND_BASE_URL/text-adventures/respond") {
+    ): TextAdventureRemoteResponse = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/text-adventures/respond") {
         header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
         contentType(ContentType.Application.Json)
         setBody(
@@ -61,9 +61,4 @@ class DefaultTextAdventureRemoteDataSource(
             )
         )
     }.body()
-
-    private companion object {
-        const val BACKEND_BASE_URL =
-            "https://comprehensibleinput-844851864443.europe-west1.run.app"
-    }
 }

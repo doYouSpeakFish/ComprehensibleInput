@@ -5,6 +5,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  pull_request_target:
+    types: [closed]
 
 jobs:
   build-and-test-android:
@@ -97,7 +99,24 @@ jobs:
           mkdir ./service-account
           echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
           echo $APP_TESTERS > testers.txt
-          ./gradlew assembleRelease appDistributionUploadRelease
+          ./gradlew :app:assembleProductionRelease :app:appDistributionUploadProductionRelease
+        env:
+          FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
+          APP_TESTERS: ${{ secrets.APP_TESTERS }}
+
+      - name: Deliver PR android app via firebase
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          mkdir ./service-account
+          echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
+          echo $APP_TESTERS > testers.txt
+
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
+
+          ./gradlew :app:assemblePrRelease :app:appDistributionUploadPrRelease \
+            -PprNumber="$PR_NUMBER" \
+            -PprBackendBaseUrl="http://${{ secrets.BACKEND_STAGING_IP_ADDRESS }}:${BACKEND_PORT}"
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
           APP_TESTERS: ${{ secrets.APP_TESTERS }}
@@ -152,7 +171,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
         with:
@@ -209,6 +228,136 @@ jobs:
         run: |
           docker context create prod --docker host=$BACKEND_HOST
           docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth
+        env:
+          BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+
+  deploy-pr-backend:
+    runs-on: ubuntu-latest
+    needs: build-and-test-backend
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      id-token: write
+      actions: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:comprehensible-input-ci
+          version: latest
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          sudo chmod 600 ~/.ssh/id_ed25519
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Load Docker secrets
+        run: |
+          echo $KOOG_API_KEY > compose-secrets/koog_api_key.txt
+          echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
+          echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
+          echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
+        env:
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: edwardsills/comprehensible-input:pr-${{ github.event.pull_request.number }}
+
+      - name: Deploy PR backend + database containers
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
+          DB_PORT=$((29000 + (PR_NUMBER % 100)))
+
+          docker context create prod --docker host=$BACKEND_HOST
+          docker --context prod rm -f ci-backend-pr-${PR_NUMBER} ci-postgres-pr-${PR_NUMBER} || true
+
+          docker --context prod run -d \
+            --name ci-postgres-pr-${PR_NUMBER} \
+            --restart unless-stopped \
+            -e POSTGRES_DB=comprehensible_input_pr_${PR_NUMBER} \
+            -e POSTGRES_USER=admin \
+            -e POSTGRES_PASSWORD="$DB_ADMIN_PASSWORD" \
+            -p ${DB_PORT}:5432 \
+            -v ci-postgres-pr-${PR_NUMBER}-data:/var/lib/postgresql/data \
+            postgres:17-alpine
+
+          docker --context prod run -d \
+            --name ci-backend-pr-${PR_NUMBER} \
+            --restart unless-stopped \
+            --link ci-postgres-pr-${PR_NUMBER}:postgres \
+            -e KOOG_API_KEY="$KOOG_API_KEY" \
+            -e APP_API_KEY="$BACKEND_API_KEY" \
+            -e BACKEND_DATABASE_URL="jdbc:postgresql://postgres:5432/comprehensible_input_pr_${PR_NUMBER}" \
+            -e BACKEND_DATABASE_USER=admin \
+            -e BACKEND_DATABASE_PASSWORD="$DB_ADMIN_PASSWORD" \
+            -e BACKEND_DATABASE_ADMIN_USER=admin \
+            -e BACKEND_DATABASE_ADMIN_PASSWORD="$DB_ADMIN_PASSWORD" \
+            -p ${BACKEND_PORT}:8080 \
+            edwardsills/comprehensible-input:pr-${PR_NUMBER}
+        env:
+          BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+
+  cleanup-pr-backend:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.merged == true }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:comprehensible-input-ci
+          version: latest
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          sudo chmod 600 ~/.ssh/id_ed25519
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Stop and prune PR containers
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          docker context create prod --docker host=$BACKEND_HOST
+          docker --context prod rm -f ci-backend-pr-${PR_NUMBER} ci-postgres-pr-${PR_NUMBER} || true
+          docker --context prod volume rm ci-postgres-pr-${PR_NUMBER}-data || true
+          docker --context prod image rm edwardsills/comprehensible-input:pr-${PR_NUMBER} || true
+          docker --context prod system prune -f || true
         env:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
 
