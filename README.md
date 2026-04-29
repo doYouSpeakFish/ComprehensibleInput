@@ -57,9 +57,9 @@ For local development you can run the backend directly with environment variable
 export KOOG_API_KEY='replace-with-real-koog-api-key'
 export APP_API_KEY='replace-with-real-app-api-key'
 export BACKEND_DATABASE_URL='jdbc:postgresql://localhost:5432/comprehensible_input'
-export BACKEND_DATABASE_USER='comprehensible_app'
+export BACKEND_DATABASE_USER='app'
 export BACKEND_DATABASE_PASSWORD='replace-with-strong-app-password'
-export BACKEND_DATABASE_ADMIN_USER='comprehensible_admin'
+export BACKEND_DATABASE_ADMIN_USER='admin'
 export BACKEND_DATABASE_ADMIN_PASSWORD='replace-with-strong-admin-password'
 ./gradlew :backend:run
 ```

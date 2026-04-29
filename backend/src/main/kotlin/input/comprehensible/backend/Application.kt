@@ -24,10 +24,10 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import java.io.File
-import kotlin.time.Duration.Companion.minutes
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
+import java.io.File
+import kotlin.time.Duration.Companion.minutes
 
 data class AppPrincipal(val key: String)
 
@@ -227,6 +227,6 @@ private const val BACKEND_DATABASE_PASSWORD_ENV_VAR = "BACKEND_DATABASE_PASSWORD
 private const val BACKEND_DATABASE_ADMIN_USER_ENV_VAR = "BACKEND_DATABASE_ADMIN_USER"
 private const val BACKEND_DATABASE_ADMIN_PASSWORD_ENV_VAR = "BACKEND_DATABASE_ADMIN_PASSWORD"
 private const val DEFAULT_DATABASE_URL = "jdbc:postgresql://localhost:5432/comprehensible_input"
-private const val DEFAULT_APP_DATABASE_USER = "comprehensible_app"
-private const val DEFAULT_ADMIN_DATABASE_USER = "comprehensible_admin"
+private const val DEFAULT_APP_DATABASE_USER = "app"
+private const val DEFAULT_ADMIN_DATABASE_USER = "admin"
 private const val POSTGRESQL_JDBC_DRIVER = "org.postgresql.Driver"

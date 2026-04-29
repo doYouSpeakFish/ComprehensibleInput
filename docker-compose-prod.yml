@@ -1,11 +1,8 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: edwardsills/comprehensible-input:latest
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     environment:
       KOOG_API_KEY_FILE: /run/secrets/koog_api_key
       APP_API_KEY_FILE: /run/secrets/app_api_key
