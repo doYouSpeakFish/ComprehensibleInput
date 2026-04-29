@@ -24,8 +24,8 @@ if git diff --cached --name-only -- app/screenshots | grep -q .; then
   git clean -fd -- app/screenshots >/dev/null 2>&1 || true
 fi
 
-echo "Running unit tests..."
-./gradlew :app:testDebugUnitTest --tests "input.comprehensible.*" --console=plain
+echo "Running coverage snapshot checks..."
+./gradlew koverMarkdownSnapshotCheck
 
 echo "Running detekt..."
 ./gradlew detekt
