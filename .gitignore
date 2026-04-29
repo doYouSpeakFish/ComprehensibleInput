@@ -12,3 +12,7 @@ local.properties
 /keystore.properties
 /upload-keystore.jks
 /.kotlin/sessions/
+
+# Local Docker Compose secrets
+/compose-secrets/*
+!/compose-secrets/.gitkeep

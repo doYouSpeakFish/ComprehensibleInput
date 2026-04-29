@@ -1,5 +1,6 @@
 package input.comprehensible.backend
 
+import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.DefaultTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.data.textadventures.sources.remote.ContinueTextAdventureRequest
@@ -23,19 +24,52 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import org.flywaydb.core.Flyway
+import org.jetbrains.exposed.sql.Database
+import java.io.File
 import kotlin.time.Duration.Companion.minutes
 
 data class AppPrincipal(val key: String)
 
+data class DatabaseConnectionConfig(
+    val databaseUrl: String,
+    val databaseUser: String,
+    val databasePassword: String,
+    val migrationDatabaseUser: String,
+    val migrationDatabasePassword: String,
+    val appRole: String,
+    val appRolePassword: String,
+    val flywayLocations: List<String> = listOf("classpath:db/migration"),
+)
+
+
 fun main() {
-    val aiApiKey = requireNotNull(System.getenv(AI_API_KEY_ENV_VAR)?.takeIf { it.isNotBlank() }) {
-        "Missing required environment variable $AI_API_KEY_ENV_VAR. " +
-                "Set it before starting the backend."
-    }
-    val apiKey = requireNotNull(System.getenv(APP_API_KEY_ENV_VAR)?.takeIf { it.isNotBlank() }) {
-        "Missing required environment variable $APP_API_KEY_ENV_VAR. " +
-                "Set it before starting the backend."
-    }
+    val aiApiKey = requireSecretValue(AI_API_KEY_ENV_VAR)
+    val apiKey = requireSecretValue(APP_API_KEY_ENV_VAR)
+    val databaseUrl = System.getenv(BACKEND_DATABASE_URL_ENV_VAR)
+        ?.takeIf { it.isNotBlank() }
+        ?: DEFAULT_DATABASE_URL
+
+    val databaseUser = System.getenv(BACKEND_DATABASE_USER_ENV_VAR)
+        ?.takeIf { it.isNotBlank() }
+        ?: DEFAULT_APP_DATABASE_USER
+    val databasePassword = requireSecretValue(BACKEND_DATABASE_PASSWORD_ENV_VAR)
+    val databaseAdminUser = System.getenv(BACKEND_DATABASE_ADMIN_USER_ENV_VAR)
+        ?.takeIf { it.isNotBlank() }
+        ?: DEFAULT_ADMIN_DATABASE_USER
+    val databaseAdminPassword = requireSecretValue(BACKEND_DATABASE_ADMIN_PASSWORD_ENV_VAR)
+
+    val database = connectDatabase(
+        DatabaseConnectionConfig(
+            databaseUrl = databaseUrl,
+            databaseUser = databaseUser,
+            databasePassword = databasePassword,
+            migrationDatabaseUser = databaseAdminUser,
+            migrationDatabasePassword = databaseAdminPassword,
+            appRole = databaseUser,
+            appRolePassword = databasePassword,
+        )
+    )
 
     embeddedServer(
         factory = Netty,
@@ -46,12 +80,64 @@ fun main() {
                 textAdventureService = TextAdventureGenerationService(
                     structuredPromptExecutor = DefaultTextAdventureStructuredPromptExecutor(
                         apiKey = aiApiKey,
-                    )
+                    ),
+                    adventureRepository = DatabaseAdventureRepository(
+                        database = database,
+                    ),
                 ),
                 appApiKey = apiKey,
             )
         },
     ).start(wait = true)
+}
+
+
+fun connectDatabase(config: DatabaseConnectionConfig): Database {
+    migrateDatabase(config)
+
+    return Database.connect(
+        url = config.databaseUrl,
+        driver = POSTGRESQL_JDBC_DRIVER,
+        user = config.databaseUser,
+        password = config.databasePassword,
+    )
+}
+
+@Suppress("SpreadOperator")
+private fun migrateDatabase(config: DatabaseConnectionConfig) {
+    Flyway.configure()
+        .dataSource(config.databaseUrl, config.migrationDatabaseUser, config.migrationDatabasePassword)
+        .locations(*config.flywayLocations.toTypedArray())
+        .placeholders(
+            mapOf(
+                "app_role" to config.appRole,
+                "app_role_password" to config.appRolePassword,
+            )
+        )
+        .load()
+        .migrate()
+}
+
+private fun requireSecretValue(envVarName: String): String {
+    val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
+    if (directValue != null) {
+        return directValue
+    }
+
+    val fileEnvVarName = "${envVarName}_FILE"
+    val secretFilePath = System.getenv(fileEnvVarName)?.takeIf { it.isNotBlank() }
+    if (secretFilePath != null) {
+        val secretValue = File(secretFilePath).readText().trim()
+        require(secretValue.isNotEmpty()) {
+            "Environment variable $fileEnvVarName points to an empty file: $secretFilePath"
+        }
+        return secretValue
+    }
+
+    error(
+        "Missing required environment variable $envVarName. " +
+            "Set $envVarName directly or set ${envVarName}_FILE to a file containing the value."
+    )
 }
 
 fun Application.configureRouting(
@@ -115,9 +201,32 @@ fun Application.configureRouting(
                     )
                 )
             }
+
+            get("/text-adventures/{adventureId}/messages") {
+                requireNotNull(call.principal<AppPrincipal>()) { "Unauthenticated" }
+                val adventureId = requireNotNull(call.parameters["adventureId"]) {
+                    "Missing adventureId path parameter"
+                }
+                val response = textAdventureService.getAdventureMessages(adventureId)
+                if (response == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    call.respond(response)
+                }
+            }
         }
     }
 }
 
+
 private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"
+private const val BACKEND_DATABASE_URL_ENV_VAR = "BACKEND_DATABASE_URL"
+private const val BACKEND_DATABASE_USER_ENV_VAR = "BACKEND_DATABASE_USER"
+private const val BACKEND_DATABASE_PASSWORD_ENV_VAR = "BACKEND_DATABASE_PASSWORD"
+private const val BACKEND_DATABASE_ADMIN_USER_ENV_VAR = "BACKEND_DATABASE_ADMIN_USER"
+private const val BACKEND_DATABASE_ADMIN_PASSWORD_ENV_VAR = "BACKEND_DATABASE_ADMIN_PASSWORD"
+private const val DEFAULT_DATABASE_URL = "jdbc:postgresql://localhost:5432/comprehensible_input"
+private const val DEFAULT_APP_DATABASE_USER = "app"
+private const val DEFAULT_ADMIN_DATABASE_USER = "admin"
+private const val POSTGRESQL_JDBC_DRIVER = "org.postgresql.Driver"
