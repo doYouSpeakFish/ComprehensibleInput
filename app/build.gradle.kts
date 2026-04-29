@@ -1,4 +1,5 @@
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
@@ -12,6 +13,8 @@ plugins {
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.kover)
     alias(libs.plugins.room)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.app.distribution)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
     id("input.comprehensible.kover-markdown-report")
 }
@@ -72,6 +75,11 @@ android {
             )
             if (hasKeystore) {
                 signingConfig = signingConfigs.getByName("release")
+            }
+            firebaseAppDistribution {
+                artifactType = "APK"
+                testersFile = "./testers.txt"
+                serviceCredentialsFile = "./firebase-app-distribution-key.json"
             }
         }
     }

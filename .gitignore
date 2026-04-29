@@ -16,3 +16,6 @@ local.properties
 # Local Docker Compose secrets
 /compose-secrets/*
 !/compose-secrets/.gitkeep
+/testers.txt
+/firebase-app-distribution-key.json
+/buildSrc/.kotlin/
