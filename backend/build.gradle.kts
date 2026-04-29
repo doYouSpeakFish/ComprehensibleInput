@@ -1,7 +1,9 @@
 plugins {
     application
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
+    alias(libs.plugins.shadow)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
     id("input.comprehensible.kover-markdown-report")
 }
@@ -14,14 +16,14 @@ application {
 }
 
 tasks.jar {
-    dependsOn(configurations.runtimeClasspath)
+    enabled = false
+}
+
+tasks.shadowJar {
     manifest.attributes["Main-Class"] = "input.comprehensible.backend.ApplicationKt"
-    from(
-        configurations.runtimeClasspath.map { classpath ->
-            classpath.map(::zipTree)
-        }
-    )
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    mergeServiceFiles {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
 }
 
 kotlin {
@@ -31,6 +33,10 @@ kotlin {
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 dependencies {
@@ -44,8 +50,19 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koog.agents.jvm)
     implementation(libs.serialization.json)
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.flyway.core)
+    runtimeOnly(libs.flyway.database.postgresql)
+    runtimeOnly(libs.postgresql)
     runtimeOnly(libs.logback.classic)
 
     testImplementation(libs.junit)
+    testImplementation(libs.cucumber.java)
+    testImplementation(libs.cucumber.junit.platform.engine)
+    testImplementation(libs.junit.platform.suite.api)
+    testRuntimeOnly(libs.junit.platform.suite.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.h2)
 }
