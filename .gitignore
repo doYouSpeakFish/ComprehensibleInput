@@ -17,4 +17,5 @@ local.properties
 /compose-secrets/*
 !/compose-secrets/.gitkeep
 /testers.txt
-/service-account/
+/firebase-app-distribution-key.json
+/buildSrc/.kotlin/

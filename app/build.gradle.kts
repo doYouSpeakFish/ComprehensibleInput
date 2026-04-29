@@ -79,7 +79,7 @@ android {
             firebaseAppDistribution {
                 artifactType = "APK"
                 testersFile = "./testers.txt"
-                serviceCredentialsFile = "./service-account/service-account.json"
+                serviceCredentialsFile = "./firebase-app-distribution-key.json"
             }
         }
     }
