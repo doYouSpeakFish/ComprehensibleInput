@@ -61,9 +61,7 @@ android {
         }
         create("pr") {
             dimension = "environment"
-            versionNameSuffix = "-pr"
-            val baseVersionCode = defaultConfig.versionCode ?: 1
-            versionCode = (baseVersionCode * 1000) + prNumber
+            versionNameSuffix = "-pr-$prNumber"
             buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
         }
     }
