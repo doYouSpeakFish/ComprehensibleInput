@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -139,6 +140,12 @@ class StoryListRobot(
             .onNodeWithTag("text_adventure_start_button")
             .performScrollTo()
             .performClick()
+    }
+
+    fun assertStartTextAdventureIsHidden() {
+        composeTestRule
+            .onAllNodesWithTag("text_adventure_start_button")
+            .assertCountEquals(0)
     }
 
     fun assertTextAdventureIsVisible(title: String) {
