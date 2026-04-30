@@ -1,0 +1,46 @@
+name: PR Cleanup
+
+on:
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  cleanup-pr-backend:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID_PR_MERGE }}
+          audience: ${{ secrets.TS_AUDIENCE_PR_MERGE }}
+          tags: tag:comprehensible-input-ci
+          version: latest
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          sudo chmod 600 ~/.ssh/id_ed25519
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Remove PR swarm services and network
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          STACK=ci-pr-${PR_NUMBER}
+          docker context create prod --docker host=$BACKEND_HOST || true
+
+          docker --context prod service rm ${STACK}_backend || true
+          docker --context prod service rm ${STACK}_postgres || true
+          docker --context prod volume rm ${STACK}_postgres_data || true
+          docker --context prod network rm ${STACK}_net || true
+          docker --context prod image rm edwardsills/comprehensible-input:pr-${PR_NUMBER} || true
+          docker --context prod system prune -f || true
+        env:
+          BACKEND_HOST: ${{ secrets.BACKEND_HOST }}

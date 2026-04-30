@@ -97,7 +97,24 @@ jobs:
           mkdir ./service-account
           echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
           echo $APP_TESTERS > testers.txt
-          ./gradlew assembleRelease appDistributionUploadRelease
+          ./gradlew :app:assembleProductionRelease :app:appDistributionUploadProductionRelease
+        env:
+          FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
+          APP_TESTERS: ${{ secrets.APP_TESTERS }}
+
+      - name: Deliver PR android app via firebase
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          mkdir ./service-account
+          echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
+          echo $APP_TESTERS > testers.txt
+
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
+
+          ./gradlew :app:assemblePrRelease :app:appDistributionUploadPrRelease \
+            -PprNumber="$PR_NUMBER" \
+            -PprBackendBaseUrl="http://${{ secrets.BACKEND_STAGING_IP_ADDRESS }}:${BACKEND_PORT}"
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
           APP_TESTERS: ${{ secrets.APP_TESTERS }}
@@ -152,7 +169,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
         with:
@@ -211,6 +228,107 @@ jobs:
           docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth
         env:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+
+  deploy-pr-backend:
+    runs-on: ubuntu-latest
+    needs: build-and-test-backend
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      id-token: write
+      actions: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID_PR }}
+          audience: ${{ secrets.TS_AUDIENCE_PR }}
+          tags: tag:comprehensible-input-ci
+          version: latest
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          sudo chmod 600 ~/.ssh/id_ed25519
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Load Docker secrets
+        run: |
+          echo $KOOG_API_KEY > compose-secrets/koog_api_key.txt
+          echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
+          echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
+          echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
+        env:
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: edwardsills/comprehensible-input:pr-${{ github.event.pull_request.number }}
+
+      - name: Deploy PR backend + database services
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
+          DB_PORT=$((29000 + (PR_NUMBER % 100)))
+          STACK=ci-pr-${PR_NUMBER}
+
+          docker context create prod --docker host=$BACKEND_HOST || true
+
+          docker --context prod service rm ${STACK}_backend || true
+          docker --context prod service rm ${STACK}_postgres || true
+          docker --context prod network rm ${STACK}_net || true
+
+          docker --context prod network create --driver overlay --attachable ${STACK}_net
+
+          docker --context prod service create \
+            --name ${STACK}_postgres \
+            --network ${STACK}_net \
+            --replicas 1 \
+            --publish published=${DB_PORT},target=5432 \
+            --mount type=volume,source=${STACK}_postgres_data,target=/var/lib/postgresql/data \
+            --env POSTGRES_DB=comprehensible_input_pr_${PR_NUMBER} \
+            --env POSTGRES_USER=admin \
+            --env POSTGRES_PASSWORD=$DB_ADMIN_PASSWORD \
+            postgres:17-alpine
+
+          docker --context prod service create \
+            --name ${STACK}_backend \
+            --network ${STACK}_net \
+            --replicas 1 \
+            --publish published=${BACKEND_PORT},target=8080 \
+            --env KOOG_API_KEY=$KOOG_API_KEY \
+            --env APP_API_KEY=$BACKEND_API_KEY \
+            --env BACKEND_DATABASE_URL=jdbc:postgresql://${STACK}_postgres:5432/comprehensible_input_pr_${PR_NUMBER} \
+            --env BACKEND_DATABASE_USER=admin \
+            --env BACKEND_DATABASE_PASSWORD=$DB_ADMIN_PASSWORD \
+            --env BACKEND_DATABASE_ADMIN_USER=admin \
+            --env BACKEND_DATABASE_ADMIN_PASSWORD=$DB_ADMIN_PASSWORD \
+            edwardsills/comprehensible-input:pr-${PR_NUMBER}
+        env:
+          BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
 
   auto-merge:
     runs-on: ubuntu-latest
