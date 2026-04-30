@@ -8,7 +8,7 @@ data class FeatureFlags(
 ) {
     companion object : InjectedSingleton<FeatureFlags>() {
         fun getDefault() = FeatureFlags(
-            aiTextAdventuresEnabled = BuildConfig.DEBUG,
+            aiTextAdventuresEnabled = BuildConfig.AI_TEXT_ADVENTURES_ENABLED,
         )
     }
 }
