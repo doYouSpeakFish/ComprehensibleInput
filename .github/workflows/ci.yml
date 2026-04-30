@@ -225,7 +225,7 @@ jobs:
       - name: Deploy
         run: |
           docker context create prod --docker host=$BACKEND_HOST
-          docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth
+          docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth --resolve-image always
         env:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
 
@@ -278,6 +278,7 @@ jobs:
           DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
 
       - name: Build and push Docker image
+        id: push-pr
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -323,7 +324,8 @@ jobs:
             --env BACKEND_DATABASE_PASSWORD=$DB_ADMIN_PASSWORD \
             --env BACKEND_DATABASE_ADMIN_USER=admin \
             --env BACKEND_DATABASE_ADMIN_PASSWORD=$DB_ADMIN_PASSWORD \
-            edwardsills/comprehensible-input:pr-${PR_NUMBER}
+            --with-registry-auth \
+            edwardsills/comprehensible-input@${{ steps.push-pr.outputs.digest }}
         env:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
           KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
