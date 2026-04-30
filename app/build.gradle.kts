@@ -41,6 +41,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "false")
         applicationId = "in.comprehensible"
         minSdk = 24
         targetSdk = 36
@@ -61,6 +62,7 @@ android {
         }
         create("pr") {
             dimension = "environment"
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
             versionNameSuffix = "-pr-$prNumber"
             buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
         }
@@ -80,6 +82,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
