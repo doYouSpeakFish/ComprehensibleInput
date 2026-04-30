@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -33,11 +32,7 @@ class StoryListViewModel(
     val events = _events.asSharedFlow()
 
     private val textAdventuresFlow: Flow<TextAdventuresListResult> =
-        if (featureFlags.aiTextAdventuresEnabled) {
-            getTextAdventuresListUseCase()
-        } else {
-            flowOf(TextAdventuresListResult.Success(emptyList()))
-        }
+        getTextAdventuresListUseCase()
 
     val state = combine(
         getStoriesListUseCase(),

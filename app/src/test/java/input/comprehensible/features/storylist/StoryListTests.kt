@@ -112,6 +112,26 @@ class StoryListTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `story list opens when text adventures are disabled`() = testRule.runTest(
+        aiTextAdventuresEnabled = false
+    ) {
+        // GIVEN stories available to show in the list
+        val stories = SampleStoriesData.listOf100Stories
+        setLocalStories(stories)
+
+        // WHEN the story list is opened with text adventures disabled
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // THEN stories still appear
+            assertStoryTitleIsVisible(stories.first().germanTitle)
+            // AND the text adventure call to action is hidden
+            assertStartTextAdventureIsHidden()
+        }
+    }
+
+    @Test
     fun `Story text matches learning language setting`() = testRule.runTest {
         // GIVEN a story available in German, English, and Spanish
         val stories = SampleStoriesData.listOf100Stories
