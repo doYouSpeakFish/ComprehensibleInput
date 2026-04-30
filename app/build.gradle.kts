@@ -33,21 +33,38 @@ if (localPropertiesFile.exists()) {
 }
 val backendApiKey = localProperties.getProperty("backendApiKey")
     ?: System.getenv("BACKEND_API_KEY") ?: ""
+val prBackendBaseUrl = providers.gradleProperty("prBackendBaseUrl").orNull.orEmpty()
+val prNumber = providers.gradleProperty("prNumber").orNull?.toIntOrNull() ?: 0
 
 android {
     namespace = "input.comprehensible"
     compileSdk = 36
 
     defaultConfig {
+        buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "false")
         applicationId = "in.comprehensible"
         minSdk = 24
         targetSdk = 36
         versionCode = 9
+        buildConfigField("String", "BACKEND_BASE_URL", "\"https://comprehensibleinput-844851864443.europe-west1.run.app\"")
         versionName = "0.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("production") {
+            dimension = "environment"
+        }
+        create("pr") {
+            dimension = "environment"
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
+            versionNameSuffix = "-pr-$prNumber"
+            buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
         }
     }
 
@@ -65,6 +82,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
@@ -223,3 +241,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+

@@ -15,7 +15,7 @@ Location: `src/main/java/input/comprehensible/util/FeatureFlags.kt:8-13`
 ⚪    8 | ) {
 ⚪    9 |     companion object : InjectedSingleton<FeatureFlags>() {
 🔴   10 |         fun getDefault() = FeatureFlags(
-🔴   11 |             aiTextAdventuresEnabled = BuildConfig.DEBUG,
+🔴   11 |             aiTextAdventuresEnabled = BuildConfig.AI_TEXT_ADVENTURES_ENABLED,
 ⚪   12 |         )
 ⚪   13 |     }
 ```
