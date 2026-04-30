@@ -19,26 +19,19 @@ Location: `src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt:24-28
 🟢   28 |         val featureFlags = FeatureFlags()
 ```
 
-## Lines 38-54
+## Lines 41-50
 
-Location: `src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt:38-54`
+Location: `src/main/java/input/comprehensible/ui/ComprehensibleInputApp.kt:41-50`
 
 ```kotlin
-🟢   38 |             storyList(
-🟢   39 |                 onStorySelected = { navController.navigate(StoryReaderRoute(storyId = it)) },
-🟡   40 |                 onTextAdventureSelected = if (featureFlags.aiTextAdventuresEnabled) {
 🟢   41 |                     { navController.navigate(TextAdventureRoute(adventureId = it)) }
 ⚪   42 |                 } else {
 🔴   43 |                     {}
 ⚪   44 |                 },
-🟡   45 |                 onTextAdventureStarted = if (featureFlags.aiTextAdventuresEnabled) {
+🟢   45 |                 onTextAdventureStarted = if (featureFlags.aiTextAdventuresEnabled) {
 🟢   46 |                     { navController.navigate(TextAdventureRoute(adventureId = it)) }
 ⚪   47 |                 } else {
 🔴   48 |                     {}
 ⚪   49 |                 },
 🟢   50 |                 onSettingsClick = { navController.navigate(SettingsRoute) },
-⚪   51 |             )
-🟡   52 |             if (featureFlags.aiTextAdventuresEnabled) {
-🟢   53 |                 textAdventure(onNavigateUp = { navController.navigateUp() })
-⚪   54 |             }
 ```
