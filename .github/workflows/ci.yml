@@ -320,8 +320,8 @@ jobs:
             --env KOOG_API_KEY=$KOOG_API_KEY \
             --env APP_API_KEY=$BACKEND_API_KEY \
             --env BACKEND_DATABASE_URL=jdbc:postgresql://${STACK}_postgres:5432/comprehensible_input_pr_${PR_NUMBER} \
-            --env BACKEND_DATABASE_USER=admin \
-            --env BACKEND_DATABASE_PASSWORD=$DB_ADMIN_PASSWORD \
+            --env BACKEND_DATABASE_USER=app \
+            --env BACKEND_DATABASE_PASSWORD=$DB_APP_PASSWORD \
             --env BACKEND_DATABASE_ADMIN_USER=admin \
             --env BACKEND_DATABASE_ADMIN_PASSWORD=$DB_ADMIN_PASSWORD \
             --with-registry-auth \
@@ -330,6 +330,7 @@ jobs:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
           KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
           BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
 
   auto-merge:
