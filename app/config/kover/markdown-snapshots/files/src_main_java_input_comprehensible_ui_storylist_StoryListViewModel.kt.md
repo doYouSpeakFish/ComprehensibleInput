@@ -7,72 +7,53 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 34-41
+## Lines 42-46
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:34-41`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:42-46`
 
 ```kotlin
-⚪   34 | 
-⚪   35 |     private val textAdventuresFlow: Flow<TextAdventuresListResult> =
-🟡   36 |         if (featureFlags.aiTextAdventuresEnabled) {
-🟢   37 |             getTextAdventuresListUseCase()
-⚪   38 |         } else {
-🔴   39 |             flowOf(TextAdventuresListResult.Success(emptyList()))
-⚪   40 |         }
-⚪   41 | 
+⚪   42 |     ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
+🟢   43 |         val storyItems = when (storiesResult) {
+🟡   44 |             is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
+🟢   45 |                 StoryListUiState.StoryListItem.Story(
+🟢   46 |                     id = story.id,
 ```
 
-## Lines 47-51
+## Lines 51-58
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:47-51`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:51-58`
 
 ```kotlin
-⚪   47 |     ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
-🟢   48 |         val storyItems = when (storiesResult) {
-🟡   49 |             is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
-🟢   50 |                 StoryListUiState.StoryListItem.Story(
-🟢   51 |                     id = story.id,
+⚪   51 |             }
+⚪   52 | 
+🔴   53 |             StoriesListResult.Error -> emptyList()
+⚪   54 |         }
+🟢   55 |         val adventureItems = when (adventuresResult) {
+🟡   56 |             is TextAdventuresListResult.Success -> adventuresResult.adventures.map { adventure ->
+🟢   57 |                 StoryListUiState.StoryListItem.TextAdventure(
+🟢   58 |                     id = adventure.id,
 ```
 
-## Lines 56-63
+## Lines 62-66
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:56-63`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:62-66`
 
 ```kotlin
-⚪   56 |             }
-⚪   57 | 
-🔴   58 |             StoriesListResult.Error -> emptyList()
-⚪   59 |         }
-🟢   60 |         val adventureItems = when (adventuresResult) {
-🟡   61 |             is TextAdventuresListResult.Success -> adventuresResult.adventures.map { adventure ->
-🟢   62 |                 StoryListUiState.StoryListItem.TextAdventure(
-🟢   63 |                     id = adventure.id,
+⚪   62 |             }
+⚪   63 | 
+🔴   64 |             TextAdventuresListResult.Error -> emptyList()
+⚪   65 |         }
+🟢   66 |         val items = buildList {
 ```
 
-## Lines 67-75
+## Lines 105-109
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:67-75`
-
-```kotlin
-⚪   67 |             }
-⚪   68 | 
-🔴   69 |             TextAdventuresListResult.Error -> emptyList()
-⚪   70 |         }
-🟢   71 |         val items = buildList {
-🟢   72 |             addAll(storyItems)
-🟡   73 |             if (featureFlags.aiTextAdventuresEnabled) {
-🟢   74 |                 addAll(adventureItems)
-🟢   75 |                 add(StoryListUiState.StoryListItem.StartTextAdventure)
-```
-
-## Lines 110-114
-
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:110-114`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt:105-109`
 
 ```kotlin
-⚪  110 | 
-⚪  111 |     fun onStartTextAdventure() {
-🟡  112 |         if (!featureFlags.aiTextAdventuresEnabled) return
-🟢  113 |         viewModelScope.launch {
-🟢  114 |             val adventureId = startTextAdventureUseCase()
+⚪  105 | 
+⚪  106 |     fun onStartTextAdventure() {
+🟡  107 |         if (!featureFlags.aiTextAdventuresEnabled) return
+🟢  108 |         viewModelScope.launch {
+🟢  109 |             val adventureId = startTextAdventureUseCase()
 ```
