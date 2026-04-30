@@ -97,7 +97,8 @@ jobs:
           mkdir ./service-account
           echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
           echo $APP_TESTERS > testers.txt
-          ./gradlew :app:assembleProductionRelease :app:appDistributionUploadProductionRelease
+          ./gradlew :app:assembleProductionRelease :app:appDistributionUploadProductionRelease \
+            -PenableAllFeatureFlags=true
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
           APP_TESTERS: ${{ secrets.APP_TESTERS }}
