@@ -297,8 +297,17 @@ jobs:
 
           docker --context prod service rm ${STACK}_backend || true
           docker --context prod service rm ${STACK}_postgres || true
-          docker --context prod network rm ${STACK}_net || true
 
+          for _ in $(seq 1 30); do
+            backend_present=$(docker --context prod service ls --filter "name=${STACK}_backend" --format "{{.Name}}")
+            postgres_present=$(docker --context prod service ls --filter "name=${STACK}_postgres" --format "{{.Name}}")
+            if [ -z "${backend_present}" ] && [ -z "${postgres_present}" ]; then
+              break
+            fi
+            sleep 2
+          done
+
+          docker --context prod network rm ${STACK}_net || true
           docker --context prod network create --driver overlay --attachable ${STACK}_net
 
           docker --context prod service create \
