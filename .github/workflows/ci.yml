@@ -195,20 +195,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Load Docker secrets
-        run: |
-          echo $KOOG_API_KEY > compose-secrets/koog_api_key.txt
-          echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
-          echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
-          echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
-          echo $CLOUDFLARE_TUNNEL_TOKEN > compose-secrets/cloudflared_tunnel_token.txt
-        env:
-          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
-          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
-          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
-          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
-          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v6
@@ -227,10 +213,30 @@ jobs:
 
       - name: Deploy
         run: |
-          docker context create prod --docker host=$BACKEND_HOST
+          docker context create prod --docker host=$BACKEND_HOST || true
+
+          ensure_secret() {
+            local secret_name="$1"
+            local secret_value="$2"
+            if ! docker --context prod secret inspect "${secret_name}" >/dev/null 2>&1; then
+              printf '%s' "${secret_value}" | docker --context prod secret create "${secret_name}" -
+            fi
+          }
+
+          ensure_secret app_koog_api_key "$KOOG_API_KEY"
+          ensure_secret app_app_api_key "$BACKEND_API_KEY"
+          ensure_secret app_db_app_password "$DB_APP_PASSWORD"
+          ensure_secret app_db_admin_password "$DB_ADMIN_PASSWORD"
+          ensure_secret app_cloudflared_tunnel_token "$CLOUDFLARE_TUNNEL_TOKEN"
+
           docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth --resolve-image always
         env:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
 
   deploy-pr-backend:
     runs-on: ubuntu-latest
