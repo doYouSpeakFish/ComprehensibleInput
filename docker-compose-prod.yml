@@ -19,6 +19,20 @@ services:
       - db_app_password
       - db_admin_password
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    depends_on:
+      - backend
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+    environment:
+      TUNNEL_TOKEN_FILE: /run/secrets/cloudflared_tunnel_token
+    restart: unless-stopped
+    secrets:
+      - cloudflared_tunnel_token
+
   postgres:
     image: postgres:17-alpine
     environment:
@@ -47,6 +61,8 @@ secrets:
     file: ./compose-secrets/db_app_password.txt
   db_admin_password:
     file: ./compose-secrets/db_admin_password.txt
+  cloudflared_tunnel_token:
+    file: ./compose-secrets/cloudflared_tunnel_token.txt
 
 volumes:
   postgres_data:
