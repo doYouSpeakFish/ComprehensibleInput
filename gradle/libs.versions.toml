@@ -35,7 +35,7 @@ flyway = "12.4.0"
 h2 = "2.4.240"
 cucumber = "7.34.3"
 junit-platform = "6.0.3"
-shadow = "9.0.0"
+shadow = "9.4.1"
 firebaseAppDist = "5.2.1"
 googleServices = "4.4.4"
 
