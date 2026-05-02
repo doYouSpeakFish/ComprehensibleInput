@@ -35,6 +35,10 @@ val backendApiKey = localProperties.getProperty("backendApiKey")
     ?: System.getenv("BACKEND_API_KEY") ?: ""
 val prBackendBaseUrl = providers.gradleProperty("prBackendBaseUrl").orNull.orEmpty()
 val prNumber = providers.gradleProperty("prNumber").orNull?.toIntOrNull() ?: 0
+val enableAllFeatureFlags = providers.gradleProperty("enableAllFeatureFlags")
+    .orNull
+    ?.toBooleanStrictOrNull()
+    ?: false
 
 android {
     namespace = "input.comprehensible"
@@ -59,6 +63,7 @@ android {
     productFlavors {
         create("production") {
             dimension = "environment"
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
         }
         create("pr") {
             dimension = "environment"
@@ -241,4 +246,3 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
-
