@@ -52,15 +52,20 @@ services:
 
 secrets:
   koog_api_key:
-    file: ./compose-secrets/koog_api_key.txt
+    external: true
+    name: app_koog_api_key
   app_api_key:
-    file: ./compose-secrets/app_api_key.txt
+    external: true
+    name: app_app_api_key
   db_app_password:
-    file: ./compose-secrets/db_app_password.txt
+    external: true
+    name: app_db_app_password
   db_admin_password:
-    file: ./compose-secrets/db_admin_password.txt
+    external: true
+    name: app_db_admin_password
   cloudflared_tunnel_token:
-    file: ./compose-secrets/cloudflared_tunnel_token.txt
+    external: true
+    name: app_cloudflared_tunnel_token
 
 volumes:
   postgres_data:
