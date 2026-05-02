@@ -63,6 +63,7 @@ android {
     productFlavors {
         create("production") {
             dimension = "environment"
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
         }
         create("pr") {
             dimension = "environment"
@@ -90,7 +91,6 @@ android {
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
-            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
