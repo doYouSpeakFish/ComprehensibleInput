@@ -21,8 +21,6 @@ services:
 
   cloudflared:
     image: cloudflare/cloudflared:latest
-    depends_on:
-      - backend
     command:
       - tunnel
       - --no-autoupdate
