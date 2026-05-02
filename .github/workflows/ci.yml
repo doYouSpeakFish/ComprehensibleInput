@@ -201,11 +201,13 @@ jobs:
           echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
           echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
           echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
+          echo $CLOUDFLARE_TUNNEL_TOKEN > compose-secrets/cloudflared_tunnel_token.txt
         env:
           KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
           BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
           DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta

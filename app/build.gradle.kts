@@ -50,7 +50,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 9
-        buildConfigField("String", "BACKEND_BASE_URL", "\"https://comprehensibleinput-844851864443.europe-west1.run.app\"")
+        buildConfigField("String", "BACKEND_BASE_URL", "\"https://api.languagethis.com\"")
         versionName = "0.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
