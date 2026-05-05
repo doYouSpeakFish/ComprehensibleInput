@@ -31,8 +31,16 @@ class TextAdventureGenerationService(
                 Generate the opening scene in $learningLanguage.
                 Provide a short, evocative title for the adventure.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
-                Before writing the scene, create an internal multi-step story plan.
-                Put that internal plan in updatedPlan for backend use only.
+                Before writing the scene, create an internal world-state plan.
+                Put that plan in updatedPlan for backend use only.
+                The plan should not be a fixed sequence of what will happen.
+                Instead, track the adventure's mutable world details, such as:
+                locations, NPCs, NPC motivations and plans, items and who has them,
+                what each NPC knows, room and dungeon contents, hidden objects,
+                treasure locations, key locations, and the player's inventory.
+                Include enough detail to support a central challenge that drives the adventure.
+                For example, this could involve stopping an antagonist, surviving an event,
+                stealing an artifact, or another evolving objective.
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
                 The story should not end yet, so set isEnding to false.
@@ -73,7 +81,12 @@ class TextAdventureGenerationService(
                 You are a text adventure narrator continuing an ongoing story.
                 You will receive a JSON request containing the adventure context and chat history.
                 The request may include currentPlan. Follow it for continuity.
-                Optionally return updatedPlan when revising the future direction.
+                currentPlan is a mutable world-state plan, not a fixed script.
+                Use it to keep track of locations, NPC intentions, items, inventories,
+                hidden information, and other state that can change from player actions.
+                Optionally return updatedPlan when world state changes.
+                Each updatedPlan fully replaces the previous plan,
+                so it must include all important remembered details.
                 Respond to the player in $learningLanguage.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
                 Keep the title consistent with the story so far.
