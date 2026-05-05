@@ -47,6 +47,14 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
+    override fun getAdventurePlan(adventureId: String): String? = transaction(database) {
+        AdventuresTable
+            .select(AdventuresTable.internalPlan)
+            .where { AdventuresTable.id eq adventureId }
+            .singleOrNull()
+            ?.get(AdventuresTable.internalPlan)
+    }
+
     private fun findAdventureCreatedAt(adventureId: String): Long? = AdventuresTable
         .select(AdventuresTable.createdAt)
         .where { AdventuresTable.id eq adventureId }
@@ -63,6 +71,7 @@ class DatabaseAdventureRepository(
             it[this.title] = adventurePart.title
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
+            it[this.internalPlan] = adventurePart.internalPlan
             it[createdAt] = existingCreatedAt ?: now
             it[updatedAt] = now
         }
@@ -206,6 +215,7 @@ object AdventuresTable : Table("text_adventure") {
     val title = text("title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
+    val internalPlan = text("internal_plan").nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
 

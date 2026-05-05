@@ -31,6 +31,8 @@ class TextAdventureGenerationService(
                 Generate the opening scene in $learningLanguage.
                 Provide a short, evocative title for the adventure.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
+                Before writing the scene, create an internal multi-step story plan.
+                Put that internal plan in updatedPlan for backend use only.
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
                 The story should not end yet, so set isEnding to false.
@@ -44,6 +46,7 @@ class TextAdventureGenerationService(
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
                 isEnding = response.isEnding,
+                internalPlan = response.updatedPlan?.takeIf { it.isNotBlank() },
                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
                     (paragraph, translatedParagraph) ->
                     PersistedAdventureParagraph(
@@ -69,6 +72,8 @@ class TextAdventureGenerationService(
             systemPrompt = """
                 You are a text adventure narrator continuing an ongoing story.
                 You will receive a JSON request containing the adventure context and chat history.
+                The request may include currentPlan. Follow it for continuity.
+                Optionally return updatedPlan when revising the future direction.
                 Respond to the player in $learningLanguage.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
                 Keep the title consistent with the story so far.
@@ -83,8 +88,9 @@ class TextAdventureGenerationService(
                     userMessage = userMessage,
                     history = history,
                 )
-            ),
+            ) + "\n" + "currentPlan=${adventureRepository.getAdventurePlan(adventureId).orEmpty()}",
         )
+        val existingPlan = adventureRepository.getAdventurePlan(adventureId)
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
                 adventureId = response.adventureId,
@@ -92,6 +98,7 @@ class TextAdventureGenerationService(
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
                 isEnding = response.isEnding,
+                internalPlan = response.updatedPlan?.takeIf { it.isNotBlank() } ?: existingPlan,
                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
                     (paragraph, translatedParagraph) ->
                     PersistedAdventureParagraph(
@@ -147,6 +154,7 @@ class TextAdventureGenerationService(
             paragraphs = response.paragraphs,
             translatedParagraphs = response.translatedParagraphs,
             isEnding = response.isEnding,
+            updatedPlan = response.updatedPlan,
         )
     }
 
@@ -179,6 +187,7 @@ private data class GeneratedAdventureResponse(
     val paragraphs: List<TextAdventureStructuredParagraph>,
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     val isEnding: Boolean,
+    val updatedPlan: String?,
 )
 
 private fun GeneratedAdventureResponse.toRemoteResponse(): TextAdventureRemoteResponse = TextAdventureRemoteResponse(
@@ -201,6 +210,8 @@ data class TextAdventureStructuredResponse(
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     @property:LLMDescription("Whether the story ends after this response.")
     val isEnding: Boolean,
+    @property:LLMDescription("Optional backend-only updated story plan for future turns.")
+    val updatedPlan: String? = null,
 )
 
 @Serializable

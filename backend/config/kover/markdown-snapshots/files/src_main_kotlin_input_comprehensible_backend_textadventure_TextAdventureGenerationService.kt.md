@@ -7,81 +7,105 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 121-130
+## Lines 47-51
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:121-130`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:47-51`
 
 ```kotlin
-⚪  121 |         )
-⚪  122 | 
-🟡  123 |         check(response.paragraphs.size == response.translatedParagraphs.size) {
-⚪  124 |             """
-⚪  125 |                 Text adventure paragraph count mismatch:
-🔴  126 |                     paragraphs=${response.paragraphs.size}
-🔴  127 |                     translations=${response.translatedParagraphs.size}
-🔴  128 |             """.trimIndent()
-⚪  129 |         }
-⚪  130 | 
+🟢   47 |                 translationLanguage = translationsLanguage,
+🟢   48 |                 isEnding = response.isEnding,
+🟡   49 |                 internalPlan = response.updatedPlan?.takeIf { it.isNotBlank() },
+🟢   50 |                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
+⚪   51 |                     (paragraph, translatedParagraph) ->
 ```
 
-## Lines 133-142
+## Lines 99-103
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:133-142`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:99-103`
 
 ```kotlin
-🟢  133 |         paragraphs.forEachIndexed { index, sentences ->
-🟢  134 |             val translatedSentences = translatedParagraphs[index]
-🟡  135 |             check(sentences.size == translatedSentences.size) {
-⚪  136 |                 """
-🔴  137 |                     Text adventure sentence count mismatch in paragraph $index:
-🔴  138 |                         sentences=${sentences.size}
-🔴  139 |                         translations=${translatedSentences.size}
-🔴  140 |                 """.trimIndent()
-⚪  141 |             }
-🟢  142 |         }
+🟢   99 |                 translationLanguage = translationsLanguage,
+🟢  100 |                 isEnding = response.isEnding,
+🟡  101 |                 internalPlan = response.updatedPlan?.takeIf { it.isNotBlank() } ?: existingPlan,
+🟢  102 |                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
+⚪  103 |                     (paragraph, translatedParagraph) ->
 ```
 
-## Lines 156-169
+## Lines 128-137
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:156-169`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:128-137`
 
 ```kotlin
-⚪  156 |         block: suspend () -> T,
-⚪  157 |     ): T {
-🟡  158 |         repeat(maxRetries) { attemptIndex ->
-⚪  159 |             try {
-🟢  160 |                 return block()
-⚪  161 |             } catch (throwable: Throwable) {
-🔴  162 |                 if (attemptIndex == maxRetries - 1) {
-⚪  163 |                     throw throwable
-⚪  164 |                 }
-⚪  165 |             }
-🔴  166 |         }
-🔴  167 |         error("Unreachable")
-⚪  168 |     }
-⚪  169 | 
+⚪  128 |         )
+⚪  129 | 
+🟡  130 |         check(response.paragraphs.size == response.translatedParagraphs.size) {
+⚪  131 |             """
+⚪  132 |                 Text adventure paragraph count mismatch:
+🔴  133 |                     paragraphs=${response.paragraphs.size}
+🔴  134 |                     translations=${response.translatedParagraphs.size}
+🔴  135 |             """.trimIndent()
+⚪  136 |         }
+⚪  137 | 
 ```
 
-## Lines 190-194
+## Lines 140-149
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:190-194`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:140-149`
 
 ```kotlin
-⚪  190 | )
-⚪  191 | 
-🔴  192 | @Serializable
-⚪  193 | @SerialName("TextAdventureResponse")
-⚪  194 | @LLMDescription("A single response from the text adventure narrator.")
+🟢  140 |         paragraphs.forEachIndexed { index, sentences ->
+🟢  141 |             val translatedSentences = translatedParagraphs[index]
+🟡  142 |             check(sentences.size == translatedSentences.size) {
+⚪  143 |                 """
+🔴  144 |                     Text adventure sentence count mismatch in paragraph $index:
+🔴  145 |                         sentences=${sentences.size}
+🔴  146 |                         translations=${translatedSentences.size}
+🔴  147 |                 """.trimIndent()
+⚪  148 |             }
+🟢  149 |         }
 ```
 
-## Lines 204-208
+## Lines 164-177
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:204-208`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:164-177`
 
 ```kotlin
-⚪  204 | )
-⚪  205 | 
-🔴  206 | @Serializable
-⚪  207 | @LLMDescription("A paragraph containing narration sentences.")
-⚪  208 | data class TextAdventureStructuredParagraph(
+⚪  164 |         block: suspend () -> T,
+⚪  165 |     ): T {
+🟡  166 |         repeat(maxRetries) { attemptIndex ->
+⚪  167 |             try {
+🟢  168 |                 return block()
+⚪  169 |             } catch (throwable: Throwable) {
+🔴  170 |                 if (attemptIndex == maxRetries - 1) {
+⚪  171 |                     throw throwable
+⚪  172 |                 }
+⚪  173 |             }
+🔴  174 |         }
+🔴  175 |         error("Unreachable")
+⚪  176 |     }
+⚪  177 | 
+```
+
+## Lines 199-203
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:199-203`
+
+```kotlin
+⚪  199 | )
+⚪  200 | 
+🔴  201 | @Serializable
+⚪  202 | @SerialName("TextAdventureResponse")
+⚪  203 | @LLMDescription("A single response from the text adventure narrator.")
+```
+
+## Lines 215-219
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:215-219`
+
+```kotlin
+⚪  215 | )
+⚪  216 | 
+🔴  217 | @Serializable
+⚪  218 | @LLMDescription("A paragraph containing narration sentences.")
+⚪  219 | data class TextAdventureStructuredParagraph(
 ```

@@ -37,6 +37,7 @@ import org.junit.Assert.assertTrue
 class TextAdventureApiStepDefinitions {
     private lateinit var database: Database
     private lateinit var fakeExecutor: FakeTextAdventureStructuredPromptExecutor
+    private lateinit var adventureRepository: DatabaseAdventureRepository
     private lateinit var textAdventureService: TextAdventureGenerationService
     private val validApiKey = "test"
     private val invalidApiKey = "invalid"
@@ -50,9 +51,10 @@ class TextAdventureApiStepDefinitions {
     fun setUpScenario() {
         database = connectDatabase(PostgreSqlTestDatabase.createConfig())
         fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
+        adventureRepository = DatabaseAdventureRepository(database = database)
         textAdventureService = TextAdventureGenerationService(
             structuredPromptExecutor = fakeExecutor,
-            adventureRepository = DatabaseAdventureRepository(database = database),
+            adventureRepository = adventureRepository,
         )
         latestResponseStatus = null
         latestResponseBody = ""
@@ -86,6 +88,26 @@ class TextAdventureApiStepDefinitions {
     }
 
     @Given(
+        "the AI will return an opening adventure titled {string} with sentence {string} and translation {string} and updated plan {string}"
+    )
+    fun aiReturnsOpeningAdventureWithPlan(
+        title: String,
+        sentence: String,
+        translation: String,
+        updatedPlan: String,
+    ) {
+        fakeExecutor.enqueueResponse(
+            TextAdventureStructuredResponse(
+                title = title,
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
+                isEnding = false,
+                updatedPlan = updatedPlan,
+            )
+        )
+    }
+
+    @Given(
         "the AI will return a continuation for title {string} with sentence {string} and translation {string} that is ending {string}"
     )
     fun aiReturnsContinuation(
@@ -100,6 +122,47 @@ class TextAdventureApiStepDefinitions {
                 paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
                 translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
                 isEnding = isEnding.toBooleanStrict(),
+            )
+        )
+    }
+
+    @Given(
+        "the AI will return a continuation for title {string} with sentence {string} and translation {string} that is ending {string} and updated plan {string}"
+    )
+    fun aiReturnsContinuationWithPlan(
+        title: String,
+        sentence: String,
+        translation: String,
+        isEnding: String,
+        updatedPlan: String,
+    ) {
+        fakeExecutor.enqueueResponse(
+            TextAdventureStructuredResponse(
+                title = title,
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
+                isEnding = isEnding.toBooleanStrict(),
+                updatedPlan = updatedPlan,
+            )
+        )
+    }
+
+    @Given(
+        "the AI will return a continuation for title {string} with sentence {string} and translation {string} that is ending {string} and no updated plan"
+    )
+    fun aiReturnsContinuationWithoutPlan(
+        title: String,
+        sentence: String,
+        translation: String,
+        isEnding: String,
+    ) {
+        fakeExecutor.enqueueResponse(
+            TextAdventureStructuredResponse(
+                title = title,
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
+                isEnding = isEnding.toBooleanStrict(),
+                updatedPlan = null,
             )
         )
     }
@@ -263,6 +326,22 @@ class TextAdventureApiStepDefinitions {
         val payload = json.decodeFromString<TextAdventureMessagesRemoteResponse>(latestResponseBody)
         assertEquals(firstSentence, payload.messages[0].paragraphs.single().sentences.single())
         assertEquals(secondSentence, payload.messages[1].paragraphs.single().sentences.single())
+    }
+
+    @Then("the latest adventure response body does not contain {string}")
+    fun latestAdventureResponseBodyDoesNotContain(text: String) {
+        assertTrue(!latestResponseBody.contains(text))
+    }
+
+    @Then("the stored adventure plan for the started adventure is {string}")
+    fun storedAdventurePlanForStartedAdventureIs(expectedPlan: String) {
+        assertEquals(expectedPlan, adventureRepository.getAdventurePlan(startedAdventureId))
+    }
+
+    @Then("the AI continuation request includes current plan {string}")
+    fun aiContinuationRequestIncludesCurrentPlan(expectedPlan: String) {
+        val continuationInvocation = fakeExecutor.invocations.last { it.promptName == "text-adventure-continue" }
+        assertTrue(continuationInvocation.userPrompt.contains("currentPlan=$expectedPlan"))
     }
 
     private fun runAgainstApplication(

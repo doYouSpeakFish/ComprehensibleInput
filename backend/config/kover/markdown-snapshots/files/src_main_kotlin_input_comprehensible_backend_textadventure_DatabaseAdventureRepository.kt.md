@@ -18,3 +18,15 @@ Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAd
 🟢   42 |                 learningLanguage = adventureRow[AdventuresTable.learningLanguage],
 🟢   43 |                 translationLanguage = adventureRow[AdventuresTable.translationLanguage],
 ```
+
+## Lines 53-57
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:53-57`
+
+```kotlin
+🟢   53 |             .where { AdventuresTable.id eq adventureId }
+🟢   54 |             .singleOrNull()
+🟡   55 |             ?.get(AdventuresTable.internalPlan)
+⚪   56 |     }
+⚪   57 | 
+```
