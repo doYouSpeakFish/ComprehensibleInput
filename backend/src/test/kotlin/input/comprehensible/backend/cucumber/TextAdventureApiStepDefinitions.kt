@@ -127,7 +127,8 @@ class TextAdventureApiStepDefinitions {
     }
 
     @Given(
-        "the AI will return a continuation for title {string} with sentence {string} and translation {string} that is ending {string} and updated plan {string}"
+        "the AI will return a continuation for title {string} with sentence {string} " +
+            "and translation {string} that is ending {string} and updated plan {string}"
     )
     fun aiReturnsContinuationWithPlan(
         title: String,
@@ -148,7 +149,8 @@ class TextAdventureApiStepDefinitions {
     }
 
     @Given(
-        "the AI will return a continuation for title {string} with sentence {string} and translation {string} that is ending {string} and no updated plan"
+        "the AI will return a continuation for title {string} with sentence {string} " +
+            "and translation {string} that is ending {string} and no updated plan"
     )
     fun aiReturnsContinuationWithoutPlan(
         title: String,
