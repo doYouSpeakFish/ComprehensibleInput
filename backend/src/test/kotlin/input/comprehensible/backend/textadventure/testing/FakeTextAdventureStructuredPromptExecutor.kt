@@ -2,6 +2,7 @@ package input.comprehensible.backend.textadventure.testing
 
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredPromptExecutor
+import input.comprehensible.backend.textadventure.TextAdventurePlanStructuredResponse
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
 
 class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptExecutor {
@@ -12,6 +13,7 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
     )
 
     private val queuedResponses = ArrayDeque<TextAdventureStructuredResponse>()
+    private val queuedPlanResponses = ArrayDeque<TextAdventurePlanStructuredResponse>()
     private val queuedErrors = ArrayDeque<Throwable>()
     val invocations = mutableListOf<Invocation>()
 
@@ -21,6 +23,10 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
 
     fun enqueueError(error: Throwable) {
         queuedErrors.add(error)
+    }
+
+    fun enqueuePlanResponse(response: TextAdventurePlanStructuredResponse) {
+        queuedPlanResponses.add(response)
     }
 
     override suspend fun executeResponse(
@@ -47,6 +53,26 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
                     TextAdventureStructuredParagraph(sentences = listOf("Esperas."))
                 ),
                 isEnding = false,
+            )
+    }
+
+    override suspend fun executePlanResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): TextAdventurePlanStructuredResponse {
+        invocations.add(
+            Invocation(
+                promptName = promptName,
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+            )
+        )
+        queuedErrors.removeFirstOrNull()?.let { throw it }
+        return queuedPlanResponses.removeFirstOrNull()
+            ?: TextAdventurePlanStructuredResponse(
+                plan = "Fallback plan",
+                firstSceneGuidance = "Open with a decision point.",
             )
     }
 }

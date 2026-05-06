@@ -13,10 +13,13 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
 
+@Suppress("TooManyFunctions")
 class DatabaseAdventureRepository(
     private val database: Database,
     private val nowProvider: () -> Long = { System.currentTimeMillis() },
@@ -45,6 +48,22 @@ class DatabaseAdventureRepository(
         }
 
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
+    }
+
+    override fun saveAdventurePlan(adventureId: String, adventurePlan: String) {
+        transaction(database) {
+            AdventuresTable.update(where = { AdventuresTable.id eq adventureId }) {
+                it[AdventuresTable.adventurePlan] = adventurePlan
+            }
+        }
+    }
+
+    override fun getAdventurePlan(adventureId: String): String? = transaction(database) {
+        AdventuresTable
+            .select(AdventuresTable.adventurePlan)
+            .where { AdventuresTable.id eq adventureId }
+            .singleOrNull()
+            ?.get(AdventuresTable.adventurePlan)
     }
 
     private fun findAdventureCreatedAt(adventureId: String): Long? = AdventuresTable
@@ -206,6 +225,7 @@ object AdventuresTable : Table("text_adventure") {
     val title = text("title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
+    val adventurePlan = text("adventure_plan").nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
 

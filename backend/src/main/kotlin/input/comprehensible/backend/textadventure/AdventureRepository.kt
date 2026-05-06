@@ -4,6 +4,8 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureMess
 
 interface AdventureRepository {
     fun saveAdventurePart(adventurePart: PersistedAdventurePart)
+    fun saveAdventurePlan(adventureId: String, adventurePlan: String)
+    fun getAdventurePlan(adventureId: String): String?
 
     fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse?
 }

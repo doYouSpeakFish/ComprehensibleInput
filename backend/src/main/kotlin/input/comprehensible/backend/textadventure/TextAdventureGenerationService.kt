@@ -23,11 +23,39 @@ class TextAdventureGenerationService(
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse {
+        val adventureId = UUID.randomUUID().toString()
+        val planResponse = requestAdventurePlan(
+            promptName = "text-adventure-plan-start",
+            systemPrompt = """
+                You are creating an internal adventure plan for a text adventure narrator.
+                The plan is not shown to the player.
+                Create the initial plan using alternating rounds:
+                Round 1: create/update the plan.
+                Round 2: review whether the plan is sufficient for an exciting and interesting full adventure, and whether details are missing.
+                Continue alternating update/review rounds until the review says the plan is acceptable or 5 planning rounds have occurred.
+                The plan must set the stage for player agency and must not dictate exactly what will happen.
+                The plan must include:
+                - Premise.
+                - Exactly 5 locations.
+                - For each location: what is there, NPCs present (if any), and at least one element from puzzle/role play/action/setback/exploration across the full set.
+                - NPC motivations.
+                - Important items.
+                - Player starting inventory.
+                - A grand finale concept.
+                - No underspecified elements: every mentioned puzzle must describe how it works and the intended solution.
+                The review step must explicitly verify all criteria above.
+                After planning is accepted, or after 5 rounds, produce first-scene guidance for generating the first part of the adventure.
+                Respond in $learningLanguage.
+            """.trimIndent(),
+            userPrompt = "Create and iterate the internal plan, then provide first-scene guidance.",
+        )
+
         val response = requestAdventureResponse(
-            adventureId = UUID.randomUUID().toString(),
+            adventureId = adventureId,
             promptName = "text-adventure-start",
             systemPrompt = """
                 You are a text adventure narrator.
+                You will receive internal plan context that must remain private.
                 Generate the opening scene in $learningLanguage.
                 Provide a short, evocative title for the adventure.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
@@ -35,8 +63,15 @@ class TextAdventureGenerationService(
                 Avoid markdown and keep punctuation natural for the language.
                 The story should not end yet, so set isEnding to false.
             """.trimIndent(),
-            userPrompt = "Start a new adventure.",
+            userPrompt = """
+                Internal plan:
+                ${planResponse.plan}
+
+                First-scene guidance:
+                ${planResponse.firstSceneGuidance}
+            """.trimIndent(),
         )
+        adventureRepository.saveAdventurePlan(adventureId = adventureId, adventurePlan = planResponse.plan)
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
                 adventureId = response.adventureId,
@@ -63,27 +98,57 @@ class TextAdventureGenerationService(
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse {
+        val existingPlan = adventureRepository.getAdventurePlan(adventureId).orEmpty()
+        val updatedPlan = requestAdventurePlan(
+            promptName = "text-adventure-plan-update",
+            systemPrompt = """
+                You are maintaining an internal adventure plan as a private guide for a text adventure narrator.
+                Update the existing plan in a single pass based on the player's latest action and the recent history.
+                Do not perform multi-round review in this update step.
+                Keep the plan stage-setting and preserve player agency.
+                Respond in $learningLanguage.
+            """.trimIndent(),
+            userPrompt = """
+                Existing plan:
+                $existingPlan
+
+                Latest player action:
+                $userMessage
+
+                Recent history:
+                ${history.joinToString(separator = "\n") { "${it.role}: ${it.text}" }}
+            """.trimIndent(),
+        )
+        adventureRepository.saveAdventurePlan(adventureId = adventureId, adventurePlan = updatedPlan.plan)
+
         val response = requestAdventureResponse(
             adventureId = adventureId,
             promptName = "text-adventure-continue",
             systemPrompt = """
                 You are a text adventure narrator continuing an ongoing story.
                 You will receive a JSON request containing the adventure context and chat history.
+                You will also receive internal plan context that must remain private.
                 Respond to the player in $learningLanguage.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
                 Keep the title consistent with the story so far.
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
             """.trimIndent(),
-            userPrompt = json.encodeToString(
-                ContinueTextAdventureRequest(
+            userPrompt = """
+                Internal plan:
+                ${updatedPlan.plan}
+
+                Adventure request:
+                ${json.encodeToString(
+                    ContinueTextAdventureRequest(
                     adventureId = adventureId,
                     learningLanguage = learningLanguage,
                     translationsLanguage = translationsLanguage,
                     userMessage = userMessage,
                     history = history,
                 )
-            ),
+                )}
+            """.trimIndent(),
         )
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
@@ -150,6 +215,16 @@ class TextAdventureGenerationService(
         )
     }
 
+    private suspend fun requestAdventurePlan(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): TextAdventurePlanStructuredResponse = structuredPromptExecutor.executePlanResponse(
+        promptName = promptName,
+        systemPrompt = systemPrompt,
+        userPrompt = userPrompt,
+    )
+
     @Suppress("TooGenericExceptionCaught")
     private suspend fun <T> runRetrying(
         maxRetries: Int,
@@ -208,4 +283,13 @@ data class TextAdventureStructuredResponse(
 data class TextAdventureStructuredParagraph(
     @property:LLMDescription("Sentences in the paragraph.")
     val sentences: List<String>,
+)
+
+@Serializable
+@LLMDescription("Internal planning output for text adventures.")
+data class TextAdventurePlanStructuredResponse(
+    @property:LLMDescription("The internal adventure plan kept private from users.")
+    val plan: String,
+    @property:LLMDescription("Guidance for generating the first part of the adventure narrative.")
+    val firstSceneGuidance: String = "",
 )
