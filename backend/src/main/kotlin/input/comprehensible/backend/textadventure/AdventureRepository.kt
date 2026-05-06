@@ -6,6 +6,8 @@ interface AdventureRepository {
     fun saveAdventurePart(adventurePart: PersistedAdventurePart)
 
     fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse?
+
+    fun getAdventurePlan(adventureId: String): TextAdventureWorldPlan?
 }
 
 data class PersistedAdventurePart(
@@ -15,6 +17,7 @@ data class PersistedAdventurePart(
     val translationLanguage: String,
     val isEnding: Boolean,
     val paragraphs: List<PersistedAdventureParagraph>,
+    val internalPlan: TextAdventureWorldPlan?,
 )
 
 data class PersistedAdventureParagraph(

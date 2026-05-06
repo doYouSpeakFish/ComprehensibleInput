@@ -16,11 +16,13 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
+import kotlinx.serialization.json.Json
 
 class DatabaseAdventureRepository(
     private val database: Database,
     private val nowProvider: () -> Long = { System.currentTimeMillis() },
 ) : AdventureRepository {
+    private val json = Json { encodeDefaults = true; prettyPrint = false }
     override fun saveAdventurePart(adventurePart: PersistedAdventurePart) {
         transaction(database) {
             val now = nowProvider()
@@ -46,6 +48,13 @@ class DatabaseAdventureRepository(
 
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
+    override fun getAdventurePlan(adventureId: String): TextAdventureWorldPlan? = transaction(database) {
+        AdventuresTable.select(AdventuresTable.internalPlan)
+            .where { AdventuresTable.id eq adventureId }
+            .singleOrNull()
+            ?.get(AdventuresTable.internalPlan)
+            ?.let { plan -> json.decodeFromString<TextAdventureWorldPlan>(plan) }
+    }
 
     private fun findAdventureCreatedAt(adventureId: String): Long? = AdventuresTable
         .select(AdventuresTable.createdAt)
@@ -65,6 +74,7 @@ class DatabaseAdventureRepository(
             it[this.translationLanguage] = adventurePart.translationLanguage
             it[createdAt] = existingCreatedAt ?: now
             it[updatedAt] = now
+            it[internalPlan] = adventurePart.internalPlan?.let { plan -> json.encodeToString(plan) }
         }
     }
 
@@ -208,6 +218,7 @@ object AdventuresTable : Table("text_adventure") {
     val translationLanguage = varchar("translation_language", length = 64)
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
+    val internalPlan = text("internal_plan").nullable()
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
 }

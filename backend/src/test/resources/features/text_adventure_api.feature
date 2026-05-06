@@ -49,3 +49,21 @@ Feature: Text adventure API
   Scenario: Returning not found for an unknown adventure id
     When I request messages for adventure id "missing"
     Then the response status should be 404
+
+  Scenario: Persisting and replacing internal plan while keeping API unchanged
+    Given the AI opening response includes plan premise "Find the moon shard"
+    And the AI continuation response includes replacement plan premise "Escape the flooded crypt"
+    When I start a text adventure in "English" with translations in "Spanish"
+    Then the response does not expose internal plan fields
+    And the persisted internal plan has premise "Find the moon shard"
+    When I continue the started adventure with user message "Open the iron gate"
+    Then the response does not expose internal plan fields
+    And the continuation prompt includes the current plan JSON with premise "Find the moon shard"
+    And the persisted internal plan has premise "Escape the flooded crypt"
+
+  Scenario: Retaining internal plan when continuation omits updated plan
+    Given the AI opening response includes plan premise "Negotiate with the ferryman"
+    And the AI continuation response omits updated plan
+    When I start a text adventure in "English" with translations in "Spanish"
+    And I continue the started adventure with user message "Offer a silver coin"
+    Then the persisted internal plan has premise "Negotiate with the ferryman"

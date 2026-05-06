@@ -1,7 +1,6 @@
 package input.comprehensible.backend.textadventure
 
 import ai.koog.agents.core.tools.annotations.LLMDescription
-import input.comprehensible.data.textadventures.sources.remote.ContinueTextAdventureRequest
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
@@ -18,6 +17,7 @@ class TextAdventureGenerationService(
         encodeDefaults = true
         prettyPrint = true
     }
+    private val planJson = Json { encodeDefaults = true; prettyPrint = false }
 
     suspend fun startAdventure(
         learningLanguage: String,
@@ -51,6 +51,7 @@ class TextAdventureGenerationService(
                         translatedSentences = translatedParagraph.sentences.map(String::trim),
                     )
                 },
+                internalPlan = response.updatedPlan,
             )
         )
         return response.toRemoteResponse()
@@ -63,6 +64,7 @@ class TextAdventureGenerationService(
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse {
+        val currentPlan = adventureRepository.getAdventurePlan(adventureId)
         val response = requestAdventureResponse(
             adventureId = adventureId,
             promptName = "text-adventure-continue",
@@ -75,13 +77,14 @@ class TextAdventureGenerationService(
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
             """.trimIndent(),
-            userPrompt = json.encodeToString(
-                ContinueTextAdventureRequest(
+            userPrompt = planJson.encodeToString(
+                ContinueTextAdventurePrompt(
                     adventureId = adventureId,
                     learningLanguage = learningLanguage,
                     translationsLanguage = translationsLanguage,
                     userMessage = userMessage,
                     history = history,
+                    currentPlan = currentPlan,
                 )
             ),
         )
@@ -99,6 +102,7 @@ class TextAdventureGenerationService(
                         translatedSentences = translatedParagraph.sentences.map(String::trim),
                     )
                 },
+                internalPlan = response.updatedPlan ?: currentPlan,
             )
         )
         return response.toRemoteResponse()
@@ -147,7 +151,19 @@ class TextAdventureGenerationService(
             paragraphs = response.paragraphs,
             translatedParagraphs = response.translatedParagraphs,
             isEnding = response.isEnding,
+            updatedPlan = response.updatedPlan?.also(::validatePlanRichness),
         )
+    }
+
+    private fun validatePlanRichness(plan: TextAdventureWorldPlan) {
+        check(plan.premise.isNotBlank())
+        check(plan.playerObjective.isNotBlank())
+        check(plan.setting.locationName.isNotBlank())
+        check(plan.setting.mood.isNotBlank())
+        check(plan.setting.constraints.isNotEmpty())
+        check(plan.keyNpcs.size >= 2)
+        check(plan.inventory.isNotEmpty())
+        check(plan.openThreads.isNotEmpty())
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -179,6 +195,7 @@ private data class GeneratedAdventureResponse(
     val paragraphs: List<TextAdventureStructuredParagraph>,
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     val isEnding: Boolean,
+    val updatedPlan: TextAdventureWorldPlan?,
 )
 
 private fun GeneratedAdventureResponse.toRemoteResponse(): TextAdventureRemoteResponse = TextAdventureRemoteResponse(
@@ -201,6 +218,18 @@ data class TextAdventureStructuredResponse(
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     @property:LLMDescription("Whether the story ends after this response.")
     val isEnding: Boolean,
+    @property:LLMDescription("Updated world-state plan for future continuity.")
+    val updatedPlan: TextAdventureWorldPlan? = null,
+)
+
+@Serializable
+private data class ContinueTextAdventurePrompt(
+    val adventureId: String,
+    val learningLanguage: String,
+    val translationsLanguage: String,
+    val userMessage: String,
+    val history: List<TextAdventureHistoryMessage>,
+    val currentPlan: TextAdventureWorldPlan?,
 )
 
 @Serializable

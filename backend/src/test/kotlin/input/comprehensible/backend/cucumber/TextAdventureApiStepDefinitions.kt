@@ -3,9 +3,14 @@ package input.comprehensible.backend.cucumber
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
+import input.comprehensible.backend.textadventure.AdventuresTable
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
+import input.comprehensible.backend.textadventure.TextAdventureInventoryItem
+import input.comprehensible.backend.textadventure.TextAdventureNpc
+import input.comprehensible.backend.textadventure.TextAdventureSetting
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
+import input.comprehensible.backend.textadventure.TextAdventureWorldPlan
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.testing.PostgreSqlTestDatabase
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
@@ -30,9 +35,13 @@ import io.ktor.server.testing.testApplication
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 
 class TextAdventureApiStepDefinitions {
     private lateinit var database: Database
@@ -44,6 +53,7 @@ class TextAdventureApiStepDefinitions {
     private var latestResponseBody: String = ""
     private var startedAdventureId: String = ""
     private var startedAssistantSentence: String = ""
+    private var latestContinuationPrompt: String = ""
     private val json = Json { ignoreUnknownKeys = true }
 
     @Before
@@ -58,6 +68,7 @@ class TextAdventureApiStepDefinitions {
         latestResponseBody = ""
         startedAdventureId = ""
         startedAssistantSentence = ""
+        latestContinuationPrompt = ""
     }
 
 
@@ -80,6 +91,44 @@ class TextAdventureApiStepDefinitions {
                 title = title,
                 paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
                 translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
+                isEnding = false,
+            )
+        )
+    }
+
+    @Given("the AI opening response includes plan premise {string}")
+    fun aiOpeningResponseIncludesPlan(premise: String) {
+        fakeExecutor.enqueueResponse(
+            TextAdventureStructuredResponse(
+                title = "Lantern Trail",
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("You wake up."))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("Te despiertas."))),
+                isEnding = false,
+                updatedPlan = samplePlan(premise),
+            )
+        )
+    }
+
+    @Given("the AI continuation response includes replacement plan premise {string}")
+    fun aiContinuationResponseIncludesPlan(premise: String) {
+        fakeExecutor.enqueueResponse(
+            TextAdventureStructuredResponse(
+                title = "Lantern Trail",
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("You continue."))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("Continúas."))),
+                isEnding = false,
+                updatedPlan = samplePlan(premise),
+            )
+        )
+    }
+
+    @Given("the AI continuation response omits updated plan")
+    fun aiContinuationOmitsPlan() {
+        fakeExecutor.enqueueResponse(
+            TextAdventureStructuredResponse(
+                title = "Lantern Trail",
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("You continue."))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("Continúas."))),
                 isEnding = false,
             )
         )
@@ -145,6 +194,7 @@ class TextAdventureApiStepDefinitions {
                 )
             }
         }
+        latestContinuationPrompt = fakeExecutor.invocations.last().userPrompt
     }
 
     @When("I request messages for the started adventure")
@@ -265,6 +315,29 @@ class TextAdventureApiStepDefinitions {
         assertEquals(secondSentence, payload.messages[1].paragraphs.single().sentences.single())
     }
 
+    @Then("the response does not expose internal plan fields")
+    fun responseDoesNotExposeInternalPlan() {
+        assertFalse(latestResponseBody.contains("updatedPlan"))
+        assertFalse(latestResponseBody.contains("currentPlan"))
+    }
+
+    @Then("the continuation prompt includes the current plan JSON with premise {string}")
+    fun continuationPromptIncludesCurrentPlan(expectedPremise: String) {
+        assertTrue(latestContinuationPrompt.contains("\"currentPlan\""))
+        assertTrue(latestContinuationPrompt.contains("\"premise\":\"$expectedPremise\""))
+    }
+
+    @Then("the persisted internal plan has premise {string}")
+    fun persistedInternalPlanHasPremise(expectedPremise: String) {
+        val persistedPlan = transaction(database) {
+            AdventuresTable
+                .selectAll()
+                .where { AdventuresTable.id eq startedAdventureId }
+                .single()[AdventuresTable.internalPlan]
+        }
+        assertTrue(persistedPlan?.contains("\"premise\":\"$expectedPremise\"") == true)
+    }
+
     private fun runAgainstApplication(
         block: suspend ApplicationTestBuilder.() -> HttpResponse,
     ) {
@@ -313,4 +386,20 @@ class TextAdventureApiStepDefinitions {
         latestResponseStatus = response.status
         latestResponseBody = response.bodyAsText()
     }
+
+    private fun samplePlan(premise: String): TextAdventureWorldPlan = TextAdventureWorldPlan(
+        premise = premise,
+        setting = TextAdventureSetting(
+            locationName = "Old Forest",
+            mood = "tense",
+            constraints = listOf("nightfall"),
+        ),
+        playerObjective = "Find the lantern",
+        keyNpcs = listOf(
+            TextAdventureNpc("Mara", "guide", "wary"),
+            TextAdventureNpc("Toren", "rival", "hostile"),
+        ),
+        inventory = listOf(TextAdventureInventoryItem("Map", "worn")),
+        openThreads = listOf("Who stole the lantern?"),
+    )
 }
