@@ -19,6 +19,12 @@ interface TextAdventureStructuredPromptExecutor {
         systemPrompt: String,
         userPrompt: String,
     ): TextAdventurePlanStructuredResponse
+
+    suspend fun executePlanEvaluationResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): TextAdventurePlanEvaluationStructuredResponse
 }
 
 class DefaultTextAdventureStructuredPromptExecutor(
@@ -43,6 +49,18 @@ class DefaultTextAdventureStructuredPromptExecutor(
         systemPrompt: String,
         userPrompt: String,
     ): TextAdventurePlanStructuredResponse = promptExecutor.executeStructured<TextAdventurePlanStructuredResponse>(
+        prompt = prompt(promptName) {
+            system(systemPrompt)
+            user(userPrompt)
+        },
+        model = Gemini3_1FlashLite,
+    ).getOrThrow().data
+
+    override suspend fun executePlanEvaluationResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): TextAdventurePlanEvaluationStructuredResponse = promptExecutor.executeStructured<TextAdventurePlanEvaluationStructuredResponse>(
         prompt = prompt(promptName) {
             system(systemPrompt)
             user(userPrompt)

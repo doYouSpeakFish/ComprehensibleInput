@@ -24,31 +24,7 @@ class TextAdventureGenerationService(
         translationsLanguage: String,
     ): TextAdventureRemoteResponse {
         val adventureId = UUID.randomUUID().toString()
-        val planResponse = requestAdventurePlan(
-            promptName = "text-adventure-plan-start",
-            systemPrompt = """
-                You are creating an internal adventure plan for a text adventure narrator.
-                The plan is not shown to the player.
-                Create the initial plan using alternating rounds:
-                Round 1: create/update the plan.
-                Round 2: review whether the plan is sufficient for an exciting and interesting full adventure, and whether details are missing.
-                Continue alternating update/review rounds until the review says the plan is acceptable or 5 planning rounds have occurred.
-                The plan must set the stage for player agency and must not dictate exactly what will happen.
-                The plan must include:
-                - Premise.
-                - Exactly 5 locations.
-                - For each location: what is there, NPCs present (if any), and at least one element from puzzle/role play/action/setback/exploration across the full set.
-                - NPC motivations.
-                - Important items.
-                - Player starting inventory.
-                - A grand finale concept.
-                - No underspecified elements: every mentioned puzzle must describe how it works and the intended solution.
-                The review step must explicitly verify all criteria above.
-                After planning is accepted, or after 5 rounds, produce first-scene guidance for generating the first part of the adventure.
-                Respond in $learningLanguage.
-            """.trimIndent(),
-            userPrompt = "Create and iterate the internal plan, then provide first-scene guidance.",
-        )
+        val planResponse = generateInitialAdventurePlan(learningLanguage)
 
         val response = requestAdventureResponse(
             adventureId = adventureId,
@@ -71,13 +47,13 @@ class TextAdventureGenerationService(
                 ${planResponse.firstSceneGuidance}
             """.trimIndent(),
         )
-        adventureRepository.saveAdventurePlan(adventureId = adventureId, adventurePlan = planResponse.plan)
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
                 adventureId = response.adventureId,
                 title = response.title,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
+                adventurePlan = planResponse.plan,
                 isEnding = response.isEnding,
                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
                     (paragraph, translatedParagraph) ->
@@ -225,6 +201,94 @@ class TextAdventureGenerationService(
         userPrompt = userPrompt,
     )
 
+    private suspend fun evaluateAdventurePlan(
+        userPrompt: String,
+        learningLanguage: String,
+    ): TextAdventurePlanEvaluationStructuredResponse = structuredPromptExecutor.executePlanEvaluationResponse(
+        promptName = "text-adventure-plan-evaluate",
+        systemPrompt = """
+            You are evaluating an internal text-adventure plan.
+            Evaluate whether the plan satisfies all of these criteria:
+            - The plan sets the stage for player agency and does not dictate exact outcomes.
+            - It includes premise, exactly 5 locations, NPCs and motivations, key items, player inventory, and a grand finale plan.
+            - The 5 locations include a mixture of puzzles, role play, action, setbacks, and exploration.
+            - Each location clearly describes what is present at that location.
+            - No element is underspecified (every puzzle includes mechanics and intended solution).
+            Return:
+            - isPlanAcceptable: true only if all criteria are fully met.
+            - feedback: concrete improvement guidance.
+            Respond in $learningLanguage.
+        """.trimIndent(),
+        userPrompt = userPrompt,
+    )
+
+    private suspend fun generateInitialAdventurePlan(learningLanguage: String): TextAdventurePlanStructuredResponse {
+        var currentPlan = ""
+        var feedback = "Create the first draft."
+        var evaluation = TextAdventurePlanEvaluationStructuredResponse(
+            isPlanAcceptable = false,
+            feedback = "No evaluation yet.",
+        )
+
+        repeat(MAX_PLAN_ITERATIONS) { index ->
+            val round = index + 1
+            val writerResponse = requestAdventurePlan(
+                promptName = "text-adventure-plan-write",
+                systemPrompt = """
+                    You write internal plans for a text-adventure narrator.
+                    The plan is private and not shown to the player.
+                    Build or improve the plan using reviewer feedback.
+                    The plan must set the stage and preserve player agency.
+                    Required content: premise; exactly 5 locations; NPCs and motivations; key items; player inventory; grand finale.
+                    Each location must clearly describe what is there.
+                    The 5-location set must include puzzle, role-play, action, setback, and exploration content.
+                    Every puzzle must include how it works and intended solution.
+                    Return updated plan and first-scene guidance.
+                    Respond in $learningLanguage.
+                """.trimIndent(),
+                userPrompt = """
+                    Planning round: $round of $MAX_PLAN_ITERATIONS
+                    Current plan:
+                    $currentPlan
+
+                    Reviewer feedback:
+                    $feedback
+                """.trimIndent(),
+            )
+            currentPlan = writerResponse.plan
+            evaluation = evaluateAdventurePlan(
+                userPrompt = """
+                    Planning round: $round of $MAX_PLAN_ITERATIONS
+                    Plan to evaluate:
+                    $currentPlan
+                """.trimIndent(),
+                learningLanguage = learningLanguage,
+            )
+            if (evaluation.isPlanAcceptable) {
+                return writerResponse
+            }
+            feedback = evaluation.feedback
+        }
+
+        return requestAdventurePlan(
+            promptName = "text-adventure-plan-write-final",
+            systemPrompt = """
+                You are the final writer pass for an internal text-adventure plan.
+                Incorporate the latest reviewer feedback and return:
+                - plan
+                - firstSceneGuidance
+                Respond in $learningLanguage.
+            """.trimIndent(),
+            userPrompt = """
+                Current plan:
+                $currentPlan
+
+                Latest reviewer feedback:
+                ${evaluation.feedback}
+            """.trimIndent(),
+        )
+    }
+
     @Suppress("TooGenericExceptionCaught")
     private suspend fun <T> runRetrying(
         maxRetries: Int,
@@ -244,6 +308,7 @@ class TextAdventureGenerationService(
 
     private companion object {
         const val MAX_SENTENCE_MATCH_ATTEMPTS = 3
+        const val MAX_PLAN_ITERATIONS = 5
     }
 }
 
@@ -292,4 +357,13 @@ data class TextAdventurePlanStructuredResponse(
     val plan: String,
     @property:LLMDescription("Guidance for generating the first part of the adventure narrative.")
     val firstSceneGuidance: String = "",
+)
+
+@Serializable
+@LLMDescription("Evaluation of whether the current plan meets required criteria.")
+data class TextAdventurePlanEvaluationStructuredResponse(
+    @property:LLMDescription("True when the plan satisfies all required criteria.")
+    val isPlanAcceptable: Boolean,
+    @property:LLMDescription("Specific feedback about gaps or improvements.")
+    val feedback: String,
 )

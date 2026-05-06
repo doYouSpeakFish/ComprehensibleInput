@@ -3,6 +3,7 @@ package input.comprehensible.backend.textadventure.testing
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventurePlanStructuredResponse
+import input.comprehensible.backend.textadventure.TextAdventurePlanEvaluationStructuredResponse
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
 
 class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptExecutor {
@@ -14,6 +15,7 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
 
     private val queuedResponses = ArrayDeque<TextAdventureStructuredResponse>()
     private val queuedPlanResponses = ArrayDeque<TextAdventurePlanStructuredResponse>()
+    private val queuedPlanEvaluationResponses = ArrayDeque<TextAdventurePlanEvaluationStructuredResponse>()
     private val queuedErrors = ArrayDeque<Throwable>()
     val invocations = mutableListOf<Invocation>()
 
@@ -27,6 +29,10 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
 
     fun enqueuePlanResponse(response: TextAdventurePlanStructuredResponse) {
         queuedPlanResponses.add(response)
+    }
+
+    fun enqueuePlanEvaluationResponse(response: TextAdventurePlanEvaluationStructuredResponse) {
+        queuedPlanEvaluationResponses.add(response)
     }
 
     override suspend fun executeResponse(
@@ -73,6 +79,26 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
             ?: TextAdventurePlanStructuredResponse(
                 plan = "Fallback plan",
                 firstSceneGuidance = "Open with a decision point.",
+            )
+    }
+
+    override suspend fun executePlanEvaluationResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): TextAdventurePlanEvaluationStructuredResponse {
+        invocations.add(
+            Invocation(
+                promptName = promptName,
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+            )
+        )
+        queuedErrors.removeFirstOrNull()?.let { throw it }
+        return queuedPlanEvaluationResponses.removeFirstOrNull()
+            ?: TextAdventurePlanEvaluationStructuredResponse(
+                isPlanAcceptable = true,
+                feedback = "Plan meets criteria.",
             )
     }
 }

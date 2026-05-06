@@ -11,5 +11,5 @@
 
 - [src/main/kotlin/input/comprehensible/backend/Application.kt](files/src_main_kotlin_input_comprehensible_backend_Application.kt.md) (missed 48, partial 4)
 - [src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_DatabaseAdventureRepository.kt.md) (missed 0, partial 2)
-- [src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_TextAdventureGenerationService.kt.md) (missed 13, partial 4)
-- [src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureStructuredPromptExecutor.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_TextAdventureStructuredPromptExecutor.kt.md) (missed 31, partial 0)
+- [src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_TextAdventureGenerationService.kt.md) (missed 24, partial 6)
+- [src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureStructuredPromptExecutor.kt](files/src_main_kotlin_input_comprehensible_backend_textadventure_TextAdventureStructuredPromptExecutor.kt.md) (missed 37, partial 0)

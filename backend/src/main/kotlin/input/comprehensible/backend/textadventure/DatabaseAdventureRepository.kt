@@ -82,6 +82,7 @@ class DatabaseAdventureRepository(
             it[this.title] = adventurePart.title
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
+            it[this.adventurePlan] = adventurePart.adventurePlan
             it[createdAt] = existingCreatedAt ?: now
             it[updatedAt] = now
         }
