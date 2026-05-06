@@ -18,6 +18,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
 import kotlinx.serialization.json.Json
 
+@Suppress("TooManyFunctions")
 class DatabaseAdventureRepository(
     private val database: Database,
     private val nowProvider: () -> Long = { System.currentTimeMillis() },

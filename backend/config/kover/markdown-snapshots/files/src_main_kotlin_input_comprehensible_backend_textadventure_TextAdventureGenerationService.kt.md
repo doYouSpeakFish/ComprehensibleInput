@@ -7,112 +7,112 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 125-134
+## Lines 121-130
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:125-134`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:121-130`
 
 ```kotlin
-⚪  125 |         )
-⚪  126 | 
-🟡  127 |         check(response.paragraphs.size == response.translatedParagraphs.size) {
-⚪  128 |             """
-⚪  129 |                 Text adventure paragraph count mismatch:
-🔴  130 |                     paragraphs=${response.paragraphs.size}
-🔴  131 |                     translations=${response.translatedParagraphs.size}
-🔴  132 |             """.trimIndent()
-⚪  133 |         }
-⚪  134 | 
+⚪  121 |         )
+⚪  122 | 
+🟡  123 |         check(response.paragraphs.size == response.translatedParagraphs.size) {
+⚪  124 |             """
+⚪  125 |                 Text adventure paragraph count mismatch:
+🔴  126 |                     paragraphs=${response.paragraphs.size}
+🔴  127 |                     translations=${response.translatedParagraphs.size}
+🔴  128 |             """.trimIndent()
+⚪  129 |         }
+⚪  130 | 
 ```
 
-## Lines 137-146
+## Lines 133-142
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:137-146`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:133-142`
 
 ```kotlin
-🟢  137 |         paragraphs.forEachIndexed { index, sentences ->
-🟢  138 |             val translatedSentences = translatedParagraphs[index]
-🟡  139 |             check(sentences.size == translatedSentences.size) {
-⚪  140 |                 """
-🔴  141 |                     Text adventure sentence count mismatch in paragraph $index:
-🔴  142 |                         sentences=${sentences.size}
-🔴  143 |                         translations=${translatedSentences.size}
-🔴  144 |                 """.trimIndent()
-⚪  145 |             }
-🟢  146 |         }
+🟢  133 |         paragraphs.forEachIndexed { index, sentences ->
+🟢  134 |             val translatedSentences = translatedParagraphs[index]
+🟡  135 |             check(sentences.size == translatedSentences.size) {
+⚪  136 |                 """
+🔴  137 |                     Text adventure sentence count mismatch in paragraph $index:
+🔴  138 |                         sentences=${sentences.size}
+🔴  139 |                         translations=${translatedSentences.size}
+🔴  140 |                 """.trimIndent()
+⚪  141 |             }
+🟢  142 |         }
 ```
 
-## Lines 157-168
+## Lines 153-164
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:157-168`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:153-164`
 
 ```kotlin
-⚪  157 | 
-⚪  158 |     private fun validatePlanRichness(plan: TextAdventureWorldPlan) {
-🟡  159 |         check(plan.premise.isNotBlank())
-🟡  160 |         check(plan.playerObjective.isNotBlank())
-🟡  161 |         check(plan.setting.locationName.isNotBlank())
-🟡  162 |         check(plan.setting.mood.isNotBlank())
-🟡  163 |         check(plan.setting.constraints.isNotEmpty())
-🟡  164 |         check(plan.keyNpcs.size >= 2)
-🟡  165 |         check(plan.inventory.isNotEmpty())
-🟡  166 |         check(plan.openThreads.isNotEmpty())
-⚪  167 |     }
-⚪  168 | 
+⚪  153 | 
+⚪  154 |     private fun validatePlanRichness(plan: TextAdventureWorldPlan) {
+🟡  155 |         check(plan.premise.isNotBlank())
+🟡  156 |         check(plan.playerObjective.isNotBlank())
+🟡  157 |         check(plan.setting.locationName.isNotBlank())
+🟡  158 |         check(plan.setting.mood.isNotBlank())
+🟡  159 |         check(plan.setting.constraints.isNotEmpty())
+🟡  160 |         check(plan.keyNpcs.size >= 2)
+🟡  161 |         check(plan.inventory.isNotEmpty())
+🟡  162 |         check(plan.openThreads.isNotEmpty())
+⚪  163 |     }
+⚪  164 | 
 ```
 
-## Lines 172-185
+## Lines 168-181
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:172-185`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:168-181`
 
 ```kotlin
-⚪  172 |         block: suspend () -> T,
-⚪  173 |     ): T {
-🟡  174 |         repeat(maxRetries) { attemptIndex ->
-⚪  175 |             try {
-🟢  176 |                 return block()
-⚪  177 |             } catch (throwable: Throwable) {
-🔴  178 |                 if (attemptIndex == maxRetries - 1) {
-⚪  179 |                     throw throwable
-⚪  180 |                 }
-⚪  181 |             }
-🔴  182 |         }
-🔴  183 |         error("Unreachable")
-⚪  184 |     }
-⚪  185 | 
+⚪  168 |         block: suspend () -> T,
+⚪  169 |     ): T {
+🟡  170 |         repeat(maxRetries) { attemptIndex ->
+⚪  171 |             try {
+🟢  172 |                 return block()
+⚪  173 |             } catch (throwable: Throwable) {
+🔴  174 |                 if (attemptIndex == maxRetries - 1) {
+⚪  175 |                     throw throwable
+⚪  176 |                 }
+⚪  177 |             }
+🔴  178 |         }
+🔴  179 |         error("Unreachable")
+⚪  180 |     }
+⚪  181 | 
 ```
 
-## Lines 207-211
+## Lines 203-207
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:207-211`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:203-207`
 
 ```kotlin
-⚪  207 | )
-⚪  208 | 
-🔴  209 | @Serializable
-⚪  210 | @SerialName("TextAdventureResponse")
-⚪  211 | @LLMDescription("A single response from the text adventure narrator.")
+⚪  203 | )
+⚪  204 | 
+🔴  205 | @Serializable
+⚪  206 | @SerialName("TextAdventureResponse")
+⚪  207 | @LLMDescription("A single response from the text adventure narrator.")
 ```
 
-## Lines 223-227
+## Lines 219-223
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:223-227`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:219-223`
 
 ```kotlin
-⚪  223 | )
-⚪  224 | 
-🔴  225 | @Serializable
-⚪  226 | private data class ContinueTextAdventurePrompt(
-🟢  227 |     val adventureId: String,
+⚪  219 | )
+⚪  220 | 
+🔴  221 | @Serializable
+⚪  222 | private data class ContinueTextAdventurePrompt(
+🟢  223 |     val adventureId: String,
 ```
 
-## Lines 233-237
+## Lines 229-233
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:233-237`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:229-233`
 
 ```kotlin
-⚪  233 | )
-⚪  234 | 
-🔴  235 | @Serializable
-⚪  236 | @LLMDescription("A paragraph containing narration sentences.")
-⚪  237 | data class TextAdventureStructuredParagraph(
+⚪  229 | )
+⚪  230 | 
+🔴  231 | @Serializable
+⚪  232 | @LLMDescription("A paragraph containing narration sentences.")
+⚪  233 | data class TextAdventureStructuredParagraph(
 ```

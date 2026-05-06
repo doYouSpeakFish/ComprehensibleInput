@@ -7,26 +7,26 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 41-45
+## Lines 42-46
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:41-45`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:42-46`
 
 ```kotlin
-🟢   41 |         val messages = findMessageRows(adventureId).map { messageRow ->
-🟢   42 |             messageRow.toRemoteMessage(
-🟡   43 |                 sentencesForMessage = sentenceRowsByMessage[messageRow[AdventureMessagesTable.messageIndex]].orEmpty(),
-🟢   44 |                 learningLanguage = adventureRow[AdventuresTable.learningLanguage],
-🟢   45 |                 translationLanguage = adventureRow[AdventuresTable.translationLanguage],
+🟢   42 |         val messages = findMessageRows(adventureId).map { messageRow ->
+🟢   43 |             messageRow.toRemoteMessage(
+🟡   44 |                 sentencesForMessage = sentenceRowsByMessage[messageRow[AdventureMessagesTable.messageIndex]].orEmpty(),
+🟢   45 |                 learningLanguage = adventureRow[AdventuresTable.learningLanguage],
+🟢   46 |                 translationLanguage = adventureRow[AdventuresTable.translationLanguage],
 ```
 
-## Lines 53-57
+## Lines 54-58
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:53-57`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:54-58`
 
 ```kotlin
-🟢   53 |             .where { AdventuresTable.id eq adventureId }
-🟢   54 |             .singleOrNull()
-🟡   55 |             ?.get(AdventuresTable.internalPlan)
-🟢   56 |             ?.let { plan -> json.decodeFromString<TextAdventureWorldPlan>(plan) }
-⚪   57 |     }
+🟢   54 |             .where { AdventuresTable.id eq adventureId }
+🟢   55 |             .singleOrNull()
+🟡   56 |             ?.get(AdventuresTable.internalPlan)
+🟢   57 |             ?.let { plan -> json.decodeFromString<TextAdventureWorldPlan>(plan) }
+⚪   58 |     }
 ```

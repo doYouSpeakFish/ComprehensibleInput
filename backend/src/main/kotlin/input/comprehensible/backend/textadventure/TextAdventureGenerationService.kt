@@ -13,10 +13,6 @@ class TextAdventureGenerationService(
     private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,
     private val adventureRepository: AdventureRepository,
 ) {
-    private val json = Json {
-        encodeDefaults = true
-        prettyPrint = true
-    }
     private val planJson = Json { encodeDefaults = true; prettyPrint = false }
 
     suspend fun startAdventure(
