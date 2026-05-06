@@ -113,10 +113,13 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
 
-          RELEASE_NOTES="$PR_DESCRIPTION"
-          if [ -z "$(echo "$RELEASE_NOTES" | tr -d '[:space:]')" ]; then
-            RELEASE_NOTES="PR Branch: $PR_BRANCH_NAME"
+          RELEASE_NOTES_BODY="$PR_DESCRIPTION"
+          if [ -z "$(echo "$RELEASE_NOTES_BODY" | tr -d '[:space:]')" ]; then
+            RELEASE_NOTES_BODY="PR Branch: $PR_BRANCH_NAME"
           fi
+          RELEASE_NOTES="$PR_TITLE
+
+$RELEASE_NOTES_BODY"
 
           ./gradlew :app:assemblePrRelease :app:appDistributionUploadPrRelease \
             -PprNumber="$PR_NUMBER" \
@@ -125,6 +128,7 @@ jobs:
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
           APP_TESTERS: ${{ secrets.APP_TESTERS }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
           PR_DESCRIPTION: ${{ github.event.pull_request.body }}
           PR_BRANCH_NAME: ${{ github.head_ref }}
 
