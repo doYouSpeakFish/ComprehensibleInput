@@ -103,6 +103,7 @@ android {
                 artifactType = "APK"
                 testersFile = "./testers.txt"
                 serviceCredentialsFile = "./firebase-app-distribution-key.json"
+                releaseNotes = (project.findProperty("firebaseReleaseNotes") as String?)?.trim()
             }
         }
     }
