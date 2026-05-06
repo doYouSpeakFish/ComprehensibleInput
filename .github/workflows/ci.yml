@@ -117,9 +117,7 @@ jobs:
           if [ -z "$(echo "$RELEASE_NOTES_BODY" | tr -d '[:space:]')" ]; then
             RELEASE_NOTES_BODY="PR Branch: $PR_BRANCH_NAME"
           fi
-          RELEASE_NOTES="$PR_TITLE
-
-$RELEASE_NOTES_BODY"
+          RELEASE_NOTES="$(printf '%s\n\n%s' "$PR_TITLE" "$RELEASE_NOTES_BODY")"
 
           ./gradlew :app:assemblePrRelease :app:appDistributionUploadPrRelease \
             -PprNumber="$PR_NUMBER" \
