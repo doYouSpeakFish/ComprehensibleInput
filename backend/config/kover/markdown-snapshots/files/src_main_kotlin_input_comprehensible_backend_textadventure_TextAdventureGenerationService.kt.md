@@ -7,179 +7,205 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 75-79
+## Lines 87-91
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:75-79`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:87-91`
 
 ```kotlin
-⚪   75 |         history: List<TextAdventureHistoryMessage>,
-⚪   76 |     ): TextAdventureRemoteResponse {
-🟡   77 |         val existingPlan = adventureRepository.getAdventurePlan(adventureId).orEmpty()
-🟢   78 |         val updatedPlan = requestAdventurePlan(
-🟢   79 |             promptName = "text-adventure-plan-update",
+⚪   87 |         history: List<TextAdventureHistoryMessage>,
+⚪   88 |     ): TextAdventureRemoteResponse {
+🟡   89 |         val existingPlan = adventureRepository.getAdventurePlan(adventureId).orEmpty()
+🟢   90 |         val updatedPlan = requestAdventurePlan(
+🟢   91 |             promptName = "text-adventure-plan-update",
 ```
 
-## Lines 162-171
+## Lines 179-188
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:162-171`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:179-188`
 
 ```kotlin
-⚪  162 |         )
-⚪  163 | 
-🟡  164 |         check(response.paragraphs.size == response.translatedParagraphs.size) {
-⚪  165 |             """
-⚪  166 |                 Text adventure paragraph count mismatch:
-🔴  167 |                     paragraphs=${response.paragraphs.size}
-🔴  168 |                     translations=${response.translatedParagraphs.size}
-🔴  169 |             """.trimIndent()
-⚪  170 |         }
-⚪  171 | 
+⚪  179 |         )
+⚪  180 | 
+🟡  181 |         check(response.paragraphs.size == response.translatedParagraphs.size) {
+⚪  182 |             """
+⚪  183 |                 Text adventure paragraph count mismatch:
+🔴  184 |                     paragraphs=${response.paragraphs.size}
+🔴  185 |                     translations=${response.translatedParagraphs.size}
+🔴  186 |             """.trimIndent()
+⚪  187 |         }
+⚪  188 | 
 ```
 
-## Lines 174-183
+## Lines 191-200
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:174-183`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:191-200`
 
 ```kotlin
-🟢  174 |         paragraphs.forEachIndexed { index, sentences ->
-🟢  175 |             val translatedSentences = translatedParagraphs[index]
-🟡  176 |             check(sentences.size == translatedSentences.size) {
-⚪  177 |                 """
-🔴  178 |                     Text adventure sentence count mismatch in paragraph $index:
-🔴  179 |                         sentences=${sentences.size}
-🔴  180 |                         translations=${translatedSentences.size}
-🔴  181 |                 """.trimIndent()
-⚪  182 |             }
-🟢  183 |         }
+🟢  191 |         paragraphs.forEachIndexed { index, sentences ->
+🟢  192 |             val translatedSentences = translatedParagraphs[index]
+🟡  193 |             check(sentences.size == translatedSentences.size) {
+⚪  194 |                 """
+🔴  195 |                     Text adventure sentence count mismatch in paragraph $index:
+🔴  196 |                         sentences=${sentences.size}
+🔴  197 |                         translations=${translatedSentences.size}
+🔴  198 |                 """.trimIndent()
+⚪  199 |             }
+🟢  200 |         }
 ```
 
-## Lines 231-235
+## Lines 252-256
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:231-235`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:252-256`
 
 ```kotlin
-⚪  231 |         )
-⚪  232 | 
-🟡  233 |         repeat(MAX_PLAN_ITERATIONS) { index ->
-🟢  234 |             val round = index + 1
-🟢  235 |             val writerResponse = requestAdventurePlan(
+⚪  252 |         )
+⚪  253 | 
+🟡  254 |         repeat(MAX_PLAN_ITERATIONS) { index ->
+🟢  255 |             val round = index + 1
+🟢  256 |             val writerResponse = requestAdventurePlan(
 ```
 
-## Lines 265-276
+## Lines 288-299
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:265-276`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:288-299`
 
 ```kotlin
-🟢  265 |                 learningLanguage = learningLanguage,
-⚪  266 |             )
-🟡  267 |             if (evaluation.isPlanAcceptable) {
-🟢  268 |                 return writerResponse
-⚪  269 |             }
-🔴  270 |             feedback = evaluation.feedback
-🔴  271 |         }
-⚪  272 | 
-🔴  273 |         return requestAdventurePlan(
-🔴  274 |             promptName = "text-adventure-plan-write-final",
-⚪  275 |             systemPrompt = """
-⚪  276 |                 You are the final writer pass for an internal text-adventure plan.
+🟢  288 |                 learningLanguage = learningLanguage,
+⚪  289 |             )
+🟡  290 |             if (evaluation.isPlanAcceptable) {
+🟢  291 |                 return writerResponse
+⚪  292 |             }
+🔴  293 |             feedback = evaluation.feedback
+🔴  294 |         }
+⚪  295 | 
+🔴  296 |         return requestAdventurePlan(
+🔴  297 |             promptName = "text-adventure-plan-write-final",
+⚪  298 |             systemPrompt = """
+⚪  299 |                 You are the final writer pass for an internal text-adventure plan.
 ```
 
-## Lines 278-290
+## Lines 301-315
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:278-290`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:301-315`
 
 ```kotlin
-⚪  278 |                 - plan
-⚪  279 |                 - firstSceneGuidance
-🔴  280 |                 Respond in $learningLanguage.
-🔴  281 |             """.trimIndent(),
-⚪  282 |             userPrompt = """
-⚪  283 |                 Current plan:
-🔴  284 |                 $currentPlan
-⚪  285 | 
-⚪  286 |                 Latest reviewer feedback:
-🔴  287 |                 ${evaluation.feedback}
-🔴  288 |             """.trimIndent(),
-⚪  289 |         )
-⚪  290 |     }
+⚪  301 |                 - plan
+⚪  302 |                 - firstSceneGuidance
+🔴  303 |                 Genre to use as a creative frame: $genre.
+🔴  304 |                 Inspiration words (not strict obligations, only idea sparks): ${inspirationWords.joinToString()}.
+🔴  305 |                 Respond in $learningLanguage.
+🔴  306 |             """.trimIndent(),
+⚪  307 |             userPrompt = """
+⚪  308 |                 Current plan:
+🔴  309 |                 $currentPlan
+⚪  310 | 
+⚪  311 |                 Latest reviewer feedback:
+🔴  312 |                 ${evaluation.feedback}
+🔴  313 |             """.trimIndent(),
+⚪  314 |         )
+⚪  315 |     }
 ```
 
-## Lines 295-308
+## Lines 320-333
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:295-308`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:320-333`
 
 ```kotlin
-⚪  295 |         block: suspend () -> T,
-⚪  296 |     ): T {
-🟡  297 |         repeat(maxRetries) { attemptIndex ->
-⚪  298 |             try {
-🟢  299 |                 return block()
-⚪  300 |             } catch (throwable: Throwable) {
-🔴  301 |                 if (attemptIndex == maxRetries - 1) {
-⚪  302 |                     throw throwable
-⚪  303 |                 }
-⚪  304 |             }
-🔴  305 |         }
-🔴  306 |         error("Unreachable")
-⚪  307 |     }
-⚪  308 | 
+⚪  320 |         block: suspend () -> T,
+⚪  321 |     ): T {
+🟡  322 |         repeat(maxRetries) { attemptIndex ->
+⚪  323 |             try {
+🟢  324 |                 return block()
+⚪  325 |             } catch (throwable: Throwable) {
+🔴  326 |                 if (attemptIndex == maxRetries - 1) {
+⚪  327 |                     throw throwable
+⚪  328 |                 }
+⚪  329 |             }
+🔴  330 |         }
+🔴  331 |         error("Unreachable")
+⚪  332 |     }
+⚪  333 | 
 ```
 
-## Lines 330-334
+## Lines 337-341
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:330-334`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:337-341`
 
 ```kotlin
-⚪  330 | )
-⚪  331 | 
-🔴  332 | @Serializable
-⚪  333 | @SerialName("TextAdventureResponse")
-⚪  334 | @LLMDescription("A single response from the text adventure narrator.")
+⚪  337 |         const val INSPIRATION_WORD_COUNT = 8
+⚪  338 | 
+🟡  339 |         val adventureGenres = listOf(
+🟢  340 |             "High Fantasy",
+🟢  341 |             "Cyberpunk",
 ```
 
-## Lines 344-348
+## Lines 350-354
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:344-348`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:350-354`
 
 ```kotlin
-⚪  344 | )
-⚪  345 | 
-🔴  346 | @Serializable
-⚪  347 | @LLMDescription("A paragraph containing narration sentences.")
-⚪  348 | data class TextAdventureStructuredParagraph(
+⚪  350 |         )
+⚪  351 | 
+🟡  352 |         val inspirationWordPool = listOf(
+🟢  353 |             "lantern", "storm", "echo", "rust", "compass", "whisper", "mask", "clockwork",
+🟢  354 |             "ivy", "mirror", "ash", "harbor", "glyph", "ember", "vault", "signal", "crow",
 ```
 
-## Lines 351-355
+## Lines 375-379
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:351-355`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:375-379`
 
 ```kotlin
-⚪  351 | )
-⚪  352 | 
-🔴  353 | @Serializable
-⚪  354 | @LLMDescription("Internal planning output for text adventures.")
-⚪  355 | data class TextAdventurePlanStructuredResponse(
+⚪  375 | )
+⚪  376 | 
+🔴  377 | @Serializable
+⚪  378 | @SerialName("TextAdventureResponse")
+⚪  379 | @LLMDescription("A single response from the text adventure narrator.")
 ```
 
-## Lines 360-364
+## Lines 389-393
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:360-364`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:389-393`
 
 ```kotlin
-⚪  360 | )
-⚪  361 | 
-🔴  362 | @Serializable
-⚪  363 | @LLMDescription("Evaluation of whether the current plan meets required criteria.")
-⚪  364 | data class TextAdventurePlanEvaluationStructuredResponse(
+⚪  389 | )
+⚪  390 | 
+🔴  391 | @Serializable
+⚪  392 | @LLMDescription("A paragraph containing narration sentences.")
+⚪  393 | data class TextAdventureStructuredParagraph(
 ```
 
-## Lines 366-369
+## Lines 396-400
 
-Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:366-369`
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:396-400`
 
 ```kotlin
-🟢  366 |     val isPlanAcceptable: Boolean,
-🟢  367 |     @property:LLMDescription("Specific feedback about gaps or improvements.")
-🔴  368 |     val feedback: String,
-⚪  369 | )
+⚪  396 | )
+⚪  397 | 
+🔴  398 | @Serializable
+⚪  399 | @LLMDescription("Internal planning output for text adventures.")
+⚪  400 | data class TextAdventurePlanStructuredResponse(
+```
+
+## Lines 405-409
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:405-409`
+
+```kotlin
+⚪  405 | )
+⚪  406 | 
+🔴  407 | @Serializable
+⚪  408 | @LLMDescription("Evaluation of whether the current plan meets required criteria.")
+⚪  409 | data class TextAdventurePlanEvaluationStructuredResponse(
+```
+
+## Lines 411-414
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/TextAdventureGenerationService.kt:411-414`
+
+```kotlin
+🟢  411 |     val isPlanAcceptable: Boolean,
+🟢  412 |     @property:LLMDescription("Specific feedback about gaps or improvements.")
+🔴  413 |     val feedback: String,
+⚪  414 | )
 ```

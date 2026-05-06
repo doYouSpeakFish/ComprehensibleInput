@@ -9,10 +9,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.util.UUID
+import kotlin.random.Random
 
 class TextAdventureGenerationService(
     private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,
     private val adventureRepository: AdventureRepository,
+    private val random: Random = Random.Default,
 ) {
     private val json = Json {
         encodeDefaults = true
@@ -24,7 +26,15 @@ class TextAdventureGenerationService(
         translationsLanguage: String,
     ): TextAdventureRemoteResponse {
         val adventureId = UUID.randomUUID().toString()
-        val planResponse = generateInitialAdventurePlan(learningLanguage)
+        val genre = adventureGenres.random(random)
+        val inspirationWords = inspirationWordPool
+            .shuffled(random)
+            .take(INSPIRATION_WORD_COUNT)
+        val planResponse = generateInitialAdventurePlan(
+            learningLanguage = learningLanguage,
+            genre = genre,
+            inspirationWords = inspirationWords,
+        )
 
         val response = requestAdventureResponse(
             adventureId = adventureId,
@@ -32,7 +42,9 @@ class TextAdventureGenerationService(
             systemPrompt = """
                 You are a text adventure narrator.
                 You will receive internal plan context that must remain private.
+                Never tell the player what to do. Set the scene and narrate outcomes of player actions.
                 Generate the opening scene in $learningLanguage.
+                Clearly tell the player who they are and what items are currently in their inventory.
                 Provide a short, evocative title for the adventure.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
                 Do not include extra commentary outside the requested fields.
@@ -104,6 +116,11 @@ class TextAdventureGenerationService(
                 You are a text adventure narrator continuing an ongoing story.
                 You will receive a JSON request containing the adventure context and chat history.
                 You will also receive internal plan context that must remain private.
+                Never tell the player what to do. Set the scene and narrate outcomes of player actions.
+                Evaluate whether requested player actions are possible in this world state:
+                - does the player have required items,
+                - does the action make sense in the current location and situation.
+                If an action is impossible, explain why in-story and continue with sensible consequences.
                 Respond to the player in $learningLanguage.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
                 Keep the title consistent with the story so far.
@@ -222,7 +239,11 @@ class TextAdventureGenerationService(
         userPrompt = userPrompt,
     )
 
-    private suspend fun generateInitialAdventurePlan(learningLanguage: String): TextAdventurePlanStructuredResponse {
+    private suspend fun generateInitialAdventurePlan(
+        learningLanguage: String,
+        genre: String,
+        inspirationWords: List<String>,
+    ): TextAdventurePlanStructuredResponse {
         var currentPlan = ""
         var feedback = "Create the first draft."
         var evaluation = TextAdventurePlanEvaluationStructuredResponse(
@@ -243,6 +264,8 @@ class TextAdventureGenerationService(
                     Each location must clearly describe what is there.
                     The 5-location set must include puzzle, role-play, action, setback, and exploration content.
                     Every puzzle must include how it works and intended solution.
+                    Genre to use as a creative frame: $genre.
+                    Inspiration words (not strict obligations, only idea sparks): ${inspirationWords.joinToString()}.
                     Return updated plan and first-scene guidance.
                     Respond in $learningLanguage.
                 """.trimIndent(),
@@ -277,6 +300,8 @@ class TextAdventureGenerationService(
                 Incorporate the latest reviewer feedback and return:
                 - plan
                 - firstSceneGuidance
+                Genre to use as a creative frame: $genre.
+                Inspiration words (not strict obligations, only idea sparks): ${inspirationWords.joinToString()}.
                 Respond in $learningLanguage.
             """.trimIndent(),
             userPrompt = """
@@ -309,6 +334,26 @@ class TextAdventureGenerationService(
     private companion object {
         const val MAX_SENTENCE_MATCH_ATTEMPTS = 3
         const val MAX_PLAN_ITERATIONS = 5
+        const val INSPIRATION_WORD_COUNT = 8
+
+        val adventureGenres = listOf(
+            "High Fantasy",
+            "Cyberpunk",
+            "Mystery Noir",
+            "Post-Apocalyptic Survival",
+            "Steampunk",
+            "Space Opera",
+            "Gothic Horror",
+            "Mythic Adventure",
+            "Archaeological Thriller",
+            "Whimsical Fairy Tale",
+        )
+
+        val inspirationWordPool = listOf(
+            "lantern", "storm", "echo", "rust", "compass", "whisper", "mask", "clockwork",
+            "ivy", "mirror", "ash", "harbor", "glyph", "ember", "vault", "signal", "crow",
+            "river", "throne", "key", "frost", "market", "cathedral", "starfall", "tide",
+        )
     }
 }
 
