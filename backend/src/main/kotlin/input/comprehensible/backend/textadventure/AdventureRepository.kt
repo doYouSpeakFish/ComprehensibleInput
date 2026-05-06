@@ -16,6 +16,8 @@ data class PersistedAdventurePart(
     val learningLanguage: String,
     val translationLanguage: String,
     val adventurePlan: String? = null,
+    val inputTokensUsed: Long = 0,
+    val outputTokensUsed: Long = 0,
     val isEnding: Boolean,
     val paragraphs: List<PersistedAdventureParagraph>,
 )

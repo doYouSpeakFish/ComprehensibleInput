@@ -25,6 +25,7 @@ class TextAdventureGenerationService(
         learningLanguage: String,
         translationsLanguage: String,
     ): TextAdventureRemoteResponse {
+        val usage = UsageCounter()
         val adventureId = UUID.randomUUID().toString()
         val genre = adventureGenres.random(random)
         val inspirationWords = inspirationWordPool
@@ -34,6 +35,7 @@ class TextAdventureGenerationService(
             learningLanguage = learningLanguage,
             genre = genre,
             inspirationWords = inspirationWords,
+            usage = usage,
         )
 
         val response = requestAdventureResponse(
@@ -58,6 +60,7 @@ class TextAdventureGenerationService(
                 First-scene guidance:
                 ${planResponse.firstSceneGuidance}
             """.trimIndent(),
+            usage = usage,
         )
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
@@ -66,6 +69,8 @@ class TextAdventureGenerationService(
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
                 adventurePlan = planResponse.plan,
+                inputTokensUsed = usage.inputTokens,
+                outputTokensUsed = usage.outputTokens,
                 isEnding = response.isEnding,
                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
                     (paragraph, translatedParagraph) ->
@@ -86,6 +91,7 @@ class TextAdventureGenerationService(
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
     ): TextAdventureRemoteResponse {
+        val usage = UsageCounter()
         val existingPlan = adventureRepository.getAdventurePlan(adventureId).orEmpty()
         val updatedPlan = requestAdventurePlan(
             promptName = "text-adventure-plan-update",
@@ -106,6 +112,7 @@ class TextAdventureGenerationService(
                 Recent history:
                 ${history.joinToString(separator = "\n") { "${it.role}: ${it.text}" }}
             """.trimIndent(),
+            usage = usage,
         )
         adventureRepository.saveAdventurePlan(adventureId = adventureId, adventurePlan = updatedPlan.plan)
 
@@ -142,6 +149,7 @@ class TextAdventureGenerationService(
                 )
                 )}
             """.trimIndent(),
+            usage = usage,
         )
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
@@ -149,6 +157,8 @@ class TextAdventureGenerationService(
                 title = response.title,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
+                inputTokensUsed = usage.inputTokens,
+                outputTokensUsed = usage.outputTokens,
                 isEnding = response.isEnding,
                 paragraphs = response.paragraphs.zip(response.translatedParagraphs).map {
                     (paragraph, translatedParagraph) ->
@@ -171,12 +181,15 @@ class TextAdventureGenerationService(
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
+        usage: UsageCounter,
     ): GeneratedAdventureResponse = runRetrying(maxRetries = MAX_SENTENCE_MATCH_ATTEMPTS) {
+        usage.record(input = "$systemPrompt\n$userPrompt")
         val response = structuredPromptExecutor.executeResponse(
             promptName = promptName,
             systemPrompt = systemPrompt,
             userPrompt = userPrompt,
         )
+        usage.record(output = response.toString())
 
         check(response.paragraphs.size == response.translatedParagraphs.size) {
             """
@@ -212,15 +225,17 @@ class TextAdventureGenerationService(
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
+        usage: UsageCounter,
     ): TextAdventurePlanStructuredResponse = structuredPromptExecutor.executePlanResponse(
         promptName = promptName,
         systemPrompt = systemPrompt,
         userPrompt = userPrompt,
-    )
+    ).also { usage.record(input = "$systemPrompt\n$userPrompt", output = it.toString()) }
 
     private suspend fun evaluateAdventurePlan(
         userPrompt: String,
         learningLanguage: String,
+        usage: UsageCounter,
     ): TextAdventurePlanEvaluationStructuredResponse = structuredPromptExecutor.executePlanEvaluationResponse(
         promptName = "text-adventure-plan-evaluate",
         systemPrompt = """
@@ -237,12 +252,13 @@ class TextAdventureGenerationService(
             Respond in $learningLanguage.
         """.trimIndent(),
         userPrompt = userPrompt,
-    )
+    ).also { usage.record(input = userPrompt, output = it.toString()) }
 
     private suspend fun generateInitialAdventurePlan(
         learningLanguage: String,
         genre: String,
         inspirationWords: List<String>,
+        usage: UsageCounter,
     ): TextAdventurePlanStructuredResponse {
         var currentPlan = ""
         var feedback = "Create the first draft."
@@ -277,6 +293,7 @@ class TextAdventureGenerationService(
                     Reviewer feedback:
                     $feedback
                 """.trimIndent(),
+                usage = usage,
             )
             currentPlan = writerResponse.plan
             evaluation = evaluateAdventurePlan(
@@ -286,6 +303,7 @@ class TextAdventureGenerationService(
                     $currentPlan
                 """.trimIndent(),
                 learningLanguage = learningLanguage,
+                usage = usage,
             )
             if (evaluation.isPlanAcceptable) {
                 return writerResponse
@@ -311,6 +329,7 @@ class TextAdventureGenerationService(
                 Latest reviewer feedback:
                 ${evaluation.feedback}
             """.trimIndent(),
+            usage = usage,
         )
     }
 
@@ -356,6 +375,18 @@ class TextAdventureGenerationService(
         )
     }
 }
+
+private data class UsageCounter(
+    var inputTokens: Long = 0,
+    var outputTokens: Long = 0,
+) {
+    fun record(input: String? = null, output: String? = null) {
+        if (input != null) inputTokens += estimateTokenCount(input)
+        if (output != null) outputTokens += estimateTokenCount(output)
+    }
+}
+
+private fun estimateTokenCount(text: String): Long = (text.length / 4.0).toLong().coerceAtLeast(1L)
 
 
 private data class GeneratedAdventureResponse(
