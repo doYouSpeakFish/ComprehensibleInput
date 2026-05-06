@@ -13,10 +13,13 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
 
+@Suppress("TooManyFunctions")
 class DatabaseAdventureRepository(
     private val database: Database,
     private val nowProvider: () -> Long = { System.currentTimeMillis() },
@@ -47,6 +50,22 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
+    override fun saveAdventurePlan(adventureId: String, adventurePlan: String) {
+        transaction(database) {
+            AdventuresTable.update(where = { AdventuresTable.id eq adventureId }) {
+                it[AdventuresTable.adventurePlan] = adventurePlan
+            }
+        }
+    }
+
+    override fun getAdventurePlan(adventureId: String): String? = transaction(database) {
+        AdventuresTable
+            .select(AdventuresTable.adventurePlan)
+            .where { AdventuresTable.id eq adventureId }
+            .singleOrNull()
+            ?.get(AdventuresTable.adventurePlan)
+    }
+
     private fun findAdventureCreatedAt(adventureId: String): Long? = AdventuresTable
         .select(AdventuresTable.createdAt)
         .where { AdventuresTable.id eq adventureId }
@@ -63,10 +82,29 @@ class DatabaseAdventureRepository(
             it[this.title] = adventurePart.title
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
+            it[this.adventurePlan] = adventurePart.adventurePlan
             it[createdAt] = existingCreatedAt ?: now
             it[updatedAt] = now
+            it[inputTokensUsed] = (existingCreatedAt?.let { findAdventureInputTokens(adventurePart.adventureId) } ?: 0L) +
+                adventurePart.inputTokensUsed
+            it[outputTokensUsed] = (existingCreatedAt?.let { findAdventureOutputTokens(adventurePart.adventureId) } ?: 0L) +
+                adventurePart.outputTokensUsed
         }
     }
+
+    private fun findAdventureInputTokens(adventureId: String): Long = AdventuresTable
+        .select(AdventuresTable.inputTokensUsed)
+        .where { AdventuresTable.id eq adventureId }
+        .singleOrNull()
+        ?.get(AdventuresTable.inputTokensUsed)
+        ?: 0L
+
+    private fun findAdventureOutputTokens(adventureId: String): Long = AdventuresTable
+        .select(AdventuresTable.outputTokensUsed)
+        .where { AdventuresTable.id eq adventureId }
+        .singleOrNull()
+        ?.get(AdventuresTable.outputTokensUsed)
+        ?: 0L
 
     private fun findNextMessageIndex(adventureId: String): Int {
         val latestMessageIndex = AdventureMessagesTable
@@ -206,8 +244,11 @@ object AdventuresTable : Table("text_adventure") {
     val title = text("title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
+    val adventurePlan = text("adventure_plan").nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
+    val inputTokensUsed = long("input_tokens_used").default(0)
+    val outputTokensUsed = long("output_tokens_used").default(0)
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
 }

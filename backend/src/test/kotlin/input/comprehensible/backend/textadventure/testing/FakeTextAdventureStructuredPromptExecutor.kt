@@ -2,7 +2,10 @@ package input.comprehensible.backend.textadventure.testing
 
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredPromptExecutor
+import input.comprehensible.backend.textadventure.TextAdventurePlanStructuredResponse
+import input.comprehensible.backend.textadventure.TextAdventurePlanEvaluationStructuredResponse
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
+import input.comprehensible.backend.textadventure.StructuredPromptResult
 
 class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptExecutor {
     data class Invocation(
@@ -12,6 +15,8 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
     )
 
     private val queuedResponses = ArrayDeque<TextAdventureStructuredResponse>()
+    private val queuedPlanResponses = ArrayDeque<TextAdventurePlanStructuredResponse>()
+    private val queuedPlanEvaluationResponses = ArrayDeque<TextAdventurePlanEvaluationStructuredResponse>()
     private val queuedErrors = ArrayDeque<Throwable>()
     val invocations = mutableListOf<Invocation>()
 
@@ -23,11 +28,19 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
         queuedErrors.add(error)
     }
 
+    fun enqueuePlanResponse(response: TextAdventurePlanStructuredResponse) {
+        queuedPlanResponses.add(response)
+    }
+
+    fun enqueuePlanEvaluationResponse(response: TextAdventurePlanEvaluationStructuredResponse) {
+        queuedPlanEvaluationResponses.add(response)
+    }
+
     override suspend fun executeResponse(
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
-    ): TextAdventureStructuredResponse {
+    ): StructuredPromptResult<TextAdventureStructuredResponse> {
         invocations.add(
             Invocation(
                 promptName = promptName,
@@ -37,7 +50,7 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
         )
 
         queuedErrors.removeFirstOrNull()?.let { throw it }
-        return queuedResponses.removeFirstOrNull()
+        val response = queuedResponses.removeFirstOrNull()
             ?: TextAdventureStructuredResponse(
                 title = "Fallback Adventure",
                 paragraphs = listOf(
@@ -48,5 +61,48 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
                 ),
                 isEnding = false,
             )
+        return StructuredPromptResult(response = response, inputTokens = 0, outputTokens = 0)
+    }
+
+    override suspend fun executePlanResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): StructuredPromptResult<TextAdventurePlanStructuredResponse> {
+        invocations.add(
+            Invocation(
+                promptName = promptName,
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+            )
+        )
+        queuedErrors.removeFirstOrNull()?.let { throw it }
+        val response = queuedPlanResponses.removeFirstOrNull()
+            ?: TextAdventurePlanStructuredResponse(
+                plan = "Fallback plan",
+                firstSceneGuidance = "Open with a decision point.",
+            )
+        return StructuredPromptResult(response = response, inputTokens = 0, outputTokens = 0)
+    }
+
+    override suspend fun executePlanEvaluationResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): StructuredPromptResult<TextAdventurePlanEvaluationStructuredResponse> {
+        invocations.add(
+            Invocation(
+                promptName = promptName,
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+            )
+        )
+        queuedErrors.removeFirstOrNull()?.let { throw it }
+        val response = queuedPlanEvaluationResponses.removeFirstOrNull()
+            ?: TextAdventurePlanEvaluationStructuredResponse(
+                isPlanAcceptable = true,
+                feedback = "Plan meets criteria.",
+            )
+        return StructuredPromptResult(response = response, inputTokens = 0, outputTokens = 0)
     }
 }

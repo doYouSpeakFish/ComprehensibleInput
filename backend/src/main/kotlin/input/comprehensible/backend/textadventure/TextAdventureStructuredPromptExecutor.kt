@@ -12,7 +12,19 @@ interface TextAdventureStructuredPromptExecutor {
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
-    ): TextAdventureStructuredResponse
+    ): StructuredPromptResult<TextAdventureStructuredResponse>
+
+    suspend fun executePlanResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): StructuredPromptResult<TextAdventurePlanStructuredResponse>
+
+    suspend fun executePlanEvaluationResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): StructuredPromptResult<TextAdventurePlanEvaluationStructuredResponse>
 }
 
 class DefaultTextAdventureStructuredPromptExecutor(
@@ -24,14 +36,65 @@ class DefaultTextAdventureStructuredPromptExecutor(
         promptName: String,
         systemPrompt: String,
         userPrompt: String,
-    ): TextAdventureStructuredResponse = promptExecutor.executeStructured<TextAdventureStructuredResponse>(
-        prompt = prompt(promptName) {
-            system(systemPrompt)
-            user(userPrompt)
-        },
-        model = Gemini3_1FlashLite,
-    ).getOrThrow().data
+    ): StructuredPromptResult<TextAdventureStructuredResponse> {
+        val result = promptExecutor.executeStructured<TextAdventureStructuredResponse>(
+            prompt = prompt(promptName) {
+                system(systemPrompt)
+                user(userPrompt)
+            },
+            model = Gemini3_1FlashLite,
+        ).getOrThrow()
+        return StructuredPromptResult(
+            response = result.data,
+            inputTokens = result.message.metaInfo.inputTokensCount?.toLong() ?: 0L,
+            outputTokens = result.message.metaInfo.outputTokensCount?.toLong() ?: 0L,
+        )
+    }
+
+    override suspend fun executePlanResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): StructuredPromptResult<TextAdventurePlanStructuredResponse> {
+        val result = promptExecutor.executeStructured<TextAdventurePlanStructuredResponse>(
+            prompt = prompt(promptName) {
+                system(systemPrompt)
+                user(userPrompt)
+            },
+            model = Gemini3_1FlashLite,
+        ).getOrThrow()
+        return StructuredPromptResult(
+            response = result.data,
+            inputTokens = result.message.metaInfo.inputTokensCount?.toLong() ?: 0L,
+            outputTokens = result.message.metaInfo.outputTokensCount?.toLong() ?: 0L,
+        )
+    }
+
+    override suspend fun executePlanEvaluationResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): StructuredPromptResult<TextAdventurePlanEvaluationStructuredResponse> {
+        val result = promptExecutor.executeStructured<TextAdventurePlanEvaluationStructuredResponse>(
+            prompt = prompt(promptName) {
+                system(systemPrompt)
+                user(userPrompt)
+            },
+            model = Gemini3_1FlashLite,
+        ).getOrThrow()
+        return StructuredPromptResult(
+            response = result.data,
+            inputTokens = result.message.metaInfo.inputTokensCount?.toLong() ?: 0L,
+            outputTokens = result.message.metaInfo.outputTokensCount?.toLong() ?: 0L,
+        )
+    }
 }
+
+data class StructuredPromptResult<T>(
+    val response: T,
+    val inputTokens: Long,
+    val outputTokens: Long,
+)
 
 private val Gemini3_1FlashLite = LLModel(
     provider = LLMProvider.Google,
