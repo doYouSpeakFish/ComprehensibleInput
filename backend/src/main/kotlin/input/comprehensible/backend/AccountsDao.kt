@@ -2,6 +2,7 @@ package input.comprehensible.backend
 
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
@@ -10,17 +11,42 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 class AccountsDao(private val database: Database) {
-    fun insertAccount(email: String, passwordHash: String, now: Long): Boolean = transaction(database) {
+    fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): String? = transaction(database) {
         runCatching {
+            val accountId = UUID.randomUUID().toString()
             AccountsTable.insert {
-                it[id] = UUID.randomUUID().toString()
+                it[id] = accountId
                 it[this.email] = email
                 it[this.passwordHash] = passwordHash
+                it[this.emailVerified] = emailVerified
                 it[createdAt] = now
                 it[updatedAt] = now
             }
-        }.isSuccess
+            accountId
+        }.getOrNull()
+    }
+
+    fun storeEmailVerificationCode(accountId: String, code: String, expiresAt: Long) = transaction(database) {
+        EmailVerificationTable.deleteWhere { EmailVerificationTable.accountId eq accountId }
+        EmailVerificationTable.insert {
+            it[EmailVerificationTable.accountId] = accountId
+            it[EmailVerificationTable.code] = code
+            it[EmailVerificationTable.expiresAt] = expiresAt
+        }
+    }
+
+    fun verifyEmailCode(email: String, code: String, now: Long): Boolean = transaction(database) {
+        val account = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull() ?: return@transaction false
+        val accountId = account[AccountsTable.id]
+        val verification = EmailVerificationTable.selectAll()
+            .where { (EmailVerificationTable.accountId eq accountId) and (EmailVerificationTable.code eq code) }
+            .singleOrNull() ?: return@transaction false
+        if (verification[EmailVerificationTable.expiresAt] < now) return@transaction false
+        AccountsTable.update({ AccountsTable.id eq accountId }) { it[AccountsTable.emailVerified] = true }
+        EmailVerificationTable.deleteWhere { EmailVerificationTable.accountId eq accountId }
+        true
     }
 
     fun findAccountByEmail(email: String): ResultRow? = transaction(database) {

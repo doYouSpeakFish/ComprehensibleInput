@@ -1,6 +1,9 @@
 package input.comprehensible.backend
 
 import io.ktor.http.HttpStatusCode
+import input.comprehensible.backend.email.CloudflareEmailDataSource
+import input.comprehensible.backend.email.EmailDataSource
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.LongColumnType
@@ -16,17 +19,45 @@ class AccountService(
     database: Database,
     private val random: SecureRandom = SecureRandom(),
     private val accountsDao: AccountsDao = AccountsDao(database),
+    private val emailDataSource: EmailDataSource = CloudflareEmailDataSource.fromEnvironment(),
+    private val verificationCodeProvider: () -> String = { random.nextInt(1_000_000).toString().padStart(6, '0') },
+    private val currentTimeMillisProvider: () -> Long = System::currentTimeMillis,
 ) {
     fun createAccount(email: String, password: String): AccountResult {
         val normalizedEmail = normalizeEmail(email)
         if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) {
             return AccountResult(HttpStatusCode.BadRequest)
         }
-        accountsDao.insertAccount(
+        val verificationCode = verificationCodeProvider()
+        val accountId = accountsDao.insertAccount(
             email = normalizedEmail,
             passwordHash = BCrypt.hashpw(password, BCrypt.gensalt()),
+            emailVerified = false,
             now = now(),
         )
+        if (accountId == null) {
+            runBlocking {
+                emailDataSource.sendEmail(
+                    to = normalizedEmail,
+                    subject = "Comprehensible Input account already exists",
+                    textBody = "A Comprehensible Input account already exists for this email address. " +
+                        "If this was not you, you can safely ignore this message.",
+                )
+            }
+            return AccountResult(HttpStatusCode.OK)
+        }
+        accountsDao.storeEmailVerificationCode(
+            accountId = accountId,
+            code = verificationCode,
+            expiresAt = now() + verificationCodeTtlMs,
+        )
+        runBlocking {
+            emailDataSource.sendEmail(
+                to = normalizedEmail,
+                subject = "Verify your Comprehensible Input email address",
+                textBody = "Use this verification code to verify your Comprehensible Input email address: $verificationCode",
+            )
+        }
         return AccountResult(HttpStatusCode.OK)
     }
 
@@ -35,6 +66,7 @@ class AccountService(
         if (!isValidEmail(normalizedEmail)) return SignInResult(HttpStatusCode.Unauthorized)
         val account = accountsDao.findAccountByEmail(normalizedEmail) ?: return SignInResult(HttpStatusCode.Unauthorized)
         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return SignInResult(HttpStatusCode.Unauthorized)
+        if (!account[AccountsTable.emailVerified]) return SignInResult(HttpStatusCode.Unauthorized)
         val token = generateToken()
         accountsDao.createSession(
             accountId = account[AccountsTable.id],
@@ -82,17 +114,25 @@ class AccountService(
         )
     }
 
+    fun verifyEmail(email: String, code: String): HttpStatusCode {
+        val normalizedEmail = normalizeEmail(email)
+        val now = now()
+        val verified = accountsDao.verifyEmailCode(normalizedEmail, code, now)
+        return if (verified) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
+    }
+
     private fun normalizeEmail(email: String): String = email.trim().lowercase()
     private fun isValidEmail(email: String): Boolean = email.isNotBlank() && email.contains('@')
     private fun generateToken(): String = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(32).also(random::nextBytes))
     private fun hashToken(token: String): String =
         Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-256").digest(token.toByteArray()))
 
-    private fun now(): Long = System.currentTimeMillis()
+    private fun now(): Long = currentTimeMillisProvider()
 
     private companion object {
         const val minimumPasswordLength = 12
         const val bearerTokenType = "Bearer"
+        const val verificationCodeTtlMs = 15 * 60 * 1000L
     }
 }
 
@@ -105,9 +145,17 @@ object AccountsTable : Table("account_user") {
     val id = varchar("id", 255)
     val email = varchar("email", 320).uniqueIndex()
     val passwordHash = varchar("password_hash", 1024)
+    val emailVerified = bool("email_verified")
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
     override val primaryKey = PrimaryKey(id)
+}
+
+object EmailVerificationTable : Table("account_email_verification") {
+    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
+    val code = varchar("code", 6)
+    val expiresAt = registerColumn("expires_at", LongColumnType())
+    override val primaryKey = PrimaryKey(accountId)
 }
 
 object SessionsTable : Table("account_session") {
