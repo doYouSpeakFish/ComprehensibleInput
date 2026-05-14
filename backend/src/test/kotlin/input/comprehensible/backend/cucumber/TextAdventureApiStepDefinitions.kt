@@ -1,5 +1,6 @@
 package input.comprehensible.backend.cucumber
 
+import input.comprehensible.backend.AccountService
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
@@ -274,6 +275,7 @@ class TextAdventureApiStepDefinitions {
                     configureRouting(
                         textAdventureService = textAdventureService,
                         appApiKey = validApiKey,
+                        accountService = AccountService(database),
                     )
                 }
                 val response = block()

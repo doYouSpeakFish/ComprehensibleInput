@@ -1,0 +1,66 @@
+package input.comprehensible.backend.email
+
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+class CloudflareEmailDataSource(
+    private val from: String,
+    private val accountId: String,
+    private val apiToken: String,
+    private val httpClient: HttpClient = HttpClient(CIO) {
+        install(ContentNegotiation) { json() }
+    },
+) : EmailDataSource {
+    override suspend fun sendEmail(to: String, subject: String, textBody: String) {
+        val response = httpClient.post("https://api.cloudflare.com/client/v4/accounts/$accountId/email/sending/send") {
+            contentType(ContentType.Application.Json)
+            header(HttpHeaders.Authorization, "Bearer $apiToken")
+            setBody(CloudflareSendEmailRequest(to = to, from = from, subject = subject, text = textBody))
+        }
+        val body: CloudflareApiResponse = response.body()
+        require(body.success) { "Cloudflare email send failed: ${body.errors.joinToString { it.message }}" }
+    }
+
+    companion object {
+        fun fromEnvironment(): CloudflareEmailDataSource = CloudflareEmailDataSource(
+            from = requireEnv("CLOUDFLARE_EMAIL_SENDING_FROM"),
+            accountId = requireEnv("CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"),
+            apiToken = requireEnv("CLOUDFLARE_EMAIL_SENDING_TOKEN"),
+        )
+
+        private fun requireEnv(name: String): String =
+            System.getenv(name)?.takeIf { it.isNotBlank() } ?: error("Missing required environment variable $name")
+    }
+}
+
+@Serializable
+private data class CloudflareSendEmailRequest(
+    val to: String,
+    val from: String,
+    val subject: String,
+    val text: String,
+)
+
+@Serializable
+private data class CloudflareApiResponse(
+    val success: Boolean,
+    val errors: List<CloudflareError> = emptyList(),
+)
+
+@Serializable
+private data class CloudflareError(
+    val code: Int,
+    @SerialName("message")
+    val message: String,
+)

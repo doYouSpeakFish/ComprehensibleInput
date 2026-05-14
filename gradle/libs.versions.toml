@@ -36,6 +36,7 @@ h2 = "2.4.240"
 cucumber = "7.34.3"
 junit-platform = "6.0.3"
 shadow = "9.0.0"
+jbcrypt = "0.4"
 firebaseAppDist = "5.2.1"
 googleServices = "4.4.4"
 
@@ -101,6 +102,7 @@ postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "pos
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
+jbcrypt = { group = "org.mindrot", name = "jbcrypt", version.ref = "jbcrypt" }
 cucumber-java = { group = "io.cucumber", name = "cucumber-java", version.ref = "cucumber" }
 cucumber-junit-platform-engine = { group = "io.cucumber", name = "cucumber-junit-platform-engine", version.ref = "cucumber" }
 junit-platform-suite-api = { group = "org.junit.platform", name = "junit-platform-suite-api", version.ref = "junit-platform" }
