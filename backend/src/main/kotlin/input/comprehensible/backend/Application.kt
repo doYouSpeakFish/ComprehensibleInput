@@ -17,6 +17,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.ratelimit.RateLimit
+import io.ktor.server.plugins.ratelimit.RateLimitName
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
@@ -25,6 +26,7 @@ import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import java.io.File
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 data class AppPrincipal(val key: String)
@@ -146,7 +148,15 @@ fun Application.configureRouting(
     accountService: AccountService,
 ) {
     install(ContentNegotiation) { json() }
-    install(RateLimit) { global { rateLimiter(limit = 20, refillPeriod = 10.minutes) } }
+    install(RateLimit) {
+        global { rateLimiter(limit = 20, refillPeriod = 10.minutes) }
+        register(RateLimitName("email-verification")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call ->
+                call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+            }
+        }
+    }
     install(Authentication) {
         apiKey {
             validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
@@ -176,4 +186,3 @@ private const val DEFAULT_DATABASE_URL = "jdbc:postgresql://localhost:5432/compr
 private const val DEFAULT_APP_DATABASE_USER = "app"
 private const val DEFAULT_ADMIN_DATABASE_USER = "admin"
 private const val POSTGRESQL_JDBC_DRIVER = "org.postgresql.Driver"
-

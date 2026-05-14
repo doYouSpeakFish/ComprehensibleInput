@@ -3,6 +3,7 @@ package input.comprehensible.backend.cucumber
 import input.comprehensible.backend.AccountService
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
+import input.comprehensible.backend.email.EmailDataSource
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
@@ -38,9 +39,21 @@ class AccountManagementApiStepDefinitions {
     private var latestBody: String = ""
     private var bearerToken: String = ""
     private var currentPassword: String = ""
+    private var nextVerificationCode: String = "123456"
+    private var now: Long = 1_000_000L
+    private val fakeEmailDataSource = FakeEmailDataSource()
     private val json = Json { ignoreUnknownKeys = true }
 
-    @Before fun setUp() { database = connectDatabase(PostgreSqlTestDatabase.createConfig()); accountService = AccountService(database) }
+    @Before
+    fun setUp() {
+        database = connectDatabase(PostgreSqlTestDatabase.createConfig())
+        accountService = AccountService(
+            database = database,
+            emailDataSource = fakeEmailDataSource,
+            verificationCodeProvider = { nextVerificationCode },
+            currentTimeMillisProvider = { now },
+        )
+    }
     @After fun tearDown() { PostgreSqlTestDatabase.reset(database); TransactionManager.closeAndUnregister(database) }
 
     @Given("existing user {string} with password {string}")
@@ -61,9 +74,27 @@ class AccountManagementApiStepDefinitions {
         post("/v1/users") { contentType(ContentType.Application.Json); setBody(credentialsBody(email, password)) }
     }
 
+    @Given("the next verification code will be {string}")
+    fun nextVerificationCode(code: String) {
+        nextVerificationCode = code
+    }
+
+    @Given("time advances by {int} minutes and {int} seconds")
+    fun timeAdvancesBy(minutes: Int, seconds: Int) {
+        now += ((minutes * 60L) + seconds) * 1000L
+    }
+
     @When("I sign in with email {string} and password {string}")
     fun signIn(email: String, password: String) = runCall {
         post("/v1/auth/sessions") { contentType(ContentType.Application.Json); setBody(credentialsBody(email, password)) }
+    }
+
+    @When("I verify email {string} using code {string}")
+    fun verifyEmail(email: String, code: String) = runCall {
+        post("/v1/email-verifications") {
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
+        }
     }
 
     @When("I request me profile")
@@ -80,11 +111,25 @@ class AccountManagementApiStepDefinitions {
             setBody("{\"email\":\"$email\",\"password\":\"$currentPassword\"}")
         }
     }
+    @When("I update me email to {string} without authorization")
+    fun patchMeNoAuth(email: String) = runCall {
+        patch("/v1/me") {
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\",\"password\":\"$currentPassword\"}")
+        }
+    }
 
     @When("I delete me")
     fun deleteMe() = runCall {
         delete("/v1/me") {
             header(HttpHeaders.Authorization, "Bearer $bearerToken")
+            contentType(ContentType.Application.Json)
+            setBody("{\"password\":\"$currentPassword\"}")
+        }
+    }
+    @When("I delete me without authorization")
+    fun deleteMeNoAuth() = runCall {
+        delete("/v1/me") {
             contentType(ContentType.Application.Json)
             setBody("{\"password\":\"$currentPassword\"}")
         }
@@ -95,9 +140,18 @@ class AccountManagementApiStepDefinitions {
 
     @When("I sign out current session with invalid token")
     fun signOutInvalid() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer bad") } }
+    @When("I sign out current session without token")
+    fun signOutNoAuth() = runCall { delete("/v1/auth/sessions/current") }
 
     @Then("account API status should be {int}")
     fun statusShouldBe(status: Int) { assertEquals(HttpStatusCode.fromValue(status), latestStatus) }
+
+    @Then("an email should be sent to {string} containing {string}")
+    fun emailShouldBeSent(to: String, containsText: String) {
+        val sent = fakeEmailDataSource.sentEmails.lastOrNull { it.to == to }
+        requireNotNull(sent) { "No email sent to $to" }
+        org.junit.Assert.assertTrue(sent.subject.contains(containsText) || sent.textBody.contains(containsText))
+    }
 
     private fun runCall(block: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse) {
         testApplication {
@@ -119,6 +173,15 @@ class AccountManagementApiStepDefinitions {
 
     private fun credentialsBody(email: String, password: String) = "{\"email\":\"$email\",\"password\":\"$password\"}"
 }
+
+private class FakeEmailDataSource : EmailDataSource {
+    val sentEmails = mutableListOf<SentEmail>()
+    override suspend fun sendEmail(to: String, subject: String, textBody: String) {
+        sentEmails += SentEmail(to, subject, textBody)
+    }
+}
+
+private data class SentEmail(val to: String, val subject: String, val textBody: String)
 
 @Serializable
 private data class SignInResponse(
