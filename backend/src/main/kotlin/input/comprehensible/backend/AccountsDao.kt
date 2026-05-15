@@ -184,7 +184,7 @@ data class PendingEmailVerification(val email: String, val code: String)
 
 object PendingEmailChangeTable : Table("account_pending_email_change") {
     val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
-    val email = varchar("email", 320)
+    val email = varchar("email", 320).uniqueIndex()
     val currentEmailCode = varchar("current_email_code", 6)
     val currentEmailCodeExpiresAt = registerColumn("current_email_code_expires_at", LongColumnType())
     val newEmailCode = varchar("new_email_code", 6)
