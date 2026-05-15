@@ -53,8 +53,19 @@ fun Route.accountRoutes(accountService: AccountService) {
         patch("/v1/me") {
             val principal = call.principal<AccountSessionPrincipal>() ?: return@patch call.respond(HttpStatusCode.Unauthorized)
             val request = call.receive<UpdateMeRequest>()
-            val result = accountService.updateMe(principal.accountId, principal.account.email, request.email, request.password)
-            if (result.payload == null) call.respond(result.status) else call.respond(result.status, result.payload)
+            call.respond(accountService.updateMe(accountId = principal.accountId, newEmail = request.email, password = request.password))
+        }
+        post("/v1/email-change-current-verifications") {
+            val principal = call.principal<AccountSessionPrincipal>()
+                ?: return@post call.respond(HttpStatusCode.Unauthorized)
+            val request = call.receive<EmailChangeCurrentVerificationRequest>()
+            call.respond(accountService.verifyCurrentEmailChange(accountId = principal.accountId, code = request.code))
+        }
+        post("/v1/email-change-verifications") {
+            val principal = call.principal<AccountSessionPrincipal>()
+                ?: return@post call.respond(HttpStatusCode.Unauthorized)
+            val request = call.receive<EmailVerificationRequest>()
+            call.respond(accountService.verifyPendingEmailChange(principal.accountId, request.email, request.code))
         }
         delete("/v1/me") {
             val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
@@ -72,6 +83,7 @@ fun Route.accountRoutes(accountService: AccountService) {
 @Serializable data class UpdateMeRequest(val email: String? = null, val password: String? = null)
 @Serializable data class DeleteMeRequest(val password: String? = null)
 @Serializable data class EmailVerificationRequest(val email: String, val code: String)
+@Serializable data class EmailChangeCurrentVerificationRequest(val code: String)
 @Serializable data class PasswordResetCodeRequest(val email: String)
 @Serializable data class PasswordResetRequest(val email: String, val password: String, val code: String)
 

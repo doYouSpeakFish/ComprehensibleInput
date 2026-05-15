@@ -91,6 +91,20 @@ Feature: Account management API
     And I am signed in with email "alice@example.com" and password "SecurePass123!"
     When I update me email to "alice2@example.com"
     Then account API status should be 200
+    And an email should be sent to "alice@example.com" containing "unexpected"
+    When I request me profile
+    Then account API status should be 200
+    And account profile email should be "alice@example.com"
+    When I verify current email change using code "123456"
+    Then account API status should be 204
+    And an email should be sent to "alice2@example.com" containing "verification code"
+    And an email should be sent to "alice2@example.com" containing "123456"
+    When I verify pending email change to "alice2@example.com" using code "123456"
+    Then account API status should be 204
+    When I request me profile
+    Then account API status should be 401
+    When I sign in with email "alice2@example.com" and password "SecurePass123!"
+    Then account API status should be 200
 
   Scenario: Rejecting me update to duplicate email
     Given existing user "alice@example.com" with password "SecurePass123!"
@@ -99,7 +113,18 @@ Feature: Account management API
     And I verify email "alice@example.com" using code "123456"
     And I am signed in with email "alice@example.com" and password "SecurePass123!"
     When I update me email to "bob@example.com"
-    Then account API status should be 409
+    Then account API status should be 200
+    And an email should be sent to "bob@example.com" containing "already has"
+
+  Scenario: Rejecting pending email verification with wrong code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I update me email to "alice2@example.com"
+    Then account API status should be 200
+    When I verify pending email change to "alice2@example.com" using code "999999"
+    Then account API status should be 400
 
   Scenario: Deleting me
     Given existing user "alice@example.com" with password "SecurePass123!"
@@ -154,11 +179,15 @@ Feature: Account management API
 
   Scenario: Resetting password succeeds with valid code
     Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
     And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
     And the next verification code will be "123456"
     And I request a password reset for "alice@example.com"
     When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
     Then account API status should be 204
+    When I request me profile
+    Then account API status should be 401
     When I sign in with email "alice@example.com" and password "SecurePass123!"
     Then account API status should be 401
     When I sign in with email "alice@example.com" and password "NewSecurePass123!"
@@ -170,4 +199,15 @@ Feature: Account management API
     And I request a password reset for "alice@example.com"
     And time advances by 16 minutes and 0 seconds
     When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
+    Then account API status should be 400
+
+
+  Scenario: Rejecting current email verification with wrong code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I update me email to "alice2@example.com"
+    Then account API status should be 200
+    When I verify current email change using code "999999"
     Then account API status should be 400

@@ -6,9 +6,6 @@ import input.comprehensible.backend.email.EmailDataSource
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.LongColumnType
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.Table
 import org.mindrot.jbcrypt.BCrypt
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -80,17 +77,67 @@ class AccountService(
         AccountPayload(it[AccountsTable.id], it[AccountsTable.email])
     }
 
-    fun updateMe(accountId: String, currentEmail: String, newEmail: String?, password: String?): AccountResult {
-        if (password.isNullOrBlank()) return AccountResult(HttpStatusCode.BadRequest)
-        val account = accountsDao.findAccountById(accountId) ?: return AccountResult(HttpStatusCode.Unauthorized)
-        if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return AccountResult(HttpStatusCode.Unauthorized)
-        val normalizedEmail = newEmail?.let(::normalizeEmail) ?: return AccountResult(HttpStatusCode.BadRequest)
-        if (!isValidEmail(normalizedEmail)) return AccountResult(HttpStatusCode.BadRequest)
-        val existing = accountsDao.findAccountByEmail(normalizedEmail)
-        if (existing != null && existing[AccountsTable.email] != currentEmail) return AccountResult(HttpStatusCode.Conflict)
-        accountsDao.updateEmail(accountId, normalizedEmail, now())
-        val updated = accountsDao.findAccountById(accountId) ?: return AccountResult(HttpStatusCode.Unauthorized)
-        return AccountResult(HttpStatusCode.OK, AccountPayload(updated[AccountsTable.id], updated[AccountsTable.email]))
+    fun updateMe(accountId: String, newEmail: String?, password: String?): HttpStatusCode {
+        if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
+        val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
+        if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
+        val normalizedEmail = newEmail?.let(::normalizeEmail) ?: return HttpStatusCode.BadRequest
+        if (!isValidEmail(normalizedEmail)) return HttpStatusCode.BadRequest
+        val currentEmailCode = verificationCodeProvider()
+        val updateResult = accountsDao.requestEmailChange(
+            accountId = accountId,
+            email = normalizedEmail,
+            currentEmailCode = currentEmailCode,
+            currentEmailCodeExpiresAt = now() + verificationCodeTtlMs,
+            now = now(),
+        )
+        runBlocking {
+            if (updateResult == EmailChangeRequestResult.AlreadyInUse) {
+                emailDataSource.sendEmail(
+                    to = normalizedEmail,
+                    subject = "Comprehensible Input email update attempted",
+                    textBody = "An account update attempted to use this email address, but an account already has this email.",
+                )
+            } else {
+                emailDataSource.sendEmail(
+                    to = account[AccountsTable.email],
+                    subject = "Confirm your Comprehensible Input email change",
+                    textBody = "Use this verification code to confirm your Comprehensible Input " +
+                        "email change: $currentEmailCode. If this change is unexpected, login to your " +
+                        "Comprehensible Input account and change your password immediately.",
+                )
+            }
+        }
+        return HttpStatusCode.OK
+    }
+
+    fun verifyCurrentEmailChange(accountId: String, code: String): HttpStatusCode {
+        val verificationResult = accountsDao.verifyCurrentEmailChange(
+            accountId = accountId,
+            code = code,
+            now = now(),
+            newEmailCode = verificationCodeProvider(),
+            newEmailCodeExpiresAt = now() + verificationCodeTtlMs,
+        )
+        if (verificationResult == null) return HttpStatusCode.BadRequest
+        runBlocking {
+            emailDataSource.sendEmail(
+                to = verificationResult.email,
+                subject = "Verify your Comprehensible Input email change",
+                textBody = "Use this verification code to verify your Comprehensible Input email change: ${verificationResult.code}",
+            )
+        }
+        return HttpStatusCode.NoContent
+    }
+
+    fun verifyPendingEmailChange(accountId: String, email: String, code: String): HttpStatusCode {
+        val verified = accountsDao.verifyPendingEmailChange(
+            accountId = accountId,
+            email = normalizeEmail(email),
+            code = code,
+            now = now(),
+        )
+        return if (verified) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
     }
 
     fun deleteMe(accountId: String, password: String?): HttpStatusCode {
@@ -182,35 +229,3 @@ data class AccountResult(val status: HttpStatusCode, val payload: AccountPayload
 @Serializable data class AccountPayload(val id: String, val email: String)
 data class SignInResult(val status: HttpStatusCode, val payload: SignInPayload? = null)
 @Serializable data class SignInPayload(val accessToken: String, val tokenType: String)
-
-object AccountsTable : Table("account_user") {
-    val id = varchar("id", 255)
-    val email = varchar("email", 320).uniqueIndex()
-    val passwordHash = varchar("password_hash", 1024)
-    val emailVerified = bool("email_verified")
-    val createdAt = registerColumn("created_at", LongColumnType())
-    val updatedAt = registerColumn("updated_at", LongColumnType())
-    override val primaryKey = PrimaryKey(id)
-}
-
-object EmailVerificationTable : Table("account_email_verification") {
-    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
-    val code = varchar("code", 6)
-    val expiresAt = registerColumn("expires_at", LongColumnType())
-    override val primaryKey = PrimaryKey(accountId)
-}
-
-object SessionsTable : Table("account_session") {
-    val id = varchar("id", 255)
-    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
-    val tokenHash = varchar("token_hash", 255).uniqueIndex()
-    val createdAt = registerColumn("created_at", LongColumnType())
-    override val primaryKey = PrimaryKey(id)
-}
-
-object PasswordResetTable : Table("account_password_reset") {
-    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
-    val code = varchar("code", 6)
-    val expiresAt = registerColumn("expires_at", LongColumnType())
-    override val primaryKey = PrimaryKey(accountId)
-}
