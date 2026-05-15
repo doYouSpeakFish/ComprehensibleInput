@@ -18,7 +18,7 @@ import java.util.UUID
 @Suppress("TooManyFunctions")
 class AccountsDao(private val database: Database) {
     fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): InsertAccountResult =
-        transaction(database) {
+        transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
             val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
             if (existing != null) return@transaction InsertAccountResult.AlreadyExists
 
