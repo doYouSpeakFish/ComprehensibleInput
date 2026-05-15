@@ -13,13 +13,16 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 class CloudflareEmailDataSource(
     private val from: String,
     private val accountId: String,
     private val apiToken: String,
     private val httpClient: HttpClient = HttpClient(CIO) {
-        install(ContentNegotiation) { json() }
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
     },
 ) : EmailDataSource {
     override suspend fun sendEmail(to: String, subject: String, textBody: String) {
@@ -29,7 +32,7 @@ class CloudflareEmailDataSource(
             setBody(CloudflareSendEmailRequest(to = to, from = from, subject = subject, text = textBody))
         }
         val body: CloudflareApiResponse = response.body()
-        require(body.success) { "Cloudflare email send failed: ${body.errors.joinToString { it.message }}" }
+        require(body.success) { "Cloudflare email send failed" }
     }
 
     companion object {
@@ -55,7 +58,9 @@ private data class CloudflareSendEmailRequest(
 @Serializable
 private data class CloudflareApiResponse(
     val success: Boolean,
+    val result: CloudflareSendEmailResult? = null,
     val errors: List<CloudflareError> = emptyList(),
+    val messages: List<CloudflareMessage> = emptyList(),
 )
 
 @Serializable
@@ -63,4 +68,15 @@ private data class CloudflareError(
     val code: Int,
     @SerialName("message")
     val message: String,
+)
+
+@Serializable
+private data class CloudflareMessage(
+    val code: Int,
+    val message: String,
+)
+
+@Serializable
+private data class CloudflareSendEmailResult(
+    val id: String? = null,
 )

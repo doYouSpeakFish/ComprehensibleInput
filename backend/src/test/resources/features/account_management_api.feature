@@ -128,3 +128,46 @@ Feature: Account management API
   Scenario: Rejecting sign out without token
     When I sign out current session without token
     Then account API status should be 401
+
+  Scenario: Requesting a password reset code for an existing account
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    When I request a password reset for "alice@example.com"
+    Then account API status should be 202
+    And an email should be sent to "alice@example.com" containing "password reset code"
+
+  Scenario: Requesting a password reset code for an unknown account still succeeds
+    When I request a password reset for "missing@example.com"
+    Then account API status should be 202
+    And an email should be sent to "missing@example.com" containing "do not have"
+
+  Scenario: Requesting a password reset code again replaces the previous code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "111111"
+    And I request a password reset for "alice@example.com"
+    And the next verification code will be "222222"
+    When I request a password reset for "alice@example.com"
+    Then account API status should be 202
+    When I reset password for "alice@example.com" to "NewSecurePass123!" using code "111111"
+    Then account API status should be 400
+    When I reset password for "alice@example.com" to "NewSecurePass123!" using code "222222"
+    Then account API status should be 204
+
+  Scenario: Resetting password succeeds with valid code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And I verify email "alice@example.com" using code "123456"
+    And the next verification code will be "123456"
+    And I request a password reset for "alice@example.com"
+    When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
+    Then account API status should be 204
+    When I sign in with email "alice@example.com" and password "SecurePass123!"
+    Then account API status should be 401
+    When I sign in with email "alice@example.com" and password "NewSecurePass123!"
+    Then account API status should be 200
+
+  Scenario: Resetting password fails with expired code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I request a password reset for "alice@example.com"
+    And time advances by 16 minutes and 0 seconds
+    When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
+    Then account API status should be 400

@@ -121,6 +121,48 @@ class AccountService(
         return if (verified) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
     }
 
+    fun requestPasswordReset(email: String): HttpStatusCode {
+        val normalizedEmail = normalizeEmail(email)
+        if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
+        val account = accountsDao.findAccountByEmail(normalizedEmail)
+        if (account == null) {
+            runBlocking {
+                emailDataSource.sendEmail(
+                    to = normalizedEmail,
+                    subject = "Comprehensible Input password reset request",
+                    textBody = "A password reset was requested for this email, but you do not have a Comprehensible Input account.",
+                )
+            }
+            return HttpStatusCode.Accepted
+        }
+        val code = verificationCodeProvider()
+        accountsDao.storePasswordResetCode(
+            accountId = account[AccountsTable.id],
+            code = code,
+            expiresAt = now() + verificationCodeTtlMs,
+        )
+        runBlocking {
+            emailDataSource.sendEmail(
+                to = normalizedEmail,
+                subject = "Your Comprehensible Input password reset code",
+                textBody = "Use this password reset code to reset your Comprehensible Input password: $code",
+            )
+        }
+        return HttpStatusCode.Accepted
+    }
+
+    fun resetPassword(email: String, password: String, code: String): HttpStatusCode {
+        val normalizedEmail = normalizeEmail(email)
+        if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) return HttpStatusCode.BadRequest
+        val updated = accountsDao.resetPassword(
+            email = normalizedEmail,
+            passwordHash = BCrypt.hashpw(password, BCrypt.gensalt()),
+            code = code,
+            now = now(),
+        )
+        return if (updated) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
+    }
+
     private fun normalizeEmail(email: String): String = email.trim().lowercase()
     private fun isValidEmail(email: String): Boolean = email.isNotBlank() && email.contains('@')
     private fun generateToken(): String = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(32).also(random::nextBytes))
@@ -164,4 +206,11 @@ object SessionsTable : Table("account_session") {
     val tokenHash = varchar("token_hash", 255).uniqueIndex()
     val createdAt = registerColumn("created_at", LongColumnType())
     override val primaryKey = PrimaryKey(id)
+}
+
+object PasswordResetTable : Table("account_password_reset") {
+    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
+    val code = varchar("code", 6)
+    val expiresAt = registerColumn("expires_at", LongColumnType())
+    override val primaryKey = PrimaryKey(accountId)
 }

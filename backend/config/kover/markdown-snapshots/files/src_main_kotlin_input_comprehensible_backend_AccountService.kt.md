@@ -79,28 +79,52 @@ Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:103-11
 🟢  111 |             token = token,
 ```
 
-## Lines 123-127
+## Lines 124-128
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:123-127`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:124-128`
 
 ```kotlin
-⚪  123 | 
-🟢  124 |     private fun normalizeEmail(email: String): String = email.trim().lowercase()
-🟡  125 |     private fun isValidEmail(email: String): Boolean = email.isNotBlank() && email.contains('@')
-🟢  126 |     private fun generateToken(): String = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(32).also(random::nextBytes))
-⚪  127 |     private fun hashToken(token: String): String =
+⚪  124 |     fun requestPasswordReset(email: String): HttpStatusCode {
+🟢  125 |         val normalizedEmail = normalizeEmail(email)
+🟡  126 |         if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
+🟢  127 |         val account = accountsDao.findAccountByEmail(normalizedEmail)
+🟢  128 |         if (account == null) {
 ```
 
-## Lines 138-144
+## Lines 154-158
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:138-144`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:154-158`
 
 ```kotlin
-⚪  138 | 
-🟢  139 | data class AccountResult(val status: HttpStatusCode, val payload: AccountPayload? = null)
-🔴  140 | @Serializable data class AccountPayload(val id: String, val email: String)
-🟢  141 | data class SignInResult(val status: HttpStatusCode, val payload: SignInPayload? = null)
-🔴  142 | @Serializable data class SignInPayload(val accessToken: String, val tokenType: String)
-⚪  143 | 
-🟢  144 | object AccountsTable : Table("account_user") {
+⚪  154 |     fun resetPassword(email: String, password: String, code: String): HttpStatusCode {
+🟢  155 |         val normalizedEmail = normalizeEmail(email)
+🟡  156 |         if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) return HttpStatusCode.BadRequest
+🟢  157 |         val updated = accountsDao.resetPassword(
+🟢  158 |             email = normalizedEmail,
+```
+
+## Lines 165-169
+
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:165-169`
+
+```kotlin
+⚪  165 | 
+🟢  166 |     private fun normalizeEmail(email: String): String = email.trim().lowercase()
+🟡  167 |     private fun isValidEmail(email: String): Boolean = email.isNotBlank() && email.contains('@')
+🟢  168 |     private fun generateToken(): String = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(32).also(random::nextBytes))
+⚪  169 |     private fun hashToken(token: String): String =
+```
+
+## Lines 180-186
+
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:180-186`
+
+```kotlin
+⚪  180 | 
+🟢  181 | data class AccountResult(val status: HttpStatusCode, val payload: AccountPayload? = null)
+🔴  182 | @Serializable data class AccountPayload(val id: String, val email: String)
+🟢  183 | data class SignInResult(val status: HttpStatusCode, val payload: SignInPayload? = null)
+🔴  184 | @Serializable data class SignInPayload(val accessToken: String, val tokenType: String)
+⚪  185 | 
+🟢  186 | object AccountsTable : Table("account_user") {
 ```

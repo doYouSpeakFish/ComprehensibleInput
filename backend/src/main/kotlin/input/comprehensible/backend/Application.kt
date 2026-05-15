@@ -156,6 +156,12 @@ fun Application.configureRouting(
                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
             }
         }
+        register(RateLimitName("password-reset")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call ->
+                call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+            }
+        }
     }
     install(Authentication) {
         apiKey {
