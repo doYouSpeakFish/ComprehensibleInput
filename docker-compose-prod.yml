@@ -11,6 +11,9 @@ services:
       BACKEND_DATABASE_PASSWORD_FILE: /run/secrets/db_app_password
       BACKEND_DATABASE_ADMIN_USER: admin
       BACKEND_DATABASE_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
+      CLOUDFLARE_EMAIL_SENDING_FROM_FILE: /run/secrets/cloudflare_email_sending_from
+      CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID_FILE: /run/secrets/cloudflare_email_sending_account_id
+      CLOUDFLARE_EMAIL_SENDING_TOKEN_FILE: /run/secrets/cloudflare_email_sending_token
     ports:
       - "8080:8080"
     secrets:
@@ -18,6 +21,9 @@ services:
       - app_api_key
       - db_app_password
       - db_admin_password
+      - cloudflare_email_sending_from
+      - cloudflare_email_sending_account_id
+      - cloudflare_email_sending_token
 
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -63,6 +69,15 @@ secrets:
   db_admin_password:
     external: true
     name: app_db_admin_password
+  cloudflare_email_sending_from:
+    external: true
+    name: app_cloudflare_email_sending_from
+  cloudflare_email_sending_account_id:
+    external: true
+    name: app_cloudflare_email_sending_account_id
+  cloudflare_email_sending_token:
+    external: true
+    name: app_cloudflare_email_sending_token
   cloudflared_tunnel_token:
     external: true
     name: app_cloudflared_tunnel_token
