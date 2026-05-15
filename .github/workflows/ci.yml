@@ -245,6 +245,9 @@ jobs:
           ensure_secret app_app_api_key "$BACKEND_API_KEY"
           ensure_secret app_db_app_password "$DB_APP_PASSWORD"
           ensure_secret app_db_admin_password "$DB_ADMIN_PASSWORD"
+          ensure_secret app_cloudflare_email_sending_from "$CLOUDFLARE_EMAIL_SENDING_FROM"
+          ensure_secret app_cloudflare_email_sending_account_id "$CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"
+          ensure_secret app_cloudflare_email_sending_token "$CLOUDFLARE_EMAIL_SENDING_TOKEN"
           ensure_secret app_cloudflared_tunnel_token "$CLOUDFLARE_TUNNEL_TOKEN"
 
           docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth --resolve-image always
@@ -254,6 +257,9 @@ jobs:
           BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
           DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+          CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
           CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
 
   deploy-pr-backend:
@@ -298,11 +304,17 @@ jobs:
           echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
           echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
           echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
+          echo $CLOUDFLARE_EMAIL_SENDING_FROM > compose-secrets/cloudflare_email_sending_from.txt
+          echo $CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID > compose-secrets/cloudflare_email_sending_account_id.txt
+          echo $CLOUDFLARE_EMAIL_SENDING_TOKEN > compose-secrets/cloudflare_email_sending_token.txt
         env:
           KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
           BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
           DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+          CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
 
       - name: Build and push Docker image
         id: push-pr
@@ -360,6 +372,9 @@ jobs:
             --env BACKEND_DATABASE_PASSWORD=$DB_APP_PASSWORD \
             --env BACKEND_DATABASE_ADMIN_USER=admin \
             --env BACKEND_DATABASE_ADMIN_PASSWORD=$DB_ADMIN_PASSWORD \
+            --env CLOUDFLARE_EMAIL_SENDING_FROM=$CLOUDFLARE_EMAIL_SENDING_FROM \
+            --env CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID=$CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID \
+            --env CLOUDFLARE_EMAIL_SENDING_TOKEN=$CLOUDFLARE_EMAIL_SENDING_TOKEN \
             --with-registry-auth \
             edwardsills/comprehensible-input@${{ steps.push-pr.outputs.digest }}
         env:
@@ -368,6 +383,9 @@ jobs:
           BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
           DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+          CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
 
   auto-merge:
     runs-on: ubuntu-latest

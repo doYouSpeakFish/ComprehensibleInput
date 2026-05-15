@@ -26,22 +26,25 @@ class AccountService(
             return AccountResult(HttpStatusCode.BadRequest)
         }
         val verificationCode = verificationCodeProvider()
-        val accountId = accountsDao.insertAccount(
+        val insertAccountResult = accountsDao.insertAccount(
             email = normalizedEmail,
             passwordHash = BCrypt.hashpw(password, BCrypt.gensalt()),
             emailVerified = false,
             now = now(),
         )
-        if (accountId == null) {
-            runBlocking {
-                emailDataSource.sendEmail(
-                    to = normalizedEmail,
-                    subject = "Comprehensible Input account already exists",
-                    textBody = "A Comprehensible Input account already exists for this email address. " +
-                        "If this was not you, you can safely ignore this message.",
-                )
+        val accountId = when (insertAccountResult) {
+            InsertAccountResult.AlreadyExists -> {
+                runBlocking {
+                    emailDataSource.sendEmail(
+                        to = normalizedEmail,
+                        subject = "Comprehensible Input account already exists",
+                        textBody = "A Comprehensible Input account already exists for this email address. " +
+                            "If this was not you, you can safely ignore this message.",
+                    )
+                }
+                return AccountResult(HttpStatusCode.OK)
             }
-            return AccountResult(HttpStatusCode.OK)
+            is InsertAccountResult.Inserted -> insertAccountResult.accountId
         }
         accountsDao.storeEmailVerificationCode(
             accountId = accountId,

@@ -34,11 +34,13 @@ fun Route.accountRoutes(accountService: AccountService) {
             call.respond(accountService.verifyEmail(request.email, request.code))
         }
     }
-    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset")) {
+    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset-request")) {
         post("/v1/password-resets") {
             val request = call.receive<PasswordResetCodeRequest>()
             call.respond(accountService.requestPasswordReset(request.email))
         }
+    }
+    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset-attempt")) {
         post("/v1/password-reset-attempts") {
             val request = call.receive<PasswordResetRequest>()
             call.respond(accountService.resetPassword(request.email, request.password, request.code))

@@ -17,8 +17,11 @@ import java.util.UUID
 
 @Suppress("TooManyFunctions")
 class AccountsDao(private val database: Database) {
-    fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): String? = transaction(database) {
-        runCatching {
+    fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): InsertAccountResult =
+        transaction(database) {
+            val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
+            if (existing != null) return@transaction InsertAccountResult.AlreadyExists
+
             val accountId = UUID.randomUUID().toString()
             AccountsTable.insert {
                 it[id] = accountId
@@ -28,9 +31,8 @@ class AccountsDao(private val database: Database) {
                 it[createdAt] = now
                 it[updatedAt] = now
             }
-            accountId
-        }.getOrNull()
-    }
+            InsertAccountResult.Inserted(accountId)
+        }
 
     fun storeEmailVerificationCode(accountId: String, code: String, expiresAt: Long) = transaction(database) {
         EmailVerificationTable.deleteWhere { EmailVerificationTable.accountId eq accountId }
@@ -81,13 +83,6 @@ class AccountsDao(private val database: Database) {
 
     fun findSessionByTokenHash(tokenHash: String): ResultRow? = transaction(database) {
         SessionsTable.selectAll().where { SessionsTable.tokenHash eq tokenHash }.singleOrNull()
-    }
-
-    fun updateEmail(accountId: String, email: String, now: Long) = transaction(database) {
-        AccountsTable.update({ AccountsTable.id eq accountId }) {
-            it[AccountsTable.email] = email
-            it[updatedAt] = now
-        }
     }
 
     fun requestEmailChange(
@@ -193,6 +188,11 @@ object PendingEmailChangeTable : Table("account_pending_email_change") {
 }
 
 enum class EmailChangeRequestResult { Requested, AlreadyInUse }
+
+sealed interface InsertAccountResult {
+    data class Inserted(val accountId: String) : InsertAccountResult
+    data object AlreadyExists : InsertAccountResult
+}
 
 object AccountsTable : Table("account_user") {
     val id = varchar("id", 255)

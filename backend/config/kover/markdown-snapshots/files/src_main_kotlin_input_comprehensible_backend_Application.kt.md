@@ -116,3 +116,15 @@ Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:160-164`
 ⚪  163 |             }
 ⚪  164 |         }
 ```
+
+## Lines 166-170
+
+Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:166-170`
+
+```kotlin
+🟢  166 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
+🟢  167 |             requestKey { call ->
+🟡  168 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+⚪  169 |             }
+⚪  170 |         }
+```
