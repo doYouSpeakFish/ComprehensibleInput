@@ -37,6 +37,15 @@ class AccountsDao(private val database: Database) {
         }
     }
 
+    fun storePasswordResetCode(accountId: String, code: String, expiresAt: Long) = transaction(database) {
+        PasswordResetTable.deleteWhere { PasswordResetTable.accountId eq accountId }
+        PasswordResetTable.insert {
+            it[PasswordResetTable.accountId] = accountId
+            it[PasswordResetTable.code] = code
+            it[PasswordResetTable.expiresAt] = expiresAt
+        }
+    }
+
     fun verifyEmailCode(email: String, code: String, now: Long): Boolean = transaction(database) {
         val account = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull() ?: return@transaction false
         val accountId = account[AccountsTable.id]
@@ -83,5 +92,23 @@ class AccountsDao(private val database: Database) {
 
     fun deleteSessionByTokenHash(tokenHash: String): Int = transaction(database) {
         SessionsTable.deleteWhere { SessionsTable.tokenHash eq tokenHash }
+    }
+
+    fun resetPassword(email: String, passwordHash: String, code: String, now: Long): Boolean = transaction(database) {
+        val account = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull() ?: return@transaction false
+        val accountId = account[AccountsTable.id]
+        val reset = PasswordResetTable.selectAll().where {
+            (PasswordResetTable.accountId eq accountId) and (PasswordResetTable.code eq code)
+        }.singleOrNull() ?: return@transaction false
+        if (reset[PasswordResetTable.expiresAt] < now) {
+            PasswordResetTable.deleteWhere { PasswordResetTable.accountId eq accountId }
+            return@transaction false
+        }
+        AccountsTable.update({ AccountsTable.id eq accountId }) {
+            it[AccountsTable.passwordHash] = passwordHash
+            it[updatedAt] = now
+        }
+        PasswordResetTable.deleteWhere { PasswordResetTable.accountId eq accountId }
+        true
     }
 }

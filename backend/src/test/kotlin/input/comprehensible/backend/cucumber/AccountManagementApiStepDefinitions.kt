@@ -97,6 +97,22 @@ class AccountManagementApiStepDefinitions {
         }
     }
 
+    @When("I request a password reset for {string}")
+    fun requestPasswordReset(email: String) = runCall {
+        post("/v1/password-resets") {
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\"}")
+        }
+    }
+
+    @When("I reset password for {string} to {string} using code {string}")
+    fun resetPassword(email: String, password: String, code: String) = runCall {
+        post("/v1/password-reset-attempts") {
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\",\"password\":\"$password\",\"code\":\"$code\"}")
+        }
+    }
+
     @When("I request me profile")
     fun getMe() = runCall { get("/v1/me") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }
 

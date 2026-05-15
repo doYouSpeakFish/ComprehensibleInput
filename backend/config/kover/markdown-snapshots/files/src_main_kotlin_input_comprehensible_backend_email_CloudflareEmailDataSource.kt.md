@@ -7,60 +7,75 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 16-66
+## Lines 17-82
 
-Location: `src/main/kotlin/input/comprehensible/backend/email/CloudflareEmailDataSource.kt:16-66`
+Location: `src/main/kotlin/input/comprehensible/backend/email/CloudflareEmailDataSource.kt:17-82`
 
 ```kotlin
-⚪   16 | 
-⚪   17 | class CloudflareEmailDataSource(
-🔴   18 |     private val from: String,
-🔴   19 |     private val accountId: String,
-🔴   20 |     private val apiToken: String,
-🔴   21 |     private val httpClient: HttpClient = HttpClient(CIO) {
-🔴   22 |         install(ContentNegotiation) { json() }
-⚪   23 |     },
-⚪   24 | ) : EmailDataSource {
-⚪   25 |     override suspend fun sendEmail(to: String, subject: String, textBody: String) {
-🔴   26 |         val response = httpClient.post("https://api.cloudflare.com/client/v4/accounts/$accountId/email/sending/send") {
-🔴   27 |             contentType(ContentType.Application.Json)
-🔴   28 |             header(HttpHeaders.Authorization, "Bearer $apiToken")
-🔴   29 |             setBody(CloudflareSendEmailRequest(to = to, from = from, subject = subject, text = textBody))
-🔴   30 |         }
-🔴   31 |         val body: CloudflareApiResponse = response.body()
-🔴   32 |         require(body.success) { "Cloudflare email send failed: ${body.errors.joinToString { it.message }}" }
-⚪   33 |     }
-⚪   34 | 
-⚪   35 |     companion object {
-🔴   36 |         fun fromEnvironment(): CloudflareEmailDataSource = CloudflareEmailDataSource(
-🔴   37 |             from = requireEnv("CLOUDFLARE_EMAIL_SENDING_FROM"),
-🔴   38 |             accountId = requireEnv("CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"),
-🔴   39 |             apiToken = requireEnv("CLOUDFLARE_EMAIL_SENDING_TOKEN"),
-⚪   40 |         )
-⚪   41 | 
-⚪   42 |         private fun requireEnv(name: String): String =
-🔴   43 |             System.getenv(name)?.takeIf { it.isNotBlank() } ?: error("Missing required environment variable $name")
-⚪   44 |     }
-⚪   45 | }
-⚪   46 | 
-🔴   47 | @Serializable
-⚪   48 | private data class CloudflareSendEmailRequest(
-🔴   49 |     val to: String,
-🔴   50 |     val from: String,
-🔴   51 |     val subject: String,
-🔴   52 |     val text: String,
-⚪   53 | )
-⚪   54 | 
-🔴   55 | @Serializable
-⚪   56 | private data class CloudflareApiResponse(
-🔴   57 |     val success: Boolean,
-🔴   58 |     val errors: List<CloudflareError> = emptyList(),
-⚪   59 | )
-⚪   60 | 
-🔴   61 | @Serializable
-⚪   62 | private data class CloudflareError(
-🔴   63 |     val code: Int,
-🔴   64 |     @SerialName("message")
-🔴   65 |     val message: String,
-⚪   66 | )
+⚪   17 | 
+⚪   18 | class CloudflareEmailDataSource(
+🔴   19 |     private val from: String,
+🔴   20 |     private val accountId: String,
+🔴   21 |     private val apiToken: String,
+🔴   22 |     private val httpClient: HttpClient = HttpClient(CIO) {
+🔴   23 |         install(ContentNegotiation) {
+🔴   24 |             json(Json { ignoreUnknownKeys = true })
+⚪   25 |         }
+⚪   26 |     },
+⚪   27 | ) : EmailDataSource {
+⚪   28 |     override suspend fun sendEmail(to: String, subject: String, textBody: String) {
+🔴   29 |         val response = httpClient.post("https://api.cloudflare.com/client/v4/accounts/$accountId/email/sending/send") {
+🔴   30 |             contentType(ContentType.Application.Json)
+🔴   31 |             header(HttpHeaders.Authorization, "Bearer $apiToken")
+🔴   32 |             setBody(CloudflareSendEmailRequest(to = to, from = from, subject = subject, text = textBody))
+🔴   33 |         }
+🔴   34 |         val body: CloudflareApiResponse = response.body()
+🔴   35 |         require(body.success) { "Cloudflare email send failed" }
+⚪   36 |     }
+⚪   37 | 
+⚪   38 |     companion object {
+🔴   39 |         fun fromEnvironment(): CloudflareEmailDataSource = CloudflareEmailDataSource(
+🔴   40 |             from = requireEnv("CLOUDFLARE_EMAIL_SENDING_FROM"),
+🔴   41 |             accountId = requireEnv("CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"),
+🔴   42 |             apiToken = requireEnv("CLOUDFLARE_EMAIL_SENDING_TOKEN"),
+⚪   43 |         )
+⚪   44 | 
+⚪   45 |         private fun requireEnv(name: String): String =
+🔴   46 |             System.getenv(name)?.takeIf { it.isNotBlank() } ?: error("Missing required environment variable $name")
+⚪   47 |     }
+⚪   48 | }
+⚪   49 | 
+🔴   50 | @Serializable
+⚪   51 | private data class CloudflareSendEmailRequest(
+🔴   52 |     val to: String,
+🔴   53 |     val from: String,
+🔴   54 |     val subject: String,
+🔴   55 |     val text: String,
+⚪   56 | )
+⚪   57 | 
+🔴   58 | @Serializable
+⚪   59 | private data class CloudflareApiResponse(
+🔴   60 |     val success: Boolean,
+🔴   61 |     val result: CloudflareSendEmailResult? = null,
+🔴   62 |     val errors: List<CloudflareError> = emptyList(),
+🔴   63 |     val messages: List<CloudflareMessage> = emptyList(),
+⚪   64 | )
+⚪   65 | 
+🔴   66 | @Serializable
+⚪   67 | private data class CloudflareError(
+🔴   68 |     val code: Int,
+🔴   69 |     @SerialName("message")
+🔴   70 |     val message: String,
+⚪   71 | )
+⚪   72 | 
+🔴   73 | @Serializable
+⚪   74 | private data class CloudflareMessage(
+🔴   75 |     val code: Int,
+🔴   76 |     val message: String,
+⚪   77 | )
+⚪   78 | 
+🔴   79 | @Serializable
+⚪   80 | private data class CloudflareSendEmailResult(
+🔴   81 |     val id: String? = null,
+⚪   82 | )
 ```

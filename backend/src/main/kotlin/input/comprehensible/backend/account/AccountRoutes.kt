@@ -34,6 +34,16 @@ fun Route.accountRoutes(accountService: AccountService) {
             call.respond(accountService.verifyEmail(request.email, request.code))
         }
     }
+    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset")) {
+        post("/v1/password-resets") {
+            val request = call.receive<PasswordResetCodeRequest>()
+            call.respond(accountService.requestPasswordReset(request.email))
+        }
+        post("/v1/password-reset-attempts") {
+            val request = call.receive<PasswordResetRequest>()
+            call.respond(accountService.resetPassword(request.email, request.password, request.code))
+        }
+    }
     authenticate("account-bearer") {
         get("/v1/me") {
             val principal = call.principal<AccountSessionPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
@@ -62,6 +72,8 @@ fun Route.accountRoutes(accountService: AccountService) {
 @Serializable data class UpdateMeRequest(val email: String? = null, val password: String? = null)
 @Serializable data class DeleteMeRequest(val password: String? = null)
 @Serializable data class EmailVerificationRequest(val email: String, val code: String)
+@Serializable data class PasswordResetCodeRequest(val email: String)
+@Serializable data class PasswordResetRequest(val email: String, val password: String, val code: String)
 
 @Serializable
 data class SignInRemoteResponse(
