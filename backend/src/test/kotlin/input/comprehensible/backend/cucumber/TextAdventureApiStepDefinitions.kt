@@ -1,7 +1,9 @@
 package input.comprehensible.backend.cucumber
 
+import input.comprehensible.backend.AccountService
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
+import input.comprehensible.backend.email.EmailDataSource
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
@@ -274,6 +276,12 @@ class TextAdventureApiStepDefinitions {
                     configureRouting(
                         textAdventureService = textAdventureService,
                         appApiKey = validApiKey,
+                        accountService = AccountService(
+                            database = database,
+                            emailDataSource = object : EmailDataSource {
+                                override suspend fun sendEmail(to: String, subject: String, textBody: String) = Unit
+                            },
+                        ),
                     )
                 }
                 val response = block()
