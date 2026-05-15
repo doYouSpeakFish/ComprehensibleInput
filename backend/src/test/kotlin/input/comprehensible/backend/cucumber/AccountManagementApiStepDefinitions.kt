@@ -135,6 +135,31 @@ class AccountManagementApiStepDefinitions {
         }
     }
 
+
+    @When("I verify pending email change to {string} using code {string}")
+    fun verifyPendingEmailChange(email: String, code: String) = runCall {
+        post("/v1/email-change-verifications") {
+            header(HttpHeaders.Authorization, "Bearer $bearerToken")
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
+        }
+    }
+
+    @When("I verify current email change using code {string}")
+    fun verifyCurrentEmailChange(code: String) = runCall {
+        post("/v1/email-change-current-verifications") {
+            header(HttpHeaders.Authorization, "Bearer $bearerToken")
+            contentType(ContentType.Application.Json)
+            setBody("{\"code\":\"$code\"}")
+        }
+    }
+
+    @Then("account profile email should be {string}")
+    fun accountProfileEmailShouldBe(email: String) {
+        val profile = json.decodeFromString<AccountProfileResponse>(latestBody)
+        assertEquals(email, profile.email)
+    }
+
     @When("I delete me")
     fun deleteMe() = runCall {
         delete("/v1/me") {
@@ -203,4 +228,9 @@ private data class SentEmail(val to: String, val subject: String, val textBody: 
 private data class SignInResponse(
     @SerialName("access_token")
     val accessToken: String,
+)
+
+@Serializable
+private data class AccountProfileResponse(
+    val email: String,
 )

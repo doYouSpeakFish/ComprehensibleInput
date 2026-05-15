@@ -7,9 +7,9 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 47-56
+## Lines 47-78
 
-Location: `src/main/kotlin/input/comprehensible/backend/account/AccountRoutes.kt:47-56`
+Location: `src/main/kotlin/input/comprehensible/backend/account/AccountRoutes.kt:47-78`
 
 ```kotlin
 🟢   47 |     authenticate("account-bearer") {
@@ -21,41 +21,47 @@ Location: `src/main/kotlin/input/comprehensible/backend/account/AccountRoutes.kt
 🟢   53 |         patch("/v1/me") {
 🟡   54 |             val principal = call.principal<AccountSessionPrincipal>() ?: return@patch call.respond(HttpStatusCode.Unauthorized)
 🟢   55 |             val request = call.receive<UpdateMeRequest>()
-🟢   56 |             val result = accountService.updateMe(principal.accountId, principal.account.email, request.email, request.password)
-```
-
-## Lines 58-67
-
-Location: `src/main/kotlin/input/comprehensible/backend/account/AccountRoutes.kt:58-67`
-
-```kotlin
-⚪   58 |         }
-🟢   59 |         delete("/v1/me") {
-🟡   60 |             val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
-🟢   61 |             val request = call.receive<DeleteMeRequest>()
-🟢   62 |             call.respond(accountService.deleteMe(principal.accountId, request.password))
+🟢   56 |             call.respond(accountService.updateMe(accountId = principal.accountId, newEmail = request.email, password = request.password))
+⚪   57 |         }
+🟢   58 |         post("/v1/email-change-current-verifications") {
+🟡   59 |             val principal = call.principal<AccountSessionPrincipal>()
+🔴   60 |                 ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟢   61 |             val request = call.receive<EmailChangeCurrentVerificationRequest>()
+🟢   62 |             call.respond(accountService.verifyCurrentEmailChange(accountId = principal.accountId, code = request.code))
 ⚪   63 |         }
-🟢   64 |         delete("/v1/auth/sessions/current") {
-🟡   65 |             val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
-🟢   66 |             call.respond(accountService.signOutCurrent(principal.token))
-⚪   67 |         }
+🟢   64 |         post("/v1/email-change-verifications") {
+🟡   65 |             val principal = call.principal<AccountSessionPrincipal>()
+🔴   66 |                 ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟢   67 |             val request = call.receive<EmailVerificationRequest>()
+🟢   68 |             call.respond(accountService.verifyPendingEmailChange(principal.accountId, request.email, request.code))
+⚪   69 |         }
+🟢   70 |         delete("/v1/me") {
+🟡   71 |             val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+🟢   72 |             val request = call.receive<DeleteMeRequest>()
+🟢   73 |             call.respond(accountService.deleteMe(principal.accountId, request.password))
+⚪   74 |         }
+🟢   75 |         delete("/v1/auth/sessions/current") {
+🟡   76 |             val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+🟢   77 |             call.respond(accountService.signOutCurrent(principal.token))
+⚪   78 |         }
 ```
 
-## Lines 69-80
+## Lines 80-92
 
-Location: `src/main/kotlin/input/comprehensible/backend/account/AccountRoutes.kt:69-80`
+Location: `src/main/kotlin/input/comprehensible/backend/account/AccountRoutes.kt:80-92`
 
 ```kotlin
-⚪   69 | }
-⚪   70 | 
-🟡   71 | @Serializable data class CredentialsRequest(val email: String, val password: String)
-🟡   72 | @Serializable data class UpdateMeRequest(val email: String? = null, val password: String? = null)
-🟡   73 | @Serializable data class DeleteMeRequest(val password: String? = null)
-🟡   74 | @Serializable data class EmailVerificationRequest(val email: String, val code: String)
-🟡   75 | @Serializable data class PasswordResetCodeRequest(val email: String)
-🟡   76 | @Serializable data class PasswordResetRequest(val email: String, val password: String, val code: String)
-⚪   77 | 
-🔴   78 | @Serializable
-⚪   79 | data class SignInRemoteResponse(
-🟢   80 |     @SerialName("access_token") val accessToken: String,
+⚪   80 | }
+⚪   81 | 
+🟡   82 | @Serializable data class CredentialsRequest(val email: String, val password: String)
+🟡   83 | @Serializable data class UpdateMeRequest(val email: String? = null, val password: String? = null)
+🟡   84 | @Serializable data class DeleteMeRequest(val password: String? = null)
+🟡   85 | @Serializable data class EmailVerificationRequest(val email: String, val code: String)
+🟡   86 | @Serializable data class EmailChangeCurrentVerificationRequest(val code: String)
+🟡   87 | @Serializable data class PasswordResetCodeRequest(val email: String)
+🟡   88 | @Serializable data class PasswordResetRequest(val email: String, val password: String, val code: String)
+⚪   89 | 
+🔴   90 | @Serializable
+⚪   91 | data class SignInRemoteResponse(
+🟢   92 |     @SerialName("access_token") val accessToken: String,
 ```

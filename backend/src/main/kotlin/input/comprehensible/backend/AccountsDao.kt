@@ -1,7 +1,10 @@
 package input.comprehensible.backend
 
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.LongColumnType
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -9,6 +12,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import java.sql.Connection
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
@@ -86,6 +90,68 @@ class AccountsDao(private val database: Database) {
         }
     }
 
+    fun requestEmailChange(
+        accountId: String,
+        email: String,
+        currentEmailCode: String,
+        currentEmailCodeExpiresAt: Long,
+        now: Long,
+    ): EmailChangeRequestResult =
+        transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
+            val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
+            if (existing != null && existing[AccountsTable.id] != accountId) return@transaction EmailChangeRequestResult.AlreadyInUse
+            PendingEmailChangeTable.deleteWhere { PendingEmailChangeTable.accountId eq accountId }
+            PendingEmailChangeTable.insert {
+                it[PendingEmailChangeTable.accountId] = accountId
+                it[PendingEmailChangeTable.email] = email
+                it[PendingEmailChangeTable.currentEmailCode] = currentEmailCode
+                it[PendingEmailChangeTable.currentEmailCodeExpiresAt] = currentEmailCodeExpiresAt
+                it[PendingEmailChangeTable.newEmailCode] = ""
+                it[PendingEmailChangeTable.newEmailCodeExpiresAt] = 0L
+            }
+            AccountsTable.update({ AccountsTable.id eq accountId }) { it[updatedAt] = now }
+            EmailChangeRequestResult.Requested
+        }
+
+    fun verifyCurrentEmailChange(
+        accountId: String,
+        code: String,
+        now: Long,
+        newEmailCode: String,
+        newEmailCodeExpiresAt: Long,
+    ): PendingEmailVerification? = transaction(database) {
+        val pending = PendingEmailChangeTable.selectAll().where {
+            (PendingEmailChangeTable.accountId eq accountId) and
+                (PendingEmailChangeTable.currentEmailCode eq code)
+        }.singleOrNull() ?: return@transaction null
+        if (pending[PendingEmailChangeTable.currentEmailCodeExpiresAt] < now) return@transaction null
+        PendingEmailChangeTable.update({ PendingEmailChangeTable.accountId eq accountId }) {
+            it[PendingEmailChangeTable.newEmailCode] = newEmailCode
+            it[PendingEmailChangeTable.newEmailCodeExpiresAt] = newEmailCodeExpiresAt
+        }
+        PendingEmailVerification(
+            email = pending[PendingEmailChangeTable.email],
+            code = newEmailCode,
+        )
+    }
+
+    fun verifyPendingEmailChange(accountId: String, email: String, code: String, now: Long): Boolean = transaction(database) {
+        val pending = PendingEmailChangeTable.selectAll().where {
+            (PendingEmailChangeTable.accountId eq accountId) and
+                (PendingEmailChangeTable.email eq email) and
+                (PendingEmailChangeTable.newEmailCode eq code)
+        }.singleOrNull() ?: return@transaction false
+        if (pending[PendingEmailChangeTable.newEmailCodeExpiresAt] < now) return@transaction false
+        AccountsTable.update({ AccountsTable.id eq accountId }) {
+            it[AccountsTable.email] = email
+            it[updatedAt] = now
+        }
+        EmailVerificationTable.deleteWhere { EmailVerificationTable.accountId eq accountId }
+        PendingEmailChangeTable.deleteWhere { PendingEmailChangeTable.accountId eq accountId }
+        SessionsTable.deleteWhere { SessionsTable.accountId eq accountId }
+        true
+    }
+
     fun deleteAccount(accountId: String) = transaction(database) {
         AccountsTable.deleteWhere { AccountsTable.id eq accountId }
     }
@@ -109,6 +175,53 @@ class AccountsDao(private val database: Database) {
             it[updatedAt] = now
         }
         PasswordResetTable.deleteWhere { PasswordResetTable.accountId eq accountId }
+        SessionsTable.deleteWhere { SessionsTable.accountId eq accountId }
         true
     }
+}
+
+data class PendingEmailVerification(val email: String, val code: String)
+
+object PendingEmailChangeTable : Table("account_pending_email_change") {
+    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
+    val email = varchar("email", 320)
+    val currentEmailCode = varchar("current_email_code", 6)
+    val currentEmailCodeExpiresAt = registerColumn("current_email_code_expires_at", LongColumnType())
+    val newEmailCode = varchar("new_email_code", 6)
+    val newEmailCodeExpiresAt = registerColumn("new_email_code_expires_at", LongColumnType())
+    override val primaryKey = PrimaryKey(accountId)
+}
+
+enum class EmailChangeRequestResult { Requested, AlreadyInUse }
+
+object AccountsTable : Table("account_user") {
+    val id = varchar("id", 255)
+    val email = varchar("email", 320).uniqueIndex()
+    val passwordHash = varchar("password_hash", 1024)
+    val emailVerified = bool("email_verified")
+    val createdAt = registerColumn("created_at", LongColumnType())
+    val updatedAt = registerColumn("updated_at", LongColumnType())
+    override val primaryKey = PrimaryKey(id)
+}
+
+object EmailVerificationTable : Table("account_email_verification") {
+    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
+    val code = varchar("code", 6)
+    val expiresAt = registerColumn("expires_at", LongColumnType())
+    override val primaryKey = PrimaryKey(accountId)
+}
+
+object SessionsTable : Table("account_session") {
+    val id = varchar("id", 255)
+    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
+    val tokenHash = varchar("token_hash", 255).uniqueIndex()
+    val createdAt = registerColumn("created_at", LongColumnType())
+    override val primaryKey = PrimaryKey(id)
+}
+
+object PasswordResetTable : Table("account_password_reset") {
+    val accountId = varchar("account_id", 255).references(AccountsTable.id, onDelete = ReferenceOption.CASCADE)
+    val code = varchar("code", 6)
+    val expiresAt = registerColumn("expires_at", LongColumnType())
+    override val primaryKey = PrimaryKey(accountId)
 }
