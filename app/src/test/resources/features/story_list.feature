@@ -28,3 +28,19 @@ Feature: Story list
     When the learning language is set to "es"
     And the reader opens the first story in language "es"
     Then the first story text is shown in language "es"
+
+
+  Scenario: changing translation language keeps learning separate
+    Given a full story library is loaded
+    And the reader is on the story list screen
+    When the translation language is set to "de"
+    Then the learning language shown is "en"
+    And the translation language shown is "de"
+
+  Scenario: changing learning language keeps translations separate
+    Given a full story library is loaded
+    And the reader is on the story list screen
+    When the translation language is set to "es"
+    And the learning language is set to "es"
+    Then the learning language shown is "es"
+    And the translation language shown is "de"

@@ -73,6 +73,23 @@ class StoryListStepDefinitions {
         scope.awaitIdle()
     }
 
+
+    @When("the translation language is set to {string}")
+    fun setTranslationLanguage(language: String) = runBlocking(scope.dispatcher) {
+        StoryListRobot(scope.composeRule).setTranslationLanguage(language)
+        scope.awaitIdle()
+    }
+
+    @Then("the learning language shown is {string}")
+    fun learningLanguageShown(language: String) {
+        StoryListRobot(scope.composeRule).assertLearningLanguageIs(language)
+    }
+
+    @Then("the translation language shown is {string}")
+    fun translationLanguageShown(language: String) {
+        StoryListRobot(scope.composeRule).assertTranslationLanguageIs(language)
+    }
+
     @Then("the first story text is shown")
     fun firstStoryTextShown() = runBlocking(scope.dispatcher) {
         StoryReaderRobot(scope.composeRule)
