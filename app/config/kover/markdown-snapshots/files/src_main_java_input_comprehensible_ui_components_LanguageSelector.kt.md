@@ -49,6 +49,19 @@ Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:
 🟢  174 |             Text(
 ```
 
+## Lines 202-207
+
+Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:202-207`
+
+```kotlin
+🟢  202 |                     text = { Text(text = stringResource(languageSelection.languageName)) },
+🟢  203 |                     onClick = {
+🔴  204 |                         onLanguageSelected(languageSelection)
+🔴  205 |                         onMenuShownChanged(false)
+⚪  206 |                     },
+🟢  207 |                     leadingIcon = {
+```
+
 ## Lines 232-236
 
 Location: `src/main/java/input/comprehensible/ui/components/LanguageSelector.kt:232-236`

@@ -133,6 +133,7 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.useJUnitPlatform()
             }
         }
     }
@@ -237,6 +238,11 @@ dependencies {
     testImplementation(libs.composable.preview.scanner)
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.ktin.test)
+    testImplementation(libs.cucumber.java)
+    testRuntimeOnly(libs.cucumber.junit.platform.engine)
+    testImplementation(libs.junit.platform.suite.api)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.3")
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)

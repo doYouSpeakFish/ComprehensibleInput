@@ -7,9 +7,9 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 59-63
+## Lines 59-69
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:59-63`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:59-69`
 
 ```kotlin
 ⚪   59 |     onTextAdventureStarted: (id: String) -> Unit,
@@ -17,6 +17,12 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:59-63`
 🟡   61 | ) {
 🟢   62 |     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
 🟢   63 |     LaunchedEffect(viewModel.events) {
+🟢   64 |         viewModel.events.collect { event ->
+🔴   65 |             when (event) {
+🔴   66 |                 is StoryListEvent.TextAdventureStarted ->
+🔴   67 |                     onTextAdventureStarted(event.adventureId)
+⚪   68 |             }
+⚪   69 |         }
 ```
 
 ## Lines 91-95
@@ -29,6 +35,35 @@ Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:91-95`
 🟡   93 | ) {
 🟢   94 |     val itemsWithIndex = remember(state.items) { state.items.withIndex().toList() }
 🟢   95 |     StoryListScaffold(
+```
+
+## Lines 122-126
+
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:122-126`
+
+```kotlin
+🟢  122 |                 val shouldAddTopPadding = column % 2 == 0
+🟢  123 |                 val shouldAddBottomPadding =
+🟡  124 |                     (column % 2 == 0) && it.index != itemsWithIndex.lastIndex
+🟢  125 |                 val itemModifier = Modifier.padding(
+🟢  126 |                     top = if (shouldAddTopPadding) 0.dp else 140.dp,
+```
+
+## Lines 130-139
+
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:130-139`
+
+```kotlin
+🟢  130 |                     is StoryListUiState.StoryListItem.Story -> StoryListItem(
+🟢  131 |                         modifier = itemModifier,
+🟡  132 |                         onClick = { onStorySelected(item) },
+🟢  133 |                         story = item,
+⚪  134 |                     )
+🟢  135 |                     is StoryListUiState.StoryListItem.TextAdventure -> TextAdventureListItem(
+🟢  136 |                         modifier = itemModifier,
+🟡  137 |                         onClick = { onTextAdventureSelected(item) },
+🟢  138 |                         adventure = item,
+⚪  139 |                     )
 ```
 
 ## Lines 159-163
