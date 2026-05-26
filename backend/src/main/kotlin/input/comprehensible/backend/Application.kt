@@ -1,5 +1,6 @@
 package input.comprehensible.backend
 
+import input.comprehensible.backend.common.requireSecretValue
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.DefaultTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
@@ -24,7 +25,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
-import java.io.File
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -120,27 +120,6 @@ private fun migrateDatabase(config: DatabaseConnectionConfig) {
         .migrate()
 }
 
-private fun requireSecretValue(envVarName: String): String {
-    val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
-    if (directValue != null) {
-        return directValue
-    }
-
-    val fileEnvVarName = "${envVarName}_FILE"
-    val secretFilePath = System.getenv(fileEnvVarName)?.takeIf { it.isNotBlank() }
-    if (secretFilePath != null) {
-        val secretValue = File(secretFilePath).readText().trim()
-        require(secretValue.isNotEmpty()) {
-            "Environment variable $fileEnvVarName points to an empty file: $secretFilePath"
-        }
-        return secretValue
-    }
-
-    error(
-        "Missing required environment variable $envVarName. " +
-            "Set $envVarName directly or set ${envVarName}_FILE to a file containing the value."
-    )
-}
 
 fun Application.configureRouting(
     textAdventureService: TextAdventureGenerationService,
