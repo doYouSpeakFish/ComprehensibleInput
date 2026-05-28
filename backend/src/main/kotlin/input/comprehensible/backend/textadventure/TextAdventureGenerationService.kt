@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 class TextAdventureGenerationService(
     private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,
     private val adventureRepository: AdventureRepository,
@@ -22,6 +23,7 @@ class TextAdventureGenerationService(
     suspend fun startAdventure(
         learningLanguage: String,
         translationsLanguage: String,
+        accountId: String? = null,
     ): TextAdventureRemoteResponse {
         val response = requestAdventureResponse(
             adventureId = UUID.randomUUID().toString(),
@@ -40,6 +42,7 @@ class TextAdventureGenerationService(
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
                 adventureId = response.adventureId,
+                accountId = accountId,
                 title = response.title,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
@@ -56,12 +59,96 @@ class TextAdventureGenerationService(
         return response.toRemoteResponse()
     }
 
+
+    fun listAdventuresForAccount(accountId: String): AdventureListRemoteResponse =
+        AdventureListRemoteResponse(
+            items = adventureRepository.listAdventureSummariesForAccount(accountId).map {
+                AdventureSummaryRemoteResponse(
+                    id = it.adventureId,
+                    title = it.title,
+                    learningLanguage = it.learningLanguage,
+                    translationLanguage = it.translationLanguage,
+                    updatedAt = it.updatedAt,
+                )
+            },
+        )
+
+
+
+    fun getAdventureSummaryForAccount(
+        accountId: String,
+        adventureId: String,
+    ): AdventureSummaryRemoteResponse? =
+        adventureRepository.listAdventureSummariesForAccount(accountId)
+            .firstOrNull { it.adventureId == adventureId }
+            ?.let {
+                AdventureSummaryRemoteResponse(
+                    id = it.adventureId,
+                    title = it.title,
+                    learningLanguage = it.learningLanguage,
+                    translationLanguage = it.translationLanguage,
+                    updatedAt = it.updatedAt,
+                )
+            }
+
+    fun getAdventureMessagesForAccount(
+        accountId: String,
+        adventureId: String,
+    ): TextAdventureMessagesRemoteResponse? {
+        val isOwned = adventureRepository.listAdventureSummariesForAccount(accountId)
+            .any { it.adventureId == adventureId }
+        if (!isOwned) return null
+        return getAdventureMessages(adventureId)
+    }
+
+    fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean =
+        adventureRepository.deleteAdventureForAccount(accountId, adventureId)
+
+    fun deleteAllAdventuresForAccount(accountId: String) {
+        adventureRepository.deleteAllAdventuresForAccount(accountId)
+    }
+
+    suspend fun respondToAdventureForAccount(
+        accountId: String,
+        adventureId: String,
+        userMessage: String,
+    ): RespondToAdventureForAccountResult? {
+        val isOwned = adventureRepository.listAdventureSummariesForAccount(accountId)
+            .any { it.adventureId == adventureId }
+        if (!isOwned) return null
+        val existing = adventureRepository.getAdventureMessages(adventureId) ?: return null
+        if (existing.messages.lastOrNull()?.isEnding == true) {
+            return RespondToAdventureForAccountResult.AdventureEnded
+        }
+        val history = existing.messages.mapNotNull { message ->
+            val text = message.paragraphs.flatMap { it.sentences }.joinToString(" ").trim()
+            if (text.isBlank()) {
+                null
+            } else {
+                TextAdventureHistoryMessage(
+                    role = if (message.sender == "AI") "assistant" else "user",
+                    text = text,
+                )
+            }
+        }
+        val response = respondToUser(
+            adventureId = adventureId,
+            learningLanguage = existing.learningLanguage,
+            translationsLanguage = existing.translationsLanguage,
+            userMessage = userMessage,
+            history = history,
+            accountId = accountId,
+        )
+        return RespondToAdventureForAccountResult.Success(response)
+    }
+
     suspend fun respondToUser(
         adventureId: String,
         learningLanguage: String,
         translationsLanguage: String,
         userMessage: String,
         history: List<TextAdventureHistoryMessage>,
+        accountId: String? = null,
     ): TextAdventureRemoteResponse {
         val response = requestAdventureResponse(
             adventureId = adventureId,
@@ -88,6 +175,7 @@ class TextAdventureGenerationService(
         adventureRepository.saveAdventurePart(
             PersistedAdventurePart(
                 adventureId = response.adventureId,
+                accountId = accountId,
                 title = response.title,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
@@ -209,3 +297,21 @@ data class TextAdventureStructuredParagraph(
     @property:LLMDescription("Sentences in the paragraph.")
     val sentences: List<String>,
 )
+
+
+@Serializable
+data class AdventureListRemoteResponse(val items: List<AdventureSummaryRemoteResponse>)
+
+@Serializable
+data class AdventureSummaryRemoteResponse(
+    val id: String,
+    val title: String,
+    val learningLanguage: String,
+    val translationLanguage: String,
+    val updatedAt: Long,
+)
+
+sealed interface RespondToAdventureForAccountResult {
+    data class Success(val response: TextAdventureRemoteResponse) : RespondToAdventureForAccountResult
+    data object AdventureEnded : RespondToAdventureForAccountResult
+}

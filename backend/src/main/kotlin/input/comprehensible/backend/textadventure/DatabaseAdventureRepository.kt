@@ -11,16 +11,35 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
 
+@Suppress("TooManyFunctions")
 class DatabaseAdventureRepository(
     private val database: Database,
     private val nowProvider: () -> Long = { System.currentTimeMillis() },
 ) : AdventureRepository {
+
+    override fun listAdventureSummariesForAccount(accountId: String): List<AdventureSummary> = transaction(database) {
+        AdventuresTable
+            .selectAll()
+            .where { AdventuresTable.accountId eq accountId }
+            .orderBy(AdventuresTable.updatedAt, SortOrder.DESC)
+            .map {
+                AdventureSummary(
+                    adventureId = it[AdventuresTable.id],
+                    title = it[AdventuresTable.title],
+                    learningLanguage = it[AdventuresTable.learningLanguage],
+                    translationLanguage = it[AdventuresTable.translationLanguage],
+                    updatedAt = it[AdventuresTable.updatedAt],
+                )
+            }
+    }
+
     override fun saveAdventurePart(adventurePart: PersistedAdventurePart) {
         transaction(database) {
             val now = nowProvider()
@@ -47,6 +66,19 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
+    override fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean = transaction(database) {
+        AdventuresTable.deleteWhere {
+            (AdventuresTable.id eq adventureId) and
+                (AdventuresTable.accountId eq accountId)
+        } > 0
+    }
+
+    override fun deleteAllAdventuresForAccount(accountId: String) {
+        transaction(database) {
+            AdventuresTable.deleteWhere { AdventuresTable.accountId eq accountId }
+        }
+    }
+
     private fun findAdventureCreatedAt(adventureId: String): Long? = AdventuresTable
         .select(AdventuresTable.createdAt)
         .where { AdventuresTable.id eq adventureId }
@@ -60,6 +92,7 @@ class DatabaseAdventureRepository(
     ) {
         AdventuresTable.upsert {
             it[id] = adventurePart.adventureId
+            it[this.accountId] = adventurePart.accountId
             it[this.title] = adventurePart.title
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
@@ -203,6 +236,10 @@ private fun insertSentencesForMessage(
 
 object AdventuresTable : Table("text_adventure") {
     val id = varchar("id", length = 255)
+    val accountId = optReference("account_id",
+        input.comprehensible.backend.AccountsTable.id,
+        onDelete = ReferenceOption.CASCADE,
+    )
     val title = text("title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
