@@ -1,0 +1,25 @@
+package input.comprehensible.backend.common
+
+import java.io.File
+
+fun requireSecretValue(envVarName: String): String {
+    val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
+    if (directValue != null) {
+        return directValue
+    }
+
+    val fileEnvVarName = "${envVarName}_FILE"
+    val secretFilePath = System.getenv(fileEnvVarName)?.takeIf { it.isNotBlank() }
+    if (secretFilePath != null) {
+        val secretValue = File(secretFilePath).readText().trim()
+        require(secretValue.isNotEmpty()) {
+            "Environment variable $fileEnvVarName points to an empty file: $secretFilePath"
+        }
+        return secretValue
+    }
+
+    error(
+        "Missing required environment variable $envVarName. " +
+            "Set $envVarName directly or set ${envVarName}_FILE to a file containing the value."
+    )
+}
