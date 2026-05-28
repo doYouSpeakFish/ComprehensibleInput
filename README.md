@@ -73,6 +73,25 @@ export BACKEND_DATABASE_ADMIN_PASSWORD='replace-with-strong-admin-password'
 curl http://localhost:8080/health
 ```
 
+
+### Production deploy safety (Docker Swarm)
+
+Use `scripts/deploy-stack-with-healthcheck.sh` in your deployment pipeline instead of calling `docker stack deploy` directly.
+
+The script:
+- deploys `docker-compose-prod.yml`
+- waits for the Postgres service to start (because Swarm does not support `depends_on` health conditions)
+- polls backend `GET /health` until success or timeout
+- automatically runs `docker service rollback` for the backend service if validation fails
+- exits non-zero so the pipeline fails visibly
+
+Example:
+
+```bash
+STACK_NAME=app MAX_WAIT_SECONDS=300 BACKEND_PORT=8080 \
+  ./scripts/deploy-stack-with-healthcheck.sh
+```
+
 Expected response:
 
 ```text
