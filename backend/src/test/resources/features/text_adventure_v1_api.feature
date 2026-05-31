@@ -54,6 +54,14 @@ Feature: Text adventure v1 API
     And the request does not require a full history payload
 
   @v1
+  Scenario: Submitted player message text is stored and returned unchanged
+    Given I have an existing adventure
+    When I post a new player message "Abro la puerta roja" to the adventure messages collection
+    And I fetch adventure messages
+    Then the response status is 200
+    And the returned messages include the exact submitted player message text
+
+  @v1
   Scenario: Posting a player message to an ended adventure returns conflict
     Given I have an adventure that is ended
     When I post a new player message "Sigo adelante" to the adventure messages collection
@@ -83,7 +91,7 @@ Feature: Text adventure v1 API
     Given I have an existing adventure with 5 turns
     When I fetch adventure messages
     Then the response status is 200
-    And exactly 5 messages are returned
+    And exactly 9 messages are returned
 
   @v1
   Scenario: Reading adventure messages from another user adventure returns not found

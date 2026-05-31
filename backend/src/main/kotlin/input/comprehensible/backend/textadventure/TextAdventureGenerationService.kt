@@ -120,7 +120,15 @@ class TextAdventureGenerationService(
         if (existing.messages.lastOrNull()?.isEnding == true) {
             return RespondToAdventureForAccountResult.AdventureEnded
         }
-        val history = existing.messages.mapNotNull { message ->
+        adventureRepository.appendUserMessage(
+            adventureId = adventureId,
+            accountId = accountId,
+            learningLanguage = existing.learningLanguage,
+            translationLanguage = existing.translationsLanguage,
+            userMessage = userMessage,
+        )
+        val withUserMessage = adventureRepository.getAdventureMessages(adventureId) ?: return null
+        val history = withUserMessage.messages.mapNotNull { message ->
             val text = message.paragraphs.flatMap { it.sentences }.joinToString(" ").trim()
             if (text.isBlank()) {
                 null

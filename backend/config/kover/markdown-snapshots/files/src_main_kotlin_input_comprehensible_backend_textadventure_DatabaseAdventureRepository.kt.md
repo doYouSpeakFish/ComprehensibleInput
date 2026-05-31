@@ -18,3 +18,27 @@ Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAd
 🟢   61 |                 learningLanguage = adventureRow[AdventuresTable.learningLanguage],
 🟢   62 |                 translationLanguage = adventureRow[AdventuresTable.translationLanguage],
 ```
+
+## Lines 77-81
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:77-81`
+
+```kotlin
+🟢   77 |             val now = nowProvider()
+🟢   78 |             val existingCreatedAt = findAdventureCreatedAt(adventureId)
+🟡   79 |             val existingTitle = findAdventureRow(adventureId)?.get(AdventuresTable.title).orEmpty()
+🟢   80 |             AdventuresTable.upsert {
+🟢   81 |                 it[id] = adventureId
+```
+
+## Lines 84-88
+
+Location: `src/main/kotlin/input/comprehensible/backend/textadventure/DatabaseAdventureRepository.kt:84-88`
+
+```kotlin
+🟢   84 |                 it[this.translationLanguage] = translationLanguage
+🟢   85 |                 it[this.title] = existingTitle
+🟡   86 |                 it[createdAt] = existingCreatedAt ?: now
+🟢   87 |                 it[updatedAt] = now
+⚪   88 |             }
+```

@@ -9,6 +9,14 @@ interface AdventureRepository {
 
     fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse?
 
+    fun appendUserMessage(
+        adventureId: String,
+        accountId: String?,
+        learningLanguage: String,
+        translationLanguage: String,
+        userMessage: String,
+    )
+
     fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean
 
     fun deleteAllAdventuresForAccount(accountId: String)

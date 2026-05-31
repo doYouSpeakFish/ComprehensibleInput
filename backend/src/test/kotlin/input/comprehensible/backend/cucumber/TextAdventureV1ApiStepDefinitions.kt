@@ -54,6 +54,7 @@ class TextAdventureV1ApiStepDefinitions {
     private var userAAdventureId: String = ""
     private val userAAdventureIds: MutableList<String> = mutableListOf()
     private var userBAdventureId: String = ""
+    private var lastSubmittedPlayerMessage: String = ""
 
 
     @Before("@v1")
@@ -86,6 +87,7 @@ class TextAdventureV1ApiStepDefinitions {
         userAAdventureId = ""
         userAAdventureIds.clear()
         userBAdventureId = ""
+        lastSubmittedPlayerMessage = ""
     }
 
     @After("@v1")
@@ -339,6 +341,7 @@ class TextAdventureV1ApiStepDefinitions {
         if (userAAdventureId.isBlank()) {
             userAHasAdventure()
         }
+        lastSubmittedPlayerMessage = message
         enqueueNarratorResponse(title = "Lantern Trail", sentence = "Siguiente escena", translation = "Next scene")
         runAgainstApplication {
             client.post("/v1/adventures/$userAAdventureId/messages") {
@@ -521,6 +524,12 @@ class TextAdventureV1ApiStepDefinitions {
     @Then("the request does not require a full history payload")
     fun requestDoesNotRequireFullHistoryPayload() {
         assertEquals(HttpStatusCode.Created, latestResponseStatus)
+    }
+
+    @Then("the returned messages include the exact submitted player message text")
+    fun returnedMessagesIncludeExactSubmittedPlayerText() {
+        assertTrue(lastSubmittedPlayerMessage.isNotBlank())
+        assertTrue(latestResponseBody.contains(lastSubmittedPlayerMessage))
     }
 
     @Then("messages are ordered by turn index ascending")

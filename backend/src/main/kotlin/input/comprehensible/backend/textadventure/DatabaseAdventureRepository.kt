@@ -66,6 +66,51 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
+    override fun appendUserMessage(
+        adventureId: String,
+        accountId: String?,
+        learningLanguage: String,
+        translationLanguage: String,
+        userMessage: String,
+    ) {
+        transaction(database) {
+            val now = nowProvider()
+            val existingCreatedAt = findAdventureCreatedAt(adventureId)
+            val existingTitle = findAdventureRow(adventureId)?.get(AdventuresTable.title).orEmpty()
+            AdventuresTable.upsert {
+                it[id] = adventureId
+                it[this.accountId] = accountId
+                it[this.learningLanguage] = learningLanguage
+                it[this.translationLanguage] = translationLanguage
+                it[this.title] = existingTitle
+                it[createdAt] = existingCreatedAt ?: now
+                it[updatedAt] = now
+            }
+            val messageIndex = findNextMessageIndex(adventureId)
+            AdventureMessagesTable.insert {
+                it[this.adventureId] = adventureId
+                it[this.sender] = senderUser
+                it[this.isEnding] = false
+                it[this.createdAt] = now
+                it[this.messageIndex] = messageIndex
+            }
+            insertSentencesForMessage(
+                adventureId = adventureId,
+                messageIndex = messageIndex,
+                paragraphIndex = 0,
+                language = learningLanguage,
+                sentences = listOf(userMessage),
+            )
+            insertSentencesForMessage(
+                adventureId = adventureId,
+                messageIndex = messageIndex,
+                paragraphIndex = 0,
+                language = translationLanguage,
+                sentences = listOf(userMessage),
+            )
+        }
+    }
+
     override fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean = transaction(database) {
         AdventuresTable.deleteWhere {
             (AdventuresTable.id eq adventureId) and
@@ -169,6 +214,7 @@ class DatabaseAdventureRepository(
 
     private companion object {
         const val senderAi = "AI"
+        const val senderUser = "USER"
     }
 }
 
