@@ -3,39 +3,6 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Create google-services.json
-cat > "${PROJECT_ROOT}/app/google-services.json" <<'EOF'
-{
-  "project_info": {
-    "project_number": "824625580730",
-    "project_id": "language-this",
-    "storage_bucket": "language-this.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:824625580730:android:4e96e01fce9aa61a211083",
-        "android_client_info": {
-          "package_name": "in.comprehensible"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBuO8XwuuIlxgwtuLhAngdjqWC8RvmG3-g"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
-}
-EOF
-
 # Run the existing SDK installer
 "${PROJECT_ROOT}/scripts/setup-android-sdk.sh"
 
