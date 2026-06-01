@@ -24,6 +24,7 @@ import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
 import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
@@ -100,6 +101,10 @@ class ComprehensibleInputTestScope(
 
     fun goToStoryList() {
         navController.navigate(StoryListRoute)
+    }
+
+    fun goToSettings() {
+        navController.navigate(SettingsRoute)
     }
 
     fun goToStoryReader(id: String) {

@@ -7,14 +7,17 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 22-26
+## Lines 25-32
 
-Location: `src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt:22-26`
+Location: `src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt:25-32`
 
 ```kotlin
-⚪   22 |         )
-🟢   23 |         softwareLicences(
-🟡   24 |             onNavigateUp = navController::navigateUp,
 ⚪   25 |         )
-⚪   26 |     }
+🟢   26 |         accountScreen(
+🟡   27 |             onNavigateUp = navController::navigateUp,
+⚪   28 |         )
+🟢   29 |         softwareLicences(
+🟡   30 |             onNavigateUp = navController::navigateUp,
+⚪   31 |         )
+⚪   32 |     }
 ```
