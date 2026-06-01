@@ -51,4 +51,16 @@
     <string name="story_reader_error_dialog_message">No pudimos abrir esta historia. Inténtalo de nuevo más tarde.</string>
     <string name="story_reader_error_dialog_button">Aceptar</string>
     <string name="story_reader_error_dialog_content_description">Ilustración de un robot triste</string>
+    <string name="account_sign_up_email_label">Correo electrónico</string>
+    <string name="account_sign_up_password_label">Contraseña</string>
+    <string name="account_sign_up_confirm_password_label">Confirmar contraseña</string>
+    <string name="account_sign_up_submit_button">Registrarse</string>
+    <string name="account_verify_email_message">Hemos enviado un código de verificación de 6 dígitos a %1$s</string>
+    <string name="account_verify_email_code_label">Código de verificación</string>
+    <string name="account_verify_email_submit_button">Verificar</string>
+    <string name="account_verified_message">Tu correo electrónico ha sido verificado. Ahora puedes iniciar sesión en tu cuenta.</string>
+    <string name="generic_error_dialog_title">Algo salió mal</string>
+    <string name="generic_error_dialog_message">Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="generic_error_dialog_button">Aceptar</string>
+    <string name="generic_error_dialog_content_description">Ilustración de un robot triste</string>
 </resources>
