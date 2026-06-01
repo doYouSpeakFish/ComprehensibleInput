@@ -43,21 +43,9 @@ class AccountService(
                                 "If this was not you, you can safely ignore this message.",
                         )
                     }
-                } else {
-                    accountsDao.storeEmailVerificationCode(
-                        accountId = insertAccountResult.accountId,
-                        code = verificationCode,
-                        expiresAt = now() + verificationCodeTtlMs,
-                    )
-                    runBlocking {
-                        emailDataSource.sendEmail(
-                            to = normalizedEmail,
-                            subject = "Verify your Comprehensible Input email address",
-                            textBody = "Use this verification code to verify your Comprehensible Input email address: $verificationCode",
-                        )
-                    }
+                    return AccountResult(HttpStatusCode.OK)
                 }
-                return AccountResult(HttpStatusCode.OK)
+                insertAccountResult.accountId
             }
             is InsertAccountResult.Inserted -> insertAccountResult.accountId
         }
