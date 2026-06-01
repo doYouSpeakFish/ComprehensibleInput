@@ -68,7 +68,9 @@ class AccountViewModel(
         viewModelScope.launch {
             accountRepository.verifyEmail(step.email, step.code)
                 .onSuccess {
-                    // Email verified successfully
+                    _uiState.update {
+                        AccountUiState(step = AccountUiState.Step.Verified)
+                    }
                 }
                 .onFailure {
                     _uiState.update { it.copy(step = step.copy(isLoading = false), showError = true) }

@@ -58,6 +58,7 @@
     <string name="account_verify_email_message">We\'ve sent a 6-digit verification code to %1$s</string>
     <string name="account_verify_email_code_label">Verification code</string>
     <string name="account_verify_email_submit_button">Verify</string>
+    <string name="account_verified_message">Your email has been verified. You can now sign in to your account.</string>
     <string name="generic_error_dialog_title">Something went wrong</string>
     <string name="generic_error_dialog_message">Please try again later.</string>
     <string name="generic_error_dialog_button">OK</string>
