@@ -3,6 +3,8 @@
     <string name="navigate_up">Naviguer vers le haut</string>
     <string name="settings_button_description">Paramètres</string>
     <string name="settings_screen_title">Paramètres</string>
+    <string name="settings_item_account">Compte</string>
+    <string name="account_screen_title">Compte</string>
     <string name="settings_item_software_licences">Licences des logiciels</string>
     <string name="software_licences_screen_title">Licences des logiciels</string>
     <string name="language_selector_en_content_description">Sélectionner l\'anglais</string>

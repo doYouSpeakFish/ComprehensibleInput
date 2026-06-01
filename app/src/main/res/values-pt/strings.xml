@@ -3,6 +3,8 @@
     <string name="navigate_up">Voltar</string>
     <string name="settings_button_description">Configurações</string>
     <string name="settings_screen_title">Configurações</string>
+    <string name="settings_item_account">Conta</string>
+    <string name="account_screen_title">Conta</string>
     <string name="settings_item_software_licences">Licenças de software</string>
     <string name="software_licences_screen_title">Licenças de software</string>
     <string name="language_selector_en_content_description">Selecionar inglês</string>

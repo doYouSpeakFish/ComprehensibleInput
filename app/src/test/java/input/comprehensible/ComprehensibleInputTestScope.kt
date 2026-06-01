@@ -23,6 +23,8 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemo
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
+import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
@@ -41,6 +43,7 @@ class ComprehensibleInputTestScope(
     val testScope: TestScope,
     private val darkTheme: Boolean,
     aiTextAdventuresEnabled: Boolean,
+    accountManagementEnabled: Boolean,
 ) {
     private var isAppUiLaunched = false
 
@@ -69,7 +72,10 @@ class ComprehensibleInputTestScope(
 
     init {
         FeatureFlags.inject {
-            FeatureFlags(aiTextAdventuresEnabled = aiTextAdventuresEnabled)
+            FeatureFlags(
+                aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+                accountManagementEnabled = accountManagementEnabled,
+            )
         }
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
@@ -101,8 +107,16 @@ class ComprehensibleInputTestScope(
         navController.navigate(StoryListRoute)
     }
 
+    fun goToSettings() {
+        navController.navigate(SettingsRoute)
+    }
+
     fun goToStoryReader(id: String) {
         navController.navigate(StoryReaderRoute(storyId = id))
+    }
+
+    fun goToAccount() {
+        navController.navigate(AccountRoute)
     }
 
     fun goToSoftwareLicences() {
@@ -160,6 +174,7 @@ class ComprehensibleInputTestScope(
 
 fun ComprehensibleInputTestRule.runTest(
     aiTextAdventuresEnabled: Boolean = true,
+    accountManagementEnabled: Boolean = true,
     block: suspend ComprehensibleInputTestScope.() -> Unit
 ) = kotlinx.coroutines.test.runTest(context = dispatcher) {
     ComprehensibleInputTestScope(
@@ -168,6 +183,7 @@ fun ComprehensibleInputTestRule.runTest(
         dispatcher = dispatcher,
         darkTheme = themeMode.isDarkTheme,
         aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+        accountManagementEnabled = accountManagementEnabled,
     ).apply {
         block()
         close()
