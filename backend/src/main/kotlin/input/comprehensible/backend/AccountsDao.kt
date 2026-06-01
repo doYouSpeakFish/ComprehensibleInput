@@ -20,7 +20,10 @@ class AccountsDao(private val database: Database) {
     fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): InsertAccountResult =
         transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
             val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
-            if (existing != null) return@transaction InsertAccountResult.AlreadyExists
+            if (existing != null) return@transaction InsertAccountResult.AlreadyExists(
+                accountId = existing[AccountsTable.id],
+                emailVerified = existing[AccountsTable.emailVerified],
+            )
 
             val accountId = UUID.randomUUID().toString()
             AccountsTable.insert {
@@ -191,7 +194,7 @@ enum class EmailChangeRequestResult { Requested, AlreadyInUse }
 
 sealed interface InsertAccountResult {
     data class Inserted(val accountId: String) : InsertAccountResult
-    data object AlreadyExists : InsertAccountResult
+    data class AlreadyExists(val accountId: String, val emailVerified: Boolean) : InsertAccountResult
 }
 
 object AccountsTable : Table("account_user") {

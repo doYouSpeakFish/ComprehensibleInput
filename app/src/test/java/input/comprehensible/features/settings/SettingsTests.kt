@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.sample.SampleStoriesData
+import input.comprehensible.features.account.onAccount
 import input.comprehensible.features.softwarelicences.onSoftwareLicences
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
@@ -27,7 +28,83 @@ class SettingsTests {
     val testRule = ComprehensibleInputTestRule()
 
     @Test
+    fun `settings screen shows account option`() = testRule.runTest {
+        // GIVEN the settings screen is shown
+        goToSettings()
+        awaitIdle()
+
+        onSettings {
+            // THEN the account link is shown
+            assertAccountOptionIsVisible()
+        }
+    }
+
+    @Test
+    fun `account link opens the account screen`() = testRule.runTest {
+        // GIVEN the settings screen is shown
+        goToSettings()
+        awaitIdle()
+
+        onSettings {
+            // WHEN the reader chooses the account link
+            openAccount()
+        }
+        awaitIdle()
+
+        onAccount {
+            // THEN the account screen title is visible
+            assertAccountTitleIsVisible()
+        }
+    }
+
+    @Test
+    fun `account option is hidden when account management is disabled`() = testRule.runTest(
+        accountManagementEnabled = false,
+    ) {
+        // GIVEN the settings screen is shown with account management disabled
+        goToSettings()
+        awaitIdle()
+
+        onSettings {
+            // THEN the account option is not shown
+            assertAccountOptionIsNotVisible()
+        }
+    }
+
+    @Test
     fun `settings screen shows software licences option`() = testRule.runTest {
+        // GIVEN the settings screen is shown
+        goToSettings()
+        awaitIdle()
+
+        onSettings {
+            // THEN the settings title is visible
+            assertSettingsTitleIsVisible()
+            // AND the software licences link is shown
+            assertSoftwareLicencesOptionIsVisible()
+        }
+    }
+
+    @Test
+    fun `software licences link opens the software licences screen`() = testRule.runTest {
+        // GIVEN the settings screen is shown
+        goToSettings()
+        awaitIdle()
+
+        onSettings {
+            // WHEN the reader chooses the software licences link
+            openSoftwareLicences()
+        }
+        awaitIdle()
+
+        onSoftwareLicences {
+            // THEN the software licences screen title is visible
+            assertSoftwareLicencesTitleIsVisible()
+        }
+    }
+
+    @Test
+    fun `settings can be opened from the story list`() = testRule.runTest {
         // GIVEN a full library of stories is available for readers
         val stories = SampleStoriesData.listOf100Stories
         setLocalStories(stories)
@@ -44,35 +121,6 @@ class SettingsTests {
         onSettings {
             // THEN the settings title is visible
             assertSettingsTitleIsVisible()
-            // AND the software licences link is shown
-            assertSoftwareLicencesOptionIsVisible()
-        }
-    }
-
-    @Test
-    fun `software licences link opens the software licences screen`() = testRule.runTest {
-        // GIVEN a full library of stories is available for readers
-        val stories = SampleStoriesData.listOf100Stories
-        setLocalStories(stories)
-        // AND the story list is open
-        goToStoryList()
-        awaitIdle()
-
-        onStoryList {
-            // AND the reader opens the settings screen
-            openSettings()
-        }
-        awaitIdle()
-
-        onSettings {
-            // WHEN the reader chooses the software licences link
-            openSoftwareLicences()
-        }
-        awaitIdle()
-
-        onSoftwareLicences {
-            // THEN the software licences screen title is visible
-            assertSoftwareLicencesTitleIsVisible()
         }
     }
 

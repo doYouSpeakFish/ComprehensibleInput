@@ -13,6 +13,8 @@ import input.comprehensible.data.TextAdventuresTestData
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
@@ -23,6 +25,8 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemo
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
+import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
@@ -41,12 +45,14 @@ class ComprehensibleInputTestScope(
     val testScope: TestScope,
     private val darkTheme: Boolean,
     aiTextAdventuresEnabled: Boolean,
+    accountManagementEnabled: Boolean,
 ) {
     private var isAppUiLaunched = false
 
     private val storiesTestData = StoriesTestData()
     private val fakeTextAdventureRemoteDataSource = FakeTextAdventureRemoteDataSource()
     private val textAdventuresTestData = TextAdventuresTestData(fakeTextAdventureRemoteDataSource)
+    private val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
         .inMemoryDatabaseBuilder<AppDb>(context = appContext)
@@ -69,7 +75,10 @@ class ComprehensibleInputTestScope(
 
     init {
         FeatureFlags.inject {
-            FeatureFlags(aiTextAdventuresEnabled = aiTextAdventuresEnabled)
+            FeatureFlags(
+                aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+                accountManagementEnabled = accountManagementEnabled,
+            )
         }
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
@@ -82,6 +91,7 @@ class ComprehensibleInputTestScope(
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
         TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
+        AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
     }
 
     fun launchAppUi() {
@@ -101,8 +111,16 @@ class ComprehensibleInputTestScope(
         navController.navigate(StoryListRoute)
     }
 
+    fun goToSettings() {
+        navController.navigate(SettingsRoute)
+    }
+
     fun goToStoryReader(id: String) {
         navController.navigate(StoryReaderRoute(storyId = id))
+    }
+
+    fun goToAccount() {
+        navController.navigate(AccountRoute)
     }
 
     fun goToSoftwareLicences() {
@@ -153,6 +171,30 @@ class ComprehensibleInputTestScope(
         textAdventuresTestData.enqueueAdventure(scenario, responses)
     }
 
+    fun delayAccountRequests(delayMillis: Long) {
+        fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
+    }
+
+    fun enqueueCreateAccountResult(result: Result<Unit>) {
+        fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
+    }
+
+    fun enqueueVerifyEmailResult(result: Result<Unit>) {
+        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
+    }
+
+    /**
+     * Navigates away from the screen under test so that it leaves the composition. Disposing the
+     * screen cancels any infinite animations it hosts (such as the blinking text field cursor),
+     * which would otherwise keep the test scheduler busy forever and hang [runTest]'s final drain.
+     * Software licences is used as the destination because it has no infinite animations of its own.
+     */
+    internal suspend fun disposeUiUnderTest() {
+        if (!isAppUiLaunched) return
+        _navController.navigate(SoftwareLicencesRoute)
+        awaitIdle()
+    }
+
     internal fun close() {
         appDb.close()
     }
@@ -160,6 +202,7 @@ class ComprehensibleInputTestScope(
 
 fun ComprehensibleInputTestRule.runTest(
     aiTextAdventuresEnabled: Boolean = true,
+    accountManagementEnabled: Boolean = true,
     block: suspend ComprehensibleInputTestScope.() -> Unit
 ) = kotlinx.coroutines.test.runTest(context = dispatcher) {
     ComprehensibleInputTestScope(
@@ -168,8 +211,10 @@ fun ComprehensibleInputTestRule.runTest(
         dispatcher = dispatcher,
         darkTheme = themeMode.isDarkTheme,
         aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+        accountManagementEnabled = accountManagementEnabled,
     ).apply {
         block()
+        disposeUiUnderTest()
         close()
     }
 }

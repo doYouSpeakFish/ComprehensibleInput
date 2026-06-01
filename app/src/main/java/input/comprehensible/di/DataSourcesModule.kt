@@ -7,6 +7,8 @@ import input.comprehensible.data.stories.sources.stories.local.DefaultStoriesLoc
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.account.sources.remote.DefaultAccountRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.DefaultTextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 
@@ -17,5 +19,6 @@ object DataSourcesModule {
         LanguageSettingsLocalDataSource.inject { DefaultLanguageSettingsLocalDataSource() }
         TextAdventuresLocalDataSource.inject { AppDb.getInstance().getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { DefaultTextAdventureRemoteDataSource() }
+        AccountRemoteDataSource.inject { DefaultAccountRemoteDataSource() }
     }
 }
