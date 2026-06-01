@@ -33,14 +33,29 @@ class AccountService(
             now = now(),
         )
         val accountId = when (insertAccountResult) {
-            InsertAccountResult.AlreadyExists -> {
-                runBlocking {
-                    emailDataSource.sendEmail(
-                        to = normalizedEmail,
-                        subject = "Comprehensible Input account already exists",
-                        textBody = "A Comprehensible Input account already exists for this email address. " +
-                            "If this was not you, you can safely ignore this message.",
+            is InsertAccountResult.AlreadyExists -> {
+                if (insertAccountResult.emailVerified) {
+                    runBlocking {
+                        emailDataSource.sendEmail(
+                            to = normalizedEmail,
+                            subject = "Comprehensible Input account already exists",
+                            textBody = "A Comprehensible Input account already exists for this email address. " +
+                                "If this was not you, you can safely ignore this message.",
+                        )
+                    }
+                } else {
+                    accountsDao.storeEmailVerificationCode(
+                        accountId = insertAccountResult.accountId,
+                        code = verificationCode,
+                        expiresAt = now() + verificationCodeTtlMs,
                     )
+                    runBlocking {
+                        emailDataSource.sendEmail(
+                            to = normalizedEmail,
+                            subject = "Verify your Comprehensible Input email address",
+                            textBody = "Use this verification code to verify your Comprehensible Input email address: $verificationCode",
+                        )
+                    }
                 }
                 return AccountResult(HttpStatusCode.OK)
             }
