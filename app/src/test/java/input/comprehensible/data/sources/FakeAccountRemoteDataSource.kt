@@ -1,10 +1,17 @@
 package input.comprehensible.data.sources
 
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import kotlinx.coroutines.delay
 
 class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
+
+    /**
+     * When greater than zero, requests suspend for this many milliseconds before completing. This
+     * keeps a request in-flight so tests can observe the loading state before it finishes.
+     */
+    var requestDelayMillis: Long = 0L
 
     fun enqueueCreateAccountResult(result: Result<Unit>) {
         createAccountResults.add(result)
@@ -15,12 +22,14 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     }
 
     override suspend fun createAccount(email: String, password: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
         createAccountResults.removeFirstOrNull()
             ?.getOrThrow()
             ?: error("No scripted create account result available")
     }
 
     override suspend fun verifyEmail(email: String, code: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
         verifyEmailResults.removeFirstOrNull()
             ?.getOrThrow()
             ?: error("No scripted verify email result available")

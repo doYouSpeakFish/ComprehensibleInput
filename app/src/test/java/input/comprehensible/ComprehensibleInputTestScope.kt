@@ -171,12 +171,28 @@ class ComprehensibleInputTestScope(
         textAdventuresTestData.enqueueAdventure(scenario, responses)
     }
 
+    fun delayAccountRequests(delayMillis: Long) {
+        fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
+    }
+
     fun enqueueCreateAccountResult(result: Result<Unit>) {
         fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
     }
 
     fun enqueueVerifyEmailResult(result: Result<Unit>) {
         fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
+    }
+
+    /**
+     * Navigates away from the screen under test so that it leaves the composition. Disposing the
+     * screen cancels any infinite animations it hosts (such as the blinking text field cursor),
+     * which would otherwise keep the test scheduler busy forever and hang [runTest]'s final drain.
+     * Software licences is used as the destination because it has no infinite animations of its own.
+     */
+    internal suspend fun disposeUiUnderTest() {
+        if (!isAppUiLaunched) return
+        _navController.navigate(SoftwareLicencesRoute)
+        awaitIdle()
     }
 
     internal fun close() {
@@ -198,6 +214,7 @@ fun ComprehensibleInputTestRule.runTest(
         accountManagementEnabled = accountManagementEnabled,
     ).apply {
         block()
+        disposeUiUnderTest()
         close()
     }
 }
