@@ -29,6 +29,7 @@ internal fun AccountScreen(
     )
 }
 
+@Suppress("UnusedParameter")
 @Composable
 private fun AccountScreen(
     uiState: AccountUiState,
