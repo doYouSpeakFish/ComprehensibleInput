@@ -26,6 +26,7 @@ import input.comprehensible.util.DefaultPreview
 @Composable
 internal fun Settings(
     onNavigateUp: () -> Unit,
+    accountManagementEnabled: Boolean,
     onGoToAccount: () -> Unit,
     onGoToSoftwareLicences: () -> Unit,
     modifier: Modifier = Modifier
@@ -42,10 +43,12 @@ internal fun Settings(
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
-            SettingsItem(
-                onClick = onGoToAccount,
-                title = stringResource(R.string.settings_item_account)
-            )
+            if (accountManagementEnabled) {
+                SettingsItem(
+                    onClick = onGoToAccount,
+                    title = stringResource(R.string.settings_item_account)
+                )
+            }
             SettingsItem(
                 onClick = onGoToSoftwareLicences,
                 title = stringResource(R.string.settings_item_software_licences)
@@ -91,6 +94,7 @@ fun SettingsPreview() {
         Settings(
             modifier = Modifier.fillMaxSize(),
             onNavigateUp = {},
+            accountManagementEnabled = true,
             onGoToAccount = {},
             onGoToSoftwareLicences = {}
         )

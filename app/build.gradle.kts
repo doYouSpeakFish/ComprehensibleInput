@@ -46,6 +46,7 @@ android {
 
     defaultConfig {
         buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "false")
+        buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "false")
         applicationId = "in.comprehensible"
         minSdk = 24
         targetSdk = 36
@@ -64,10 +65,12 @@ android {
         create("production") {
             dimension = "environment"
             buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
+            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "$enableAllFeatureFlags")
         }
         create("pr") {
             dimension = "environment"
             buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
+            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "true")
             versionNameSuffix = "-pr-$prNumber"
             buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
         }
@@ -88,6 +91,7 @@ android {
         debug {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
             buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
+            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "true")
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")

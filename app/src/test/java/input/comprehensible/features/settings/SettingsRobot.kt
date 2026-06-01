@@ -1,7 +1,9 @@
 package input.comprehensible.features.settings
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -18,6 +20,12 @@ class SettingsRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule
             .onNodeWithText("Account")
             .assertIsDisplayed()
+    }
+
+    fun assertAccountOptionIsNotVisible() {
+        composeTestRule
+            .onAllNodesWithText("Account")
+            .assertCountEquals(0)
     }
 
     fun openAccount() {

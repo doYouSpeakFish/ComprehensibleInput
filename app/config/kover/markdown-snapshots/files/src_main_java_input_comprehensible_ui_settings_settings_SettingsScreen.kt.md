@@ -7,14 +7,14 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 60-64
+## Lines 63-67
 
-Location: `src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt:60-64`
+Location: `src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt:63-67`
 
 ```kotlin
-⚪   60 |     onClick: () -> Unit,
-⚪   61 |     title: String,
-🟡   62 | ) {
-🟢   63 |     TextButton(
-🟢   64 |         modifier = modifier,
+⚪   63 |     onClick: () -> Unit,
+⚪   64 |     title: String,
+🟡   65 | ) {
+🟢   66 |     TextButton(
+🟢   67 |         modifier = modifier,
 ```

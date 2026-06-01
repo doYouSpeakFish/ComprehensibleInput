@@ -43,6 +43,7 @@ class ComprehensibleInputTestScope(
     val testScope: TestScope,
     private val darkTheme: Boolean,
     aiTextAdventuresEnabled: Boolean,
+    accountManagementEnabled: Boolean,
 ) {
     private var isAppUiLaunched = false
 
@@ -71,7 +72,10 @@ class ComprehensibleInputTestScope(
 
     init {
         FeatureFlags.inject {
-            FeatureFlags(aiTextAdventuresEnabled = aiTextAdventuresEnabled)
+            FeatureFlags(
+                aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+                accountManagementEnabled = accountManagementEnabled,
+            )
         }
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
@@ -170,6 +174,7 @@ class ComprehensibleInputTestScope(
 
 fun ComprehensibleInputTestRule.runTest(
     aiTextAdventuresEnabled: Boolean = true,
+    accountManagementEnabled: Boolean = true,
     block: suspend ComprehensibleInputTestScope.() -> Unit
 ) = kotlinx.coroutines.test.runTest(context = dispatcher) {
     ComprehensibleInputTestScope(
@@ -178,6 +183,7 @@ fun ComprehensibleInputTestRule.runTest(
         dispatcher = dispatcher,
         darkTheme = themeMode.isDarkTheme,
         aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+        accountManagementEnabled = accountManagementEnabled,
     ).apply {
         block()
         close()

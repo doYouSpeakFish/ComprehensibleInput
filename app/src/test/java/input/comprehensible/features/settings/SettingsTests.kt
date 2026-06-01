@@ -58,6 +58,20 @@ class SettingsTests {
     }
 
     @Test
+    fun `account option is hidden when account management is disabled`() = testRule.runTest(
+        accountManagementEnabled = false,
+    ) {
+        // GIVEN the settings screen is shown with account management disabled
+        goToSettings()
+        awaitIdle()
+
+        onSettings {
+            // THEN the account option is not shown
+            assertAccountOptionIsNotVisible()
+        }
+    }
+
+    @Test
     fun `settings screen shows software licences option`() = testRule.runTest {
         // GIVEN the settings screen is shown
         goToSettings()
