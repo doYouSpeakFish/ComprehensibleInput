@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
+    private val signInResults = ArrayDeque<Result<String>>()
 
     /**
      * When greater than zero, requests suspend for this many milliseconds before completing. This
@@ -21,6 +22,10 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
         verifyEmailResults.add(result)
     }
 
+    fun enqueueSignInResult(result: Result<String>) {
+        signInResults.add(result)
+    }
+
     override suspend fun createAccount(email: String, password: String) {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
         createAccountResults.removeFirstOrNull()
@@ -33,5 +38,12 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
         verifyEmailResults.removeFirstOrNull()
             ?.getOrThrow()
             ?: error("No scripted verify email result available")
+    }
+
+    override suspend fun signIn(email: String, password: String): String {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+        return signInResults.removeFirstOrNull()
+            ?.getOrThrow()
+            ?: error("No scripted sign in result available")
     }
 }

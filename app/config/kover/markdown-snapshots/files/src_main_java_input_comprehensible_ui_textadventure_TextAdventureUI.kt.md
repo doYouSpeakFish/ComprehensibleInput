@@ -7,9 +7,9 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 46-50
+## Lines 46-57
 
-Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.kt:46-50`
+Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.kt:46-57`
 
 ```kotlin
 ⚪   46 |     onNavigateUp: () -> Unit,
@@ -17,6 +17,13 @@ Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.k
 🟡   48 | ) {
 🟢   49 |     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = TextAdventureUiState.Loading)
 🟢   50 |     TextAdventureScreen(
+🟢   51 |         modifier = modifier,
+🟢   52 |         onNavigateUp = onNavigateUp,
+🟡   53 |         onInputChanged = viewModel::onInputChanged,
+🟡   54 |         onSendMessage = viewModel::onSendMessage,
+🟡   55 |         onSentenceSelected = viewModel::onSentenceSelected,
+🟢   56 |         state = state,
+⚪   57 |     )
 ```
 
 ## Lines 66-70
@@ -67,16 +74,16 @@ Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.k
 🟢  116 |         modifier = modifier
 ```
 
-## Lines 144-148
+## Lines 119-123
 
-Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.kt:144-148`
+Location: `src/main/java/input/comprehensible/ui/textadventure/TextAdventureUI.kt:119-123`
 
 ```kotlin
-⚪  144 |     selectedText: TextAdventureUiState.SelectedText?,
-⚪  145 |     onSentenceSelected: (messageId: String, paragraphIndex: Int, sentenceIndex: Int) -> Unit,
-🟡  146 | ) {
-🟢  147 |     Surface(
-🟢  148 |         modifier = Modifier.fillMaxWidth(),
+🟢  119 |         contentPadding = PaddingValues(16.dp),
+🟢  120 |         verticalArrangement = Arrangement.spacedBy(16.dp),
+🟡  121 |     ) {
+🟢  122 |         item {
+🟢  123 |             Text(
 ```
 
 ## Lines 153-157

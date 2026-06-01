@@ -5,6 +5,7 @@ import android.os.Build
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
+import input.comprehensible.data.account.InvalidCredentialsException
 import input.comprehensible.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -33,23 +34,224 @@ class AccountTests(private val themeMode: ThemeMode) {
         fun parameters() = ThemeMode.entries.map { arrayOf(it) }
     }
 
+    // Sign in tests
+
     @Test
-    fun `account sign up screenshot`() = testRule.runTest {
-        // GIVEN the account screen is open
+    fun `account sign in screenshot`() = testRule.runTest {
+        // GIVEN the account screen is open with no session
         goToAccount()
         awaitIdle()
 
-        // THEN the sign up form is shown with the account title
+        // THEN the sign in form is shown
         onAccount {
             assertAccountTitleIsVisible()
+            assertSignInScreenIsShown()
         }
     }
 
     @Test
-    fun `sign up button is disabled when fields are empty`() = testRule.runTest {
+    fun `sign in button is disabled when fields are empty`() = testRule.runTest {
         // GIVEN the account screen is open
         goToAccount()
         awaitIdle()
+
+        onAccount {
+            // THEN the sign in button is disabled
+            assertSignInSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `sign in button is disabled when only email is filled`() = testRule.runTest {
+        // GIVEN the account screen is open
+        goToAccount()
+        awaitIdle()
+
+        onAccount {
+            // WHEN only the email is filled
+            enterSignInEmail("user@example.com")
+
+            // THEN the sign in button is disabled
+            assertSignInSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `sign in button is disabled when only password is filled`() = testRule.runTest {
+        // GIVEN the account screen is open
+        goToAccount()
+        awaitIdle()
+
+        onAccount {
+            // WHEN only the password is filled
+            enterSignInPassword("password12345")
+
+            // THEN the sign in button is disabled
+            assertSignInSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `sign in button is enabled when email and password are filled`() = testRule.runTest {
+        // GIVEN the account screen is open
+        goToAccount()
+        awaitIdle()
+
+        onAccount {
+            // WHEN both fields are filled
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+
+            // THEN the sign in button is enabled
+            assertSignInSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `sign in shows loading state while request is in progress`() = testRule.runTest {
+        // GIVEN the account screen is open with valid fields filled
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+        }
+        // The request is kept in-flight so the loading state can be observed before it completes
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueSignInResult(Result.success("token123"))
+
+        // WHEN the sign in button is tapped
+        onAccount { tapSignIn() }
+
+        // THEN the loading indicator is shown, sign in button is disabled, and sign up button is disabled
+        onAccount {
+            assertSignInLoadingIndicatorIsShown()
+            assertSignInSubmitIsDisabled()
+            assertSignUpFromSignInIsDisabled()
+        }
+    }
+
+    @Test
+    fun `sign in navigates to signed in step on success`() = testRule.runTest {
+        // GIVEN the account screen is open with valid fields filled
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+        }
+        enqueueSignInResult(Result.success("token123"))
+
+        // WHEN the sign in request succeeds
+        onAccount { tapSignIn() }
+        awaitIdle()
+
+        // THEN the signed in state is shown with the user's email
+        onAccount {
+            assertSignedInEmailIsShown("user@example.com")
+        }
+    }
+
+    @Test
+    fun `sign in shows invalid credentials dialog on 401 error`() = testRule.runTest {
+        // GIVEN the account screen is open with fields filled
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("wrongpassword12345")
+        }
+        enqueueSignInResult(Result.failure(InvalidCredentialsException()))
+
+        // WHEN the sign in request fails with invalid credentials
+        onAccount { tapSignIn() }
+        awaitIdle()
+
+        // THEN the invalid credentials dialog is shown
+        onAccount {
+            assertInvalidCredentialsDialogIsShown()
+        }
+    }
+
+    @Test
+    fun `sign in shows generic error dialog on non-credentials failure`() = testRule.runTest {
+        // GIVEN the account screen is open with fields filled
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+        }
+        enqueueSignInResult(Result.failure(Exception("Network error")))
+
+        // WHEN the sign in request fails with a generic error
+        onAccount { tapSignIn() }
+        awaitIdle()
+
+        // THEN the generic error dialog is shown
+        onAccount {
+            assertErrorDialogIsShown()
+        }
+    }
+
+    @Test
+    fun `sign up button navigates to sign up step`() = testRule.runTest {
+        // GIVEN the account screen is open showing the sign in step
+        goToAccount()
+        awaitIdle()
+
+        // WHEN the sign up button is tapped
+        onAccount { tapSignUpFromSignIn() }
+        awaitIdle()
+
+        // THEN the sign up form is shown
+        onAccount {
+            assertSignUpSubmitIsDisabled()
+        }
+    }
+
+    // Signed in tests
+
+    @Test
+    fun `account shows signed in state when session exists`() = testRule.runTest {
+        // GIVEN a session has been saved
+        saveAccountSession(token = "test-token", email = "user@example.com")
+
+        // WHEN the account screen is opened
+        goToAccount()
+        awaitIdle()
+
+        // THEN the signed in state is shown with the user's email
+        onAccount {
+            assertSignedInEmailIsShown("user@example.com")
+        }
+    }
+
+    @Test
+    fun `sign out returns to sign in state`() = testRule.runTest {
+        // GIVEN the user is signed in
+        saveAccountSession(token = "test-token", email = "user@example.com")
+        goToAccount()
+        awaitIdle()
+
+        // WHEN the sign out button is tapped
+        onAccount { tapSignOut() }
+        awaitIdle()
+
+        // THEN the sign in state is shown
+        onAccount {
+            assertSignInScreenIsShown()
+        }
+    }
+
+    // Sign up tests
+
+    @Test
+    fun `sign up button is disabled when fields are empty`() = testRule.runTest {
+        // GIVEN the sign up step is shown
+        goToAccount()
+        awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
 
         onAccount {
             // THEN the submit button is disabled
@@ -59,9 +261,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up button is disabled when email is missing`() = testRule.runTest {
-        // GIVEN the account screen is open
+        // GIVEN the sign up step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
 
         onAccount {
             // WHEN password and confirm password are filled but email is not entered
@@ -75,9 +278,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up button is disabled when email is invalid`() = testRule.runTest {
-        // GIVEN the account screen is open
+        // GIVEN the sign up step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
 
         onAccount {
             // WHEN an email without an @ symbol is entered
@@ -92,9 +296,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up button is disabled when password is too short`() = testRule.runTest {
-        // GIVEN the account screen is open
+        // GIVEN the sign up step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
 
         onAccount {
             // WHEN a password shorter than 12 characters is entered
@@ -109,9 +314,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up button is disabled when passwords do not match`() = testRule.runTest {
-        // GIVEN the account screen is open
+        // GIVEN the sign up step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
 
         onAccount {
             // WHEN a valid email and password are entered but the confirm password does not match
@@ -126,9 +332,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up button is enabled when all fields are valid`() = testRule.runTest {
-        // GIVEN the account screen is open
+        // GIVEN the sign up step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
 
         onAccount {
             // WHEN all fields are filled with valid values and passwords match
@@ -143,9 +350,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up shows loading state while request is in progress`() = testRule.runTest {
-        // GIVEN the account screen is open with valid fields filled
+        // GIVEN the sign up step is shown with valid fields filled
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -169,9 +377,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up navigates to verify email step on success`() = testRule.runTest {
-        // GIVEN the account screen is open with valid fields filled
+        // GIVEN the sign up step is shown with valid fields filled
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -193,9 +402,10 @@ class AccountTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `sign up shows error dialog on failure`() = testRule.runTest {
-        // GIVEN the account screen is open with valid fields filled
+        // GIVEN the sign up step is shown with valid fields filled
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -220,6 +430,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         // GIVEN a sign up error has occurred
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -240,11 +451,14 @@ class AccountTests(private val themeMode: ThemeMode) {
         }
     }
 
+    // Verify email tests
+
     @Test
     fun `verify email button is disabled when code is empty`() = testRule.runTest {
         // GIVEN the verify email step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -265,6 +479,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         // GIVEN the verify email step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -288,6 +503,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         // GIVEN the verify email step is shown
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -311,6 +527,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         // GIVEN the verify email step is shown with a 6-digit code entered
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -335,10 +552,11 @@ class AccountTests(private val themeMode: ThemeMode) {
     }
 
     @Test
-    fun `verify email shows verified message on success`() = testRule.runTest {
+    fun `verify email navigates to sign in step on success`() = testRule.runTest {
         // GIVEN the verify email step is shown with a 6-digit code entered
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")
@@ -354,9 +572,9 @@ class AccountTests(private val themeMode: ThemeMode) {
         onAccount { tapVerifyEmailSubmit() }
         awaitIdle()
 
-        // THEN the verified message is shown
+        // THEN the sign in step is shown
         onAccount {
-            assertVerifiedMessageIsShown()
+            assertSignInScreenIsShown()
         }
     }
 
@@ -365,6 +583,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         // GIVEN the verify email step is shown with a 6-digit code entered
         goToAccount()
         awaitIdle()
+        onAccount { tapSignUpFromSignIn() }
         onAccount {
             enterEmail("user@example.com")
             enterPassword("password12345")

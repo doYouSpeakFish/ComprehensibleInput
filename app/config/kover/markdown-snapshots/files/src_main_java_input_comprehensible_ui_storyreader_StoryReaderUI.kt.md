@@ -7,9 +7,9 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 75-79
+## Lines 75-89
 
-Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:75-79`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:75-89`
 
 ```kotlin
 🟢   75 |     viewModel: StoryReaderViewModel = viewModel { StoryReaderViewModel(storyId) },
@@ -17,6 +17,16 @@ Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:75
 🟡   77 | ) {
 🟢   78 |     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
 🟢   79 |     StoryReader(
+🟢   80 |         modifier = modifier,
+🟡   81 |         onTitleClicked = viewModel::onTitleSelected,
+🟡   82 |         onStoryPositionUpdated = viewModel::onStoryLocationUpdated,
+🟡   83 |         onCurrentPartChanged = viewModel::onCurrentPartChanged,
+🟡   84 |         onSentenceSelected = viewModel::onSentenceSelected,
+🟡   85 |         onChoiceTextSelected = viewModel::onChoiceTextSelected,
+🟢   86 |         onErrorDismissed = onErrorDismissed,
+🟡   87 |         onPartScrolledTo = viewModel::onPartScrolledTo,
+🟢   88 |         state = state,
+⚪   89 |     )
 ```
 
 ## Lines 101-105
@@ -57,13 +67,15 @@ Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:14
 🟢  153 |         state.parts.indexOfFirst { part -> part.id == state.currentPartId }.coerceAtLeast(0)
 ```
 
-## Lines 159-164
+## Lines 157-164
 
-Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:159-164`
+Location: `src/main/java/input/comprehensible/ui/storyreader/StoryReaderUI.kt:157-164`
 
 ```kotlin
-🟢  159 |         pageCount = { state.parts.size },
-🟢  160 |         onNewPageSettled = { pageIndex ->
+🟢  157 |         initialPage = currentPartIndex,
+🟢  158 |         pageToScrollTo = state.scrollingToPage,
+🟡  159 |         pageCount = { state.parts.size },
+🟡  160 |         onNewPageSettled = { pageIndex ->
 🟡  161 |             if (pageIndex == state.scrollingToPage) onPartScrolledTo()
 🟡  162 |             currentParts.getOrNull(pageIndex)?.id?.let(onCurrentPartChanged)
 ⚪  163 |         },
