@@ -96,6 +96,12 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    fun assertVerifiedMessageIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_verified_message")
+            .assertIsDisplayed()
+    }
+
     fun assertErrorDialogIsShown() {
         composeTestRule
             .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)

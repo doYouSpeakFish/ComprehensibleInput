@@ -331,6 +331,32 @@ class AccountTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `verify email shows verified message on success`() = testRule.runTest {
+        // GIVEN the verify email step is shown with a 6-digit code entered
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterEmail("user@example.com")
+            enterPassword("password12345")
+            enterConfirmPassword("password12345")
+        }
+        enqueueCreateAccountResult(Result.success(Unit))
+        onAccount { tapSignUpSubmit() }
+        awaitIdle()
+        onAccount { enterVerificationCode("123456") }
+        enqueueVerifyEmailResult(Result.success(Unit))
+
+        // WHEN the verify request succeeds
+        onAccount { tapVerifyEmailSubmit() }
+        awaitIdle()
+
+        // THEN the verified message is shown
+        onAccount {
+            assertVerifiedMessageIsShown()
+        }
+    }
+
+    @Test
     fun `verify email shows error dialog on failure`() = testRule.runTest {
         // GIVEN the verify email step is shown with a 6-digit code entered
         goToAccount()

@@ -16,11 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -91,6 +93,7 @@ private fun AccountScreen(
                     onCodeChanged = onCodeChanged,
                     onSubmit = onVerifyEmailSubmit,
                 )
+                is AccountUiState.Step.Verified -> VerifiedStep()
             }
         }
     }
@@ -218,6 +221,25 @@ private fun VerifyEmailStep(
     }
 }
 
+@Composable
+private fun VerifiedStep(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = stringResource(R.string.account_verified_message),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.testTag("account_verified_message"),
+        )
+    }
+}
+
 @DefaultPreview
 @Composable
 private fun PreviewAccountSignUp() {
@@ -296,6 +318,25 @@ private fun PreviewAccountVerifyEmailLoading() {
                     isLoading = true,
                 ),
             ),
+            onNavigateUp = {},
+            onEmailChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSignUpSubmit = {},
+            onCodeChanged = {},
+            onVerifyEmailSubmit = {},
+            onErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+private fun PreviewAccountVerified() {
+    ComprehensibleInputTheme {
+        AccountScreen(
+            uiState = AccountUiState(step = AccountUiState.Step.Verified),
             onNavigateUp = {},
             onEmailChanged = {},
             onPasswordChanged = {},

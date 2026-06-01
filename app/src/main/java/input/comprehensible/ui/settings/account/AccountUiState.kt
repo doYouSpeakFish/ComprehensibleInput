@@ -17,6 +17,8 @@ data class AccountUiState(
             val code: String = "",
             val isLoading: Boolean = false,
         ) : Step
+
+        data object Verified : Step
     }
 
     companion object {
