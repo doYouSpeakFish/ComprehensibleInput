@@ -13,6 +13,8 @@ import input.comprehensible.data.TextAdventuresTestData
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
@@ -50,6 +52,7 @@ class ComprehensibleInputTestScope(
     private val storiesTestData = StoriesTestData()
     private val fakeTextAdventureRemoteDataSource = FakeTextAdventureRemoteDataSource()
     private val textAdventuresTestData = TextAdventuresTestData(fakeTextAdventureRemoteDataSource)
+    private val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
         .inMemoryDatabaseBuilder<AppDb>(context = appContext)
@@ -88,6 +91,7 @@ class ComprehensibleInputTestScope(
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
         TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
+        AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
     }
 
     fun launchAppUi() {
@@ -165,6 +169,14 @@ class ComprehensibleInputTestScope(
         responses: List<TextAdventureRemoteResponse>,
     ) {
         textAdventuresTestData.enqueueAdventure(scenario, responses)
+    }
+
+    fun enqueueCreateAccountResult(result: Result<Unit>) {
+        fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
+    }
+
+    fun enqueueVerifyEmailResult(result: Result<Unit>) {
+        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
     }
 
     internal fun close() {

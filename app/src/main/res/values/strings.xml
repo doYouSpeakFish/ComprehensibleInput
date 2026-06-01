@@ -51,4 +51,15 @@
     <string name="story_reader_error_dialog_message">We couldn\'t open this story. Please try again later.</string>
     <string name="story_reader_error_dialog_button">OK</string>
     <string name="story_reader_error_dialog_content_description">Illustration of a sad robot</string>
+    <string name="account_sign_up_email_label">Email</string>
+    <string name="account_sign_up_password_label">Password</string>
+    <string name="account_sign_up_confirm_password_label">Confirm password</string>
+    <string name="account_sign_up_submit_button">Sign up</string>
+    <string name="account_verify_email_message">We\'ve sent a 6-digit verification code to %1$s</string>
+    <string name="account_verify_email_code_label">Verification code</string>
+    <string name="account_verify_email_submit_button">Verify</string>
+    <string name="generic_error_dialog_title">Something went wrong</string>
+    <string name="generic_error_dialog_message">Please try again later.</string>
+    <string name="generic_error_dialog_button">OK</string>
+    <string name="generic_error_dialog_content_description">Illustration of a sad robot</string>
 </resources>
