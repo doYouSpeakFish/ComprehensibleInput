@@ -3,6 +3,8 @@
     <string name="navigate_up">Navigasi ke atas</string>
     <string name="settings_button_description">Pengaturan</string>
     <string name="settings_screen_title">Pengaturan</string>
+    <string name="settings_item_account">Akun</string>
+    <string name="account_screen_title">Akun</string>
     <string name="settings_item_software_licences">Lisensi perangkat lunak</string>
     <string name="software_licences_screen_title">Lisensi perangkat lunak</string>
     <string name="language_selector_en_content_description">Pilih bahasa Inggris</string>

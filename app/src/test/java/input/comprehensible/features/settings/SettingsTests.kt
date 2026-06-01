@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.data.sample.SampleStoriesData
+import input.comprehensible.features.account.onAccount
 import input.comprehensible.features.softwarelicences.onSoftwareLicences
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
@@ -25,6 +26,54 @@ import org.robolectric.annotation.GraphicsMode
 class SettingsTests {
     @get:Rule
     val testRule = ComprehensibleInputTestRule()
+
+    @Test
+    fun `settings screen shows account option`() = testRule.runTest {
+        // GIVEN a full library of stories is available for readers
+        val stories = SampleStoriesData.listOf100Stories
+        setLocalStories(stories)
+        // AND the story list is open
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // WHEN the reader opens the settings screen
+            openSettings()
+        }
+        awaitIdle()
+
+        onSettings {
+            // THEN the account link is shown
+            assertAccountOptionIsVisible()
+        }
+    }
+
+    @Test
+    fun `account link opens the account screen`() = testRule.runTest {
+        // GIVEN a full library of stories is available for readers
+        val stories = SampleStoriesData.listOf100Stories
+        setLocalStories(stories)
+        // AND the story list is open
+        goToStoryList()
+        awaitIdle()
+
+        onStoryList {
+            // AND the reader opens the settings screen
+            openSettings()
+        }
+        awaitIdle()
+
+        onSettings {
+            // WHEN the reader chooses the account link
+            openAccount()
+        }
+        awaitIdle()
+
+        onAccount {
+            // THEN the account screen title is visible
+            assertAccountTitleIsVisible()
+        }
+    }
 
     @Test
     fun `settings screen shows software licences option`() = testRule.runTest {

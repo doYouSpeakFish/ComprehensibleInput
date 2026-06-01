@@ -14,6 +14,18 @@ class SettingsRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    fun assertAccountOptionIsVisible() {
+        composeTestRule
+            .onNodeWithText("Account")
+            .assertIsDisplayed()
+    }
+
+    fun openAccount() {
+        composeTestRule
+            .onNodeWithText("Account")
+            .performClick()
+    }
+
     fun assertSoftwareLicencesOptionIsVisible() {
         composeTestRule
             .onNodeWithText("Software licences")

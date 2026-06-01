@@ -23,6 +23,7 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemo
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
+import input.comprehensible.ui.settings.account.AccountRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
@@ -103,6 +104,10 @@ class ComprehensibleInputTestScope(
 
     fun goToStoryReader(id: String) {
         navController.navigate(StoryReaderRoute(storyId = id))
+    }
+
+    fun goToAccount() {
+        navController.navigate(AccountRoute)
     }
 
     fun goToSoftwareLicences() {
