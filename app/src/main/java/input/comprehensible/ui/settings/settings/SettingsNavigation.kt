@@ -9,12 +9,14 @@ data object SettingsRoute
 
 internal fun NavGraphBuilder.settingsScreen(
     onNavigateUp: () -> Unit,
+    onGoToAccount: () -> Unit,
     onGoToSoftwareLicences: () -> Unit,
 ) {
     composable<SettingsRoute> {
         Settings(
             onNavigateUp = onNavigateUp,
-            onGoToSoftwareLicences = onGoToSoftwareLicences
+            onGoToAccount = onGoToAccount,
+            onGoToSoftwareLicences = onGoToSoftwareLicences,
         )
     }
 }
