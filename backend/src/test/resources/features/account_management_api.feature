@@ -5,11 +5,22 @@ Feature: Account management API
     Then account API status should be 200
     And an email should be sent to "alice@example.com" containing "Comprehensible Input"
 
-  Scenario: Rejecting duplicate user creation
+  Scenario: Rejecting duplicate user creation when email is verified
     Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
     When I create user with email "alice@example.com" and password "SecurePass123!"
     Then account API status should be 200
     And an email should be sent to "alice@example.com" containing "already exists"
+
+  Scenario: Re-sending verification code when existing account email is not verified
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "654321"
+    When I create user with email "alice@example.com" and password "SecurePass123!"
+    Then account API status should be 200
+    And an email should be sent to "alice@example.com" containing "654321"
+    When I verify email "alice@example.com" using code "654321"
+    Then account API status should be 204
 
   Scenario: Rejecting invalid user creation
     When I create user with email "bad" and password "short"

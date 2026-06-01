@@ -172,6 +172,7 @@ kover {
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
                     "input.comprehensible.data.textadventures.sources.remote",
+                    "input.comprehensible.data.account.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(

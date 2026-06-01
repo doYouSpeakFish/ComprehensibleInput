@@ -19,113 +19,113 @@ Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:23-27`
 ⚪   27 |         }
 ```
 
-## Lines 64-68
+## Lines 67-71
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:64-68`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:67-71`
 
 ```kotlin
-⚪   64 |     fun signIn(email: String, password: String): SignInResult {
-🟢   65 |         val normalizedEmail = normalizeEmail(email)
-🟡   66 |         if (!isValidEmail(normalizedEmail)) return SignInResult(HttpStatusCode.Unauthorized)
-🟢   67 |         val account = accountsDao.findAccountByEmail(normalizedEmail) ?: return SignInResult(HttpStatusCode.Unauthorized)
-🟢   68 |         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return SignInResult(HttpStatusCode.Unauthorized)
+⚪   67 |     fun signIn(email: String, password: String): SignInResult {
+🟢   68 |         val normalizedEmail = normalizeEmail(email)
+🟡   69 |         if (!isValidEmail(normalizedEmail)) return SignInResult(HttpStatusCode.Unauthorized)
+🟢   70 |         val account = accountsDao.findAccountByEmail(normalizedEmail) ?: return SignInResult(HttpStatusCode.Unauthorized)
+🟢   71 |         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return SignInResult(HttpStatusCode.Unauthorized)
 ```
 
-## Lines 77-90
+## Lines 80-93
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:77-90`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:80-93`
 
 ```kotlin
-⚪   77 |     }
-⚪   78 | 
-🟡   79 |     fun getMe(accountId: String): AccountPayload? = accountsDao.findAccountById(accountId)?.let {
-🟢   80 |         AccountPayload(it[AccountsTable.id], it[AccountsTable.email])
-⚪   81 |     }
-⚪   82 | 
-⚪   83 |     fun updateMe(accountId: String, newEmail: String?, password: String?): HttpStatusCode {
-🟡   84 |         if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
-🟡   85 |         val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
-🟡   86 |         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
-🟡   87 |         val normalizedEmail = newEmail?.let(::normalizeEmail) ?: return HttpStatusCode.BadRequest
-🟡   88 |         if (!isValidEmail(normalizedEmail)) return HttpStatusCode.BadRequest
-🟢   89 |         val currentEmailCode = verificationCodeProvider()
-🟢   90 |         val updateResult = accountsDao.requestEmailChange(
+⚪   80 |     }
+⚪   81 | 
+🟡   82 |     fun getMe(accountId: String): AccountPayload? = accountsDao.findAccountById(accountId)?.let {
+🟢   83 |         AccountPayload(it[AccountsTable.id], it[AccountsTable.email])
+⚪   84 |     }
+⚪   85 | 
+⚪   86 |     fun updateMe(accountId: String, newEmail: String?, password: String?): HttpStatusCode {
+🟡   87 |         if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
+🟡   88 |         val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
+🟡   89 |         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
+🟡   90 |         val normalizedEmail = newEmail?.let(::normalizeEmail) ?: return HttpStatusCode.BadRequest
+🟡   91 |         if (!isValidEmail(normalizedEmail)) return HttpStatusCode.BadRequest
+🟢   92 |         val currentEmailCode = verificationCodeProvider()
+🟢   93 |         val updateResult = accountsDao.requestEmailChange(
 ```
 
-## Lines 145-151
+## Lines 148-154
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:145-151`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:148-154`
 
 ```kotlin
-⚪  145 | 
-⚪  146 |     fun deleteMe(accountId: String, password: String?): HttpStatusCode {
-🟡  147 |         if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
-🟡  148 |         val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
-🟡  149 |         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
-🟢  150 |         accountsDao.deleteAccount(accountId)
-🟢  151 |         return HttpStatusCode.NoContent
+⚪  148 | 
+⚪  149 |     fun deleteMe(accountId: String, password: String?): HttpStatusCode {
+🟡  150 |         if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
+🟡  151 |         val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
+🟡  152 |         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
+🟢  153 |         accountsDao.deleteAccount(accountId)
+🟢  154 |         return HttpStatusCode.NoContent
 ```
 
-## Lines 153-161
+## Lines 156-164
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:153-161`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:156-164`
 
 ```kotlin
-⚪  153 | 
-⚪  154 |     fun signOutCurrent(token: String): HttpStatusCode =
-🟡  155 |         if (accountsDao.deleteSessionByTokenHash(hashToken(token)) > 0) HttpStatusCode.NoContent else HttpStatusCode.Unauthorized
 ⚪  156 | 
-⚪  157 |     fun findAccountBySessionToken(token: String): AccountSessionPrincipal? {
-🟢  158 |         val session = accountsDao.findSessionByTokenHash(hashToken(token)) ?: return null
-🟡  159 |         val account = accountsDao.findAccountById(session[SessionsTable.accountId]) ?: return null
-🟢  160 |         return AccountSessionPrincipal(
-🟢  161 |             token = token,
+⚪  157 |     fun signOutCurrent(token: String): HttpStatusCode =
+🟡  158 |         if (accountsDao.deleteSessionByTokenHash(hashToken(token)) > 0) HttpStatusCode.NoContent else HttpStatusCode.Unauthorized
+⚪  159 | 
+⚪  160 |     fun findAccountBySessionToken(token: String): AccountSessionPrincipal? {
+🟢  161 |         val session = accountsDao.findSessionByTokenHash(hashToken(token)) ?: return null
+🟡  162 |         val account = accountsDao.findAccountById(session[SessionsTable.accountId]) ?: return null
+🟢  163 |         return AccountSessionPrincipal(
+🟢  164 |             token = token,
 ```
 
-## Lines 174-178
+## Lines 177-181
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:174-178`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:177-181`
 
 ```kotlin
-⚪  174 |     fun requestPasswordReset(email: String): HttpStatusCode {
-🟢  175 |         val normalizedEmail = normalizeEmail(email)
-🟡  176 |         if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
-🟢  177 |         val account = accountsDao.findAccountByEmail(normalizedEmail)
-🟢  178 |         if (account == null) {
+⚪  177 |     fun requestPasswordReset(email: String): HttpStatusCode {
+🟢  178 |         val normalizedEmail = normalizeEmail(email)
+🟡  179 |         if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
+🟢  180 |         val account = accountsDao.findAccountByEmail(normalizedEmail)
+🟢  181 |         if (account == null) {
 ```
 
-## Lines 204-208
+## Lines 207-211
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:204-208`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:207-211`
 
 ```kotlin
-⚪  204 |     fun resetPassword(email: String, password: String, code: String): HttpStatusCode {
-🟢  205 |         val normalizedEmail = normalizeEmail(email)
-🟡  206 |         if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) return HttpStatusCode.BadRequest
-🟢  207 |         val updated = accountsDao.resetPassword(
-🟢  208 |             email = normalizedEmail,
+⚪  207 |     fun resetPassword(email: String, password: String, code: String): HttpStatusCode {
+🟢  208 |         val normalizedEmail = normalizeEmail(email)
+🟡  209 |         if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) return HttpStatusCode.BadRequest
+🟢  210 |         val updated = accountsDao.resetPassword(
+🟢  211 |             email = normalizedEmail,
 ```
 
-## Lines 215-219
+## Lines 218-222
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:215-219`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:218-222`
 
 ```kotlin
-⚪  215 | 
-🟢  216 |     private fun normalizeEmail(email: String): String = email.trim().lowercase()
-🟡  217 |     private fun isValidEmail(email: String): Boolean = email.isNotBlank() && email.contains('@')
-🟢  218 |     private fun generateToken(): String = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(32).also(random::nextBytes))
-⚪  219 |     private fun hashToken(token: String): String =
+⚪  218 | 
+🟢  219 |     private fun normalizeEmail(email: String): String = email.trim().lowercase()
+🟡  220 |     private fun isValidEmail(email: String): Boolean = email.isNotBlank() && email.contains('@')
+🟢  221 |     private fun generateToken(): String = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(32).also(random::nextBytes))
+⚪  222 |     private fun hashToken(token: String): String =
 ```
 
-## Lines 230-234
+## Lines 233-237
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:230-234`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountService.kt:233-237`
 
 ```kotlin
-⚪  230 | 
-🟢  231 | data class AccountResult(val status: HttpStatusCode, val payload: AccountPayload? = null)
-🔴  232 | @Serializable data class AccountPayload(val id: String, val email: String)
-🟢  233 | data class SignInResult(val status: HttpStatusCode, val payload: SignInPayload? = null)
-🔴  234 | @Serializable data class SignInPayload(val accessToken: String, val tokenType: String)
+⚪  233 | 
+🟢  234 | data class AccountResult(val status: HttpStatusCode, val payload: AccountPayload? = null)
+🔴  235 | @Serializable data class AccountPayload(val id: String, val email: String)
+🟢  236 | data class SignInResult(val status: HttpStatusCode, val payload: SignInPayload? = null)
+🔴  237 | @Serializable data class SignInPayload(val accessToken: String, val tokenType: String)
 ```

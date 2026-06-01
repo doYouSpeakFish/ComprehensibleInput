@@ -33,7 +33,10 @@ class CloudflareEmailDataSource(
             setBody(CloudflareSendEmailRequest(to = to, from = from, subject = subject, text = textBody))
         }
         val body: CloudflareApiResponse = response.body()
-        require(body.success) { "Cloudflare email send failed" }
+        require(body.success) {
+            val errorDetails = body.errors.joinToString("; ") { "[${it.code}] ${it.message}" }
+            "Cloudflare email send failed: $errorDetails"
+        }
     }
 
     companion object {

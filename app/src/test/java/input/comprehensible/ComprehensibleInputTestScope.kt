@@ -13,6 +13,8 @@ import input.comprehensible.data.TextAdventuresTestData
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
@@ -50,6 +52,7 @@ class ComprehensibleInputTestScope(
     private val storiesTestData = StoriesTestData()
     private val fakeTextAdventureRemoteDataSource = FakeTextAdventureRemoteDataSource()
     private val textAdventuresTestData = TextAdventuresTestData(fakeTextAdventureRemoteDataSource)
+    private val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
         .inMemoryDatabaseBuilder<AppDb>(context = appContext)
@@ -88,6 +91,7 @@ class ComprehensibleInputTestScope(
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
         TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
+        AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
     }
 
     fun launchAppUi() {
@@ -167,6 +171,30 @@ class ComprehensibleInputTestScope(
         textAdventuresTestData.enqueueAdventure(scenario, responses)
     }
 
+    fun delayAccountRequests(delayMillis: Long) {
+        fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
+    }
+
+    fun enqueueCreateAccountResult(result: Result<Unit>) {
+        fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
+    }
+
+    fun enqueueVerifyEmailResult(result: Result<Unit>) {
+        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
+    }
+
+    /**
+     * Navigates away from the screen under test so that it leaves the composition. Disposing the
+     * screen cancels any infinite animations it hosts (such as the blinking text field cursor),
+     * which would otherwise keep the test scheduler busy forever and hang [runTest]'s final drain.
+     * Software licences is used as the destination because it has no infinite animations of its own.
+     */
+    internal suspend fun disposeUiUnderTest() {
+        if (!isAppUiLaunched) return
+        _navController.navigate(SoftwareLicencesRoute)
+        awaitIdle()
+    }
+
     internal fun close() {
         appDb.close()
     }
@@ -186,6 +214,7 @@ fun ComprehensibleInputTestRule.runTest(
         accountManagementEnabled = accountManagementEnabled,
     ).apply {
         block()
+        disposeUiUnderTest()
         close()
     }
 }
