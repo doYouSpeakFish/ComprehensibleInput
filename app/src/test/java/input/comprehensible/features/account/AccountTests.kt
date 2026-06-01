@@ -151,6 +151,8 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterPassword("password12345")
             enterConfirmPassword("password12345")
         }
+        // The request is kept in-flight so the loading state can be observed before it completes
+        delayAccountRequests(delayMillis = 1_000L)
         enqueueCreateAccountResult(Result.success(Unit))
 
         // WHEN the sign up button is tapped
@@ -318,6 +320,8 @@ class AccountTests(private val themeMode: ThemeMode) {
         onAccount { tapSignUpSubmit() }
         awaitIdle()
         onAccount { enterVerificationCode("123456") }
+        // The request is kept in-flight so the loading state can be observed before it completes
+        delayAccountRequests(delayMillis = 1_000L)
         enqueueVerifyEmailResult(Result.success(Unit))
 
         // WHEN the verify button is tapped
