@@ -19,14 +19,14 @@ Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:2
 🟢   25 |     AccountScreen(
 ```
 
-## Lines 35-39
+## Lines 36-40
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:35-39`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:36-40`
 
 ```kotlin
-⚪   35 |     onNavigateUp: () -> Unit,
-🟢   36 |     modifier: Modifier = Modifier,
-🟡   37 | ) {
-🟢   38 |     Scaffold(
-🟢   39 |         modifier = modifier,
+⚪   36 |     onNavigateUp: () -> Unit,
+🟢   37 |     modifier: Modifier = Modifier,
+🟡   38 | ) {
+🟢   39 |     Scaffold(
+🟢   40 |         modifier = modifier,
 ```
