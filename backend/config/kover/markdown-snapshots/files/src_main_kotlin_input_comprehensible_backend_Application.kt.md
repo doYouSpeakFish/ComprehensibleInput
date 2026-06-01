@@ -64,67 +64,38 @@ Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:47-96`
 ⚪   96 | 
 ```
 
-## Lines 123-144
+## Lines 134-138
 
-Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:123-144`
+Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:134-138`
 
 ```kotlin
-⚪  123 | 
-⚪  124 | private fun requireSecretValue(envVarName: String): String {
-🔴  125 |     val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
-🔴  126 |     if (directValue != null) {
-🔴  127 |         return directValue
-⚪  128 |     }
-⚪  129 | 
-🔴  130 |     val fileEnvVarName = "${envVarName}_FILE"
-🔴  131 |     val secretFilePath = System.getenv(fileEnvVarName)?.takeIf { it.isNotBlank() }
-🔴  132 |     if (secretFilePath != null) {
-🔴  133 |         val secretValue = File(secretFilePath).readText().trim()
-🔴  134 |         require(secretValue.isNotEmpty()) {
-🔴  135 |             "Environment variable $fileEnvVarName points to an empty file: $secretFilePath"
-⚪  136 |         }
-🔴  137 |         return secretValue
-⚪  138 |     }
-⚪  139 | 
-🔴  140 |     error(
-🔴  141 |         "Missing required environment variable $envVarName. " +
-🔴  142 |             "Set $envVarName directly or set ${envVarName}_FILE to a file containing the value."
-⚪  143 |     )
-⚪  144 | }
+🟢  134 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
+🟢  135 |             requestKey { call ->
+🟡  136 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+⚪  137 |             }
+⚪  138 |         }
 ```
 
-## Lines 155-159
+## Lines 140-144
 
-Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:155-159`
+Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:140-144`
 
 ```kotlin
-🟢  155 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢  156 |             requestKey { call ->
-🟡  157 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪  158 |             }
-⚪  159 |         }
+🟢  140 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
+🟢  141 |             requestKey { call ->
+🟡  142 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+⚪  143 |             }
+⚪  144 |         }
 ```
 
-## Lines 161-165
+## Lines 146-150
 
-Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:161-165`
-
-```kotlin
-🟢  161 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢  162 |             requestKey { call ->
-🟡  163 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪  164 |             }
-⚪  165 |         }
-```
-
-## Lines 167-171
-
-Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:167-171`
+Location: `src/main/kotlin/input/comprehensible/backend/Application.kt:146-150`
 
 ```kotlin
-🟢  167 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢  168 |             requestKey { call ->
-🟡  169 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪  170 |             }
-⚪  171 |         }
+🟢  146 |             rateLimiter(limit = 1, refillPeriod = 30.seconds)
+🟢  147 |             requestKey { call ->
+🟡  148 |                 call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+⚪  149 |             }
+⚪  150 |         }
 ```

@@ -11,6 +11,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import input.comprehensible.backend.common.requireSecretValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -37,13 +38,10 @@ class CloudflareEmailDataSource(
 
     companion object {
         fun fromEnvironment(): CloudflareEmailDataSource = CloudflareEmailDataSource(
-            from = requireEnv("CLOUDFLARE_EMAIL_SENDING_FROM"),
-            accountId = requireEnv("CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"),
-            apiToken = requireEnv("CLOUDFLARE_EMAIL_SENDING_TOKEN"),
+            from = requireSecretValue("CLOUDFLARE_EMAIL_SENDING_FROM"),
+            accountId = requireSecretValue("CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"),
+            apiToken = requireSecretValue("CLOUDFLARE_EMAIL_SENDING_TOKEN"),
         )
-
-        private fun requireEnv(name: String): String =
-            System.getenv(name)?.takeIf { it.isNotBlank() } ?: error("Missing required environment variable $name")
     }
 }
 
