@@ -18,6 +18,99 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    // Sign in step
+
+    fun enterSignInEmail(email: String) {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_email_field")
+            .performTextInput(email)
+    }
+
+    fun enterSignInPassword(password: String) {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_password_field")
+            .performTextInput(password)
+    }
+
+    fun assertSignInSubmitIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_submit_button")
+            .assertIsEnabled()
+    }
+
+    fun assertSignInSubmitIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_submit_button")
+            .assertIsNotEnabled()
+    }
+
+    fun tapSignIn() {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_submit_button")
+            .performClick()
+    }
+
+    fun assertSignInLoadingIndicatorIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_loading_indicator")
+            .assertIsDisplayed()
+    }
+
+    fun assertSignUpFromSignInIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("account_sign_up_button")
+            .assertIsEnabled()
+    }
+
+    fun assertSignUpFromSignInIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("account_sign_up_button")
+            .assertIsNotEnabled()
+    }
+
+    fun tapSignUpFromSignIn() {
+        composeTestRule
+            .onNodeWithTag("account_sign_up_button")
+            .performClick()
+    }
+
+    fun assertInvalidCredentialsDialogIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_invalid_credentials_dialog")
+            .assertIsDisplayed()
+    }
+
+    fun dismissInvalidCredentialsDialog() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+
+    // Signed in step
+
+    fun assertSignedInEmailIsShown(email: String) {
+        composeTestRule
+            .onNodeWithTag("account_signed_in_email")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText(email)
+            .assertIsDisplayed()
+    }
+
+    fun tapSignOut() {
+        composeTestRule
+            .onNodeWithTag("account_sign_out_button")
+            .performClick()
+    }
+
+    fun assertSignInScreenIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_sign_in_email_field")
+            .assertIsDisplayed()
+    }
+
+    // Sign up step
+
     fun enterEmail(email: String) {
         composeTestRule
             .onNodeWithTag("account_sign_up_email_field")
@@ -66,6 +159,8 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    // Verify email step
+
     fun enterVerificationCode(code: String) {
         composeTestRule
             .onNodeWithTag("account_verify_email_code_field")
@@ -93,12 +188,6 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
     fun assertVerifyEmailLoadingIndicatorIsShown() {
         composeTestRule
             .onNodeWithTag("account_verify_email_loading_indicator")
-            .assertIsDisplayed()
-    }
-
-    fun assertVerifiedMessageIsShown() {
-        composeTestRule
-            .onNodeWithTag("account_verified_message")
             .assertIsDisplayed()
     }
 

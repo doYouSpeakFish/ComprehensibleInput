@@ -6,7 +6,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.ksp)
@@ -16,7 +15,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.app.distribution)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
-    id("input.comprehensible.kover-markdown-report")
+    id("input.comprehensible.kover-coverage-report")
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")

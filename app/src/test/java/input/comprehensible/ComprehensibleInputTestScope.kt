@@ -10,10 +10,12 @@ import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.TextAdventuresTestData
+import input.comprehensible.data.account.sources.local.AccountLocalDataSource
+import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
-import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
@@ -59,6 +61,8 @@ class ComprehensibleInputTestScope(
         .setQueryCoroutineContext(context = dispatcher)
         .build()
 
+    private val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
+
     private lateinit var _navController: TestNavHostController
     private val navController: TestNavHostController
         get() {
@@ -92,6 +96,7 @@ class ComprehensibleInputTestScope(
         TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
         AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
+        AccountLocalDataSource.inject { realAccountLocalDataSource }
     }
 
     fun launchAppUi() {
@@ -183,6 +188,18 @@ class ComprehensibleInputTestScope(
         fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
     }
 
+    fun enqueueSignInResult(result: Result<String>) {
+        fakeAccountRemoteDataSource.enqueueSignInResult(result)
+    }
+
+    suspend fun saveAccountSession(token: String, email: String) {
+        realAccountLocalDataSource.saveSession(token, email)
+    }
+
+    suspend fun clearAccountSession() {
+        realAccountLocalDataSource.clearSession()
+    }
+
     /**
      * Navigates away from the screen under test so that it leaves the composition. Disposing the
      * screen cancels any infinite animations it hosts (such as the blinking text field cursor),
@@ -213,6 +230,7 @@ fun ComprehensibleInputTestRule.runTest(
         aiTextAdventuresEnabled = aiTextAdventuresEnabled,
         accountManagementEnabled = accountManagementEnabled,
     ).apply {
+        clearAccountSession()
         block()
         disposeUiUnderTest()
         close()

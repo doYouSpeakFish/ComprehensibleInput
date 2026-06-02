@@ -25,7 +25,7 @@ if git diff --cached --name-only -- app/screenshots | grep -q .; then
 fi
 
 echo "Running coverage snapshot checks..."
-./gradlew koverMarkdownSnapshotCheck
+./gradlew koverCoverageSnapshotCheck
 
 echo "Running detekt..."
 ./gradlew detekt

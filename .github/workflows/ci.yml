@@ -57,7 +57,7 @@ jobs:
         run: ./gradlew :app:assemble
 
       - name: Run tests with coverage
-        run: ./gradlew :app:koverMarkdownSnapshotCheck
+        run: ./gradlew :app:koverCoverageSnapshotCheck
 
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
@@ -163,7 +163,7 @@ jobs:
         run: ./gradlew :backend:assemble
 
       - name: Run tests with coverage
-        run: ./gradlew :backend:koverMarkdownSnapshotCheck
+        run: ./gradlew :backend:koverCoverageSnapshotCheck
 
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
