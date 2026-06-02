@@ -50,7 +50,6 @@ class DatabaseAdventureRepository(
                     messageId = adventurePart.messageId,
                     parentMessageId = adventurePart.parentMessageId,
                     type = messageTypeAi,
-                    text = null,
                     isEnding = adventurePart.isEnding,
                     now = now,
                 )
@@ -99,7 +98,6 @@ class DatabaseAdventureRepository(
                     messageId = message.messageId,
                     parentMessageId = message.parentMessageId,
                     type = messageTypeUser,
-                    text = null,
                     isEnding = false,
                     now = now,
                 )
@@ -178,7 +176,6 @@ class DatabaseAdventureRepository(
             it[adventureId] = message.adventureId
             it[parentMessageId] = message.parentMessageId
             it[type] = message.type
-            it[text] = message.text
             it[isEnding] = message.isEnding
             it[createdAt] = message.now
         }
@@ -261,7 +258,6 @@ private data class PersistedMessageRow(
     val messageId: String,
     val parentMessageId: String?,
     val type: String,
-    val text: String?,
     val isEnding: Boolean,
     val now: Long,
 )
@@ -356,7 +352,6 @@ object AdventureMessagesTable : Table("text_adventure_message") {
         onDelete = ReferenceOption.CASCADE,
     )
     val type = varchar("type", length = 32)
-    val text = text("text").nullable()
     val isEnding = bool("is_ending")
     val createdAt = registerColumn("created_at", LongColumnType())
 
