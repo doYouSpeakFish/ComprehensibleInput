@@ -150,6 +150,29 @@
 🟢           true
 ⚪       }
 ⚪   
+🟢       fun updateCurrentEmailChangeCode(accountId: String, code: String, expiresAt: Long): Boolean = transaction(database) {
+🟢           val updated = PendingEmailChangeTable.update({
+🟢               (PendingEmailChangeTable.accountId eq accountId) and
+🟢                   (PendingEmailChangeTable.newEmailCode eq "")
+⚪           }) {
+🟢               it[currentEmailCode] = code
+🟢               it[currentEmailCodeExpiresAt] = expiresAt
+🟢           }
+🟢           updated > 0
+⚪       }
+⚪   
+🟢       fun updateNewEmailChangeCode(accountId: String, code: String, expiresAt: Long): String? = transaction(database) {
+🟢           val pending = PendingEmailChangeTable.selectAll()
+🟢               .where { PendingEmailChangeTable.accountId eq accountId }
+🟢               .singleOrNull() ?: return@transaction null
+🟡           if (pending[PendingEmailChangeTable.newEmailCode].isEmpty()) return@transaction null
+🟢           PendingEmailChangeTable.update({ PendingEmailChangeTable.accountId eq accountId }) {
+🟢               it[newEmailCode] = code
+🟢               it[newEmailCodeExpiresAt] = expiresAt
+🟢           }
+🟢           pending[PendingEmailChangeTable.email]
+⚪       }
+⚪   
 🟢       fun deleteAccount(accountId: String) = transaction(database) {
 🟢           AccountsTable.deleteWhere { AccountsTable.id eq accountId }
 ⚪       }

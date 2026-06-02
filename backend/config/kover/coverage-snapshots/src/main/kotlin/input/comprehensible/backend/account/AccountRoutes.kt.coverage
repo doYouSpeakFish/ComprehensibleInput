@@ -34,14 +34,20 @@
 🟢               call.respond(accountService.verifyEmail(request.email, request.code))
 ⚪           }
 ⚪       }
+🟢       rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-verification-code")) {
+🟢           post("/v1/email-verification-codes") {
+🟢               val request = call.receive<EmailVerificationCodeRequest>()
+🟢               call.respond(accountService.requestNewEmailVerificationCode(request.email))
+⚪           }
+⚪       }
 🟢       rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset-request")) {
-🟢           post("/v1/password-resets") {
+🟢           post("/v1/password-reset-codes") {
 🟢               val request = call.receive<PasswordResetCodeRequest>()
 🟢               call.respond(accountService.requestPasswordReset(request.email))
 ⚪           }
 ⚪       }
 🟢       rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset-attempt")) {
-🟢           post("/v1/password-reset-attempts") {
+🟢           post("/v1/password-resets") {
 🟢               val request = call.receive<PasswordResetRequest>()
 🟢               call.respond(accountService.resetPassword(request.email, request.password, request.code))
 ⚪           }
@@ -63,11 +69,25 @@
 🟢               val request = call.receive<EmailChangeCurrentVerificationRequest>()
 🟢               call.respond(accountService.verifyCurrentEmailChange(accountId = principal.accountId, code = request.code))
 ⚪           }
+🟢           rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-change-current-verification-code")) {
+🟢               post("/v1/email-change-current-verification-codes") {
+🟡                   val principal = call.principal<AccountSessionPrincipal>()
+🔴                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟢                   call.respond(accountService.requestNewEmailChangeCurrentCode(principal.accountId))
+⚪               }
+⚪           }
 🟢           post("/v1/email-change-verifications") {
 🟡               val principal = call.principal<AccountSessionPrincipal>()
 🔴                   ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<EmailVerificationRequest>()
 🟢               call.respond(accountService.verifyPendingEmailChange(principal.accountId, request.email, request.code))
+⚪           }
+🟢           rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-change-new-verification-code")) {
+🟢               post("/v1/email-change-new-verification-codes") {
+🟡                   val principal = call.principal<AccountSessionPrincipal>()
+🔴                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟢                   call.respond(accountService.requestNewEmailChangeNewEmailCode(principal.accountId))
+⚪               }
 ⚪           }
 🟢           delete("/v1/me") {
 🟡               val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
@@ -81,6 +101,7 @@
 ⚪       }
 ⚪   }
 ⚪   
+🟡   @Serializable data class EmailVerificationCodeRequest(val email: String)
 🟡   @Serializable data class CredentialsRequest(val email: String, val password: String)
 🟡   @Serializable data class UpdateMeRequest(val email: String? = null, val password: String? = null)
 🟡   @Serializable data class DeleteMeRequest(val password: String? = null)

@@ -167,21 +167,21 @@ Feature: Account management API
 
   Scenario: Requesting a password reset code for an existing account
     Given existing user "alice@example.com" with password "SecurePass123!"
-    When I request a password reset for "alice@example.com"
+    When I request a password reset code for "alice@example.com"
     Then account API status should be 202
     And an email should be sent to "alice@example.com" containing "password reset code"
 
   Scenario: Requesting a password reset code for an unknown account still succeeds
-    When I request a password reset for "missing@example.com"
+    When I request a password reset code for "missing@example.com"
     Then account API status should be 202
     And an email should be sent to "missing@example.com" containing "do not have"
 
   Scenario: Requesting a password reset code again replaces the previous code
     Given existing user "alice@example.com" with password "SecurePass123!"
     And the next verification code will be "111111"
-    And I request a password reset for "alice@example.com"
+    And I request a password reset code for "alice@example.com"
     And the next verification code will be "222222"
-    When I request a password reset for "alice@example.com"
+    When I request a password reset code for "alice@example.com"
     Then account API status should be 202
     When I reset password for "alice@example.com" to "NewSecurePass123!" using code "111111"
     Then account API status should be 400
@@ -194,7 +194,7 @@ Feature: Account management API
     And I verify email "alice@example.com" using code "123456"
     And I am signed in with email "alice@example.com" and password "SecurePass123!"
     And the next verification code will be "123456"
-    And I request a password reset for "alice@example.com"
+    And I request a password reset code for "alice@example.com"
     When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
     Then account API status should be 204
     When I request me profile
@@ -207,7 +207,7 @@ Feature: Account management API
   Scenario: Resetting password fails with expired code
     Given existing user "alice@example.com" with password "SecurePass123!"
     And the next verification code will be "123456"
-    And I request a password reset for "alice@example.com"
+    And I request a password reset code for "alice@example.com"
     And time advances by 16 minutes and 0 seconds
     When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
     Then account API status should be 400
@@ -222,3 +222,119 @@ Feature: Account management API
     Then account API status should be 200
     When I verify current email change using code "999999"
     Then account API status should be 400
+
+  Scenario: Requesting a new email verification code sends a fresh code to an unverified account
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "654321"
+    When I request a new email verification code for "alice@example.com"
+    Then account API status should be 202
+    And an email should be sent to "alice@example.com" containing "654321"
+    When I verify email "alice@example.com" using code "654321"
+    Then account API status should be 204
+
+  Scenario: Requesting a new email verification code replaces the previous code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "111111"
+    And I request a new email verification code for "alice@example.com"
+    And the next verification code will be "222222"
+    When I request a new email verification code for "alice@example.com"
+    Then account API status should be 202
+    When I verify email "alice@example.com" using code "111111"
+    Then account API status should be 400
+    When I verify email "alice@example.com" using code "222222"
+    Then account API status should be 204
+
+  Scenario: Requesting a new email verification code for an unknown email still succeeds
+    When I request a new email verification code for "missing@example.com"
+    Then account API status should be 202
+
+  Scenario: Requesting a new email verification code for an already verified account still succeeds
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    When I request a new email verification code for "alice@example.com"
+    Then account API status should be 202
+
+  Scenario: Requesting a new email change current verification code sends a fresh code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    And I update me email to "alice2@example.com"
+    And the next verification code will be "654321"
+    When I request a new email change current verification code
+    Then account API status should be 202
+    And an email should be sent to "alice@example.com" containing "654321"
+    When I verify current email change using code "654321"
+    Then account API status should be 204
+
+  Scenario: Requesting a new email change current verification code replaces the previous code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    And I update me email to "alice2@example.com"
+    And the next verification code will be "111111"
+    And I request a new email change current verification code
+    And the next verification code will be "222222"
+    When I request a new email change current verification code
+    Then account API status should be 202
+    When I verify current email change using code "111111"
+    Then account API status should be 400
+    When I verify current email change using code "222222"
+    Then account API status should be 204
+
+  Scenario: Requesting a new email change current verification code without a pending email change fails
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I request a new email change current verification code
+    Then account API status should be 400
+
+  Scenario: Requesting a new email change current verification code without authorization fails
+    When I request a new email change current verification code without authorization
+    Then account API status should be 401
+
+  Scenario: Requesting a new email change new-email verification code sends a fresh code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    And I update me email to "alice2@example.com"
+    And I verify current email change using code "123456"
+    And the next verification code will be "654321"
+    When I request a new email change new-email verification code
+    Then account API status should be 202
+    And an email should be sent to "alice2@example.com" containing "654321"
+    When I verify pending email change to "alice2@example.com" using code "654321"
+    Then account API status should be 204
+
+  Scenario: Requesting a new email change new-email verification code replaces the previous code
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    And I update me email to "alice2@example.com"
+    And I verify current email change using code "123456"
+    And the next verification code will be "111111"
+    And I request a new email change new-email verification code
+    And the next verification code will be "222222"
+    When I request a new email change new-email verification code
+    Then account API status should be 202
+    When I verify pending email change to "alice2@example.com" using code "111111"
+    Then account API status should be 400
+    When I verify pending email change to "alice2@example.com" using code "222222"
+    Then account API status should be 204
+
+  Scenario: Requesting a new email change new-email verification code without a pending email change in the correct state fails
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I request a new email change new-email verification code
+    Then account API status should be 400
+
+  Scenario: Requesting a new email change new-email verification code without authorization fails
+    When I request a new email change new-email verification code without authorization
+    Then account API status should be 401
