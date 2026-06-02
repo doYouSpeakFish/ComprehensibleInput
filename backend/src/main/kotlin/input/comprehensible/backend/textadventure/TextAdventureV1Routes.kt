@@ -1,0 +1,153 @@
+package input.comprehensible.backend.textadventure
+
+import input.comprehensible.backend.AccountSessionPrincipal
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import kotlinx.serialization.Serializable
+
+@Suppress("CyclomaticComplexMethod")
+fun Route.textAdventureV1Routes(textAdventureService: TextAdventureGenerationService) {
+    authenticate("account-bearer") {
+        post("/v1/adventures") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
+            val request = call.receive<StartTextAdventureV1Request>()
+            if (request.learningLanguage.isBlank() || request.translationLanguage.isBlank()) {
+                return@post call.respond(HttpStatusCode.BadRequest)
+            }
+            val response = textAdventureService.startAdventure(
+                learningLanguage = request.learningLanguage,
+                translationsLanguage = request.translationLanguage,
+                accountId = principal.accountId,
+            )
+            call.respond(HttpStatusCode.Created, response)
+        }
+
+        get("/v1/adventures") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
+            call.respond(textAdventureService.listAdventuresForAccount(principal.accountId))
+        }
+
+        get("/v1/adventures/{adventureId}") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
+            val adventureId = requireNotNull(call.parameters["adventureId"])
+            val response = textAdventureService.getAdventureSummaryForAccount(
+                accountId = principal.accountId,
+                adventureId = adventureId,
+            )
+            if (response == null) call.respond(HttpStatusCode.NotFound) else call.respond(response)
+        }
+
+        get("/v1/adventures/{adventureId}/messages") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
+            val adventureId = requireNotNull(call.parameters["adventureId"])
+            val response = textAdventureService.getAdventureMessagesForAccount(
+                accountId = principal.accountId,
+                adventureId = adventureId,
+            )
+            if (response == null) call.respond(HttpStatusCode.NotFound) else call.respond(response)
+        }
+
+        post("/v1/adventures/{adventureId}/messages") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
+            val adventureId = requireNotNull(call.parameters["adventureId"])
+            val request = call.receive<PostTextAdventureMessageV1Request>()
+            if (request.parentId.isBlank()) {
+                return@post call.respond(HttpStatusCode.BadRequest)
+            }
+            when (request.type) {
+                MESSAGE_TYPE_USER -> call.createUserMessage(
+                    textAdventureService = textAdventureService,
+                    accountId = principal.accountId,
+                    adventureId = adventureId,
+                    request = request,
+                )
+                MESSAGE_TYPE_AI -> call.createAiMessage(
+                    textAdventureService = textAdventureService,
+                    accountId = principal.accountId,
+                    adventureId = adventureId,
+                    request = request,
+                )
+                else -> call.respond(HttpStatusCode.BadRequest)
+            }
+        }
+
+        delete("/v1/adventures/{adventureId}") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+            val adventureId = requireNotNull(call.parameters["adventureId"])
+            val deleted = textAdventureService.deleteAdventureForAccount(
+                accountId = principal.accountId,
+                adventureId = adventureId,
+            )
+            if (deleted) {
+                call.respond(HttpStatusCode.NoContent)
+            } else {
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        delete("/v1/adventures") {
+            val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+            textAdventureService.deleteAllAdventuresForAccount(principal.accountId)
+            call.respond(HttpStatusCode.NoContent)
+        }
+    }
+}
+
+@Serializable
+private data class StartTextAdventureV1Request(
+    val learningLanguage: String,
+    val translationLanguage: String,
+)
+
+@Serializable
+private data class PostTextAdventureMessageV1Request(
+    val type: String,
+    val parentId: String,
+    val text: String? = null,
+)
+
+private suspend fun io.ktor.server.application.ApplicationCall.createUserMessage(
+    textAdventureService: TextAdventureGenerationService,
+    accountId: String,
+    adventureId: String,
+    request: PostTextAdventureMessageV1Request,
+) {
+    val text = request.text
+    if (text.isNullOrBlank()) {
+        return respond(HttpStatusCode.BadRequest)
+    }
+    val response = textAdventureService.createUserMessageForAccount(
+        accountId = accountId,
+        adventureId = adventureId,
+        parentMessageId = request.parentId,
+        text = text,
+    )
+    if (response == null) respond(HttpStatusCode.NotFound) else respond(HttpStatusCode.Created, response)
+}
+
+private suspend fun io.ktor.server.application.ApplicationCall.createAiMessage(
+    textAdventureService: TextAdventureGenerationService,
+    accountId: String,
+    adventureId: String,
+    request: PostTextAdventureMessageV1Request,
+) {
+    if (request.text != null) {
+        return respond(HttpStatusCode.BadRequest)
+    }
+    val response = textAdventureService.generateAiMessageForAccount(
+        accountId = accountId,
+        adventureId = adventureId,
+        parentMessageId = request.parentId,
+    )
+    if (response == null) respond(HttpStatusCode.NotFound) else respond(HttpStatusCode.Created, response)
+}
+
+private const val MESSAGE_TYPE_USER = "user"
+private const val MESSAGE_TYPE_AI = "AI"
