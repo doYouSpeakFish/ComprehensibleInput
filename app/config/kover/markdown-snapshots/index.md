@@ -9,7 +9,7 @@
 
 ## Files with missing coverage
 
-- [src/main/java/input/comprehensible/data/account/AccountRepository.kt](files/src_main_java_input_comprehensible_data_account_AccountRepository.kt.md) (missed 0, partial 1)
+- [src/main/java/input/comprehensible/data/account/AccountRepository.kt](files/src_main_java_input_comprehensible_data_account_AccountRepository.kt.md) (missed 0, partial 4)
 - [src/main/java/input/comprehensible/data/account/sources/local/DefaultAccountLocalDataSource.kt](files/src_main_java_input_comprehensible_data_account_sources_local_DefaultAccountLocalDataSource.kt.md) (missed 0, partial 1)
 - [src/main/java/input/comprehensible/data/stories/StoriesRepository.kt](files/src_main_java_input_comprehensible_data_stories_StoriesRepository.kt.md) (missed 14, partial 8)
 - [src/main/java/input/comprehensible/data/stories/model/Story.kt](files/src_main_java_input_comprehensible_data_stories_model_Story.kt.md) (missed 4, partial 0)

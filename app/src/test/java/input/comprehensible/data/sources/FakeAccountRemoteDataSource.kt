@@ -46,4 +46,8 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
             ?.getOrThrow()
             ?: error("No scripted sign in result available")
     }
+
+    override suspend fun signOut(token: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+    }
 }
