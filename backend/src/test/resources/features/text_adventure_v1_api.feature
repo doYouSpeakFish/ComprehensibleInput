@@ -45,7 +45,7 @@ Feature: Text adventure v1 API
     Then the response status is 404
 
   @v1
-  Scenario: Posting a user message stores it without generating an AI reply
+  Scenario: Posting a user message structures it via AI and returns formatted sentences
     Given I have an existing adventure with root AI message id "msg_ai_root"
     And the next message id is "msg_user_1"
     When I post a message with type "user", parent id "msg_ai_root", and text "Entro en la torre"
@@ -53,8 +53,15 @@ Feature: Text adventure v1 API
     And the response message id is "msg_user_1"
     And the response message has type "user"
     And the response message parent id is "msg_ai_root"
-    And the response message text is "Entro en la torre"
+    And the response includes generated sentences and translations
     And no AI response has been generated for message id "msg_user_1"
+
+  @v1
+  Scenario: Posting a user message fails when AI structuring fails
+    Given I have an existing adventure with root AI message id "msg_ai_root"
+    And the AI structuring will fail for the next user message
+    When I post a message with type "user", parent id "msg_ai_root", and text "Entro en la torre"
+    Then the response status is 500
 
   @v1
   Scenario: Posting an AI message generates a response to a specific user message

@@ -10,6 +10,7 @@ import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
+import input.comprehensible.backend.textadventure.UserMessageStructuredResponse
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.testing.PostgreSqlTestDatabase
 import io.cucumber.java.After
@@ -153,7 +154,6 @@ class TextAdventureV1ApiStepDefinitions {
     @Given("I have an existing adventure with messages")
     fun haveExistingAdventureWithMessages() {
         userAHasAdventure()
-        enqueueNarratorResponse(title = "Lantern Trail", sentence = "Sigue recto", translation = "Keep going")
         runAgainstApplication {
             client.post("/v1/adventures/$userAAdventureId/messages") {
                 authorized(userAToken)
@@ -743,6 +743,13 @@ class TextAdventureV1ApiStepDefinitions {
     private fun messageHasTypeAndParent(type: String, parentId: String): Boolean =
         latestResponseBody.contains("\"type\":\"$type\"") && latestResponseBody.contains("\"parentId\":\"$parentId\"")
 
+    @Given("the AI structuring will fail for the next user message")
+    fun aiStructuringWillFail() {
+        repeat(MAX_USER_MESSAGE_STRUCTURING_ATTEMPTS) {
+            fakeExecutor.enqueueError(RuntimeException("AI structuring failed"))
+        }
+    }
+
     private fun enqueueNarratorResponse(
         title: String,
         sentence: String,
@@ -755,6 +762,15 @@ class TextAdventureV1ApiStepDefinitions {
                 paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
                 translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
                 isEnding = isEnding,
+            ),
+        )
+    }
+
+    private fun enqueueUserMessageResponse(sentence: String, translation: String) {
+        fakeExecutor.enqueueUserMessageResponse(
+            UserMessageStructuredResponse(
+                paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
+                translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
             ),
         )
     }
@@ -784,5 +800,9 @@ class TextAdventureV1ApiStepDefinitions {
     private fun extractJsonString(payload: String, key: String): String {
         val pattern = "\"$key\"\\s*:\\s*\"([^\"]+)\"".toRegex()
         return pattern.find(payload)?.groupValues?.get(1).orEmpty()
+    }
+
+    private companion object {
+        const val MAX_USER_MESSAGE_STRUCTURING_ATTEMPTS = 3
     }
 }

@@ -3,6 +3,7 @@ package input.comprehensible.backend.textadventure.testing
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
+import input.comprehensible.backend.textadventure.UserMessageStructuredResponse
 
 class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptExecutor {
     data class Invocation(
@@ -12,11 +13,16 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
     )
 
     private val queuedResponses = ArrayDeque<TextAdventureStructuredResponse>()
+    private val queuedUserMessageResponses = ArrayDeque<UserMessageStructuredResponse>()
     private val queuedErrors = ArrayDeque<Throwable>()
     val invocations = mutableListOf<Invocation>()
 
     fun enqueueResponse(response: TextAdventureStructuredResponse) {
         queuedResponses.add(response)
+    }
+
+    fun enqueueUserMessageResponse(response: UserMessageStructuredResponse) {
+        queuedUserMessageResponses.add(response)
     }
 
     fun enqueueError(error: Throwable) {
@@ -47,6 +53,31 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
                     TextAdventureStructuredParagraph(sentences = listOf("Esperas."))
                 ),
                 isEnding = false,
+            )
+    }
+
+    override suspend fun executeUserMessageResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): UserMessageStructuredResponse {
+        invocations.add(
+            Invocation(
+                promptName = promptName,
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+            )
+        )
+
+        queuedErrors.removeFirstOrNull()?.let { throw it }
+        return queuedUserMessageResponses.removeFirstOrNull()
+            ?: UserMessageStructuredResponse(
+                paragraphs = listOf(
+                    TextAdventureStructuredParagraph(sentences = listOf(userPrompt))
+                ),
+                translatedParagraphs = listOf(
+                    TextAdventureStructuredParagraph(sentences = listOf(userPrompt))
+                ),
             )
     }
 }
