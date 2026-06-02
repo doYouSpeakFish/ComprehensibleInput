@@ -9,8 +9,7 @@ import kotlinx.serialization.Serializable
 data class TextAdventureRemoteResponse(
     val adventureId: String,
     val title: String,
-    val sentences: List<String>,
-    val translatedSentences: List<String>,
+    val paragraphs: List<TextAdventureParagraphRemoteResponse>,
     val isEnding: Boolean,
 )
 

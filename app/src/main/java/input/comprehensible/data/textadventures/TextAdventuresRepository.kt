@@ -171,29 +171,31 @@ class TextAdventuresRepository(
             messageIndex = messageIndex,
         )
         val sentenceEntities = buildList {
-            response.sentences.forEachIndexed { index, sentence ->
-                add(
-                    TextAdventureSentenceEntity(
-                        adventureId = adventureId,
-                        messageIndex = messageIndex,
-                        paragraphIndex = 0,
-                        language = languages.learningLanguage,
-                        sentenceIndex = index,
-                        text = sentence,
+            response.paragraphs.forEachIndexed { paragraphIndex, paragraph ->
+                paragraph.sentences.forEachIndexed { sentenceIndex, sentence ->
+                    add(
+                        TextAdventureSentenceEntity(
+                            adventureId = adventureId,
+                            messageIndex = messageIndex,
+                            paragraphIndex = paragraphIndex,
+                            language = languages.learningLanguage,
+                            sentenceIndex = sentenceIndex,
+                            text = sentence,
+                        )
                     )
-                )
-            }
-            response.translatedSentences.forEachIndexed { index, sentence ->
-                add(
-                    TextAdventureSentenceEntity(
-                        adventureId = adventureId,
-                        messageIndex = messageIndex,
-                        paragraphIndex = 0,
-                        language = languages.translationLanguage,
-                        sentenceIndex = index,
-                        text = sentence,
+                }
+                paragraph.translatedSentences.forEachIndexed { sentenceIndex, sentence ->
+                    add(
+                        TextAdventureSentenceEntity(
+                            adventureId = adventureId,
+                            messageIndex = messageIndex,
+                            paragraphIndex = paragraphIndex,
+                            language = languages.translationLanguage,
+                            sentenceIndex = sentenceIndex,
+                            text = sentence,
+                        )
                     )
-                )
+                }
             }
         }
         localDataSource.insertMessageAndSentences(messageEntity, sentenceEntities)

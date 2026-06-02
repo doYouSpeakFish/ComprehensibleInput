@@ -4,6 +4,7 @@ import ai.koog.agents.core.tools.annotations.LLMDescription
 import input.comprehensible.data.textadventures.sources.remote.ContinueTextAdventureRequest
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureParagraphRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -184,8 +185,12 @@ private data class GeneratedAdventureResponse(
 private fun GeneratedAdventureResponse.toRemoteResponse(): TextAdventureRemoteResponse = TextAdventureRemoteResponse(
     adventureId = adventureId,
     title = title,
-    sentences = paragraphs.flatMap { paragraph -> paragraph.sentences.map(String::trim) },
-    translatedSentences = translatedParagraphs.flatMap { paragraph -> paragraph.sentences.map(String::trim) },
+    paragraphs = paragraphs.zip(translatedParagraphs).map { (paragraph, translatedParagraph) ->
+        TextAdventureParagraphRemoteResponse(
+            sentences = paragraph.sentences.map(String::trim),
+            translatedSentences = translatedParagraph.sentences.map(String::trim),
+        )
+    },
     isEnding = isEnding,
 )
 

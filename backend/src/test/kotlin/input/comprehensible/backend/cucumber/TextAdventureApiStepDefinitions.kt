@@ -119,7 +119,7 @@ class TextAdventureApiStepDefinitions {
         translationsLanguage: String,
     ) {
         runAgainstApplication {
-            client.post("/text-adventures/start") {
+            client.post("/v1/text-adventures/start") {
                 header("X-Api-Key", validApiKey)
                 contentType(ContentType.Application.Json)
                 setBody(startBody(learningLanguage, translationsLanguage))
@@ -127,13 +127,13 @@ class TextAdventureApiStepDefinitions {
         }
         val payload = json.decodeFromString<TextAdventureRemoteResponse>(latestResponseBody)
         startedAdventureId = payload.adventureId
-        startedAssistantSentence = payload.sentences.single()
+        startedAssistantSentence = payload.paragraphs.single().sentences.single()
     }
 
     @When("I continue the started adventure with user message {string}")
     fun continueStartedAdventure(userMessage: String) {
         runAgainstApplication {
-            client.post("/text-adventures/respond") {
+            client.post("/v1/text-adventures/respond") {
                 authorized(validApiKey)
                 contentType(ContentType.Application.Json)
                 setBody(
@@ -152,7 +152,7 @@ class TextAdventureApiStepDefinitions {
     @When("I request messages for the started adventure")
     fun requestMessagesForStartedAdventure() {
         runAgainstApplication {
-            client.get("/text-adventures/$startedAdventureId/messages") {
+            client.get("/v1/text-adventures/$startedAdventureId/messages") {
                 authorized(validApiKey)
             }
         }
@@ -161,7 +161,7 @@ class TextAdventureApiStepDefinitions {
     @When("I start a text adventure with an invalid API key")
     fun startAdventureWithInvalidApiKey() {
         runAgainstApplication {
-            client.post("/text-adventures/start") {
+            client.post("/v1/text-adventures/start") {
                 authorized(invalidApiKey)
                 contentType(ContentType.Application.Json)
                 setBody(startBody("English", "Spanish"))
@@ -172,7 +172,7 @@ class TextAdventureApiStepDefinitions {
     @When("I continue an adventure with an invalid API key")
     fun continueAdventureWithInvalidApiKey() {
         runAgainstApplication {
-            client.post("/text-adventures/respond") {
+            client.post("/v1/text-adventures/respond") {
                 authorized(invalidApiKey)
                 contentType(ContentType.Application.Json)
                 setBody(
@@ -191,7 +191,7 @@ class TextAdventureApiStepDefinitions {
     @When("I request messages with an invalid API key")
     fun requestMessagesWithInvalidApiKey() {
         runAgainstApplication {
-            client.get("/text-adventures/missing/messages") {
+            client.get("/v1/text-adventures/missing/messages") {
                 authorized(invalidApiKey)
             }
         }
@@ -200,7 +200,7 @@ class TextAdventureApiStepDefinitions {
     @When("I request messages for adventure id {string}")
     fun requestMessagesForAdventureId(adventureId: String) {
         runAgainstApplication {
-            client.get("/text-adventures/$adventureId/messages") {
+            client.get("/v1/text-adventures/$adventureId/messages") {
                 authorized(validApiKey)
             }
         }
@@ -224,11 +224,11 @@ class TextAdventureApiStepDefinitions {
         assertEquals(expectedTitle, payload.title)
         assertEquals(
             listOf(expectedSentence),
-            payload.sentences,
+            payload.paragraphs.flatMap { it.sentences },
         )
         assertEquals(
             listOf(expectedTranslation),
-            payload.translatedSentences,
+            payload.paragraphs.flatMap { it.translatedSentences },
         )
         assertTrue(payload.adventureId.isNotBlank())
     }
@@ -243,8 +243,8 @@ class TextAdventureApiStepDefinitions {
     ) {
         assertEquals(HttpStatusCode.OK, latestResponseStatus)
         val payload = json.decodeFromString<TextAdventureRemoteResponse>(latestResponseBody)
-        assertEquals(listOf(expectedSentence), payload.sentences)
-        assertEquals(listOf(expectedTranslation), payload.translatedSentences)
+        assertEquals(listOf(expectedSentence), payload.paragraphs.flatMap { it.sentences })
+        assertEquals(listOf(expectedTranslation), payload.paragraphs.flatMap { it.translatedSentences })
         assertEquals(expectedEnding.toBooleanStrict(), payload.isEnding)
     }
 

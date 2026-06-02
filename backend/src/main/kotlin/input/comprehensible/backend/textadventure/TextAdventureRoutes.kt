@@ -14,12 +14,12 @@ import io.ktor.server.routing.post
 
 fun Route.textAdventureRoutes(textAdventureService: TextAdventureGenerationService) {
     authenticate {
-        post("/text-adventures/start") {
+        post("/v1/text-adventures/start") {
             requireNotNull(call.principal<AppPrincipal>())
             val request = call.receive<StartTextAdventureRequest>()
             call.respond(textAdventureService.startAdventure(request.learningLanguage, request.translationsLanguage))
         }
-        post("/text-adventures/respond") {
+        post("/v1/text-adventures/respond") {
             requireNotNull(call.principal<AppPrincipal>())
             val request = call.receive<ContinueTextAdventureRequest>()
             call.respond(
@@ -32,7 +32,7 @@ fun Route.textAdventureRoutes(textAdventureService: TextAdventureGenerationServi
                 )
             )
         }
-        get("/text-adventures/{adventureId}/messages") {
+        get("/v1/text-adventures/{adventureId}/messages") {
             requireNotNull(call.principal<AppPrincipal>())
             val adventureId = requireNotNull(call.parameters["adventureId"])
             val response = textAdventureService.getAdventureMessages(adventureId)

@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureParagraphRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import input.comprehensible.features.storylist.onStoryList
 import input.comprehensible.runTest
@@ -33,23 +34,29 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
         val scenario = TextAdventureRemoteResponse(
             adventureId = adventureId,
             title = "Harbor Mist",
-            sentences = listOf("You arrive at a quiet harbor."),
-            translatedSentences = listOf("Llegas a un puerto tranquilo."),
+            paragraphs = listOf(TextAdventureParagraphRemoteResponse(
+                sentences = listOf("You arrive at a quiet harbor."),
+                translatedSentences = listOf("Llegas a un puerto tranquilo."),
+            )),
             isEnding = false,
         )
         val responses = listOf(
             TextAdventureRemoteResponse(
                 adventureId = adventureId,
                 title = "Harbor Mist",
-                sentences = listOf("A lantern flickers on the dock."),
-                translatedSentences = listOf("Una linterna parpadea en el muelle."),
+                paragraphs = listOf(TextAdventureParagraphRemoteResponse(
+                    sentences = listOf("A lantern flickers on the dock."),
+                    translatedSentences = listOf("Una linterna parpadea en el muelle."),
+                )),
                 isEnding = false,
             ),
             TextAdventureRemoteResponse(
                 adventureId = adventureId,
                 title = "Harbor Mist",
-                sentences = listOf("The fog lifts and the journey ends."),
-                translatedSentences = listOf("La niebla se disipa y el viaje termina."),
+                paragraphs = listOf(TextAdventureParagraphRemoteResponse(
+                    sentences = listOf("The fog lifts and the journey ends."),
+                    translatedSentences = listOf("La niebla se disipa y el viaje termina."),
+                )),
                 isEnding = true,
             ),
         )
@@ -105,16 +112,20 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
         val scenario = TextAdventureRemoteResponse(
             adventureId = adventureId,
             title = "Forest Echoes",
-            sentences = listOf("A trail winds into the forest."),
-            translatedSentences = listOf("Un sendero se adentra en el bosque."),
+            paragraphs = listOf(TextAdventureParagraphRemoteResponse(
+                sentences = listOf("A trail winds into the forest."),
+                translatedSentences = listOf("Un sendero se adentra en el bosque."),
+            )),
             isEnding = false,
         )
         val responses = listOf(
             TextAdventureRemoteResponse(
                 adventureId = adventureId,
                 title = "Forest Echoes",
-                sentences = listOf("Birdsong follows you between the trees."),
-                translatedSentences = listOf("El canto de los pájaros te sigue entre los árboles."),
+                paragraphs = listOf(TextAdventureParagraphRemoteResponse(
+                    sentences = listOf("Birdsong follows you between the trees."),
+                    translatedSentences = listOf("El canto de los pájaros te sigue entre los árboles."),
+                )),
                 isEnding = false,
             )
         )
