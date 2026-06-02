@@ -2,13 +2,17 @@ package input.comprehensible.data.account
 
 import com.ktin.Singleton
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
+import input.comprehensible.data.account.sources.local.Session
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 class AccountRepository(
     private val remoteDataSource: AccountRemoteDataSource,
     private val localDataSource: AccountLocalDataSource,
 ) {
+    val session: Flow<Session?> = localDataSource.session
+
     suspend fun createAccount(email: String, password: String): Result<Unit> =
         runCatching { remoteDataSource.createAccount(email, password) }
             .onFailure { Timber.e(it, "Failed to create account") }
@@ -26,10 +30,6 @@ class AccountRepository(
     suspend fun signOut(): Result<Unit> =
         runCatching { localDataSource.clearSession() }
             .onFailure { Timber.e(it, "Failed to sign out") }
-
-    suspend fun getSessionToken(): String? = localDataSource.getSessionToken()
-
-    suspend fun getEmail(): String? = localDataSource.getEmail()
 
     companion object : Singleton<AccountRepository>() {
         override fun create() = AccountRepository(

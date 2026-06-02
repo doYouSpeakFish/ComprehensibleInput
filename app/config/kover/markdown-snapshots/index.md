@@ -10,6 +10,7 @@
 ## Files with missing coverage
 
 - [src/main/java/input/comprehensible/data/account/AccountRepository.kt](files/src_main_java_input_comprehensible_data_account_AccountRepository.kt.md) (missed 0, partial 1)
+- [src/main/java/input/comprehensible/data/account/sources/local/DefaultAccountLocalDataSource.kt](files/src_main_java_input_comprehensible_data_account_sources_local_DefaultAccountLocalDataSource.kt.md) (missed 0, partial 1)
 - [src/main/java/input/comprehensible/data/stories/StoriesRepository.kt](files/src_main_java_input_comprehensible_data_stories_StoriesRepository.kt.md) (missed 14, partial 8)
 - [src/main/java/input/comprehensible/data/stories/model/Story.kt](files/src_main_java_input_comprehensible_data_stories_model_Story.kt.md) (missed 4, partial 0)
 - [src/main/java/input/comprehensible/data/textadventures/TextAdventuresRepository.kt](files/src_main_java_input_comprehensible_data_textadventures_TextAdventuresRepository.kt.md) (missed 7, partial 9)
@@ -22,7 +23,7 @@
 - [src/main/java/input/comprehensible/ui/components/topbar/TopBar.kt](files/src_main_java_input_comprehensible_ui_components_topbar_TopBar.kt.md) (missed 0, partial 2)
 - [src/main/java/input/comprehensible/ui/settings/SettingsNavGraph.kt](files/src_main_java_input_comprehensible_ui_settings_SettingsNavGraph.kt.md) (missed 0, partial 2)
 - [src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt](files/src_main_java_input_comprehensible_ui_settings_account_AccountUI.kt.md) (missed 1, partial 6)
-- [src/main/java/input/comprehensible/ui/settings/account/AccountViewModel.kt](files/src_main_java_input_comprehensible_ui_settings_account_AccountViewModel.kt.md) (missed 1, partial 11)
+- [src/main/java/input/comprehensible/ui/settings/account/AccountViewModel.kt](files/src_main_java_input_comprehensible_ui_settings_account_AccountViewModel.kt.md) (missed 2, partial 11)
 - [src/main/java/input/comprehensible/ui/settings/settings/SettingsScreen.kt](files/src_main_java_input_comprehensible_ui_settings_settings_SettingsScreen.kt.md) (missed 0, partial 1)
 - [src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt](files/src_main_java_input_comprehensible_ui_storylist_StoryListUI.kt.md) (missed 1, partial 9)
 - [src/main/java/input/comprehensible/ui/storylist/StoryListViewModel.kt](files/src_main_java_input_comprehensible_ui_storylist_StoryListViewModel.kt.md) (missed 2, partial 3)

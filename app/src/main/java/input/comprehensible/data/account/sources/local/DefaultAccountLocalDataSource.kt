@@ -10,7 +10,7 @@ import input.comprehensible.di.ApplicationProvider
 import input.comprehensible.di.IoDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 private val SESSION_TOKEN = stringPreferencesKey("session_token")
@@ -24,11 +24,12 @@ class DefaultAccountLocalDataSource(
         scope = CoroutineScope(IoDispatcher() + SupervisorJob()),
     )
 
-    override suspend fun getSessionToken(): String? =
-        context.dataStore.data.map { it[SESSION_TOKEN] }.first()
-
-    override suspend fun getEmail(): String? =
-        context.dataStore.data.map { it[EMAIL] }.first()
+    override val session: Flow<Session?> = context.dataStore.data.map {
+        Session(
+            email = it[EMAIL] ?: return@map null,
+            token = it[SESSION_TOKEN] ?: return@map null,
+        )
+    }
 
     override suspend fun saveSession(token: String, email: String) {
         context.dataStore.edit {
