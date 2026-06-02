@@ -97,9 +97,9 @@ class AccountManagementApiStepDefinitions {
         }
     }
 
-    @When("I request a password reset for {string}")
-    fun requestPasswordReset(email: String) = runCall {
-        post("/v1/password-resets") {
+    @When("I request a password reset code for {string}")
+    fun requestPasswordResetCode(email: String) = runCall {
+        post("/v1/password-reset-codes") {
             contentType(ContentType.Application.Json)
             setBody("{\"email\":\"$email\"}")
         }
@@ -107,10 +107,42 @@ class AccountManagementApiStepDefinitions {
 
     @When("I reset password for {string} to {string} using code {string}")
     fun resetPassword(email: String, password: String, code: String) = runCall {
-        post("/v1/password-reset-attempts") {
+        post("/v1/password-resets") {
             contentType(ContentType.Application.Json)
             setBody("{\"email\":\"$email\",\"password\":\"$password\",\"code\":\"$code\"}")
         }
+    }
+
+    @When("I request a new email verification code for {string}")
+    fun requestNewEmailVerificationCode(email: String) = runCall {
+        post("/v1/email-verification-codes") {
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\"}")
+        }
+    }
+
+    @When("I request a new email change current verification code")
+    fun requestNewEmailChangeCurrentVerificationCode() = runCall {
+        post("/v1/email-change-current-verification-codes") {
+            header(HttpHeaders.Authorization, "Bearer $bearerToken")
+        }
+    }
+
+    @When("I request a new email change current verification code without authorization")
+    fun requestNewEmailChangeCurrentVerificationCodeNoAuth() = runCall {
+        post("/v1/email-change-current-verification-codes")
+    }
+
+    @When("I request a new email change new-email verification code")
+    fun requestNewEmailChangeNewEmailVerificationCode() = runCall {
+        post("/v1/email-change-new-verification-codes") {
+            header(HttpHeaders.Authorization, "Bearer $bearerToken")
+        }
+    }
+
+    @When("I request a new email change new-email verification code without authorization")
+    fun requestNewEmailChangeNewEmailVerificationCodeNoAuth() = runCall {
+        post("/v1/email-change-new-verification-codes")
     }
 
     @When("I request me profile")

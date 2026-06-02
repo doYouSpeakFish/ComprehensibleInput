@@ -204,6 +204,65 @@
 🟢           return HttpStatusCode.Accepted
 ⚪       }
 ⚪   
+⚪       fun requestNewEmailVerificationCode(email: String): HttpStatusCode {
+🟢           val normalizedEmail = normalizeEmail(email)
+🟡           if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
+🟢           val account = accountsDao.findAccountByEmail(normalizedEmail) ?: return HttpStatusCode.Accepted
+🟢           if (account[AccountsTable.emailVerified]) return HttpStatusCode.Accepted
+🟢           val code = verificationCodeProvider()
+🟢           accountsDao.storeEmailVerificationCode(
+🟢               accountId = account[AccountsTable.id],
+🟢               code = code,
+🟢               expiresAt = now() + verificationCodeTtlMs,
+⚪           )
+🟢           runBlocking {
+🟢               emailDataSource.sendEmail(
+🟢                   to = normalizedEmail,
+🟢                   subject = "Verify your Comprehensible Input email address",
+🟢                   textBody = "Use this verification code to verify your Comprehensible Input email address: $code",
+⚪               )
+⚪           }
+🟢           return HttpStatusCode.Accepted
+⚪       }
+⚪   
+⚪       fun requestNewEmailChangeCurrentCode(accountId: String): HttpStatusCode {
+🟡           val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.BadRequest
+🟢           val code = verificationCodeProvider()
+🟢           val updated = accountsDao.updateCurrentEmailChangeCode(
+🟢               accountId = accountId,
+🟢               code = code,
+🟢               expiresAt = now() + verificationCodeTtlMs,
+⚪           )
+🟢           if (!updated) return HttpStatusCode.BadRequest
+🟢           runBlocking {
+🟢               emailDataSource.sendEmail(
+🟢                   to = account[AccountsTable.email],
+🟢                   subject = "Confirm your Comprehensible Input email change",
+⚪                   textBody = "Use this verification code to confirm your Comprehensible Input " +
+🟢                       "email change: $code. If this change is unexpected, login to your " +
+⚪                       "Comprehensible Input account and change your password immediately.",
+⚪               )
+⚪           }
+🟢           return HttpStatusCode.Accepted
+⚪       }
+⚪   
+⚪       fun requestNewEmailChangeNewEmailCode(accountId: String): HttpStatusCode {
+🟢           val code = verificationCodeProvider()
+🟢           val pendingEmail = accountsDao.updateNewEmailChangeCode(
+🟢               accountId = accountId,
+🟢               code = code,
+🟢               expiresAt = now() + verificationCodeTtlMs,
+🟢           ) ?: return HttpStatusCode.BadRequest
+🟢           runBlocking {
+🟢               emailDataSource.sendEmail(
+🟢                   to = pendingEmail,
+🟢                   subject = "Verify your Comprehensible Input email change",
+🟢                   textBody = "Use this verification code to verify your Comprehensible Input email change: $code",
+⚪               )
+⚪           }
+🟢           return HttpStatusCode.Accepted
+⚪       }
+⚪   
 ⚪       fun resetPassword(email: String, password: String, code: String): HttpStatusCode {
 🟢           val normalizedEmail = normalizeEmail(email)
 🟡           if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) return HttpStatusCode.BadRequest
