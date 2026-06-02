@@ -16,7 +16,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.app.distribution)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
-    id("input.comprehensible.kover-markdown-report")
+    id("input.comprehensible.kover-coverage-report")
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
