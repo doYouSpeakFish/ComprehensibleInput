@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class TextAdventureRemoteResponse(
+    val messageId: String = "",
     val adventureId: String,
     val title: String,
     val sentences: List<String>,
@@ -28,7 +29,11 @@ data class TextAdventureMessagesRemoteResponse(
 
 @Serializable
 data class TextAdventureMessageRemoteResponse(
+    val id: String,
+    val parentId: String?,
+    val type: String,
     val sender: String,
+    val text: String? = null,
     val isEnding: Boolean,
     val paragraphs: List<TextAdventureParagraphRemoteResponse>,
 )

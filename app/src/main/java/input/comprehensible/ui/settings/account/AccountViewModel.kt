@@ -3,6 +3,7 @@ package input.comprehensible.ui.settings.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.account.AccountRepository
+import input.comprehensible.data.account.InvalidCredentialsException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +18,70 @@ class AccountViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AccountUiState.INITIAL)
     val uiState: StateFlow<AccountUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            accountRepository.session.collect { session ->
+                if (session != null) {
+                    _uiState.update { AccountUiState(step = AccountUiState.Step.SignedIn(session.email)) }
+                } else {
+                    _uiState.update { state ->
+                        if (state.step is AccountUiState.Step.Loading || state.step is AccountUiState.Step.SignedIn) {
+                            AccountUiState(step = AccountUiState.Step.SignIn())
+                        } else {
+                            state
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun onSignInEmailChanged(email: String) {
+        _uiState.update { state ->
+            val step = state.step as? AccountUiState.Step.SignIn ?: return
+            state.copy(step = step.copy(email = email))
+        }
+    }
+
+    fun onSignInPasswordChanged(password: String) {
+        _uiState.update { state ->
+            val step = state.step as? AccountUiState.Step.SignIn ?: return
+            state.copy(step = step.copy(password = password))
+        }
+    }
+
+    fun onSignInSubmit() {
+        val step = _uiState.value.step as? AccountUiState.Step.SignIn ?: return
+        _uiState.update { it.copy(step = step.copy(isLoading = true)) }
+        viewModelScope.launch {
+            accountRepository.signIn(step.email, step.password)
+                .onFailure { throwable ->
+                    if (throwable is InvalidCredentialsException) {
+                        _uiState.update {
+                            it.copy(step = step.copy(isLoading = false), showInvalidCredentialsError = true)
+                        }
+                    } else {
+                        _uiState.update {
+                            it.copy(step = step.copy(isLoading = false), showError = true)
+                        }
+                    }
+                }
+        }
+    }
+
+    fun onSignUpButtonClicked() {
+        _uiState.update { state ->
+            if (state.step !is AccountUiState.Step.SignIn) return
+            state.copy(step = AccountUiState.Step.SignUp())
+        }
+    }
+
+    fun onSignOutClicked() {
+        viewModelScope.launch {
+            accountRepository.signOut()
+        }
+    }
 
     fun onEmailChanged(email: String) {
         _uiState.update { state ->
@@ -69,7 +134,7 @@ class AccountViewModel(
             accountRepository.verifyEmail(step.email, step.code)
                 .onSuccess {
                     _uiState.update {
-                        AccountUiState(step = AccountUiState.Step.Verified)
+                        AccountUiState(step = AccountUiState.Step.SignIn())
                     }
                 }
                 .onFailure {
@@ -81,6 +146,10 @@ class AccountViewModel(
     fun onErrorDismissed() {
         _uiState.update { it.copy(showError = false) }
     }
+
+    fun onInvalidCredentialsErrorDismissed() {
+        _uiState.update { it.copy(showInvalidCredentialsError = false) }
+    }
 }
 
 internal fun AccountUiState.Step.SignUp.isSubmitEnabled(): Boolean {
@@ -89,4 +158,8 @@ internal fun AccountUiState.Step.SignUp.isSubmitEnabled(): Boolean {
         trimmedEmail.contains('@') &&
         password.length >= MINIMUM_PASSWORD_LENGTH &&
         password == confirmPassword
+}
+
+internal fun AccountUiState.Step.SignIn.isSignInEnabled(): Boolean {
+    return email.trim().isNotBlank() && password.isNotBlank()
 }
