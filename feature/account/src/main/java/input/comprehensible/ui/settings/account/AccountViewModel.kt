@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AccountViewModel(
-    private val accountRepository: AccountRepository = AccountRepository(),
+    private val accountRepository: AccountRepository = AccountRepository.getInstance(),
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AccountUiState.INITIAL)
     val uiState: StateFlow<AccountUiState> = _uiState.asStateFlow()

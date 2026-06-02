@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 internal const val MINIMUM_PASSWORD_LENGTH = 12
 
 class SignUpViewModel(
-    private val accountRepository: AccountRepository = AccountRepository(),
+    private val accountRepository: AccountRepository = AccountRepository.getInstance(),
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()

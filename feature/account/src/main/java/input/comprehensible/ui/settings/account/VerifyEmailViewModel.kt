@@ -16,7 +16,7 @@ internal const val VERIFICATION_CODE_LENGTH = 6
 class VerifyEmailViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val accountRepository = AccountRepository()
+    private val accountRepository = AccountRepository.getInstance()
     private val email: String = savedStateHandle.toRoute<VerifyEmailRoute>().email
 
     private val _uiState = MutableStateFlow(VerifyEmailUiState(email = email))
