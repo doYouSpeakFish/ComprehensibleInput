@@ -35,6 +35,7 @@ data class TextAdventureMessageEntity(
     val isEnding: Boolean,
     val createdAt: Long,
     val messageIndex: Int,
+    val messageId: String,
 )
 
 @Entity(

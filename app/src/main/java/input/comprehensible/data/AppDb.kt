@@ -26,7 +26,7 @@ import input.comprehensible.di.ApplicationProvider
         TextAdventureSummaryView::class,
         TextAdventureMessageSentenceView::class,
     ],
-    version = 7,
+    version = 8,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -43,6 +43,7 @@ abstract class AppDb : RoomDatabase() {
             .databaseBuilder<AppDb>(context = ApplicationProvider(), name = "app-db")
             .addMigrations(TextAdventureMigration5To6())
             .addMigrations(TextAdventureMigration6To7())
+            .addMigrations(TextAdventureMigration7To8())
             .build()
     }
 }

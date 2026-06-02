@@ -4,7 +4,6 @@ import input.comprehensible.backend.common.requireSecretValue
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.DefaultTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
-import input.comprehensible.backend.textadventure.textAdventureRoutes
 import input.comprehensible.backend.textadventure.textAdventureV1Routes
 import input.comprehensible.backend.account.accountRoutes
 import io.ktor.http.ContentType
@@ -193,7 +192,6 @@ fun Application.configureRouting(
     routing {
         get("/health") { call.respondText("ok", ContentType.Text.Plain, HttpStatusCode.OK) }
         accountRoutes(accountService)
-        textAdventureRoutes(textAdventureService)
         textAdventureV1Routes(textAdventureService)
     }
 }

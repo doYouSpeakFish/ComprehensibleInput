@@ -18,7 +18,7 @@ class StartTextAdventureUseCase(
         val translationsLanguage = languageSettingsRepository.translationsLanguage.first()
         return repository.startNewAdventure(
             learningLanguage = learningLanguage,
-            translationsLanguage = translationsLanguage,
+            translationLanguage = translationsLanguage,
         )
     }
 }

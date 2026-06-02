@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureParagraphRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import input.comprehensible.features.storylist.onStoryList
@@ -29,38 +30,46 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `text adventure can be played to completion`() = testRule.runTest {
-        // GIVEN a text adventure with a scenario and responses
+        saveAccountSession(token = "test-token", email = "user@example.com")
+
         val adventureId = "adventure-1"
         val scenario = TextAdventureRemoteResponse(
             adventureId = adventureId,
             title = "Harbor Mist",
-            paragraphs = listOf(TextAdventureParagraphRemoteResponse(
-                sentences = listOf("You arrive at a quiet harbor."),
-                translatedSentences = listOf("Llegas a un puerto tranquilo."),
-            )),
+            messageId = "msg-0",
+            sentences = listOf("You arrive at a quiet harbor."),
+            translatedSentences = listOf("Llegas a un puerto tranquilo."),
             isEnding = false,
         )
-        val responses = listOf(
-            TextAdventureRemoteResponse(
-                adventureId = adventureId,
-                title = "Harbor Mist",
-                paragraphs = listOf(TextAdventureParagraphRemoteResponse(
-                    sentences = listOf("A lantern flickers on the dock."),
-                    translatedSentences = listOf("Una linterna parpadea en el muelle."),
-                )),
+        val aiResponses = listOf(
+            TextAdventureMessageRemoteResponse(
+                id = "msg-2",
+                parentId = "user-msg-0",
+                type = "AI",
+                sender = "AI",
                 isEnding = false,
+                paragraphs = listOf(
+                    TextAdventureParagraphRemoteResponse(
+                        sentences = listOf("A lantern flickers on the dock."),
+                        translatedSentences = listOf("Una linterna parpadea en el muelle."),
+                    )
+                ),
             ),
-            TextAdventureRemoteResponse(
-                adventureId = adventureId,
-                title = "Harbor Mist",
-                paragraphs = listOf(TextAdventureParagraphRemoteResponse(
-                    sentences = listOf("The fog lifts and the journey ends."),
-                    translatedSentences = listOf("La niebla se disipa y el viaje termina."),
-                )),
+            TextAdventureMessageRemoteResponse(
+                id = "msg-4",
+                parentId = "user-msg-1",
+                type = "AI",
+                sender = "AI",
                 isEnding = true,
+                paragraphs = listOf(
+                    TextAdventureParagraphRemoteResponse(
+                        sentences = listOf("The fog lifts and the journey ends."),
+                        translatedSentences = listOf("La niebla se disipa y el viaje termina."),
+                    )
+                ),
             ),
         )
-        enqueueTextAdventure(scenario = scenario, responses = responses)
+        enqueueTextAdventure(scenario = scenario, aiResponses = aiResponses)
 
         // WHEN the reader starts a new text adventure
         goToStoryList()
@@ -107,29 +116,33 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `unfinished adventures can be resumed`() = testRule.runTest {
-        // GIVEN a text adventure with a scenario and a follow-up
+        saveAccountSession(token = "test-token", email = "user@example.com")
+
         val adventureId = "adventure-2"
         val scenario = TextAdventureRemoteResponse(
             adventureId = adventureId,
             title = "Forest Echoes",
-            paragraphs = listOf(TextAdventureParagraphRemoteResponse(
-                sentences = listOf("A trail winds into the forest."),
-                translatedSentences = listOf("Un sendero se adentra en el bosque."),
-            )),
+            messageId = "msg-0",
+            sentences = listOf("A trail winds into the forest."),
+            translatedSentences = listOf("Un sendero se adentra en el bosque."),
             isEnding = false,
         )
-        val responses = listOf(
-            TextAdventureRemoteResponse(
-                adventureId = adventureId,
-                title = "Forest Echoes",
-                paragraphs = listOf(TextAdventureParagraphRemoteResponse(
-                    sentences = listOf("Birdsong follows you between the trees."),
-                    translatedSentences = listOf("El canto de los pájaros te sigue entre los árboles."),
-                )),
+        val aiResponses = listOf(
+            TextAdventureMessageRemoteResponse(
+                id = "msg-2",
+                parentId = "user-msg-0",
+                type = "AI",
+                sender = "AI",
                 isEnding = false,
+                paragraphs = listOf(
+                    TextAdventureParagraphRemoteResponse(
+                        sentences = listOf("Birdsong follows you between the trees."),
+                        translatedSentences = listOf("El canto de los pájaros te sigue entre los árboles."),
+                    )
+                ),
             )
         )
-        enqueueTextAdventure(scenario = scenario, responses = responses)
+        enqueueTextAdventure(scenario = scenario, aiResponses = aiResponses)
 
         // WHEN the reader starts and continues the adventure
         goToStoryList()

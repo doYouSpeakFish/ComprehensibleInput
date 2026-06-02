@@ -62,6 +62,17 @@ interface TextAdventuresLocalDataSource {
 
     @Query(
         """
+            SELECT messageId
+            FROM TextAdventureMessageEntity
+            WHERE adventureId = :adventureId
+            ORDER BY messageIndex DESC
+            LIMIT 1
+        """
+    )
+    suspend fun getLatestMessageId(adventureId: String): String?
+
+    @Query(
+        """
             SELECT * FROM TextAdventureMessageEntity
             WHERE adventureId = :adventureId
             ORDER BY messageIndex ASC

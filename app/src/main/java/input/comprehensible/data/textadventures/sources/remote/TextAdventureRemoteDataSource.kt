@@ -5,16 +5,22 @@ import com.ktin.InjectedSingleton
 interface TextAdventureRemoteDataSource {
     suspend fun startAdventure(
         learningLanguage: String,
-        translationsLanguage: String,
+        translationLanguage: String,
+        sessionToken: String,
     ): TextAdventureRemoteResponse
 
-    suspend fun respondToUser(
+    suspend fun createUserMessage(
         adventureId: String,
-        learningLanguage: String,
-        translationsLanguage: String,
-        userMessage: String,
-        history: List<TextAdventureHistoryMessage>,
-    ): TextAdventureRemoteResponse
+        parentMessageId: String,
+        text: String,
+        sessionToken: String,
+    ): TextAdventureMessageRemoteResponse
+
+    suspend fun createAiMessage(
+        adventureId: String,
+        parentMessageId: String,
+        sessionToken: String,
+    ): TextAdventureMessageRemoteResponse
 
     companion object : InjectedSingleton<TextAdventureRemoteDataSource>()
 }

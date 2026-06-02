@@ -22,6 +22,7 @@ import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import input.comprehensible.di.AppScope
@@ -181,9 +182,9 @@ class ComprehensibleInputTestScope(
 
     fun enqueueTextAdventure(
         scenario: TextAdventureRemoteResponse,
-        responses: List<TextAdventureRemoteResponse>,
+        aiResponses: List<TextAdventureMessageRemoteResponse>,
     ) {
-        textAdventuresTestData.enqueueAdventure(scenario, responses)
+        textAdventuresTestData.enqueueAdventure(scenario, aiResponses)
     }
 
     fun delayAccountRequests(delayMillis: Long) {
