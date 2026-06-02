@@ -58,6 +58,7 @@ roborazzi {
 dependencies {
     implementation(project(":common"))
     implementation(project(":data:account"))
+    implementation(libs.ktin.core)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
