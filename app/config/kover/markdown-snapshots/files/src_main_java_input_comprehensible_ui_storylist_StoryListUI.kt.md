@@ -7,32 +7,16 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 59-65
+## Lines 59-63
 
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:59-65`
+Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:59-63`
 
 ```kotlin
 ⚪   59 |     onTextAdventureStarted: (id: String) -> Unit,
 🟢   60 |     viewModel: StoryListViewModel = viewModel(),
 🟡   61 | ) {
 🟢   62 |     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
-🟡   63 |     LaunchedEffect(viewModel.events) {
-🟢   64 |         viewModel.events.collect { event ->
-🟢   65 |             when (event) {
-```
-
-## Lines 74-80
-
-Location: `src/main/java/input/comprehensible/ui/storylist/StoryListUI.kt:74-80`
-
-```kotlin
-🟢   74 |         onTextAdventureSelected = { onTextAdventureSelected(it.id) },
-🟢   75 |         onSettingsClick = onSettingsClick,
-🟡   76 |         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
-🟡   77 |         onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
-🟡   78 |         onStartTextAdventure = viewModel::onStartTextAdventure,
-🟢   79 |         state = state,
-⚪   80 |     )
+🟢   63 |     LaunchedEffect(viewModel.events) {
 ```
 
 ## Lines 91-95
