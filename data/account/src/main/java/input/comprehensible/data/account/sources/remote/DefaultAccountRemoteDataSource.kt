@@ -1,0 +1,98 @@
+package input.comprehensible.data.account.sources.remote
+
+import input.comprehensible.data.account.InvalidCredentialsException
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.delete
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.http.isSuccess
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
+private const val TIMEOUT_MILLIS = 30_000L
+
+class DefaultAccountRemoteDataSource(
+    private val baseUrl: String,
+    private val apiKey: String,
+    private val httpClient: HttpClient = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = TIMEOUT_MILLIS
+        }
+        install(Logging)
+    },
+) : AccountRemoteDataSource {
+    override suspend fun createAccount(email: String, password: String) {
+        val response = httpClient.post("$baseUrl/v1/users") {
+            header("X-Api-Key", apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(CreateAccountRequest(email = email, password = password))
+        }
+        if (!response.status.isSuccess()) {
+            error("Create account failed: ${response.status}")
+        }
+    }
+
+    override suspend fun verifyEmail(email: String, code: String) {
+        val response = httpClient.post("$baseUrl/v1/email-verifications") {
+            header("X-Api-Key", apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(VerifyEmailRequest(email = email, code = code))
+        }
+        if (!response.status.isSuccess()) {
+            error("Verify email failed: ${response.status}")
+        }
+    }
+
+    override suspend fun signIn(email: String, password: String): String {
+        val response = httpClient.post("$baseUrl/v1/auth/sessions") {
+            header("X-Api-Key", apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(SignInRequest(email = email, password = password))
+        }
+        if (response.status == HttpStatusCode.Unauthorized) {
+            throw InvalidCredentialsException()
+        }
+        if (!response.status.isSuccess()) {
+            error("Sign in failed: ${response.status}")
+        }
+        return response.body<SignInResponse>().accessToken
+    }
+
+    override suspend fun signOut(token: String) {
+        val response = httpClient.delete("$baseUrl/v1/auth/sessions/current") {
+            header("X-Api-Key", apiKey)
+            header("Authorization", "Bearer $token")
+        }
+        if (!response.status.isSuccess()) {
+            error("Sign out failed: ${response.status}")
+        }
+    }
+}
+
+@Serializable
+private data class CreateAccountRequest(val email: String, val password: String)
+
+@Serializable
+private data class VerifyEmailRequest(val email: String, val code: String)
+
+@Serializable
+private data class SignInRequest(val email: String, val password: String)
+
+@Serializable
+private data class SignInResponse(
+    @SerialName("access_token") val accessToken: String,
+)

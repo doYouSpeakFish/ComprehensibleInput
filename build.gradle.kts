@@ -20,6 +20,8 @@ dependencies {
     detektPlugins(libs.detekt.formatting)
     detektPlugins(libs.detekt.compose.rules)
     kover(project(":app"))
+    kover(project(":common"))
+    kover(project(":feature:account"))
     kover(project(":backend"))
 }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up">Voltar</string>
+    <string name="generic_error_dialog_title">Algo deu errado</string>
+    <string name="generic_error_dialog_message">Por favor, tente novamente mais tarde.</string>
+    <string name="generic_error_dialog_button">OK</string>
+    <string name="generic_error_dialog_content_description">Ilustração de um robô triste</string>
+</resources>

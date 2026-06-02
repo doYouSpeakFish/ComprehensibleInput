@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up">Navigate up</string>
+    <string name="generic_error_dialog_title">Something went wrong</string>
+    <string name="generic_error_dialog_message">Please try again later.</string>
+    <string name="generic_error_dialog_button">OK</string>
+    <string name="generic_error_dialog_content_description">Illustration of a sad robot</string>
+</resources>
