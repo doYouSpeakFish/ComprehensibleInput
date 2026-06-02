@@ -1,0 +1,20 @@
+package input.comprehensible.ui.settings.account
+
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class VerifyEmailRoute(val email: String)
+
+internal fun NavGraphBuilder.verifyEmailScreen(
+    onNavigateUp: () -> Unit,
+    onVerified: () -> Unit,
+) {
+    composable<VerifyEmailRoute> {
+        VerifyEmailScreen(
+            onNavigateUp = onNavigateUp,
+            onVerified = onVerified,
+        )
+    }
+}

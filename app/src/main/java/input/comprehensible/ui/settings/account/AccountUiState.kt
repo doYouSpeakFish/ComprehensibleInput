@@ -15,19 +15,6 @@ data class AccountUiState(
             val password: String = "",
             val isLoading: Boolean = false,
         ) : Step
-
-        data class SignUp(
-            val email: String = "",
-            val password: String = "",
-            val confirmPassword: String = "",
-            val isLoading: Boolean = false,
-        ) : Step
-
-        data class VerifyEmail(
-            val email: String,
-            val code: String = "",
-            val isLoading: Boolean = false,
-        ) : Step
     }
 
     companion object {
