@@ -99,23 +99,25 @@ class DatabaseAdventureRepository(
                     messageId = message.messageId,
                     parentMessageId = message.parentMessageId,
                     type = messageTypeUser,
-                    text = message.userMessage,
+                    text = null,
                     isEnding = false,
                     now = now,
                 )
             )
-            insertSentencesForMessage(
-                messageId = message.messageId,
-                paragraphIndex = 0,
-                language = message.learningLanguage,
-                sentences = listOf(message.userMessage),
-            )
-            insertSentencesForMessage(
-                messageId = message.messageId,
-                paragraphIndex = 0,
-                language = message.translationLanguage,
-                sentences = listOf(message.userMessage),
-            )
+            message.paragraphs.forEachIndexed { paragraphIndex, paragraph ->
+                insertSentencesForMessage(
+                    messageId = message.messageId,
+                    paragraphIndex = paragraphIndex,
+                    language = message.learningLanguage,
+                    sentences = paragraph.sentences,
+                )
+                insertSentencesForMessage(
+                    messageId = message.messageId,
+                    paragraphIndex = paragraphIndex,
+                    language = message.translationLanguage,
+                    sentences = paragraph.translatedSentences,
+                )
+            }
             findMessageRow(message.messageId)?.toRemoteMessage(
                 sentencesForMessage = findSentenceRowsForMessage(message.messageId),
                 learningLanguage = message.learningLanguage,
@@ -294,7 +296,6 @@ private fun ResultRow.toRemoteMessage(
         parentId = this[AdventureMessagesTable.parentMessageId],
         type = this[AdventureMessagesTable.type],
         sender = this[AdventureMessagesTable.type],
-        text = this[AdventureMessagesTable.text],
         isEnding = this[AdventureMessagesTable.isEnding],
         paragraphs = paragraphs,
     )
