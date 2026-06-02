@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.shadow)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
-    id("input.comprehensible.kover-markdown-report")
+    id("input.comprehensible.kover-coverage-report")
 }
 
 group = "input.comprehensible"
