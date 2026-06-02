@@ -4,11 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import input.comprehensible.ui.settings.account.AccountRoute
-import input.comprehensible.ui.settings.account.SignUpRoute
-import input.comprehensible.ui.settings.account.VerifyEmailRoute
-import input.comprehensible.ui.settings.account.accountScreen
-import input.comprehensible.ui.settings.account.signUpScreen
-import input.comprehensible.ui.settings.account.verifyEmailScreen
+import input.comprehensible.ui.settings.account.accountNavGraph
 import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.settings.settingsScreen
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
@@ -30,17 +26,9 @@ internal fun NavGraphBuilder.settingsNavGraph(navController: NavController) {
             onGoToAccount = { navController.navigate(AccountRoute) },
             onGoToSoftwareLicences = { navController.navigate(SoftwareLicencesRoute) },
         )
-        accountScreen(
+        accountNavGraph(
+            navController = navController,
             onNavigateUp = navController::navigateUp,
-            onGoToSignUp = { navController.navigate(SignUpRoute) },
-        )
-        signUpScreen(
-            onNavigateUp = navController::navigateUp,
-            onAccountCreated = { email -> navController.navigate(VerifyEmailRoute(email)) },
-        )
-        verifyEmailScreen(
-            onNavigateUp = navController::navigateUp,
-            onVerified = { navController.popBackStack(AccountRoute, inclusive = false) },
         )
         softwareLicences(
             onNavigateUp = navController::navigateUp,

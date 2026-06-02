@@ -5,6 +5,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
@@ -19,9 +20,7 @@ import input.comprehensible.features.account.VerifyEmailRobot
 import input.comprehensible.ui.settings.account.AccountRoute
 import input.comprehensible.ui.settings.account.SignUpRoute
 import input.comprehensible.ui.settings.account.VerifyEmailRoute
-import input.comprehensible.ui.settings.account.accountScreen
-import input.comprehensible.ui.settings.account.signUpScreen
-import input.comprehensible.ui.settings.account.verifyEmailScreen
+import input.comprehensible.ui.settings.account.accountNavGraph
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +31,7 @@ import kotlinx.coroutines.test.setMain
 import kotlinx.serialization.Serializable
 
 @Serializable
-private data object TestDisposeRoute
+internal data object TestDisposeRoute
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AccountFeatureTestScope(
@@ -43,7 +42,7 @@ class AccountFeatureTestScope(
 ) {
     val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
-    val realAccountLocalDataSource = DefaultAccountLocalDataSource(context = appContext)
+    val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
 
     private lateinit var _navController: TestNavHostController
     private var _isLaunched = false
@@ -72,23 +71,11 @@ class AccountFeatureTestScope(
                     navController = _navController,
                     startDestination = AccountRoute,
                 ) {
-                    accountScreen(
+                    accountNavGraph(
+                        navController = _navController,
                         onNavigateUp = {},
-                        onGoToSignUp = { _navController.navigate(SignUpRoute) },
                     )
-                    signUpScreen(
-                        onNavigateUp = _navController::navigateUp,
-                        onAccountCreated = { email ->
-                            _navController.navigate(VerifyEmailRoute(email))
-                        },
-                    )
-                    verifyEmailScreen(
-                        onNavigateUp = _navController::navigateUp,
-                        onVerified = {
-                            _navController.popBackStack(AccountRoute, inclusive = false)
-                        },
-                    )
-                    androidx.navigation.compose.composable<TestDisposeRoute> {}
+                    composable<TestDisposeRoute> {}
                 }
             }
         }
@@ -118,26 +105,6 @@ class AccountFeatureTestScope(
     suspend fun awaitIdle() {
         testScope.runCurrent()
         composeRule.awaitIdle()
-    }
-
-    fun delayAccountRequests(delayMillis: Long) {
-        fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
-    }
-
-    fun enqueueCreateAccountResult(result: Result<Unit>) {
-        fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
-    }
-
-    fun enqueueVerifyEmailResult(result: Result<Unit>) {
-        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
-    }
-
-    fun enqueueSignInResult(result: Result<String>) {
-        fakeAccountRemoteDataSource.enqueueSignInResult(result)
-    }
-
-    suspend fun saveAccountSession(token: String, email: String) {
-        realAccountLocalDataSource.saveSession(token, email)
     }
 
     suspend fun clearAccountSession() {

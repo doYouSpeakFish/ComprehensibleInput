@@ -1,0 +1,156 @@
+⚪   package input.comprehensible.ui.settings.account
+⚪   
+⚪   import androidx.compose.foundation.layout.Arrangement
+⚪   import androidx.compose.foundation.layout.Column
+⚪   import androidx.compose.foundation.layout.fillMaxSize
+⚪   import androidx.compose.foundation.layout.fillMaxWidth
+⚪   import androidx.compose.foundation.layout.padding
+⚪   import androidx.compose.foundation.layout.size
+⚪   import androidx.compose.foundation.text.KeyboardOptions
+⚪   import androidx.compose.material3.Button
+⚪   import androidx.compose.material3.CircularProgressIndicator
+⚪   import androidx.compose.material3.MaterialTheme
+⚪   import androidx.compose.material3.OutlinedTextField
+⚪   import androidx.compose.material3.Scaffold
+⚪   import androidx.compose.material3.Text
+⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.LaunchedEffect
+⚪   import androidx.compose.runtime.getValue
+⚪   import androidx.compose.ui.Modifier
+⚪   import androidx.compose.ui.platform.testTag
+⚪   import androidx.compose.ui.res.stringResource
+⚪   import androidx.compose.ui.text.input.KeyboardType
+⚪   import androidx.compose.ui.unit.dp
+⚪   import androidx.lifecycle.compose.collectAsStateWithLifecycle
+⚪   import androidx.lifecycle.viewmodel.compose.viewModel
+⚪   import input.comprehensible.feature.account.R
+⚪   import input.comprehensible.ui.components.error.GenericErrorDialog
+⚪   import input.comprehensible.ui.components.topbar.SettingsTopBar
+⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
+⚪   import input.comprehensible.util.DefaultPreview
+⚪   
+⚪   @Composable
+🟢   internal fun VerifyEmailScreen(
+⚪       onNavigateUp: () -> Unit,
+⚪       onVerified: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟢       viewModel: VerifyEmailViewModel = viewModel(),
+🟡   ) {
+🟢       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+⚪   
+🟢       LaunchedEffect(uiState.verified) {
+🟢           if (uiState.verified) {
+🟢               viewModel.onNavigationConsumed()
+🟢               onVerified()
+⚪           }
+⚪       }
+⚪   
+🟢       VerifyEmailScreen(
+🟢           uiState = uiState,
+🟢           onNavigateUp = onNavigateUp,
+🟢           onCodeChanged = viewModel::onCodeChanged,
+🟢           onSubmit = viewModel::onSubmit,
+🟢           onErrorDismissed = viewModel::onErrorDismissed,
+🟢           modifier = modifier,
+⚪       )
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun VerifyEmailScreen(
+⚪       uiState: VerifyEmailUiState,
+⚪       onNavigateUp: () -> Unit,
+⚪       onCodeChanged: (String) -> Unit,
+⚪       onSubmit: () -> Unit,
+⚪       onErrorDismissed: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟡   ) {
+🟢       Scaffold(
+🟢           modifier = modifier,
+🟢           topBar = {
+🟢               SettingsTopBar(
+🟢                   title = stringResource(R.string.account_screen_title),
+🟢                   onNavigateUp = onNavigateUp,
+⚪               )
+⚪           },
+🟢       ) { paddingValues ->
+🟢           Column(
+🟢               modifier = Modifier
+🟢                   .fillMaxWidth()
+🟢                   .padding(paddingValues)
+🟢                   .padding(horizontal = 24.dp, vertical = 16.dp),
+🟢               verticalArrangement = Arrangement.spacedBy(16.dp),
+⚪           ) {
+🟢               Text(
+🟢                   text = stringResource(R.string.account_verify_email_message, uiState.email),
+🟢                   style = MaterialTheme.typography.bodyLarge,
+⚪               )
+🟢               OutlinedTextField(
+🟢                   value = uiState.code,
+🟢                   onValueChange = onCodeChanged,
+🟢                   label = { Text(stringResource(R.string.account_verify_email_code_label)) },
+🟢                   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+🟢                   singleLine = true,
+🟢                   modifier = Modifier
+🟢                       .fillMaxWidth()
+🟢                       .testTag("account_verify_email_code_field"),
+⚪               )
+🟢               Button(
+🟢                   onClick = onSubmit,
+🟢                   enabled = !uiState.isLoading && uiState.code.length == VERIFICATION_CODE_LENGTH,
+🟢                   modifier = Modifier
+🟢                       .fillMaxWidth()
+🟢                       .testTag("account_verify_email_submit_button"),
+🟢               ) {
+🟢                   if (uiState.isLoading) {
+🟢                       CircularProgressIndicator(
+🟢                           modifier = Modifier
+🟢                               .size(20.dp)
+🟢                               .testTag("account_verify_email_loading_indicator"),
+🟢                           color = MaterialTheme.colorScheme.onPrimary,
+🟢                           strokeWidth = 2.dp,
+⚪                       )
+🟢                   } else {
+🟢                       Text(stringResource(R.string.account_verify_email_submit_button))
+⚪                   }
+⚪               }
+🟢           }
+⚪       }
+⚪   
+🟢       if (uiState.showError) {
+🟢           GenericErrorDialog(onDismissRequest = onErrorDismissed)
+🟢       }
+🟢   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+🟢   fun PreviewVerifyEmail() {
+🟢       ComprehensibleInputTheme {
+🟢           VerifyEmailScreen(
+🟢               uiState = VerifyEmailUiState(email = "user@example.com"),
+🟢               onNavigateUp = {},
+🟢               onCodeChanged = {},
+🟢               onSubmit = {},
+🟢               onErrorDismissed = {},
+🟢               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+🟢   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+🟢   fun PreviewVerifyEmailLoading() {
+🟢       ComprehensibleInputTheme {
+🟢           VerifyEmailScreen(
+🟢               uiState = VerifyEmailUiState(
+🟢                   email = "user@example.com",
+🟢                   code = "123456",
+🟢                   isLoading = true,
+⚪               ),
+🟢               onNavigateUp = {},
+🟢               onCodeChanged = {},
+🟢               onSubmit = {},
+🟢               onErrorDismissed = {},
+🟢               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+🟢   }

@@ -5,7 +5,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.roborazzi)
+    alias(libs.plugins.kover)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
+    id("input.comprehensible.kover-coverage-report")
 }
 
 android {
@@ -71,6 +73,7 @@ dependencies {
     implementation(libs.serialization.json)
 
     debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     testFixturesImplementation(platform(libs.androidx.compose.bom))
     testFixturesImplementation(libs.androidx.ui.test.junit4)

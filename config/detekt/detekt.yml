@@ -13,8 +13,8 @@ complexity:
   LongMethod:
     threshold: 100
   TooManyFunctions:
-    thresholdInClasses: 40
-    thresholdInFiles: 40
+    thresholdInClasses: 15
+    thresholdInFiles: 15
 
 naming:
   FunctionNaming:

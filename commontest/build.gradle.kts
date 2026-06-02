@@ -35,6 +35,8 @@ dependencies {
     api(libs.roborazzi.core)
     api(libs.roborazzi.compose)
     api(libs.roborazzi.junit)
+    api(libs.roborazzi.compose.preview)
+    api(libs.composable.preview.scanner)
     api(libs.ktin.test)
     api(libs.junit)
     api(libs.coroutines.test)

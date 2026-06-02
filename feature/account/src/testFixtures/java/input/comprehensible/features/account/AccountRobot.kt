@@ -10,7 +10,23 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import input.comprehensible.ui.components.error.GENERIC_ERROR_DIALOG_TEST_TAG
 
+class GenericErrorDialogRobot(private val composeTestRule: ComposeTestRule) {
+    fun assertIsShown() {
+        composeTestRule
+            .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
+            .assertIsDisplayed()
+    }
+
+    fun dismiss() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
 class AccountRobot(private val composeTestRule: ComposeTestRule) {
+    val errorDialog = GenericErrorDialogRobot(composeTestRule)
+
     fun assertAccountTitleIsVisible() {
         composeTestRule
             .onNodeWithText("Account")
@@ -55,16 +71,12 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
-    fun assertSignUpFromSignInIsEnabled() {
-        composeTestRule
-            .onNodeWithTag("account_sign_up_button")
-            .assertIsEnabled()
-    }
-
-    fun assertSignUpFromSignInIsDisabled() {
-        composeTestRule
-            .onNodeWithTag("account_sign_up_button")
-            .assertIsNotEnabled()
+    fun assertSignUpFromSignInEnabled(isEnabled: Boolean) {
+        if (isEnabled) {
+            composeTestRule.onNodeWithTag("account_sign_up_button").assertIsEnabled()
+        } else {
+            composeTestRule.onNodeWithTag("account_sign_up_button").assertIsNotEnabled()
+        }
     }
 
     fun tapSignUpFromSignIn() {
@@ -107,21 +119,11 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .onNodeWithTag("account_sign_in_email_field")
             .assertIsDisplayed()
     }
-
-    fun assertErrorDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
-            .assertIsDisplayed()
-    }
-
-    fun dismissErrorDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
-            .performClick()
-    }
 }
 
 class SignUpRobot(private val composeTestRule: ComposeTestRule) {
+    val errorDialog = GenericErrorDialogRobot(composeTestRule)
+
     fun enterEmail(email: String) {
         composeTestRule
             .onNodeWithTag("account_sign_up_email_field")
@@ -163,21 +165,11 @@ class SignUpRobot(private val composeTestRule: ComposeTestRule) {
             .onNodeWithTag("account_sign_up_loading_indicator")
             .assertIsDisplayed()
     }
-
-    fun assertErrorDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
-            .assertIsDisplayed()
-    }
-
-    fun dismissErrorDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
-            .performClick()
-    }
 }
 
 class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
+    val errorDialog = GenericErrorDialogRobot(composeTestRule)
+
     fun assertEmailSentMessageIsShown(email: String) {
         composeTestRule
             .onNodeWithText(email, substring = true)
@@ -211,12 +203,6 @@ class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
     fun assertVerifyEmailLoadingIndicatorIsShown() {
         composeTestRule
             .onNodeWithTag("account_verify_email_loading_indicator")
-            .assertIsDisplayed()
-    }
-
-    fun assertErrorDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
             .assertIsDisplayed()
     }
 }
