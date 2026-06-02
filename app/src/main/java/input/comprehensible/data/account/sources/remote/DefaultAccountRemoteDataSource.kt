@@ -8,6 +8,7 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.delete
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -68,6 +69,16 @@ class DefaultAccountRemoteDataSource(
             error("Sign in failed: ${response.status}")
         }
         return response.body<SignInResponse>().accessToken
+    }
+
+    override suspend fun signOut(token: String) {
+        val response = httpClient.delete("${BuildConfig.BACKEND_BASE_URL}/v1/auth/sessions/current") {
+            header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+            header("Authorization", "Bearer $token")
+        }
+        if (!response.status.isSuccess()) {
+            error("Sign out failed: ${response.status}")
+        }
     }
 }
 
