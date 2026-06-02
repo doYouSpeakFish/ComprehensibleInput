@@ -50,7 +50,6 @@ class DatabaseAdventureRepository(
                     messageId = adventurePart.messageId,
                     parentMessageId = adventurePart.parentMessageId,
                     type = messageTypeAi,
-                    text = null,
                     isEnding = adventurePart.isEnding,
                     now = now,
                 )
@@ -99,23 +98,24 @@ class DatabaseAdventureRepository(
                     messageId = message.messageId,
                     parentMessageId = message.parentMessageId,
                     type = messageTypeUser,
-                    text = message.userMessage,
                     isEnding = false,
                     now = now,
                 )
             )
-            insertSentencesForMessage(
-                messageId = message.messageId,
-                paragraphIndex = 0,
-                language = message.learningLanguage,
-                sentences = listOf(message.userMessage),
-            )
-            insertSentencesForMessage(
-                messageId = message.messageId,
-                paragraphIndex = 0,
-                language = message.translationLanguage,
-                sentences = listOf(message.userMessage),
-            )
+            message.paragraphs.forEachIndexed { paragraphIndex, paragraph ->
+                insertSentencesForMessage(
+                    messageId = message.messageId,
+                    paragraphIndex = paragraphIndex,
+                    language = message.learningLanguage,
+                    sentences = paragraph.sentences,
+                )
+                insertSentencesForMessage(
+                    messageId = message.messageId,
+                    paragraphIndex = paragraphIndex,
+                    language = message.translationLanguage,
+                    sentences = paragraph.translatedSentences,
+                )
+            }
             findMessageRow(message.messageId)?.toRemoteMessage(
                 sentencesForMessage = findSentenceRowsForMessage(message.messageId),
                 learningLanguage = message.learningLanguage,
@@ -176,7 +176,6 @@ class DatabaseAdventureRepository(
             it[adventureId] = message.adventureId
             it[parentMessageId] = message.parentMessageId
             it[type] = message.type
-            it[text] = message.text
             it[isEnding] = message.isEnding
             it[createdAt] = message.now
         }
@@ -259,7 +258,6 @@ private data class PersistedMessageRow(
     val messageId: String,
     val parentMessageId: String?,
     val type: String,
-    val text: String?,
     val isEnding: Boolean,
     val now: Long,
 )
@@ -294,7 +292,6 @@ private fun ResultRow.toRemoteMessage(
         parentId = this[AdventureMessagesTable.parentMessageId],
         type = this[AdventureMessagesTable.type],
         sender = this[AdventureMessagesTable.type],
-        text = this[AdventureMessagesTable.text],
         isEnding = this[AdventureMessagesTable.isEnding],
         paragraphs = paragraphs,
     )
@@ -355,7 +352,6 @@ object AdventureMessagesTable : Table("text_adventure_message") {
         onDelete = ReferenceOption.CASCADE,
     )
     val type = varchar("type", length = 32)
-    val text = text("text").nullable()
     val isEnding = bool("is_ending")
     val createdAt = registerColumn("created_at", LongColumnType())
 

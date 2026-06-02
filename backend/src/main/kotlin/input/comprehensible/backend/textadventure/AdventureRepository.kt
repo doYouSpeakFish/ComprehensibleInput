@@ -24,7 +24,7 @@ data class PersistedUserAdventureMessage(
     val messageId: String,
     val learningLanguage: String,
     val translationLanguage: String,
-    val userMessage: String,
+    val paragraphs: List<PersistedAdventureParagraph>,
 )
 
 data class PersistedAdventurePart(

@@ -88,13 +88,19 @@ class TextAdventureGenerationService(
         adventureRepository.deleteAllAdventuresForAccount(accountId)
     }
 
-    fun createUserMessageForAccount(
+    suspend fun createUserMessageForAccount(
         accountId: String,
         adventureId: String,
         parentMessageId: String,
         text: String,
     ): TextAdventureMessageRemoteResponse? {
         val existing = getAdventureMessagesForAccount(accountId = accountId, adventureId = adventureId) ?: return null
+        if (existing.messages.none { it.id == parentMessageId }) return null
+        val paragraphs = structureUserMessage(
+            userMessage = text,
+            learningLanguage = existing.learningLanguage,
+            translationsLanguage = existing.translationsLanguage,
+        )
         return adventureRepository.appendUserMessage(
             PersistedUserAdventureMessage(
                 adventureId = adventureId,
@@ -103,7 +109,7 @@ class TextAdventureGenerationService(
                 messageId = messageIdProvider(),
                 learningLanguage = existing.learningLanguage,
                 translationLanguage = existing.translationsLanguage,
-                userMessage = text,
+                paragraphs = paragraphs,
             )
         )
     }
@@ -115,51 +121,19 @@ class TextAdventureGenerationService(
     ): TextAdventureMessageRemoteResponse? {
         val existing = getAdventureMessagesForAccount(accountId = accountId, adventureId = adventureId) ?: return null
         val parent = existing.messages.firstOrNull { it.id == parentMessageId } ?: return null
+        val userText = parent.paragraphs.flatMap { it.sentences }.joinToString(" ").trim()
         val messageId = messageIdProvider()
         respondToUser(
             adventureId = adventureId,
             learningLanguage = existing.learningLanguage,
             translationsLanguage = existing.translationsLanguage,
-            userMessage = parent.text.orEmpty(),
+            userMessage = userText,
             history = existing.toHistory(),
             accountId = accountId,
             messageId = messageId,
             parentMessageId = parentMessageId,
         )
         return getAdventureMessagesForAccount(accountId, adventureId)?.messages?.firstOrNull { it.id == messageId }
-    }
-
-    suspend fun respondToAdventureForAccount(
-        accountId: String,
-        adventureId: String,
-        userMessage: String,
-    ): RespondToAdventureForAccountResult? {
-        val existing = getAdventureMessagesForAccount(accountId = accountId, adventureId = adventureId) ?: return null
-        if (existing.messages.lastOrNull()?.isEnding == true) {
-            return RespondToAdventureForAccountResult.AdventureEnded
-        }
-        val userResponse = adventureRepository.appendUserMessage(
-            PersistedUserAdventureMessage(
-                adventureId = adventureId,
-                accountId = accountId,
-                parentMessageId = existing.messages.last().id,
-                messageId = messageIdProvider(),
-                learningLanguage = existing.learningLanguage,
-                translationLanguage = existing.translationsLanguage,
-                userMessage = userMessage,
-            )
-        ) ?: return null
-        val response = respondToUser(
-            adventureId = adventureId,
-            learningLanguage = existing.learningLanguage,
-            translationsLanguage = existing.translationsLanguage,
-            userMessage = userMessage,
-            history = getAdventureMessages(adventureId)?.toHistory().orEmpty(),
-            accountId = accountId,
-            messageId = messageIdProvider(),
-            parentMessageId = userResponse.id,
-        )
-        return RespondToAdventureForAccountResult.Success(response)
     }
 
     suspend fun respondToUser(
@@ -212,6 +186,42 @@ class TextAdventureGenerationService(
 
     fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse? =
         adventureRepository.getAdventureMessages(adventureId)
+
+    private suspend fun structureUserMessage(
+        userMessage: String,
+        learningLanguage: String,
+        translationsLanguage: String,
+    ): List<PersistedAdventureParagraph> = runRetrying(MAX_SENTENCE_MATCH_ATTEMPTS) {
+        val response = structuredPromptExecutor.executeUserMessageResponse(
+            promptName = "text-adventure-user-message",
+            systemPrompt = """
+                The player is responding in a text adventure game.
+                Rewrite their response as natural sentences in $learningLanguage.
+                Provide matching translations in $translationsLanguage with identical sentence counts and order.
+                Do not add extra commentary outside the requested fields.
+                Avoid markdown and keep punctuation natural for the language.
+            """.trimIndent(),
+            userPrompt = userMessage,
+        )
+
+        check(response.paragraphs.size == response.translatedParagraphs.size) {
+            """
+                User message paragraph count mismatch:
+                    paragraphs=${response.paragraphs.size}
+                    translations=${response.translatedParagraphs.size}
+            """.trimIndent()
+        }
+
+        response.paragraphs.zip(response.translatedParagraphs).map { (paragraph, translatedParagraph) ->
+            check(paragraph.sentences.size == translatedParagraph.sentences.size) {
+                "User message sentence count mismatch"
+            }
+            PersistedAdventureParagraph(
+                sentences = paragraph.sentences.map(String::trim),
+                translatedSentences = translatedParagraph.sentences.map(String::trim),
+            )
+        }
+    }
 
     private suspend fun requestAdventureResponse(
         adventureId: String,
@@ -286,7 +296,7 @@ private fun AdventureSummary.toRemoteResponse(): AdventureSummaryRemoteResponse 
 )
 
 private fun TextAdventureMessagesRemoteResponse.toHistory(): List<TextAdventureHistoryMessage> = messages.mapNotNull { message ->
-    val text = message.text ?: message.paragraphs.flatMap { it.sentences }.joinToString(" ").trim()
+    val text = message.paragraphs.flatMap { it.sentences }.joinToString(" ").trim()
     if (text.isBlank()) {
         null
     } else {
@@ -324,6 +334,16 @@ private fun GeneratedAdventureResponse.toRemoteResponse(messageId: String): Text
     )
 
 @Serializable
+@SerialName("UserMessageResponse")
+@LLMDescription("The player's adventure message converted into structured sentences.")
+data class UserMessageStructuredResponse(
+    @property:LLMDescription("The player's message as sentences in the learning language.")
+    val paragraphs: List<TextAdventureStructuredParagraph>,
+    @property:LLMDescription("Translated sentences in the translation language matching paragraph structure.")
+    val translatedParagraphs: List<TextAdventureStructuredParagraph>,
+)
+
+@Serializable
 @SerialName("TextAdventureResponse")
 @LLMDescription("A single response from the text adventure narrator.")
 data class TextAdventureStructuredResponse(
@@ -356,7 +376,3 @@ data class AdventureSummaryRemoteResponse(
     val updatedAt: Long,
 )
 
-sealed interface RespondToAdventureForAccountResult {
-    data class Success(val response: TextAdventureRemoteResponse) : RespondToAdventureForAccountResult
-    data object AdventureEnded : RespondToAdventureForAccountResult
-}

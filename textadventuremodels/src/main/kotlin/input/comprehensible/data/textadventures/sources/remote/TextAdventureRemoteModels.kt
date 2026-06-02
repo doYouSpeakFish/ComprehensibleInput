@@ -33,7 +33,6 @@ data class TextAdventureMessageRemoteResponse(
     val parentId: String?,
     val type: String,
     val sender: String,
-    val text: String? = null,
     val isEnding: Boolean,
     val paragraphs: List<TextAdventureParagraphRemoteResponse>,
 )
