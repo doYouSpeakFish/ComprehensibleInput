@@ -61,7 +61,7 @@ class ComprehensibleInputTestScope(
         .setQueryCoroutineContext(context = dispatcher)
         .build()
 
-    private lateinit var realAccountLocalDataSource: DefaultAccountLocalDataSource
+    private val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
 
     private lateinit var _navController: TestNavHostController
     private val navController: TestNavHostController
@@ -96,7 +96,6 @@ class ComprehensibleInputTestScope(
         TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
         AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
-        realAccountLocalDataSource = DefaultAccountLocalDataSource(context = appContext)
         AccountLocalDataSource.inject { realAccountLocalDataSource }
     }
 
