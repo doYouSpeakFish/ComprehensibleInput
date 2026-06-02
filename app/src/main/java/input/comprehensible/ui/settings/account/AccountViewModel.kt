@@ -21,12 +21,18 @@ class AccountViewModel(
 
     init {
         viewModelScope.launch {
-            val token = accountRepository.getSessionToken()
-            val email = accountRepository.getEmail()
-            if (token != null && email != null) {
-                _uiState.update { AccountUiState(step = AccountUiState.Step.SignedIn(email)) }
-            } else {
-                _uiState.update { AccountUiState(step = AccountUiState.Step.SignIn()) }
+            accountRepository.session.collect { session ->
+                if (session != null) {
+                    _uiState.update { AccountUiState(step = AccountUiState.Step.SignedIn(session.email)) }
+                } else {
+                    _uiState.update { state ->
+                        if (state.step is AccountUiState.Step.Loading || state.step is AccountUiState.Step.SignedIn) {
+                            AccountUiState(step = AccountUiState.Step.SignIn())
+                        } else {
+                            state
+                        }
+                    }
+                }
             }
         }
     }
@@ -50,9 +56,6 @@ class AccountViewModel(
         _uiState.update { it.copy(step = step.copy(isLoading = true)) }
         viewModelScope.launch {
             accountRepository.signIn(step.email, step.password)
-                .onSuccess {
-                    _uiState.update { AccountUiState(step = AccountUiState.Step.SignedIn(step.email)) }
-                }
                 .onFailure { throwable ->
                     if (throwable is InvalidCredentialsException) {
                         _uiState.update {
@@ -77,7 +80,6 @@ class AccountViewModel(
     fun onSignOutClicked() {
         viewModelScope.launch {
             accountRepository.signOut()
-            _uiState.update { AccountUiState(step = AccountUiState.Step.SignIn()) }
         }
     }
 
