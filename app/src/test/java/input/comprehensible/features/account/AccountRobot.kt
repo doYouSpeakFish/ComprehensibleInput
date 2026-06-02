@@ -109,8 +109,24 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
-    // Sign up step
+    fun assertErrorDialogIsShown() {
+        composeTestRule
+            .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
+            .assertIsDisplayed()
+    }
 
+    fun dismissErrorDialog() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
+suspend fun ComprehensibleInputTestScope.onAccount(
+    block: suspend AccountRobot.() -> Unit = {},
+) = AccountRobot(composeRule).apply { block() }
+
+class SignUpRobot(private val composeTestRule: ComposeTestRule) {
     fun enterEmail(email: String) {
         composeTestRule
             .onNodeWithTag("account_sign_up_email_field")
@@ -153,13 +169,29 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    fun assertErrorDialogIsShown() {
+        composeTestRule
+            .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
+            .assertIsDisplayed()
+    }
+
+    fun dismissErrorDialog() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
+suspend fun ComprehensibleInputTestScope.onSignUp(
+    block: suspend SignUpRobot.() -> Unit = {},
+) = SignUpRobot(composeRule).apply { block() }
+
+class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
     fun assertEmailSentMessageIsShown(email: String) {
         composeTestRule
             .onNodeWithText(email, substring = true)
             .assertIsDisplayed()
     }
-
-    // Verify email step
 
     fun enterVerificationCode(code: String) {
         composeTestRule
@@ -196,14 +228,8 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .onNodeWithTag(GENERIC_ERROR_DIALOG_TEST_TAG)
             .assertIsDisplayed()
     }
-
-    fun dismissErrorDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
-            .performClick()
-    }
 }
 
-suspend fun ComprehensibleInputTestScope.onAccount(
-    block: suspend AccountRobot.() -> Unit = {},
-) = AccountRobot(composeRule).apply { block() }
+suspend fun ComprehensibleInputTestScope.onVerifyEmail(
+    block: suspend VerifyEmailRobot.() -> Unit = {},
+) = VerifyEmailRobot(composeRule).apply { block() }

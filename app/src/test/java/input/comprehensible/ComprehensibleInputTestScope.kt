@@ -28,6 +28,8 @@ import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
 import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.account.SignUpRoute
+import input.comprehensible.ui.settings.account.VerifyEmailRoute
 import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -126,6 +128,14 @@ class ComprehensibleInputTestScope(
 
     fun goToAccount() {
         navController.navigate(AccountRoute)
+    }
+
+    fun goToSignUp() {
+        navController.navigate(SignUpRoute)
+    }
+
+    fun goToVerifyEmail(email: String) {
+        navController.navigate(VerifyEmailRoute(email))
     }
 
     fun goToSoftwareLicences() {
