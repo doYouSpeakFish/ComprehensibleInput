@@ -127,13 +127,7 @@ private fun migrateDatabase(config: DatabaseConnectionConfig) {
 }
 
 
-fun Application.configureRouting(
-    textAdventureService: TextAdventureGenerationService,
-    appApiKey: String,
-    accountService: AccountService,
-) {
-    install(ContentNegotiation) { json() }
-    install(DoubleReceive)
+private fun Application.configureRateLimits() {
     install(RateLimit) {
         global { rateLimiter(limit = 20, refillPeriod = 10.minutes) }
         register(RateLimitName("email-verification")) {
@@ -157,12 +151,9 @@ fun Application.configureRouting(
         register(RateLimitName("email-verification-code")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
             requestKey { call ->
-                try {
+                runCatching {
                     Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
-                        ?: (call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost)
-                } catch (e: Exception) {
-                    call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-                }
+                }.getOrNull() ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
             }
         }
         register(RateLimitName("email-change-current-verification-code")) {
@@ -178,6 +169,16 @@ fun Application.configureRouting(
             }
         }
     }
+}
+
+fun Application.configureRouting(
+    textAdventureService: TextAdventureGenerationService,
+    appApiKey: String,
+    accountService: AccountService,
+) {
+    install(ContentNegotiation) { json() }
+    install(DoubleReceive)
+    configureRateLimits()
     install(Authentication) {
         apiKey {
             validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
