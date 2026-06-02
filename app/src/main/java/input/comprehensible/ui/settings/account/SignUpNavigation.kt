@@ -5,16 +5,16 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AccountRoute
+data object SignUpRoute
 
-internal fun NavGraphBuilder.accountScreen(
+internal fun NavGraphBuilder.signUpScreen(
     onNavigateUp: () -> Unit,
-    onGoToSignUp: () -> Unit,
+    onAccountCreated: (email: String) -> Unit,
 ) {
-    composable<AccountRoute> {
-        AccountScreen(
+    composable<SignUpRoute> {
+        SignUpScreen(
             onNavigateUp = onNavigateUp,
-            onGoToSignUp = onGoToSignUp,
+            onAccountCreated = onAccountCreated,
         )
     }
 }

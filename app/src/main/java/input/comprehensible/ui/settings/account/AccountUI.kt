@@ -17,6 +17,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,11 +39,11 @@ import input.comprehensible.ui.components.error.GenericErrorDialog
 import input.comprehensible.ui.components.topbar.SettingsTopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
-import androidx.compose.material3.OutlinedTextField
 
 @Composable
 internal fun AccountScreen(
     onNavigateUp: () -> Unit,
+    onGoToSignUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel = viewModel(),
 ) {
@@ -53,14 +54,8 @@ internal fun AccountScreen(
         onSignInEmailChanged = viewModel::onSignInEmailChanged,
         onSignInPasswordChanged = viewModel::onSignInPasswordChanged,
         onSignInSubmit = viewModel::onSignInSubmit,
-        onSignUpButtonClicked = viewModel::onSignUpButtonClicked,
+        onSignUpButtonClicked = onGoToSignUp,
         onSignOutClicked = viewModel::onSignOutClicked,
-        onEmailChanged = viewModel::onEmailChanged,
-        onPasswordChanged = viewModel::onPasswordChanged,
-        onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-        onSignUpSubmit = viewModel::onSignUpSubmit,
-        onCodeChanged = viewModel::onCodeChanged,
-        onVerifyEmailSubmit = viewModel::onVerifyEmailSubmit,
         onErrorDismissed = viewModel::onErrorDismissed,
         onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
         modifier = modifier,
@@ -76,12 +71,6 @@ private fun AccountScreen(
     onSignInSubmit: () -> Unit,
     onSignUpButtonClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onConfirmPasswordChanged: (String) -> Unit,
-    onSignUpSubmit: () -> Unit,
-    onCodeChanged: (String) -> Unit,
-    onVerifyEmailSubmit: () -> Unit,
     onErrorDismissed: () -> Unit,
     onInvalidCredentialsErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
@@ -117,18 +106,6 @@ private fun AccountScreen(
                     onPasswordChanged = onSignInPasswordChanged,
                     onSignInSubmit = onSignInSubmit,
                     onSignUpClicked = onSignUpButtonClicked,
-                )
-                is AccountUiState.Step.SignUp -> SignUpStep(
-                    step = step,
-                    onEmailChanged = onEmailChanged,
-                    onPasswordChanged = onPasswordChanged,
-                    onConfirmPasswordChanged = onConfirmPasswordChanged,
-                    onSubmit = onSignUpSubmit,
-                )
-                is AccountUiState.Step.VerifyEmail -> VerifyEmailStep(
-                    step = step,
-                    onCodeChanged = onCodeChanged,
-                    onSubmit = onVerifyEmailSubmit,
                 )
             }
         }
@@ -238,124 +215,6 @@ private fun SignInStep(
     }
 }
 
-@Composable
-private fun SignUpStep(
-    step: AccountUiState.Step.SignUp,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onConfirmPasswordChanged: (String) -> Unit,
-    onSubmit: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        OutlinedTextField(
-            value = step.email,
-            onValueChange = onEmailChanged,
-            label = { Text(stringResource(R.string.account_sign_up_email_label)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_sign_up_email_field"),
-        )
-        OutlinedTextField(
-            value = step.password,
-            onValueChange = onPasswordChanged,
-            label = { Text(stringResource(R.string.account_sign_up_password_label)) },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_sign_up_password_field"),
-        )
-        OutlinedTextField(
-            value = step.confirmPassword,
-            onValueChange = onConfirmPasswordChanged,
-            label = { Text(stringResource(R.string.account_sign_up_confirm_password_label)) },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_sign_up_confirm_password_field"),
-        )
-        Button(
-            onClick = onSubmit,
-            enabled = !step.isLoading && step.isSubmitEnabled(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_sign_up_submit_button"),
-        ) {
-            if (step.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .testTag("account_sign_up_loading_indicator"),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = 2.dp,
-                )
-            } else {
-                Text(stringResource(R.string.account_sign_up_submit_button))
-            }
-        }
-    }
-}
-
-@Composable
-private fun VerifyEmailStep(
-    step: AccountUiState.Step.VerifyEmail,
-    onCodeChanged: (String) -> Unit,
-    onSubmit: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Text(
-            text = stringResource(R.string.account_verify_email_message, step.email),
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        OutlinedTextField(
-            value = step.code,
-            onValueChange = onCodeChanged,
-            label = { Text(stringResource(R.string.account_verify_email_code_label)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_verify_email_code_field"),
-        )
-        Button(
-            onClick = onSubmit,
-            enabled = !step.isLoading && step.code.length == VERIFICATION_CODE_LENGTH,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_verify_email_submit_button"),
-        ) {
-            if (step.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .testTag("account_verify_email_loading_indicator"),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = 2.dp,
-                )
-            } else {
-                Text(stringResource(R.string.account_verify_email_submit_button))
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InvalidCredentialsDialog(
@@ -408,12 +267,6 @@ fun PreviewAccountSignIn() {
             onSignInSubmit = {},
             onSignUpButtonClicked = {},
             onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),
@@ -439,12 +292,6 @@ fun PreviewAccountSignInLoading() {
             onSignInSubmit = {},
             onSignUpButtonClicked = {},
             onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),
@@ -464,127 +311,6 @@ fun PreviewAccountSignedIn() {
             onSignInSubmit = {},
             onSignUpButtonClicked = {},
             onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
-            onErrorDismissed = {},
-            onInvalidCredentialsErrorDismissed = {},
-            modifier = Modifier.fillMaxSize(),
-        )
-    }
-}
-
-@DefaultPreview
-@Composable
-fun PreviewAccountSignUp() {
-    ComprehensibleInputTheme {
-        AccountScreen(
-            uiState = AccountUiState(step = AccountUiState.Step.SignUp()),
-            onNavigateUp = {},
-            onSignInEmailChanged = {},
-            onSignInPasswordChanged = {},
-            onSignInSubmit = {},
-            onSignUpButtonClicked = {},
-            onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
-            onErrorDismissed = {},
-            onInvalidCredentialsErrorDismissed = {},
-            modifier = Modifier.fillMaxSize(),
-        )
-    }
-}
-
-@DefaultPreview
-@Composable
-fun PreviewAccountSignUpLoading() {
-    ComprehensibleInputTheme {
-        AccountScreen(
-            uiState = AccountUiState(
-                step = AccountUiState.Step.SignUp(
-                    email = "user@example.com",
-                    password = "password12345",
-                    confirmPassword = "password12345",
-                    isLoading = true,
-                ),
-            ),
-            onNavigateUp = {},
-            onSignInEmailChanged = {},
-            onSignInPasswordChanged = {},
-            onSignInSubmit = {},
-            onSignUpButtonClicked = {},
-            onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
-            onErrorDismissed = {},
-            onInvalidCredentialsErrorDismissed = {},
-            modifier = Modifier.fillMaxSize(),
-        )
-    }
-}
-
-@DefaultPreview
-@Composable
-fun PreviewAccountVerifyEmail() {
-    ComprehensibleInputTheme {
-        AccountScreen(
-            uiState = AccountUiState(
-                step = AccountUiState.Step.VerifyEmail(email = "user@example.com"),
-            ),
-            onNavigateUp = {},
-            onSignInEmailChanged = {},
-            onSignInPasswordChanged = {},
-            onSignInSubmit = {},
-            onSignUpButtonClicked = {},
-            onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
-            onErrorDismissed = {},
-            onInvalidCredentialsErrorDismissed = {},
-            modifier = Modifier.fillMaxSize(),
-        )
-    }
-}
-
-@DefaultPreview
-@Composable
-fun PreviewAccountVerifyEmailLoading() {
-    ComprehensibleInputTheme {
-        AccountScreen(
-            uiState = AccountUiState(
-                step = AccountUiState.Step.VerifyEmail(
-                    email = "user@example.com",
-                    code = "123456",
-                    isLoading = true,
-                ),
-            ),
-            onNavigateUp = {},
-            onSignInEmailChanged = {},
-            onSignInPasswordChanged = {},
-            onSignInSubmit = {},
-            onSignUpButtonClicked = {},
-            onSignOutClicked = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onConfirmPasswordChanged = {},
-            onSignUpSubmit = {},
-            onCodeChanged = {},
-            onVerifyEmailSubmit = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),

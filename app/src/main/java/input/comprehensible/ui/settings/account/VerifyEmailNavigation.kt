@@ -5,16 +5,16 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AccountRoute
+data class VerifyEmailRoute(val email: String)
 
-internal fun NavGraphBuilder.accountScreen(
+internal fun NavGraphBuilder.verifyEmailScreen(
     onNavigateUp: () -> Unit,
-    onGoToSignUp: () -> Unit,
+    onVerified: () -> Unit,
 ) {
-    composable<AccountRoute> {
-        AccountScreen(
+    composable<VerifyEmailRoute> {
+        VerifyEmailScreen(
             onNavigateUp = onNavigateUp,
-            onGoToSignUp = onGoToSignUp,
+            onVerified = onVerified,
         )
     }
 }
