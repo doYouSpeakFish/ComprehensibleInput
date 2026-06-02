@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.roborazzi)
-    `java-test-fixtures`
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
@@ -76,6 +75,7 @@ dependencies {
     testFixturesImplementation(libs.coroutines.test)
 
     testImplementation(project(":commontest"))
+    testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.navigation.testing)
