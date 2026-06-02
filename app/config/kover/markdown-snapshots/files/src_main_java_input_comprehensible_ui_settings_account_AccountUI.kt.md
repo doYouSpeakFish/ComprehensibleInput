@@ -7,62 +7,86 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 38-42
+## Lines 46-50
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:38-42`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:46-50`
 
 ```kotlin
-🟢   38 |     modifier: Modifier = Modifier,
-🟢   39 |     viewModel: AccountViewModel = viewModel(),
-🟡   40 | ) {
-🟢   41 |     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-🟢   42 |     AccountScreen(
+🟢   46 |     modifier: Modifier = Modifier,
+🟢   47 |     viewModel: AccountViewModel = viewModel(),
+🟡   48 | ) {
+🟢   49 |     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+🟢   50 |     AccountScreen(
 ```
 
-## Lines 66-70
+## Lines 86-90
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:66-70`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:86-90`
 
 ```kotlin
-⚪   66 |     onErrorDismissed: () -> Unit,
-🟢   67 |     modifier: Modifier = Modifier,
-🟡   68 | ) {
-🟢   69 |     Scaffold(
-🟢   70 |         modifier = modifier,
+⚪   86 |     onInvalidCredentialsErrorDismissed: () -> Unit,
+🟢   87 |     modifier: Modifier = Modifier,
+🟡   88 | ) {
+🟢   89 |     Scaffold(
+🟢   90 |         modifier = modifier,
 ```
 
-## Lines 95-99
+## Lines 131-135
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:95-99`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:131-135`
 
 ```kotlin
-⚪   95 |                 )
-🟢   96 |                 is AccountUiState.Step.Verified -> VerifiedStep()
-🔴   97 |             }
-🟢   98 |         }
-⚪   99 |     }
+🟢  131 |                     onSubmit = onVerifyEmailSubmit,
+⚪  132 |                 )
+🔴  133 |             }
+🟢  134 |         }
+⚪  135 |     }
 ```
 
-## Lines 112-116
+## Lines 149-153
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:112-116`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:149-153`
 
 ```kotlin
-⚪  112 |     onSubmit: () -> Unit,
-🟢  113 |     modifier: Modifier = Modifier,
-🟡  114 | ) {
-🟢  115 |     Column(
-🟢  116 |         modifier = modifier
+⚪  149 |     onSignOutClicked: () -> Unit,
+🟢  150 |     modifier: Modifier = Modifier,
+🟡  151 | ) {
+🟢  152 |     Column(
+🟢  153 |         modifier = modifier
 ```
 
-## Lines 225-229
+## Lines 180-184
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:225-229`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:180-184`
 
 ```kotlin
-⚪  225 | private fun VerifiedStep(
-🟢  226 |     modifier: Modifier = Modifier,
-🟡  227 | ) {
-🟢  228 |     Box(
-🟢  229 |         modifier = modifier
+⚪  180 |     onSignUpClicked: () -> Unit,
+🟢  181 |     modifier: Modifier = Modifier,
+🟡  182 | ) {
+🟢  183 |     Column(
+🟢  184 |         modifier = modifier
+```
+
+## Lines 247-251
+
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:247-251`
+
+```kotlin
+⚪  247 |     onSubmit: () -> Unit,
+🟢  248 |     modifier: Modifier = Modifier,
+🟡  249 | ) {
+🟢  250 |     Column(
+🟢  251 |         modifier = modifier
+```
+
+## Lines 362-366
+
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:362-366`
+
+```kotlin
+⚪  362 |     onDismissRequest: () -> Unit,
+🟢  363 |     modifier: Modifier = Modifier,
+🟡  364 | ) {
+🟢  365 |     BasicAlertDialog(onDismissRequest = onDismissRequest) {
+🟢  366 |         Surface(
 ```
