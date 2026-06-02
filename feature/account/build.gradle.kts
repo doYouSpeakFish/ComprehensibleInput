@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.roborazzi)
-    `java-test-fixtures`
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 
@@ -27,6 +26,9 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    testFixtures {
+        enable = true
     }
     testOptions {
         unitTests {
