@@ -7,9 +7,9 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 46-67
+## Lines 46-50
 
-Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:46-67`
+Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:46-50`
 
 ```kotlin
 🟢   46 |     modifier: Modifier = Modifier,
@@ -17,23 +17,6 @@ Location: `src/main/java/input/comprehensible/ui/settings/account/AccountUI.kt:4
 🟡   48 | ) {
 🟢   49 |     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 🟢   50 |     AccountScreen(
-🟢   51 |         uiState = uiState,
-🟢   52 |         onNavigateUp = onNavigateUp,
-🟡   53 |         onSignInEmailChanged = viewModel::onSignInEmailChanged,
-🟡   54 |         onSignInPasswordChanged = viewModel::onSignInPasswordChanged,
-🟡   55 |         onSignInSubmit = viewModel::onSignInSubmit,
-🟡   56 |         onSignUpButtonClicked = viewModel::onSignUpButtonClicked,
-🟡   57 |         onSignOutClicked = viewModel::onSignOutClicked,
-🟡   58 |         onEmailChanged = viewModel::onEmailChanged,
-🟡   59 |         onPasswordChanged = viewModel::onPasswordChanged,
-🟡   60 |         onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-🟡   61 |         onSignUpSubmit = viewModel::onSignUpSubmit,
-🟡   62 |         onCodeChanged = viewModel::onCodeChanged,
-🟡   63 |         onVerifyEmailSubmit = viewModel::onVerifyEmailSubmit,
-🟡   64 |         onErrorDismissed = viewModel::onErrorDismissed,
-🟡   65 |         onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
-🟢   66 |         modifier = modifier,
-⚪   67 |     )
 ```
 
 ## Lines 86-90
