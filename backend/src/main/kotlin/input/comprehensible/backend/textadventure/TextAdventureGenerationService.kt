@@ -136,46 +136,6 @@ class TextAdventureGenerationService(
         return getAdventureMessagesForAccount(accountId, adventureId)?.messages?.firstOrNull { it.id == messageId }
     }
 
-    suspend fun respondToAdventureForAccount(
-        accountId: String,
-        adventureId: String,
-        userMessage: String,
-    ): RespondToAdventureForAccountResult? {
-        val existing = getAdventureMessagesForAccount(accountId = accountId, adventureId = adventureId) ?: return null
-        if (existing.messages.lastOrNull()?.isEnding == true) {
-            return RespondToAdventureForAccountResult.AdventureEnded
-        }
-        val lastMessage = existing.messages.lastOrNull() ?: return null
-        val userParagraphs = structureUserMessage(
-            userMessage = userMessage,
-            learningLanguage = existing.learningLanguage,
-            translationsLanguage = existing.translationsLanguage,
-        )
-        val userResponse = adventureRepository.appendUserMessage(
-            PersistedUserAdventureMessage(
-                adventureId = adventureId,
-                accountId = accountId,
-                parentMessageId = lastMessage.id,
-                messageId = messageIdProvider(),
-                learningLanguage = existing.learningLanguage,
-                translationLanguage = existing.translationsLanguage,
-                paragraphs = userParagraphs,
-            )
-        ) ?: return null
-        val structuredUserText = userParagraphs.flatMap { it.sentences }.joinToString(" ").trim()
-        val response = respondToUser(
-            adventureId = adventureId,
-            learningLanguage = existing.learningLanguage,
-            translationsLanguage = existing.translationsLanguage,
-            userMessage = structuredUserText,
-            history = getAdventureMessages(adventureId)?.toHistory().orEmpty(),
-            accountId = accountId,
-            messageId = messageIdProvider(),
-            parentMessageId = userResponse.id,
-        )
-        return RespondToAdventureForAccountResult.Success(response)
-    }
-
     suspend fun respondToUser(
         adventureId: String,
         learningLanguage: String,
@@ -416,7 +376,3 @@ data class AdventureSummaryRemoteResponse(
     val updatedAt: Long,
 )
 
-sealed interface RespondToAdventureForAccountResult {
-    data class Success(val response: TextAdventureRemoteResponse) : RespondToAdventureForAccountResult
-    data object AdventureEnded : RespondToAdventureForAccountResult
-}
