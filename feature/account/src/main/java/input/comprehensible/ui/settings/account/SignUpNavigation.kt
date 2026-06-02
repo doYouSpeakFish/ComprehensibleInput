@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object SignUpRoute
 
-internal fun NavGraphBuilder.signUpScreen(
+fun NavGraphBuilder.signUpScreen(
     onNavigateUp: () -> Unit,
     onAccountCreated: (email: String) -> Unit,
 ) {

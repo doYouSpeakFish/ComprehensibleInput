@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VerifyEmailRoute(val email: String)
 
-internal fun NavGraphBuilder.verifyEmailScreen(
+fun NavGraphBuilder.verifyEmailScreen(
     onNavigateUp: () -> Unit,
     onVerified: () -> Unit,
 ) {
