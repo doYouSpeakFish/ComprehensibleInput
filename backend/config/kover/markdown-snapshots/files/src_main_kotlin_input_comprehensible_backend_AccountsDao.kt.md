@@ -43,14 +43,26 @@ Location: `src/main/kotlin/input/comprehensible/backend/AccountsDao.kt:140-144`
 🟢  144 |             it[AccountsTable.email] = email
 ```
 
-## Lines 160-164
+## Lines 166-170
 
-Location: `src/main/kotlin/input/comprehensible/backend/AccountsDao.kt:160-164`
+Location: `src/main/kotlin/input/comprehensible/backend/AccountsDao.kt:166-170`
 
 ```kotlin
-⚪  160 | 
-🟢  161 |     fun resetPassword(email: String, passwordHash: String, code: String, now: Long): Boolean = transaction(database) {
-🟡  162 |         val account = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull() ?: return@transaction false
-🟢  163 |         val accountId = account[AccountsTable.id]
-🟢  164 |         val reset = PasswordResetTable.selectAll().where {
+🟢  166 |             .where { PendingEmailChangeTable.accountId eq accountId }
+🟢  167 |             .singleOrNull() ?: return@transaction null
+🟡  168 |         if (pending[PendingEmailChangeTable.newEmailCode].isEmpty()) return@transaction null
+🟢  169 |         PendingEmailChangeTable.update({ PendingEmailChangeTable.accountId eq accountId }) {
+🟢  170 |             it[newEmailCode] = code
+```
+
+## Lines 183-187
+
+Location: `src/main/kotlin/input/comprehensible/backend/AccountsDao.kt:183-187`
+
+```kotlin
+⚪  183 | 
+🟢  184 |     fun resetPassword(email: String, passwordHash: String, code: String, now: Long): Boolean = transaction(database) {
+🟡  185 |         val account = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull() ?: return@transaction false
+🟢  186 |         val accountId = account[AccountsTable.id]
+🟢  187 |         val reset = PasswordResetTable.selectAll().where {
 ```

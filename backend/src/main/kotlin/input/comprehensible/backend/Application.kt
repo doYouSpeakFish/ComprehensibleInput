@@ -18,8 +18,13 @@ import io.ktor.server.auth.bearer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.doublereceive.DoubleReceive
 import io.ktor.server.plugins.ratelimit.RateLimit
 import io.ktor.server.plugins.ratelimit.RateLimitName
+import io.ktor.server.request.receiveText
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
@@ -128,6 +133,7 @@ fun Application.configureRouting(
     accountService: AccountService,
 ) {
     install(ContentNegotiation) { json() }
+    install(DoubleReceive)
     install(RateLimit) {
         global { rateLimiter(limit = 20, refillPeriod = 10.minutes) }
         register(RateLimitName("email-verification")) {
@@ -151,19 +157,24 @@ fun Application.configureRouting(
         register(RateLimitName("email-verification-code")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
             requestKey { call ->
-                call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+                try {
+                    Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
+                        ?: (call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost)
+                } catch (e: Exception) {
+                    call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+                }
             }
         }
         register(RateLimitName("email-change-current-verification-code")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
             requestKey { call ->
-                call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+                call.request.headers["Authorization"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
             }
         }
         register(RateLimitName("email-change-new-verification-code")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
             requestKey { call ->
-                call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+                call.request.headers["Authorization"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
             }
         }
     }
