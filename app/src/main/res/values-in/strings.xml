@@ -3,6 +3,8 @@
     <string name="navigate_up">Navigasi ke atas</string>
     <string name="settings_button_description">Pengaturan</string>
     <string name="settings_screen_title">Pengaturan</string>
+    <string name="settings_item_account">Akun</string>
+    <string name="account_screen_title">Akun</string>
     <string name="settings_item_software_licences">Lisensi perangkat lunak</string>
     <string name="software_licences_screen_title">Lisensi perangkat lunak</string>
     <string name="language_selector_en_content_description">Pilih bahasa Inggris</string>
@@ -49,4 +51,16 @@
     <string name="story_reader_error_dialog_message">Kami tidak dapat membuka cerita ini. Silakan coba lagi nanti.</string>
     <string name="story_reader_error_dialog_button">Oke</string>
     <string name="story_reader_error_dialog_content_description">Ilustrasi robot sedih</string>
+    <string name="account_sign_up_email_label">Email</string>
+    <string name="account_sign_up_password_label">Kata sandi</string>
+    <string name="account_sign_up_confirm_password_label">Konfirmasi kata sandi</string>
+    <string name="account_sign_up_submit_button">Daftar</string>
+    <string name="account_verify_email_message">Kami telah mengirimkan kode verifikasi 6 digit ke %1$s</string>
+    <string name="account_verify_email_code_label">Kode verifikasi</string>
+    <string name="account_verify_email_submit_button">Verifikasi</string>
+    <string name="account_verified_message">Email Anda telah diverifikasi. Anda sekarang dapat masuk ke akun Anda.</string>
+    <string name="generic_error_dialog_title">Terjadi kesalahan</string>
+    <string name="generic_error_dialog_message">Silakan coba lagi nanti.</string>
+    <string name="generic_error_dialog_button">Oke</string>
+    <string name="generic_error_dialog_content_description">Ilustrasi robot sedih</string>
 </resources>

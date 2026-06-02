@@ -33,16 +33,19 @@ class AccountService(
             now = now(),
         )
         val accountId = when (insertAccountResult) {
-            InsertAccountResult.AlreadyExists -> {
-                runBlocking {
-                    emailDataSource.sendEmail(
-                        to = normalizedEmail,
-                        subject = "Comprehensible Input account already exists",
-                        textBody = "A Comprehensible Input account already exists for this email address. " +
-                            "If this was not you, you can safely ignore this message.",
-                    )
+            is InsertAccountResult.AlreadyExists -> {
+                if (insertAccountResult.emailVerified) {
+                    runBlocking {
+                        emailDataSource.sendEmail(
+                            to = normalizedEmail,
+                            subject = "Comprehensible Input account already exists",
+                            textBody = "A Comprehensible Input account already exists for this email address. " +
+                                "If this was not you, you can safely ignore this message.",
+                        )
+                    }
+                    return AccountResult(HttpStatusCode.OK)
                 }
-                return AccountResult(HttpStatusCode.OK)
+                insertAccountResult.accountId
             }
             is InsertAccountResult.Inserted -> insertAccountResult.accountId
         }

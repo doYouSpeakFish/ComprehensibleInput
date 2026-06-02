@@ -1,0 +1,59 @@
+package input.comprehensible.data.account.sources.remote
+
+import input.comprehensible.BuildConfig
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.isSuccess
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
+private const val TIMEOUT_MILLIS = 30_000L
+
+class DefaultAccountRemoteDataSource(
+    private val httpClient: HttpClient = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = TIMEOUT_MILLIS
+        }
+        install(Logging)
+    },
+) : AccountRemoteDataSource {
+    override suspend fun createAccount(email: String, password: String) {
+        val response = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/users") {
+            header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+            contentType(ContentType.Application.Json)
+            setBody(CreateAccountRequest(email = email, password = password))
+        }
+        if (!response.status.isSuccess()) {
+            error("Create account failed: ${response.status}")
+        }
+    }
+
+    override suspend fun verifyEmail(email: String, code: String) {
+        val response = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/email-verifications") {
+            header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+            contentType(ContentType.Application.Json)
+            setBody(VerifyEmailRequest(email = email, code = code))
+        }
+        if (!response.status.isSuccess()) {
+            error("Verify email failed: ${response.status}")
+        }
+    }
+}
+
+@Serializable
+private data class CreateAccountRequest(val email: String, val password: String)
+
+@Serializable
+private data class VerifyEmailRequest(val email: String, val code: String)

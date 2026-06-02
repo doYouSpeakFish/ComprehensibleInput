@@ -7,15 +7,16 @@
 - 🟡 Partially covered (missing branches or instructions)
 - ⚪ Excluded or not reported
 
-## Lines 8-13
+## Lines 9-15
 
-Location: `src/main/java/input/comprehensible/util/FeatureFlags.kt:8-13`
+Location: `src/main/java/input/comprehensible/util/FeatureFlags.kt:9-15`
 
 ```kotlin
-⚪    8 | ) {
-⚪    9 |     companion object : InjectedSingleton<FeatureFlags>() {
-🔴   10 |         fun getDefault() = FeatureFlags(
-🔴   11 |             aiTextAdventuresEnabled = BuildConfig.AI_TEXT_ADVENTURES_ENABLED,
-⚪   12 |         )
-⚪   13 |     }
+⚪    9 | ) {
+⚪   10 |     companion object : InjectedSingleton<FeatureFlags>() {
+🔴   11 |         fun getDefault() = FeatureFlags(
+🔴   12 |             aiTextAdventuresEnabled = BuildConfig.AI_TEXT_ADVENTURES_ENABLED,
+🔴   13 |             accountManagementEnabled = BuildConfig.ACCOUNT_MANAGEMENT_ENABLED,
+⚪   14 |         )
+⚪   15 |     }
 ```

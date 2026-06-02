@@ -3,6 +3,8 @@
     <string name="navigate_up">Voltar</string>
     <string name="settings_button_description">Configurações</string>
     <string name="settings_screen_title">Configurações</string>
+    <string name="settings_item_account">Conta</string>
+    <string name="account_screen_title">Conta</string>
     <string name="settings_item_software_licences">Licenças de software</string>
     <string name="software_licences_screen_title">Licenças de software</string>
     <string name="language_selector_en_content_description">Selecionar inglês</string>
@@ -49,4 +51,16 @@
     <string name="story_reader_error_dialog_message">Não conseguimos abrir esta história. Tente novamente mais tarde.</string>
     <string name="story_reader_error_dialog_button">OK</string>
     <string name="story_reader_error_dialog_content_description">Ilustração de um robô triste</string>
+    <string name="account_sign_up_email_label">E-mail</string>
+    <string name="account_sign_up_password_label">Senha</string>
+    <string name="account_sign_up_confirm_password_label">Confirmar senha</string>
+    <string name="account_sign_up_submit_button">Cadastrar</string>
+    <string name="account_verify_email_message">Enviamos um código de verificação de 6 dígitos para %1$s</string>
+    <string name="account_verify_email_code_label">Código de verificação</string>
+    <string name="account_verify_email_submit_button">Verificar</string>
+    <string name="account_verified_message">Seu e-mail foi verificado. Agora você pode entrar na sua conta.</string>
+    <string name="generic_error_dialog_title">Algo deu errado</string>
+    <string name="generic_error_dialog_message">Por favor, tente novamente mais tarde.</string>
+    <string name="generic_error_dialog_button">OK</string>
+    <string name="generic_error_dialog_content_description">Ilustração de um robô triste</string>
 </resources>

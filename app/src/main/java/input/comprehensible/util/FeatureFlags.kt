@@ -4,11 +4,13 @@ import com.ktin.InjectedSingleton
 import input.comprehensible.BuildConfig
 
 data class FeatureFlags(
-    val aiTextAdventuresEnabled: Boolean
+    val aiTextAdventuresEnabled: Boolean,
+    val accountManagementEnabled: Boolean,
 ) {
     companion object : InjectedSingleton<FeatureFlags>() {
         fun getDefault() = FeatureFlags(
             aiTextAdventuresEnabled = BuildConfig.AI_TEXT_ADVENTURES_ENABLED,
+            accountManagementEnabled = BuildConfig.ACCOUNT_MANAGEMENT_ENABLED,
         )
     }
 }
