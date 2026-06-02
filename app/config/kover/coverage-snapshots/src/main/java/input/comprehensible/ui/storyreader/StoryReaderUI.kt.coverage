@@ -56,6 +56,7 @@
 ⚪   import androidx.lifecycle.compose.collectAsStateWithLifecycle
 ⚪   import androidx.lifecycle.viewmodel.compose.viewModel
 ⚪   import input.comprehensible.R
+⚪   import input.comprehensible.common.R as CommonR
 ⚪   import input.comprehensible.ui.components.rememberPagerState
 ⚪   import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 ⚪   import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
@@ -387,7 +388,7 @@
 🟢                   verticalArrangement = Arrangement.spacedBy(16.dp),
 ⚪               ) {
 🟢                   Image(
-🟢                       painter = painterResource(id = R.drawable.sad_robot),
+🟢                       painter = painterResource(id = CommonR.drawable.sad_robot),
 🟢                       contentDescription = stringResource(R.string.story_reader_error_dialog_content_description),
 🟢                       modifier = Modifier
 🟢                           .size(96.dp)

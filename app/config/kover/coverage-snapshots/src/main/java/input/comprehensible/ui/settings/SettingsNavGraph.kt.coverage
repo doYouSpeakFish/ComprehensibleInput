@@ -32,15 +32,15 @@
 ⚪           )
 🟢           accountScreen(
 🟡               onNavigateUp = navController::navigateUp,
-🟢               onGoToSignUp = { navController.navigate(SignUpRoute) },
+🔴               onGoToSignUp = { navController.navigate(SignUpRoute) },
 ⚪           )
 🟢           signUpScreen(
 🟡               onNavigateUp = navController::navigateUp,
-🟢               onAccountCreated = { email -> navController.navigate(VerifyEmailRoute(email)) },
+🔴               onAccountCreated = { email -> navController.navigate(VerifyEmailRoute(email)) },
 ⚪           )
 🟢           verifyEmailScreen(
 🟡               onNavigateUp = navController::navigateUp,
-🟢               onVerified = { navController.popBackStack(AccountRoute, inclusive = false) },
+🔴               onVerified = { navController.popBackStack(AccountRoute, inclusive = false) },
 ⚪           )
 🟢           softwareLicences(
 🟡               onNavigateUp = navController::navigateUp,
