@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_screen_title">Account</string>
+    <string name="account_sign_in_email_label">Email</string>
+    <string name="account_sign_in_password_label">Password</string>
+    <string name="account_sign_in_submit_button">Sign in</string>
+    <string name="account_sign_up_button">Sign up</string>
+    <string name="account_sign_out_button">Sign out</string>
+    <string name="account_signed_in_label">Signed in as</string>
+    <string name="account_invalid_credentials_dialog_title">Incorrect email or password</string>
+    <string name="account_invalid_credentials_dialog_message">The email or password you entered was incorrect. Please try again.</string>
+    <string name="account_invalid_credentials_dialog_button">OK</string>
+    <string name="account_sign_up_email_label">Email</string>
+    <string name="account_sign_up_password_label">Password</string>
+    <string name="account_sign_up_confirm_password_label">Confirm password</string>
+    <string name="account_sign_up_submit_button">Sign up</string>
+    <string name="account_verify_email_message">We\'ve sent a 6-digit verification code to %1$s</string>
+    <string name="account_verify_email_code_label">Verification code</string>
+    <string name="account_verify_email_submit_button">Verify</string>
+</resources>

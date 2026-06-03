@@ -1,5 +1,6 @@
 package input.comprehensible.di
 
+import input.comprehensible.BuildConfig
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
@@ -21,7 +22,12 @@ object DataSourcesModule {
         LanguageSettingsLocalDataSource.inject { DefaultLanguageSettingsLocalDataSource() }
         TextAdventuresLocalDataSource.inject { AppDb.getInstance().getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { DefaultTextAdventureRemoteDataSource() }
-        AccountRemoteDataSource.inject { DefaultAccountRemoteDataSource() }
+        AccountRemoteDataSource.inject {
+            DefaultAccountRemoteDataSource(
+                baseUrl = BuildConfig.BACKEND_BASE_URL,
+                apiKey = BuildConfig.BACKEND_API_KEY,
+            )
+        }
         AccountLocalDataSource.inject { DefaultAccountLocalDataSource() }
     }
 }

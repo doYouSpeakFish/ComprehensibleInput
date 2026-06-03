@@ -23,6 +23,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComprehensibleInput"
 include(":app")
+include(":common")
+include(":commontest")
+include(":data:account")
+include(":feature:account")
 
 include(":backend")
 include(":textadventuremodels")

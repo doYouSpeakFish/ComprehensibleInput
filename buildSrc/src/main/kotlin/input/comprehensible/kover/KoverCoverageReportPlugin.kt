@@ -9,14 +9,15 @@ import org.gradle.kotlin.dsl.register
 class KoverCoverageReportPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = project.extensions.create<KoverCoverageReportExtension>("koverCoverageReport", project)
-        extension.sourceRoots.convention(defaultSourceRoots(project))
+        extension.sourceRoots.addAll(defaultSourceRoots(project))
 
         val reportTask = project.tasks.register<GenerateKoverCoverageReportTask>("koverCoverageReport") {
             group = "verification"
             description = "Generate custom coverage files from the Kover XML coverage output."
             reportFiles.from(extension.reportFile)
             outputDir.set(extension.outputDir)
-            rootDir.set(project.layout.projectDirectory)
+            rootDir.set(project.rootProject.layout.projectDirectory)
+            rootDirPath.set(project.rootProject.layout.projectDirectory.asFile.absolutePath)
             sourceRoots.set(extension.sourceRoots)
             dependsOn(project.tasks.named("koverXmlReport"))
         }
@@ -42,10 +43,8 @@ class KoverCoverageReportPlugin : Plugin<Project> {
             "src/main/kotlin",
             "src/main/java"
         )
-        return (listOf(project) + project.subprojects)
-            .flatMap { subproject ->
-                candidatePaths.map { path -> subproject.layout.projectDirectory.dir(path) }
-            }
+        return candidatePaths
+            .map { path -> project.layout.projectDirectory.dir(path) }
             .filter { it.asFile.exists() }
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up">Navegar hacia arriba</string>
+    <string name="generic_error_dialog_title">Algo salió mal</string>
+    <string name="generic_error_dialog_message">Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="generic_error_dialog_button">Aceptar</string>
+    <string name="generic_error_dialog_content_description">Ilustración de un robot triste</string>
+</resources>

@@ -17,4 +17,15 @@ abstract class KoverCoverageReportExtension(project: Project) {
         outputDir.convention(project.layout.buildDirectory.dir("reports/kover/coverage"))
         snapshotDir.convention(project.layout.projectDirectory.dir("config/kover/coverage-snapshots"))
     }
+
+    fun sourceProjects(vararg projects: Project) {
+        val candidatePaths = listOf("src/main/kotlin", "src/main/java")
+        sourceRoots.addAll(
+            projects.flatMap { p ->
+                candidatePaths
+                    .map { path -> p.layout.projectDirectory.dir(path) }
+                    .filter { it.asFile.exists() }
+            }
+        )
+    }
 }

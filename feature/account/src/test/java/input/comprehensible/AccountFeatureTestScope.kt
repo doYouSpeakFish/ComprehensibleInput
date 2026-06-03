@@ -1,0 +1,159 @@
+package input.comprehensible
+
+import android.app.Application
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
+import input.comprehensible.data.account.sources.local.AccountLocalDataSource
+import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.sources.FakeAccountRemoteDataSource
+import input.comprehensible.di.AppScope
+import input.comprehensible.di.IoDispatcher
+import input.comprehensible.features.account.AccountRobot
+import input.comprehensible.features.account.SignUpRobot
+import input.comprehensible.features.account.VerifyEmailRobot
+import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.account.SignUpRoute
+import input.comprehensible.ui.settings.account.VerifyEmailRoute
+import input.comprehensible.ui.settings.account.accountNavGraph
+import input.comprehensible.ui.theme.ComprehensibleInputTheme
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.setMain
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data object TestDisposeRoute
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class AccountFeatureTestScope(
+    private val composeContentRule: ComposeContentTestRule,
+    val testScope: TestScope,
+    private val dispatcher: CoroutineDispatcher,
+    private val darkTheme: Boolean,
+) {
+    val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
+    private val appContext = ApplicationProvider.getApplicationContext<Application>()
+    val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
+
+    private lateinit var _navController: TestNavHostController
+    private var _isLaunched = false
+
+    val composeRule: ComposeContentTestRule
+        get() {
+            if (!_isLaunched) launch()
+            return composeContentRule
+        }
+
+    init {
+        input.comprehensible.di.ApplicationProvider.inject { appContext }
+        Dispatchers.setMain(dispatcher)
+        IoDispatcher.inject { dispatcher }
+        AppScope.inject { testScope }
+        AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
+        AccountLocalDataSource.inject { realAccountLocalDataSource }
+    }
+
+    fun launch() {
+        composeContentRule.setContent {
+            _navController = TestNavHostController(LocalContext.current)
+            _navController.navigatorProvider.addNavigator(ComposeNavigator())
+            ComprehensibleInputTheme(darkTheme = darkTheme) {
+                NavHost(
+                    navController = _navController,
+                    startDestination = AccountRoute,
+                ) {
+                    accountNavGraph(navController = _navController)
+                    composable<TestDisposeRoute> {}
+                }
+            }
+        }
+        testScope.runCurrent()
+        _isLaunched = true
+    }
+
+    fun goToAccount() {
+        if (!_isLaunched) launch()
+        _navController.navigate(AccountRoute)
+    }
+
+    fun goToSignUp() {
+        if (!_isLaunched) launch()
+        _navController.navigate(SignUpRoute)
+    }
+
+    fun goToVerifyEmail(email: String) {
+        if (!_isLaunched) launch()
+        _navController.navigate(VerifyEmailRoute(email))
+    }
+
+    fun runCurrent() {
+        testScope.runCurrent()
+    }
+
+    suspend fun awaitIdle() {
+        testScope.runCurrent()
+        composeRule.awaitIdle()
+    }
+
+    suspend fun clearAccountSession() {
+        realAccountLocalDataSource.clearSession()
+    }
+
+    internal suspend fun disposeUiUnderTest() {
+        if (!_isLaunched) return
+        _navController.navigate(TestDisposeRoute)
+        awaitIdle()
+    }
+}
+
+fun ComprehensibleInputTestRule.runAccountFeatureTest(
+    block: suspend AccountFeatureTestScope.() -> Unit,
+) = kotlinx.coroutines.test.runTest(context = dispatcher) {
+    AccountFeatureTestScope(
+        composeContentRule = composeRule,
+        testScope = this,
+        dispatcher = dispatcher,
+        darkTheme = themeMode.isDarkTheme,
+    ).apply {
+        clearAccountSession()
+        block()
+        disposeUiUnderTest()
+    }
+}
+
+fun AccountFeatureTestScope.delayAccountRequests(delayMillis: Long) {
+    fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
+}
+
+fun AccountFeatureTestScope.enqueueSignInResult(result: Result<String>) {
+    fakeAccountRemoteDataSource.enqueueSignInResult(result)
+}
+
+fun AccountFeatureTestScope.enqueueCreateAccountResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
+}
+
+fun AccountFeatureTestScope.enqueueVerifyEmailResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
+}
+
+suspend fun AccountFeatureTestScope.onAccount(
+    block: suspend AccountRobot.() -> Unit = {},
+) = AccountRobot(composeRule).apply { block() }
+
+suspend fun AccountFeatureTestScope.onSignUp(
+    block: suspend SignUpRobot.() -> Unit = {},
+) = SignUpRobot(composeRule).apply { block() }
+
+suspend fun AccountFeatureTestScope.onVerifyEmail(
+    block: suspend VerifyEmailRobot.() -> Unit = {},
+) = VerifyEmailRobot(composeRule).apply { block() }

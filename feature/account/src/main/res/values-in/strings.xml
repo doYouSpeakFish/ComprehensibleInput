@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_screen_title">Akun</string>
+    <string name="account_sign_in_email_label">Email</string>
+    <string name="account_sign_in_password_label">Kata sandi</string>
+    <string name="account_sign_in_submit_button">Masuk</string>
+    <string name="account_sign_up_button">Daftar</string>
+    <string name="account_sign_out_button">Keluar</string>
+    <string name="account_signed_in_label">Masuk sebagai</string>
+    <string name="account_invalid_credentials_dialog_title">Email atau kata sandi salah</string>
+    <string name="account_invalid_credentials_dialog_message">Email atau kata sandi yang Anda masukkan salah. Silakan coba lagi.</string>
+    <string name="account_invalid_credentials_dialog_button">Oke</string>
+    <string name="account_sign_up_email_label">Email</string>
+    <string name="account_sign_up_password_label">Kata sandi</string>
+    <string name="account_sign_up_confirm_password_label">Konfirmasi kata sandi</string>
+    <string name="account_sign_up_submit_button">Daftar</string>
+    <string name="account_verify_email_message">Kami telah mengirimkan kode verifikasi 6 digit ke %1$s</string>
+    <string name="account_verify_email_code_label">Kode verifikasi</string>
+    <string name="account_verify_email_submit_button">Verifikasi</string>
+</resources>
