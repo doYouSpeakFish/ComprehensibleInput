@@ -58,6 +58,7 @@ android {
         if (prNumber > 0) {
             versionNameSuffix = "-pr-$prNumber"
         }
+        resValue("bool", "is_cleartext_traffic_enabled", "${prBackendBaseUrl.isNotEmpty()}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
