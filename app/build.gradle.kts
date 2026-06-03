@@ -157,6 +157,25 @@ roborazzi {
     }
 }
 
+// AGP 9.2.0 built_in_kotlinc mode stores compiled Kotlin classes in a separate directory
+// instead of bundling them into compile_app_classes_jar. Both the test compilation task
+// and the test execution task need this directory on their classpath explicitly.
+val builtInKotlincClasses = files(
+    "$buildDir/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+)
+afterEvaluate {
+    tasks.named(
+        "compileDebugUnitTestKotlin",
+        org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile::class.java,
+    ) {
+        dependsOn("compileDebugKotlin")
+        libraries.from(builtInKotlincClasses)
+    }
+    tasks.named("testDebugUnitTest", Test::class.java) {
+        classpath += builtInKotlincClasses
+    }
+}
+
 koverCoverageReport {
     sourceProjects(
         project(":common"),
