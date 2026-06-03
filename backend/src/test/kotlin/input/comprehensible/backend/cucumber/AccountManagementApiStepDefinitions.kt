@@ -208,6 +208,21 @@ class AccountManagementApiStepDefinitions {
             setBody("{\"email\":\"$currentEmail\",\"password\":\"wrongpassword\"}")
         }
     }
+    @When("I attempt to delete me a second time")
+    fun deleteMeSecondAttempt() = runTwoCalls(
+        first = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
+            }
+        },
+        second = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
+            }
+        },
+    )
 
     @When("I sign out current session")
     fun signOutCurrent() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }
@@ -240,6 +255,28 @@ class AccountManagementApiStepDefinitions {
                 )
             }
             val response = client.block()
+            latestStatus = response.status
+            latestBody = response.bodyAsText()
+        }
+    }
+
+    private fun runTwoCalls(
+        first: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse,
+        second: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse,
+    ) {
+        testApplication {
+            application {
+                configureRouting(
+                    textAdventureService = TextAdventureGenerationService(
+                        FakeTextAdventureStructuredPromptExecutor(),
+                        DatabaseAdventureRepository(database),
+                    ),
+                    appApiKey = "test",
+                    accountService = accountService,
+                )
+            }
+            client.first()
+            val response = client.second()
             latestStatus = response.status
             latestBody = response.bodyAsText()
         }

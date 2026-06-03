@@ -153,6 +153,14 @@ Feature: Account management API
     When I delete me with wrong password
     Then account API status should be 401
 
+  Scenario: Rejecting repeated me deletion due to rate limiting
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I attempt to delete me a second time
+    Then account API status should be 429
+
   Scenario: Signing out current session
     Given existing user "alice@example.com" with password "SecurePass123!"
     And the next verification code will be "123456"
