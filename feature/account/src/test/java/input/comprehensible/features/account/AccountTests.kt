@@ -7,6 +7,10 @@ import input.comprehensible.AccountFeatureTestScope
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.data.account.InvalidCredentialsException
+import input.comprehensible.delayAccountRequests
+import input.comprehensible.enqueueCreateAccountResult
+import input.comprehensible.enqueueSignInResult
+import input.comprehensible.enqueueVerifyEmailResult
 import input.comprehensible.onAccount
 import input.comprehensible.onSignUp
 import input.comprehensible.onVerifyEmail
@@ -121,8 +125,8 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInPassword("password12345")
         }
         // The request is kept in-flight so the loading state can be observed before it completes
-        fakeAccountRemoteDataSource.requestDelayMillis = 1_000L
-        fakeAccountRemoteDataSource.enqueueSignInResult(Result.success("token123"))
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueSignInResult(Result.success("token123"))
 
         // WHEN the sign in button is tapped
         onAccount { tapSignIn() }
@@ -144,7 +148,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        fakeAccountRemoteDataSource.enqueueSignInResult(Result.success("token123"))
+        enqueueSignInResult(Result.success("token123"))
 
         // WHEN the sign in request succeeds
         onAccount { tapSignIn() }
@@ -165,7 +169,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        fakeAccountRemoteDataSource.enqueueSignInResult(Result.failure(Exception("Network error")))
+        enqueueSignInResult(Result.failure<String>(Exception("Network error")))
         onAccount { tapSignIn() }
         awaitIdle()
         onAccount { errorDialog.assertIsShown() }
@@ -189,7 +193,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("wrongpassword12345")
         }
-        fakeAccountRemoteDataSource.enqueueSignInResult(Result.failure(InvalidCredentialsException()))
+        enqueueSignInResult(Result.failure<String>(InvalidCredentialsException()))
         onAccount { tapSignIn() }
         awaitIdle()
         onAccount { assertInvalidCredentialsDialogIsShown() }
@@ -213,7 +217,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("wrongpassword12345")
         }
-        fakeAccountRemoteDataSource.enqueueSignInResult(Result.failure(InvalidCredentialsException()))
+        enqueueSignInResult(Result.failure<String>(InvalidCredentialsException()))
 
         // WHEN the sign in request fails with invalid credentials
         onAccount { tapSignIn() }
@@ -234,7 +238,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        fakeAccountRemoteDataSource.enqueueSignInResult(Result.failure(Exception("Network error")))
+        enqueueSignInResult(Result.failure<String>(Exception("Network error")))
 
         // WHEN the sign in request fails with a generic error
         onAccount { tapSignIn() }
@@ -405,8 +409,8 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterConfirmPassword("password12345")
         }
         // The request is kept in-flight so the loading state can be observed before it completes
-        fakeAccountRemoteDataSource.requestDelayMillis = 1_000L
-        fakeAccountRemoteDataSource.enqueueCreateAccountResult(Result.success(Unit))
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueCreateAccountResult(Result.success(Unit))
 
         // WHEN the sign up button is tapped
         onSignUp {
@@ -430,7 +434,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterPassword("password12345")
             enterConfirmPassword("password12345")
         }
-        fakeAccountRemoteDataSource.enqueueCreateAccountResult(Result.success(Unit))
+        enqueueCreateAccountResult(Result.success(Unit))
 
         // WHEN the sign up request succeeds
         onSignUp {
@@ -454,7 +458,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterPassword("password12345")
             enterConfirmPassword("password12345")
         }
-        fakeAccountRemoteDataSource.enqueueCreateAccountResult(Result.failure(Exception("Network error")))
+        enqueueCreateAccountResult(Result.failure<Unit>(Exception("Network error")))
 
         // WHEN the sign up request fails
         onSignUp {
@@ -478,7 +482,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterPassword("password12345")
             enterConfirmPassword("password12345")
         }
-        fakeAccountRemoteDataSource.enqueueCreateAccountResult(Result.failure(Exception("Network error")))
+        enqueueCreateAccountResult(Result.failure<Unit>(Exception("Network error")))
         onSignUp { tapSignUpSubmit() }
         awaitIdle()
         onSignUp { errorDialog.assertIsShown() }
@@ -544,8 +548,8 @@ class AccountTests(private val themeMode: ThemeMode) {
         awaitIdle()
         onVerifyEmail { enterVerificationCode("123456") }
         // The request is kept in-flight so the loading state can be observed before it completes
-        fakeAccountRemoteDataSource.requestDelayMillis = 1_000L
-        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(Result.success(Unit))
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueVerifyEmailResult(Result.success(Unit))
 
         // WHEN the verify button is tapped
         onVerifyEmail { tapVerifyEmailSubmit() }
@@ -565,7 +569,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToVerifyEmail("user@example.com")
         awaitIdle()
         onVerifyEmail { enterVerificationCode("123456") }
-        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(Result.success(Unit))
+        enqueueVerifyEmailResult(Result.success(Unit))
 
         // WHEN the verify request succeeds
         onVerifyEmail { tapVerifyEmailSubmit() }
@@ -583,7 +587,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToVerifyEmail("user@example.com")
         awaitIdle()
         onVerifyEmail { enterVerificationCode("123456") }
-        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(Result.failure(Exception("Invalid code")))
+        enqueueVerifyEmailResult(Result.failure<Unit>(Exception("Invalid code")))
 
         // WHEN the verify request fails
         onVerifyEmail { tapVerifyEmailSubmit() }

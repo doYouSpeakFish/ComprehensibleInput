@@ -130,6 +130,22 @@ fun ComprehensibleInputTestRule.runAccountFeatureTest(
     }
 }
 
+fun AccountFeatureTestScope.delayAccountRequests(delayMillis: Long) {
+    fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
+}
+
+fun AccountFeatureTestScope.enqueueSignInResult(result: Result<String>) {
+    fakeAccountRemoteDataSource.enqueueSignInResult(result)
+}
+
+fun AccountFeatureTestScope.enqueueCreateAccountResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
+}
+
+fun AccountFeatureTestScope.enqueueVerifyEmailResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
+}
+
 suspend fun AccountFeatureTestScope.onAccount(
     block: suspend AccountRobot.() -> Unit = {},
 ) = AccountRobot(composeRule).apply { block() }

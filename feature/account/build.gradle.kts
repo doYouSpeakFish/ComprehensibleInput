@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.detekt)
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.kover)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
