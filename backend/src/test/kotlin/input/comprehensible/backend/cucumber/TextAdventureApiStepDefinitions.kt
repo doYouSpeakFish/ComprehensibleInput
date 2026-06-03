@@ -256,6 +256,25 @@ class TextAdventureApiStepDefinitions {
         assertEquals(payload.messages.size, payload.messages.count { it.sender == "AI" })
     }
 
+    @Then("the AI received inspiration words for the opening scene")
+    fun aiReceivedInspirationWordsForOpeningScene() {
+        assertInspirationWordsProvided(promptName = "text-adventure-start")
+    }
+
+    @Then("the AI received inspiration words for the continuation")
+    fun aiReceivedInspirationWordsForContinuation() {
+        assertInspirationWordsProvided(promptName = "text-adventure-continue")
+    }
+
+    private fun assertInspirationWordsProvided(promptName: String) {
+        val invocation = fakeExecutor.invocations.firstOrNull { it.promptName == promptName }
+        assertTrue("Expected an invocation for $promptName", invocation != null)
+        assertTrue(
+            "Expected inspiration words in the $promptName system prompt",
+            invocation!!.systemPrompt.contains("loose inspiration:"),
+        )
+    }
+
     @Then("the messages response keeps {string} before {string}")
     fun messagesResponseKeepsOrder(
         firstSentence: String,

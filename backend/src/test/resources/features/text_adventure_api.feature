@@ -34,6 +34,14 @@ Feature: Text adventure API
     And I request messages for the started adventure
     Then the messages response keeps "You wake up." before "You walk north."
 
+  Scenario: Providing the AI with inspiration words for variety
+    Given the AI will return an opening adventure titled "Lantern Trail" with sentence "You wake up." and translation "Despiertas."
+    And the AI will return a continuation for title "Lantern Trail" with sentence "You walk north." and translation "Caminas al norte." that is ending "false"
+    When I start a text adventure in "English" with translations in "Spanish"
+    And I continue the started adventure with user message "Go north"
+    Then the AI received inspiration words for the opening scene
+    And the AI received inspiration words for the continuation
+
   Scenario: Rejecting a request with an invalid API key
     When I start a text adventure with an invalid API key
     Then the response status should be 401
