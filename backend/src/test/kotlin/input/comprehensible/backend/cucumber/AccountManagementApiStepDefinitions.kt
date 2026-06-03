@@ -38,6 +38,7 @@ class AccountManagementApiStepDefinitions {
     private var latestStatus: HttpStatusCode? = null
     private var latestBody: String = ""
     private var bearerToken: String = ""
+    private var currentEmail: String = ""
     private var currentPassword: String = ""
     private var nextVerificationCode: String = "123456"
     private var now: Long = 1_000_000L
@@ -65,6 +66,7 @@ class AccountManagementApiStepDefinitions {
     @Given("I am signed in with email {string} and password {string}")
     fun signInGiven(email: String, password: String) {
         signIn(email, password)
+        currentEmail = email
         currentPassword = password
         if (latestStatus == HttpStatusCode.OK) bearerToken = json.decodeFromString<SignInResponse>(latestBody).accessToken
     }
@@ -195,16 +197,15 @@ class AccountManagementApiStepDefinitions {
     @When("I delete me")
     fun deleteMe() = runCall {
         delete("/v1/me") {
-            header(HttpHeaders.Authorization, "Bearer $bearerToken")
             contentType(ContentType.Application.Json)
-            setBody("{\"password\":\"$currentPassword\"}")
+            setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
         }
     }
-    @When("I delete me without authorization")
-    fun deleteMeNoAuth() = runCall {
+    @When("I delete me with wrong password")
+    fun deleteMeWithWrongPassword() = runCall {
         delete("/v1/me") {
             contentType(ContentType.Application.Json)
-            setBody("{\"password\":\"$currentPassword\"}")
+            setBody("{\"email\":\"$currentEmail\",\"password\":\"wrongpassword\"}")
         }
     }
 

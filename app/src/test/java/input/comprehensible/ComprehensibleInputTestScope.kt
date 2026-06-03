@@ -97,7 +97,7 @@ class ComprehensibleInputTestScope(
             override suspend fun verifyEmail(email: String, code: String) = Unit
             override suspend fun signIn(email: String, password: String) = ""
             override suspend fun signOut(token: String) = Unit
-            override suspend fun deleteAccount(password: String, token: String) = Unit
+            override suspend fun deleteAccount(email: String, password: String) = Unit
         } }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
     }

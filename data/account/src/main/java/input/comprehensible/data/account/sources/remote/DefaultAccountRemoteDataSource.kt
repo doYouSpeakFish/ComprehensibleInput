@@ -82,12 +82,11 @@ class DefaultAccountRemoteDataSource(
         }
     }
 
-    override suspend fun deleteAccount(password: String, token: String) {
+    override suspend fun deleteAccount(email: String, password: String) {
         val response = httpClient.delete("$baseUrl/v1/me") {
             header("X-Api-Key", apiKey)
-            header("Authorization", "Bearer $token")
             contentType(ContentType.Application.Json)
-            setBody(DeleteAccountRequest(password = password))
+            setBody(DeleteAccountRequest(email = email, password = password))
         }
         if (response.status == HttpStatusCode.Unauthorized) {
             throw InvalidCredentialsException()
@@ -113,4 +112,4 @@ private data class SignInResponse(
 )
 
 @Serializable
-private data class DeleteAccountRequest(val password: String)
+private data class DeleteAccountRequest(val email: String, val password: String)

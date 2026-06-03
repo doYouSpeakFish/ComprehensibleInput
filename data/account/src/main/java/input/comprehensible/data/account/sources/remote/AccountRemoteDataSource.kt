@@ -7,7 +7,7 @@ interface AccountRemoteDataSource {
     suspend fun verifyEmail(email: String, code: String)
     suspend fun signIn(email: String, password: String): String
     suspend fun signOut(token: String)
-    suspend fun deleteAccount(password: String, token: String)
+    suspend fun deleteAccount(email: String, password: String)
 
     companion object : InjectedSingleton<AccountRemoteDataSource>()
 }

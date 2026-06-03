@@ -145,8 +145,12 @@ Feature: Account management API
     When I delete me
     Then account API status should be 204
 
-  Scenario: Rejecting me deletion without token
-    When I delete me without authorization
+  Scenario: Rejecting me deletion with wrong password
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I delete me with wrong password
     Then account API status should be 401
 
   Scenario: Signing out current session

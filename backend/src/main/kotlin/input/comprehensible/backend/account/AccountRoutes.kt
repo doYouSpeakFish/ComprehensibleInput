@@ -52,6 +52,10 @@ fun Route.accountRoutes(accountService: AccountService) {
             call.respond(accountService.resetPassword(request.email, request.password, request.code))
         }
     }
+    delete("/v1/me") {
+        val request = call.receive<DeleteMeRequest>()
+        call.respond(accountService.deleteMe(request.email, request.password))
+    }
     authenticate("account-bearer") {
         get("/v1/me") {
             val principal = call.principal<AccountSessionPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
@@ -89,11 +93,6 @@ fun Route.accountRoutes(accountService: AccountService) {
                 call.respond(accountService.requestNewEmailChangeNewEmailCode(principal.accountId))
             }
         }
-        delete("/v1/me") {
-            val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
-            val request = call.receive<DeleteMeRequest>()
-            call.respond(accountService.deleteMe(principal.accountId, request.password))
-        }
         delete("/v1/auth/sessions/current") {
             val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
             call.respond(accountService.signOutCurrent(principal.token))
@@ -104,7 +103,7 @@ fun Route.accountRoutes(accountService: AccountService) {
 @Serializable data class EmailVerificationCodeRequest(val email: String)
 @Serializable data class CredentialsRequest(val email: String, val password: String)
 @Serializable data class UpdateMeRequest(val email: String? = null, val password: String? = null)
-@Serializable data class DeleteMeRequest(val password: String? = null)
+@Serializable data class DeleteMeRequest(val email: String? = null, val password: String? = null)
 @Serializable data class EmailVerificationRequest(val email: String, val code: String)
 @Serializable data class EmailChangeCurrentVerificationRequest(val code: String)
 @Serializable data class PasswordResetCodeRequest(val email: String)

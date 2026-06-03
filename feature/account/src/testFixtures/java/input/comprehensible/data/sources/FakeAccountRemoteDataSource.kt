@@ -56,7 +56,7 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
     }
 
-    override suspend fun deleteAccount(password: String, token: String) {
+    override suspend fun deleteAccount(email: String, password: String) {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
         deleteAccountResults.removeFirstOrNull()
             ?.getOrThrow()
