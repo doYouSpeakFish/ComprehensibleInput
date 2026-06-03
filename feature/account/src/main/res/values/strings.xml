@@ -17,4 +17,13 @@
     <string name="account_verify_email_message">We\'ve sent a 6-digit verification code to %1$s</string>
     <string name="account_verify_email_code_label">Verification code</string>
     <string name="account_verify_email_submit_button">Verify</string>
+    <string name="account_delete_account_button">Delete account</string>
+    <string name="delete_account_screen_title">Delete account</string>
+    <string name="delete_account_explainer">Deleting your account will permanently remove all your data, including your progress and settings.</string>
+    <string name="delete_account_warning">This action cannot be undone.</string>
+    <string name="delete_account_password_label">Password</string>
+    <string name="delete_account_submit_button">Delete account</string>
+    <string name="delete_account_invalid_credentials_dialog_title">Incorrect password</string>
+    <string name="delete_account_invalid_credentials_dialog_message">The password you entered was incorrect. Please try again.</string>
+    <string name="delete_account_invalid_credentials_dialog_button">OK</string>
 </resources>

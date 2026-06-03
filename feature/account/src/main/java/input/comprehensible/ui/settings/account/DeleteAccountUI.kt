@@ -1,0 +1,225 @@
+package input.comprehensible.ui.settings.account
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import input.comprehensible.feature.account.R
+import input.comprehensible.ui.components.error.GenericErrorDialog
+import input.comprehensible.ui.components.topbar.SettingsTopBar
+import input.comprehensible.ui.theme.ComprehensibleInputTheme
+import input.comprehensible.util.DefaultPreview
+
+@Composable
+internal fun DeleteAccountScreen(
+    onNavigateUp: () -> Unit,
+    onAccountDeleted: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: DeleteAccountViewModel = viewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.accountDeleted) {
+        if (uiState.accountDeleted) {
+            viewModel.onNavigationConsumed()
+            onAccountDeleted()
+        }
+    }
+
+    DeleteAccountScreen(
+        uiState = uiState,
+        onNavigateUp = onNavigateUp,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onSubmit = viewModel::onSubmit,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun DeleteAccountScreen(
+    uiState: DeleteAccountUiState,
+    onNavigateUp: () -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onSubmit: () -> Unit,
+    onErrorDismissed: () -> Unit,
+    onInvalidCredentialsErrorDismissed: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            SettingsTopBar(
+                title = stringResource(R.string.delete_account_screen_title),
+                onNavigateUp = onNavigateUp,
+            )
+        },
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.delete_account_explainer),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.testTag("delete_account_explainer"),
+            )
+            Text(
+                text = stringResource(R.string.delete_account_warning),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.testTag("delete_account_warning"),
+            )
+            OutlinedTextField(
+                value = uiState.password,
+                onValueChange = onPasswordChanged,
+                label = { Text(stringResource(R.string.delete_account_password_label)) },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("delete_account_password_field"),
+            )
+            Button(
+                onClick = onSubmit,
+                enabled = !uiState.isLoading && uiState.isSubmitEnabled(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("delete_account_submit_button"),
+            ) {
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .testTag("delete_account_loading_indicator"),
+                        color = MaterialTheme.colorScheme.onError,
+                        strokeWidth = 2.dp,
+                    )
+                } else {
+                    Text(stringResource(R.string.delete_account_submit_button))
+                }
+            }
+        }
+    }
+
+    if (uiState.showError) {
+        GenericErrorDialog(onDismissRequest = onErrorDismissed)
+    }
+
+    if (uiState.showInvalidCredentialsError) {
+        DeleteAccountInvalidCredentialsDialog(onDismissRequest = onInvalidCredentialsErrorDismissed)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DeleteAccountInvalidCredentialsDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BasicAlertDialog(onDismissRequest = onDismissRequest) {
+        Surface(
+            modifier = modifier
+                .padding(horizontal = 24.dp)
+                .testTag("delete_account_invalid_credentials_dialog"),
+            shape = RoundedCornerShape(24.dp),
+            border = BorderStroke(1.dp, Color.Black),
+            tonalElevation = 6.dp,
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp, vertical = 32.dp)
+                    .widthIn(min = 280.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.delete_account_invalid_credentials_dialog_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = stringResource(R.string.delete_account_invalid_credentials_dialog_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                )
+                Button(onClick = onDismissRequest) {
+                    Text(text = stringResource(R.string.delete_account_invalid_credentials_dialog_button))
+                }
+            }
+        }
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewDeleteAccount() {
+    ComprehensibleInputTheme {
+        DeleteAccountScreen(
+            uiState = DeleteAccountUiState(),
+            onNavigateUp = {},
+            onPasswordChanged = {},
+            onSubmit = {},
+            onErrorDismissed = {},
+            onInvalidCredentialsErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewDeleteAccountLoading() {
+    ComprehensibleInputTheme {
+        DeleteAccountScreen(
+            uiState = DeleteAccountUiState(password = "password12345", isLoading = true),
+            onNavigateUp = {},
+            onPasswordChanged = {},
+            onSubmit = {},
+            onErrorDismissed = {},
+            onInvalidCredentialsErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}

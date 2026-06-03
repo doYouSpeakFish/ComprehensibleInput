@@ -37,6 +37,13 @@ class AccountRepository(
         localDataSource.clearSession()
     }.onFailure { Timber.e(it, "Failed to sign out") }
 
+    suspend fun deleteAccount(password: String): Result<Unit> = runCatching {
+        val token = localDataSource.session.first()?.token
+            ?: throw InvalidCredentialsException()
+        remoteDataSource.deleteAccount(password, token)
+        localDataSource.clearSession()
+    }.onFailure { Timber.e(it, "Failed to delete account") }
+
     companion object : Singleton<AccountRepository>() {
         override fun create() = AccountRepository(
             remoteDataSource = AccountRemoteDataSource(),

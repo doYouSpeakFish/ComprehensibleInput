@@ -15,9 +15,11 @@ import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.features.account.AccountRobot
+import input.comprehensible.features.account.DeleteAccountRobot
 import input.comprehensible.features.account.SignUpRobot
 import input.comprehensible.features.account.VerifyEmailRobot
 import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.account.DeleteAccountRoute
 import input.comprehensible.ui.settings.account.SignUpRoute
 import input.comprehensible.ui.settings.account.VerifyEmailRoute
 import input.comprehensible.ui.settings.account.accountNavGraph
@@ -95,6 +97,11 @@ class AccountFeatureTestScope(
         _navController.navigate(VerifyEmailRoute(email))
     }
 
+    fun goToDeleteAccount() {
+        if (!_isLaunched) launch()
+        _navController.navigate(DeleteAccountRoute)
+    }
+
     fun runCurrent() {
         testScope.runCurrent()
     }
@@ -146,6 +153,10 @@ fun AccountFeatureTestScope.enqueueVerifyEmailResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
 }
 
+fun AccountFeatureTestScope.enqueueDeleteAccountResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueDeleteAccountResult(result)
+}
+
 suspend fun AccountFeatureTestScope.onAccount(
     block: suspend AccountRobot.() -> Unit = {},
 ) = AccountRobot(composeRule).apply { block() }
@@ -157,3 +168,7 @@ suspend fun AccountFeatureTestScope.onSignUp(
 suspend fun AccountFeatureTestScope.onVerifyEmail(
     block: suspend VerifyEmailRobot.() -> Unit = {},
 ) = VerifyEmailRobot(composeRule).apply { block() }
+
+suspend fun AccountFeatureTestScope.onDeleteAccount(
+    block: suspend DeleteAccountRobot.() -> Unit = {},
+) = DeleteAccountRobot(composeRule).apply { block() }

@@ -9,9 +9,11 @@ import input.comprehensible.ThemeMode
 import input.comprehensible.data.account.InvalidCredentialsException
 import input.comprehensible.delayAccountRequests
 import input.comprehensible.enqueueCreateAccountResult
+import input.comprehensible.enqueueDeleteAccountResult
 import input.comprehensible.enqueueSignInResult
 import input.comprehensible.enqueueVerifyEmailResult
 import input.comprehensible.onAccount
+import input.comprehensible.onDeleteAccount
 import input.comprehensible.onSignUp
 import input.comprehensible.onVerifyEmail
 import input.comprehensible.runAccountFeatureTest
@@ -596,6 +598,211 @@ class AccountTests(private val themeMode: ThemeMode) {
         // THEN the error dialog is shown
         onVerifyEmail {
             errorDialog.assertIsShown()
+        }
+    }
+
+    // Delete account tests
+
+    @Test
+    fun `delete account button is shown when signed in`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToAccount()
+        awaitIdle()
+
+        // THEN the delete account button is shown
+        onAccount {
+            assertDeleteAccountButtonIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account button navigates to delete account screen`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in and on the account screen
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToAccount()
+        awaitIdle()
+
+        // WHEN the delete account button is tapped
+        onAccount { tapDeleteAccount() }
+        awaitIdle()
+
+        // THEN the delete account screen is shown with the explainer and warning
+        onDeleteAccount {
+            assertExplainerIsShown()
+            assertWarningIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account submit is disabled when password is empty`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+
+        // THEN the submit button is disabled
+        onDeleteAccount {
+            assertSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `delete account submit is enabled when password is filled`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+
+        onDeleteAccount {
+            // WHEN the password is entered
+            enterPassword("password12345")
+
+            // THEN the submit button is enabled
+            assertSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `delete account shows loading state while request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown with a password entered
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        // The request is kept in-flight so the loading state can be observed before it completes
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueDeleteAccountResult(Result.success(Unit))
+
+        // WHEN the delete button is tapped
+        onDeleteAccount { tapSubmit() }
+
+        // THEN the loading indicator is shown and the button is disabled before the request completes
+        onDeleteAccount {
+            assertLoadingIndicatorIsShown()
+            assertSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `delete account navigates to sign in screen on success`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in and on the delete account screen
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToAccount()
+        awaitIdle()
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        enqueueDeleteAccountResult(Result.success(Unit))
+
+        // WHEN the delete account request succeeds
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN the sign in screen is shown (session has been cleared)
+        onAccount {
+            assertSignInScreenIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account shows invalid credentials error on wrong password`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown with a password entered
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("wrongpassword") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
+
+        // WHEN the delete request fails with invalid credentials
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN the invalid credentials dialog is shown
+        onDeleteAccount {
+            assertInvalidCredentialsDialogIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account shows generic error on other failure`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown with a password entered
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(Exception("Network error")))
+
+        // WHEN the delete request fails with a generic error
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN the generic error dialog is shown
+        onDeleteAccount {
+            errorDialog.assertIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account generic error dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN a generic delete account error has occurred
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(Exception("Network error")))
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+        onDeleteAccount { errorDialog.assertIsShown() }
+
+        // WHEN the error dialog is dismissed
+        onDeleteAccount { errorDialog.dismiss() }
+        awaitIdle()
+
+        // THEN the submit button is re-enabled
+        onDeleteAccount {
+            assertSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `delete account invalid credentials dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN an invalid credentials error has occurred
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("wrongpassword") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+        onDeleteAccount { assertInvalidCredentialsDialogIsShown() }
+
+        // WHEN the invalid credentials dialog is dismissed
+        onDeleteAccount { dismissInvalidCredentialsDialog() }
+        awaitIdle()
+
+        // THEN the submit button is re-enabled
+        onDeleteAccount {
+            assertSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `delete account does not clear session on failure`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in and the delete account request fails
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("wrongpassword") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN navigating to the account screen still shows the signed-in state
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            assertSignedInEmailIsShown("user@example.com")
         }
     }
 }

@@ -7,6 +7,7 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
     private val signInResults = ArrayDeque<Result<String>>()
+    private val deleteAccountResults = ArrayDeque<Result<Unit>>()
 
     /**
      * When greater than zero, requests suspend for this many milliseconds before completing. This
@@ -24,6 +25,10 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     fun enqueueSignInResult(result: Result<String>) {
         signInResults.add(result)
+    }
+
+    fun enqueueDeleteAccountResult(result: Result<Unit>) {
+        deleteAccountResults.add(result)
     }
 
     override suspend fun createAccount(email: String, password: String) {
@@ -49,5 +54,12 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     override suspend fun signOut(token: String) {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
+    }
+
+    override suspend fun deleteAccount(password: String, token: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+        deleteAccountResults.removeFirstOrNull()
+            ?.getOrThrow()
+            ?: error("No scripted delete account result available")
     }
 }

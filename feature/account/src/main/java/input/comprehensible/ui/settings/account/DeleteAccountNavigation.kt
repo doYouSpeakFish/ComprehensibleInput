@@ -5,18 +5,16 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AccountRoute
+data object DeleteAccountRoute
 
-fun NavGraphBuilder.accountScreen(
+fun NavGraphBuilder.deleteAccountScreen(
     onNavigateUp: () -> Unit,
-    onGoToSignUp: () -> Unit,
-    onGoToDeleteAccount: () -> Unit,
+    onAccountDeleted: () -> Unit,
 ) {
-    composable<AccountRoute> {
-        AccountScreen(
+    composable<DeleteAccountRoute> {
+        DeleteAccountScreen(
             onNavigateUp = onNavigateUp,
-            onGoToSignUp = onGoToSignUp,
-            onGoToDeleteAccount = onGoToDeleteAccount,
+            onAccountDeleted = onAccountDeleted,
         )
     }
 }
