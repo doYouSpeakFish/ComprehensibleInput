@@ -34,7 +34,7 @@ class TextAdventureMigration7To8 : Migration(
                 "FOREIGN KEY(`adventureId`) REFERENCES `TextAdventureEntity`(`id`) " +
                 "ON UPDATE NO ACTION ON DELETE CASCADE , " +
                 "FOREIGN KEY(`parentId`) REFERENCES `TextAdventureMessageEntity`(`id`) " +
-                "ON UPDATE NO ACTION ON DELETE SET NULL )"
+                "ON UPDATE NO ACTION ON DELETE CASCADE )"
         )
         db.execSQL(
             "CREATE INDEX IF NOT EXISTS `index_TextAdventureMessageEntity_adventureId` " +

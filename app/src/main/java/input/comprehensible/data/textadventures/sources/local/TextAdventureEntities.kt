@@ -29,7 +29,7 @@ data class TextAdventureEntity(
             entity = TextAdventureMessageEntity::class,
             parentColumns = ["id"],
             childColumns = ["parentId"],
-            onDelete = ForeignKey.SET_NULL,
+            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [Index("adventureId"), Index("parentId")],
