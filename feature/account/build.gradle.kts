@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.kover)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
-    id("input.comprehensible.kover-coverage-report")
 }
 
 android {

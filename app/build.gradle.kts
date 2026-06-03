@@ -157,7 +157,22 @@ roborazzi {
     }
 }
 
+koverCoverageReport {
+    sourceProjects(
+        project(":common"),
+        project(":data:account"),
+        project(":feature:account"),
+        project(":textadventuremodels"),
+    )
+}
+
 kover {
+    dependencies {
+        kover(project(":common"))
+        kover(project(":data:account"))
+        kover(project(":feature:account"))
+        kover(project(":textadventuremodels"))
+    }
     reports {
         filters {
             excludes {
