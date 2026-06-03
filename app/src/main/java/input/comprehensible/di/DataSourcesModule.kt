@@ -2,6 +2,7 @@ package input.comprehensible.di
 
 import input.comprehensible.BuildConfig
 import input.comprehensible.data.AppDb
+import input.comprehensible.data.account.SessionProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
@@ -14,6 +15,8 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.data.textadventures.sources.remote.DefaultTextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 object DataSourcesModule {
     fun inject() {
@@ -29,5 +32,9 @@ object DataSourcesModule {
             )
         }
         AccountLocalDataSource.inject { DefaultAccountLocalDataSource() }
+
+        AccountLocalDataSource().session
+            .onEach { SessionProvider().token = it?.token }
+            .launchIn(AppScope())
     }
 }

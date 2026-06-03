@@ -2,7 +2,7 @@ package input.comprehensible.data.account
 
 import com.ktin.Singleton
 
-class SessionProvider {
+class SessionProvider private constructor() {
     @Volatile
     var token: String? = null
 
