@@ -206,7 +206,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     }
 
     @Test
-    fun `sign in shows invalid credentials dialog on 401 error`() = testRule.runAccountFeatureTest {
+    fun `sign in shows invalid credentials dialog on invalid credentials`() = testRule.runAccountFeatureTest {
         // GIVEN the account screen is open with fields filled
         goToAccount()
         awaitIdle()

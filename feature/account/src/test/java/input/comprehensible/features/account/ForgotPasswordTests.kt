@@ -40,16 +40,16 @@ class ForgotPasswordTests(private val themeMode: ThemeMode) {
     }
 
     @Test
-    fun `forgot password button is visible on sign in screen`() = testRule.runAccountFeatureTest {
+    fun `tapping forgot password on sign in screen navigates to forgot password screen`() = testRule.runAccountFeatureTest {
         // GIVEN the account screen is open showing the sign in step
         goToAccount()
         awaitIdle()
 
-        // WHEN the sign in screen is shown
-        // THEN the forgot password button is visible
+        // WHEN the forgot password button is tapped
         onAccount { tapForgotPassword() }
         awaitIdle()
 
+        // THEN the forgot password screen is shown
         onForgotPassword {
             assertSubmitIsDisabled()
         }
