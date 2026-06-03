@@ -28,9 +28,20 @@ interface TextAdventuresLocalDataSource {
 
     @Query(
         """
-            SELECT * FROM TextAdventureMessageSentenceView
-            WHERE adventureId = :adventureId
-            ORDER BY createdAt ASC, paragraphIndex ASC, sentenceIndex ASC
+            WITH RECURSIVE message_chain(id, depth) AS (
+                SELECT id, 0
+                FROM TextAdventureMessageEntity
+                WHERE adventureId = :adventureId AND parentId IS NULL
+                UNION ALL
+                SELECT m.id, mc.depth + 1
+                FROM TextAdventureMessageEntity m
+                INNER JOIN message_chain mc ON m.parentId = mc.id
+            )
+            SELECT v.*
+            FROM TextAdventureMessageSentenceView v
+            INNER JOIN message_chain mc ON mc.id = v.messageId
+            WHERE v.adventureId = :adventureId
+            ORDER BY mc.depth ASC, v.paragraphIndex ASC, v.sentenceIndex ASC
         """
     )
     fun getAdventureSentenceRows(adventureId: String): Flow<List<TextAdventureMessageSentenceView>>

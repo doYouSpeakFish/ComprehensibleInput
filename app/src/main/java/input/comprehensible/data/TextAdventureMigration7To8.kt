@@ -22,6 +22,10 @@ class TextAdventureMigration7To8 : Migration(
         db.execSQL("DROP INDEX IF EXISTS `index_TextAdventureMessageEntity_adventureId`")
         db.execSQL("DROP TABLE IF EXISTS `TextAdventureMessageEntity`")
 
+        // Adventures from the old anonymous API cannot be resumed via the v1 authenticated API,
+        // so remove their metadata rows to avoid showing unloadable entries in the list.
+        db.execSQL("DELETE FROM `TextAdventureEntity`")
+
         db.execSQL(
             """
             CREATE TABLE IF NOT EXISTS `TextAdventureMessageEntity` (

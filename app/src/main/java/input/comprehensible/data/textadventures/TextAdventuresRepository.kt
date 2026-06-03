@@ -202,10 +202,10 @@ private fun TextAdventureSummaryView.toSummary() = TextAdventureSummary(
 
 private fun List<TextAdventureMessageSentenceView>.toDomain(): TextAdventure {
     val adventure = first()
+    // groupBy preserves insertion order (LinkedHashMap); rows arrive ordered by parent-chain
+    // depth from the recursive CTE query, so entries() is already in conversation order.
     val messageGroups = groupBy { it.messageId }
-    val messageUi = messageGroups.entries
-        .sortedBy { (_, rows) -> rows.first().createdAt }
-        .map { (messageId, messageRows) ->
+    val messageUi = messageGroups.entries.map { (messageId, messageRows) ->
             val paragraphs = messageRows
                 .groupBy { it.paragraphIndex }
                 .toSortedMap()
