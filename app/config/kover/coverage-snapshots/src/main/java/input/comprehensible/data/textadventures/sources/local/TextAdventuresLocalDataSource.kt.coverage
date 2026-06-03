@@ -25,12 +25,10 @@
 ⚪           userSentences: List<TextAdventureSentenceEntity>,
 ⚪           aiMessage: TextAdventureMessageEntity,
 ⚪           aiSentences: List<TextAdventureSentenceEntity>,
-⚪           adventureId: String,
-⚪           updatedAt: Long,
 ⚪       ) {
 🟢           insertMessageAndSentences(userMessage, userSentences)
 🟢           insertMessageAndSentences(aiMessage, aiSentences)
-🟢           updateAdventureUpdatedAt(id = adventureId, updatedAt = updatedAt)
+🟢           updateAdventureUpdatedAt(id = userMessage.adventureId, updatedAt = aiMessage.createdAt)
 ⚪       }
 ⚪   
 ⚪       @Query(

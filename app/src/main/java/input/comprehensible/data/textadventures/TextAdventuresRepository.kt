@@ -114,8 +114,6 @@ class TextAdventuresRepository(
                 learningLanguage = adventure.learningLanguage,
                 translationLanguage = adventure.translationLanguage,
             ),
-            adventureId = adventureId,
-            updatedAt = now,
         )
     }
 
