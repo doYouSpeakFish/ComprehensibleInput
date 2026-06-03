@@ -30,35 +30,60 @@ class DefaultTextAdventureRemoteDataSource(
 ) : TextAdventureRemoteDataSource {
     override suspend fun startAdventure(
         learningLanguage: String,
-        translationsLanguage: String,
-    ): TextAdventureRemoteResponse = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/text-adventures/start") {
+        translationLanguage: String,
+        token: String,
+    ): TextAdventureRemoteResponse = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/adventures") {
         header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+        header("Authorization", "Bearer $token")
         contentType(ContentType.Application.Json)
         setBody(
-            StartTextAdventureRequest(
+            StartTextAdventureV1Request(
                 learningLanguage = learningLanguage,
-                translationsLanguage = translationsLanguage,
+                translationLanguage = translationLanguage,
             )
         )
     }.body()
 
-    override suspend fun respondToUser(
+    override suspend fun postUserMessage(
         adventureId: String,
-        learningLanguage: String,
-        translationsLanguage: String,
-        userMessage: String,
-        history: List<TextAdventureHistoryMessage>,
-    ): TextAdventureRemoteResponse = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/text-adventures/respond") {
+        parentId: String,
+        text: String,
+        token: String,
+    ): TextAdventureMessageRemoteResponse = httpClient.post(
+        "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
+    ) {
         header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+        header("Authorization", "Bearer $token")
         contentType(ContentType.Application.Json)
         setBody(
-            ContinueTextAdventureRequest(
-                adventureId = adventureId,
-                learningLanguage = learningLanguage,
-                translationsLanguage = translationsLanguage,
-                userMessage = userMessage,
-                history = history,
+            PostTextAdventureMessageV1Request(
+                type = MESSAGE_TYPE_USER,
+                parentId = parentId,
+                text = text,
             )
         )
     }.body()
+
+    override suspend fun postAiMessage(
+        adventureId: String,
+        parentId: String,
+        token: String,
+    ): TextAdventureMessageRemoteResponse = httpClient.post(
+        "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
+    ) {
+        header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+        header("Authorization", "Bearer $token")
+        contentType(ContentType.Application.Json)
+        setBody(
+            PostTextAdventureMessageV1Request(
+                type = MESSAGE_TYPE_AI,
+                parentId = parentId,
+            )
+        )
+    }.body()
+
+    private companion object {
+        const val MESSAGE_TYPE_USER = "user"
+        const val MESSAGE_TYPE_AI = "AI"
+    }
 }

@@ -7,17 +7,10 @@ import androidx.room.Query
 import com.ktin.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
 
-@Suppress("TooManyFunctions")
 @Dao
 interface TextAdventuresLocalDataSource {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAdventure(adventure: TextAdventureEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMessages(messages: List<TextAdventureMessageEntity>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSentences(sentences: List<TextAdventureSentenceEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessageAndSentences(
@@ -37,7 +30,7 @@ interface TextAdventuresLocalDataSource {
         """
             SELECT * FROM TextAdventureMessageSentenceView
             WHERE adventureId = :adventureId
-            ORDER BY messageIndex ASC, paragraphIndex ASC, sentenceIndex ASC
+            ORDER BY createdAt ASC, paragraphIndex ASC, sentenceIndex ASC
         """
     )
     fun getAdventureSentenceRows(adventureId: String): Flow<List<TextAdventureMessageSentenceView>>
@@ -53,34 +46,16 @@ interface TextAdventuresLocalDataSource {
 
     @Query(
         """
-            SELECT MAX(messageIndex)
-            FROM TextAdventureMessageEntity
+            SELECT id FROM TextAdventureMessageEntity
             WHERE adventureId = :adventureId
+            AND id NOT IN (
+                SELECT parentId FROM TextAdventureMessageEntity
+                WHERE adventureId = :adventureId AND parentId IS NOT NULL
+            )
+            LIMIT 1
         """
     )
-    suspend fun getLatestMessageIndex(adventureId: String): Int?
-
-    @Query(
-        """
-            SELECT * FROM TextAdventureMessageEntity
-            WHERE adventureId = :adventureId
-            ORDER BY messageIndex ASC
-        """
-    )
-    suspend fun getMessagesSnapshot(adventureId: String): List<TextAdventureMessageEntity>
-
-    @Query(
-        """
-            SELECT sentences.*
-            FROM TextAdventureSentenceEntity AS sentences
-            INNER JOIN TextAdventureMessageEntity AS messages
-                ON messages.adventureId = sentences.adventureId
-                AND messages.messageIndex = sentences.messageIndex
-            WHERE sentences.adventureId = :adventureId
-            ORDER BY sentences.messageIndex ASC, sentences.paragraphIndex ASC, sentences.sentenceIndex ASC
-        """
-    )
-    suspend fun getSentencesSnapshot(adventureId: String): List<TextAdventureSentenceEntity>
+    suspend fun getLeafMessageId(adventureId: String): String?
 
     @Query(
         """

@@ -28,6 +28,8 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `text adventure can be played to completion`() = testRule.runTest {
+        saveAccountSession(token = "test-token", email = "test@example.com")
+
         // GIVEN a text adventure with a scenario and responses
         val adventureId = "adventure-1"
         val scenario = TextAdventureRemoteResponse(
@@ -100,6 +102,8 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
 
     @Test
     fun `unfinished adventures can be resumed`() = testRule.runTest {
+        saveAccountSession(token = "test-token", email = "test@example.com")
+
         // GIVEN a text adventure with a scenario and a follow-up
         val adventureId = "adventure-2"
         val scenario = TextAdventureRemoteResponse(

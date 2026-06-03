@@ -66,3 +66,16 @@ data class ContinueTextAdventureRequest(
     val userMessage: String,
     val history: List<TextAdventureHistoryMessage>,
 )
+
+@Serializable
+data class StartTextAdventureV1Request(
+    val learningLanguage: String,
+    val translationLanguage: String,
+)
+
+@Serializable
+data class PostTextAdventureMessageV1Request(
+    val type: String,
+    val parentId: String,
+    val text: String? = null,
+)
