@@ -7,6 +7,7 @@ import input.comprehensible.data.AppDb
 import input.comprehensible.data.TextAdventureMigration4To5
 import input.comprehensible.data.TextAdventureMigration5To6
 import input.comprehensible.data.TextAdventureMigration6To7
+import input.comprehensible.data.TextAdventureMigration7To8
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,6 +30,7 @@ class AppDbMigrationTest {
                 .addMigrations(
                     TextAdventureMigration5To6(),
                     TextAdventureMigration6To7(),
+                    TextAdventureMigration7To8(),
                 )
                 .build()
         },
@@ -53,6 +55,7 @@ class AppDbMigrationTest {
             .addMigrations(
                 TextAdventureMigration5To6(),
                 TextAdventureMigration6To7(),
+                TextAdventureMigration7To8(),
             )
             .build()
             .apply { openHelper.writableDatabase.close() }
