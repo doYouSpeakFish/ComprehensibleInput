@@ -44,6 +44,7 @@ import input.comprehensible.util.DefaultPreview
 internal fun AccountScreen(
     onNavigateUp: () -> Unit,
     onGoToSignUp: () -> Unit,
+    onGoToForgotPassword: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel = viewModel(),
 ) {
@@ -55,6 +56,7 @@ internal fun AccountScreen(
         onSignInPasswordChanged = viewModel::onSignInPasswordChanged,
         onSignInSubmit = viewModel::onSignInSubmit,
         onSignUpButtonClicked = onGoToSignUp,
+        onForgotPasswordClicked = onGoToForgotPassword,
         onSignOutClicked = viewModel::onSignOutClicked,
         onErrorDismissed = viewModel::onErrorDismissed,
         onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
@@ -70,6 +72,7 @@ private fun AccountScreen(
     onSignInPasswordChanged: (String) -> Unit,
     onSignInSubmit: () -> Unit,
     onSignUpButtonClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onErrorDismissed: () -> Unit,
     onInvalidCredentialsErrorDismissed: () -> Unit,
@@ -106,6 +109,7 @@ private fun AccountScreen(
                     onPasswordChanged = onSignInPasswordChanged,
                     onSignInSubmit = onSignInSubmit,
                     onSignUpClicked = onSignUpButtonClicked,
+                    onForgotPasswordClicked = onForgotPasswordClicked,
                 )
             }
         }
@@ -155,6 +159,7 @@ private fun SignInStep(
     onPasswordChanged: (String) -> Unit,
     onSignInSubmit: () -> Unit,
     onSignUpClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -212,6 +217,15 @@ private fun SignInStep(
         ) {
             Text(stringResource(R.string.account_sign_up_button))
         }
+        OutlinedButton(
+            onClick = onForgotPasswordClicked,
+            enabled = !step.isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("account_forgot_password_button"),
+        ) {
+            Text(stringResource(R.string.account_forgot_password_button))
+        }
     }
 }
 
@@ -266,6 +280,7 @@ fun PreviewAccountSignIn() {
             onSignInPasswordChanged = {},
             onSignInSubmit = {},
             onSignUpButtonClicked = {},
+            onForgotPasswordClicked = {},
             onSignOutClicked = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
@@ -291,6 +306,7 @@ fun PreviewAccountSignInLoading() {
             onSignInPasswordChanged = {},
             onSignInSubmit = {},
             onSignUpButtonClicked = {},
+            onForgotPasswordClicked = {},
             onSignOutClicked = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
@@ -310,6 +326,7 @@ fun PreviewAccountSignedIn() {
             onSignInPasswordChanged = {},
             onSignInSubmit = {},
             onSignUpButtonClicked = {},
+            onForgotPasswordClicked = {},
             onSignOutClicked = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},

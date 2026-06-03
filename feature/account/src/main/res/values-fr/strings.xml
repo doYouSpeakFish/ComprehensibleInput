@@ -17,4 +17,12 @@
     <string name="account_verify_email_message">Nous avons envoyé un code de vérification à 6 chiffres à %1$s</string>
     <string name="account_verify_email_code_label">Code de vérification</string>
     <string name="account_verify_email_submit_button">Vérifier</string>
+    <string name="account_forgot_password_button">Mot de passe oublié ?</string>
+    <string name="account_forgot_password_email_label">E-mail</string>
+    <string name="account_forgot_password_submit_button">Envoyer le code</string>
+    <string name="account_password_reset_message">Nous avons envoyé un code de réinitialisation à 6 chiffres à %1$s</string>
+    <string name="account_password_reset_code_label">Code de réinitialisation</string>
+    <string name="account_password_reset_password_label">Nouveau mot de passe</string>
+    <string name="account_password_reset_confirm_password_label">Confirmer le nouveau mot de passe</string>
+    <string name="account_password_reset_submit_button">Réinitialiser le mot de passe</string>
 </resources>

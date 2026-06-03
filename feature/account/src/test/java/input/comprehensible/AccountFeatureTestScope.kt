@@ -15,9 +15,13 @@ import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.features.account.AccountRobot
+import input.comprehensible.features.account.ForgotPasswordRobot
+import input.comprehensible.features.account.PasswordResetRobot
 import input.comprehensible.features.account.SignUpRobot
 import input.comprehensible.features.account.VerifyEmailRobot
 import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.account.ForgotPasswordRoute
+import input.comprehensible.ui.settings.account.PasswordResetRoute
 import input.comprehensible.ui.settings.account.SignUpRoute
 import input.comprehensible.ui.settings.account.VerifyEmailRoute
 import input.comprehensible.ui.settings.account.accountNavGraph
@@ -95,6 +99,16 @@ class AccountFeatureTestScope(
         _navController.navigate(VerifyEmailRoute(email))
     }
 
+    fun goToForgotPassword() {
+        if (!_isLaunched) launch()
+        _navController.navigate(ForgotPasswordRoute)
+    }
+
+    fun goToPasswordReset(email: String) {
+        if (!_isLaunched) launch()
+        _navController.navigate(PasswordResetRoute(email))
+    }
+
     fun runCurrent() {
         testScope.runCurrent()
     }
@@ -146,6 +160,14 @@ fun AccountFeatureTestScope.enqueueVerifyEmailResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
 }
 
+fun AccountFeatureTestScope.enqueueRequestPasswordResetCodeResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueRequestPasswordResetCodeResult(result)
+}
+
+fun AccountFeatureTestScope.enqueueResetPasswordResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueResetPasswordResult(result)
+}
+
 suspend fun AccountFeatureTestScope.onAccount(
     block: suspend AccountRobot.() -> Unit = {},
 ) = AccountRobot(composeRule).apply { block() }
@@ -157,3 +179,11 @@ suspend fun AccountFeatureTestScope.onSignUp(
 suspend fun AccountFeatureTestScope.onVerifyEmail(
     block: suspend VerifyEmailRobot.() -> Unit = {},
 ) = VerifyEmailRobot(composeRule).apply { block() }
+
+suspend fun AccountFeatureTestScope.onForgotPassword(
+    block: suspend ForgotPasswordRobot.() -> Unit = {},
+) = ForgotPasswordRobot(composeRule).apply { block() }
+
+suspend fun AccountFeatureTestScope.onPasswordReset(
+    block: suspend PasswordResetRobot.() -> Unit = {},
+) = PasswordResetRobot(composeRule).apply { block() }
