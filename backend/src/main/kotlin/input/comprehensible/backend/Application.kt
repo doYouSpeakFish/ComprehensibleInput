@@ -168,6 +168,14 @@ private fun Application.configureRateLimits() {
                 call.request.headers["Authorization"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
             }
         }
+        register(RateLimitName("account-deletion")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call ->
+                runCatching {
+                    Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
+                }.getOrNull() ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+            }
+        }
     }
 }
 

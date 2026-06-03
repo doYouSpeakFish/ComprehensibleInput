@@ -38,9 +38,9 @@
 🟡       }.onFailure { Timber.e(it, "Failed to sign out") }
 ⚪   
 🟢       suspend fun deleteAccount(password: String): Result<Unit> = runCatching {
-🟡           val token = localDataSource.session.first()?.token
+🟡           val email = localDataSource.session.first()?.email
 🔴               ?: throw InvalidCredentialsException()
-🟢           remoteDataSource.deleteAccount(password, token)
+🟢           remoteDataSource.deleteAccount(email, password)
 🟢           localDataSource.clearSession()
 🟢       }.onFailure { Timber.e(it, "Failed to delete account") }
 ⚪   

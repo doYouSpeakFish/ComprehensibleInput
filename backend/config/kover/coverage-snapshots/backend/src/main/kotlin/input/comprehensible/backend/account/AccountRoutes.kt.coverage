@@ -52,9 +52,11 @@
 🟢               call.respond(accountService.resetPassword(request.email, request.password, request.code))
 ⚪           }
 ⚪       }
-🟢       delete("/v1/me") {
-🟢           val request = call.receive<DeleteMeRequest>()
-🟢           call.respond(accountService.deleteMe(request.email, request.password))
+🟢       rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("account-deletion")) {
+🟢           delete("/v1/me") {
+🟢               val request = call.receive<DeleteMeRequest>()
+🟢               call.respond(accountService.deleteMe(request.email, request.password))
+⚪           }
 ⚪       }
 🟢       authenticate("account-bearer") {
 🟢           get("/v1/me") {
