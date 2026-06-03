@@ -14,6 +14,7 @@ import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
+import io.ktor.server.plugins.ratelimit.RateLimitName
 import io.ktor.server.plugins.ratelimit.rateLimit
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,31 +29,31 @@ fun Route.accountRoutes(accountService: AccountService) {
         val result = accountService.signIn(request.email, request.password)
         if (result.payload == null) call.respond(result.status) else call.respond(result.status, result.payload.toRemote())
     }
-    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-verification")) {
+    rateLimit(RateLimitName("email-verification")) {
         post("/v1/email-verifications") {
             val request = call.receive<EmailVerificationRequest>()
             call.respond(accountService.verifyEmail(request.email, request.code))
         }
     }
-    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-verification-code")) {
+    rateLimit(RateLimitName("email-verification-code")) {
         post("/v1/email-verification-codes") {
             val request = call.receive<EmailVerificationCodeRequest>()
             call.respond(accountService.requestNewEmailVerificationCode(request.email))
         }
     }
-    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset-request")) {
+    rateLimit(RateLimitName("password-reset-request")) {
         post("/v1/password-reset-codes") {
             val request = call.receive<PasswordResetCodeRequest>()
             call.respond(accountService.requestPasswordReset(request.email))
         }
     }
-    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("password-reset-attempt")) {
+    rateLimit(RateLimitName("password-reset-attempt")) {
         post("/v1/password-resets") {
             val request = call.receive<PasswordResetRequest>()
             call.respond(accountService.resetPassword(request.email, request.password, request.code))
         }
     }
-    rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("account-deletion")) {
+    rateLimit(RateLimitName("account-deletion")) {
         delete("/v1/me") {
             val request = call.receive<DeleteMeRequest>()
             call.respond(accountService.deleteMe(request.email, request.password))
@@ -75,7 +76,7 @@ fun Route.accountRoutes(accountService: AccountService) {
             val request = call.receive<EmailChangeCurrentVerificationRequest>()
             call.respond(accountService.verifyCurrentEmailChange(accountId = principal.accountId, code = request.code))
         }
-        rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-change-current-verification-code")) {
+        rateLimit(RateLimitName("email-change-current-verification-code")) {
             post("/v1/email-change-current-verification-codes") {
                 val principal = call.principal<AccountSessionPrincipal>()
                     ?: return@post call.respond(HttpStatusCode.Unauthorized)
@@ -88,7 +89,7 @@ fun Route.accountRoutes(accountService: AccountService) {
             val request = call.receive<EmailVerificationRequest>()
             call.respond(accountService.verifyPendingEmailChange(principal.accountId, request.email, request.code))
         }
-        rateLimit(io.ktor.server.plugins.ratelimit.RateLimitName("email-change-new-verification-code")) {
+        rateLimit(RateLimitName("email-change-new-verification-code")) {
             post("/v1/email-change-new-verification-codes") {
                 val principal = call.principal<AccountSessionPrincipal>()
                     ?: return@post call.respond(HttpStatusCode.Unauthorized)

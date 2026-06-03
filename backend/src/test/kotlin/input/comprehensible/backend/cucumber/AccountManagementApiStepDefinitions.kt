@@ -222,6 +222,7 @@ class AccountManagementApiStepDefinitions {
                 setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
             }
         },
+        expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
     )
     @When("I attempt to delete me a second time with malformed body")
     fun deleteMeSecondAttemptMalformedBody() = runTwoCalls(
@@ -255,37 +256,39 @@ class AccountManagementApiStepDefinitions {
             }
         },
     )
-    @When("I attempt to verify email a second time with email in query parameter")
-    fun verifyEmailSecondAttemptWithQueryParam() = runTwoCalls(
+    @When("I attempt to verify email {string} a second time using code {string} rate-limited by email in query parameter")
+    fun verifyEmailSecondAttemptWithQueryParam(email: String, code: String) = runTwoCalls(
         first = {
-            post("/v1/email-verifications?email=$currentEmail") {
+            post("/v1/email-verifications?email=$email") {
                 contentType(ContentType.Application.Json)
-                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+                setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
             }
         },
         second = {
-            post("/v1/email-verifications?email=$currentEmail") {
+            post("/v1/email-verifications?email=$email") {
                 contentType(ContentType.Application.Json)
-                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+                setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
             }
         },
+        expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
     )
-    @When("I attempt to verify email a second time with forwarded IP")
-    fun verifyEmailSecondAttemptWithForwardedIp() = runTwoCalls(
+    @When("I attempt to verify email {string} a second time using code {string} rate-limited by X-Forwarded-For")
+    fun verifyEmailSecondAttemptWithForwardedIp(email: String, code: String) = runTwoCalls(
         first = {
             post("/v1/email-verifications") {
                 header("X-Forwarded-For", "192.168.1.1")
                 contentType(ContentType.Application.Json)
-                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+                setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
             }
         },
         second = {
             post("/v1/email-verifications") {
                 header("X-Forwarded-For", "192.168.1.1")
                 contentType(ContentType.Application.Json)
-                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+                setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
             }
         },
+        expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
     )
 
     @When("I sign out current session")
@@ -327,6 +330,7 @@ class AccountManagementApiStepDefinitions {
     private fun runTwoCalls(
         first: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse,
         second: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse,
+        expectedFirstStatus: io.ktor.http.HttpStatusCode? = null,
     ) {
         testApplication {
             application {
@@ -339,7 +343,8 @@ class AccountManagementApiStepDefinitions {
                     accountService = accountService,
                 )
             }
-            client.first()
+            val firstResponse = client.first()
+            if (expectedFirstStatus != null) assertEquals(expectedFirstStatus, firstResponse.status)
             val response = client.second()
             latestStatus = response.status
             latestBody = response.bodyAsText()
