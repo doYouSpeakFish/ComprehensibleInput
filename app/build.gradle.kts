@@ -52,26 +52,17 @@ android {
         versionCode = 9
         buildConfigField("String", "BACKEND_BASE_URL", "\"https://api.languagethis.com\"")
         versionName = "0.6.0"
+        if (prBackendBaseUrl.isNotEmpty()) {
+            buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
+        }
+        if (prNumber > 0) {
+            versionNameSuffix = "-pr-$prNumber"
+        }
+        resValue("bool", "is_cleartext_traffic_enabled", "${prBackendBaseUrl.isNotEmpty()}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-    }
-
-    flavorDimensions += "environment"
-    productFlavors {
-        create("production") {
-            dimension = "environment"
-            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
-            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "$enableAllFeatureFlags")
-        }
-        create("pr") {
-            dimension = "environment"
-            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
-            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "true")
-            versionNameSuffix = "-pr-$prNumber"
-            buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
         }
     }
 
@@ -94,6 +85,8 @@ android {
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
+            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "$enableAllFeatureFlags")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -122,6 +115,7 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
     packaging {
         resources {
