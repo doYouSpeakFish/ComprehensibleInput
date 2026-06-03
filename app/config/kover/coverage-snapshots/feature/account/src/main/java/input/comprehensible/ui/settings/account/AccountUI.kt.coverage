@@ -13,6 +13,7 @@
 ⚪   import androidx.compose.foundation.text.KeyboardOptions
 ⚪   import androidx.compose.material3.BasicAlertDialog
 ⚪   import androidx.compose.material3.Button
+⚪   import androidx.compose.material3.ButtonDefaults
 ⚪   import androidx.compose.material3.CircularProgressIndicator
 ⚪   import androidx.compose.material3.ExperimentalMaterial3Api
 ⚪   import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,7 @@
 🟢   internal fun AccountScreen(
 ⚪       onNavigateUp: () -> Unit,
 ⚪       onGoToSignUp: () -> Unit,
+⚪       onGoToDeleteAccount: () -> Unit,
 🟢       modifier: Modifier = Modifier,
 🟢       viewModel: AccountViewModel = viewModel(),
 🟡   ) {
@@ -56,6 +58,7 @@
 🟢           onSignInSubmit = viewModel::onSignInSubmit,
 🟢           onSignUpButtonClicked = onGoToSignUp,
 🟢           onSignOutClicked = viewModel::onSignOutClicked,
+🟢           onDeleteAccountClicked = onGoToDeleteAccount,
 🟢           onErrorDismissed = viewModel::onErrorDismissed,
 🟢           onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
 🟢           modifier = modifier,
@@ -71,6 +74,7 @@
 ⚪       onSignInSubmit: () -> Unit,
 ⚪       onSignUpButtonClicked: () -> Unit,
 ⚪       onSignOutClicked: () -> Unit,
+⚪       onDeleteAccountClicked: () -> Unit,
 ⚪       onErrorDismissed: () -> Unit,
 ⚪       onInvalidCredentialsErrorDismissed: () -> Unit,
 🟢       modifier: Modifier = Modifier,
@@ -99,6 +103,7 @@
 🟢                   is AccountUiState.Step.SignedIn -> SignedInStep(
 🟢                       step = step,
 🟢                       onSignOutClicked = onSignOutClicked,
+🟢                       onDeleteAccountClicked = onDeleteAccountClicked,
 ⚪                   )
 🟢                   is AccountUiState.Step.SignIn -> SignInStep(
 🟢                       step = step,
@@ -124,6 +129,7 @@
 ⚪   private fun SignedInStep(
 ⚪       step: AccountUiState.Step.SignedIn,
 ⚪       onSignOutClicked: () -> Unit,
+⚪       onDeleteAccountClicked: () -> Unit,
 🟢       modifier: Modifier = Modifier,
 🟡   ) {
 🟢       Column(
@@ -144,6 +150,17 @@
 🟢                   .testTag("account_sign_out_button"),
 ⚪           ) {
 ⚪               Text(stringResource(R.string.account_sign_out_button))
+⚪           }
+🟢           OutlinedButton(
+🟢               onClick = onDeleteAccountClicked,
+🟢               colors = ButtonDefaults.outlinedButtonColors(
+🟢                   contentColor = MaterialTheme.colorScheme.error,
+⚪               ),
+🟢               modifier = Modifier
+🟢                   .fillMaxWidth()
+🟢                   .testTag("account_delete_account_button"),
+⚪           ) {
+⚪               Text(stringResource(R.string.account_delete_account_button))
 ⚪           }
 🟢       }
 🟢   }
@@ -267,6 +284,7 @@
 ⚪               onSignInSubmit = {},
 ⚪               onSignUpButtonClicked = {},
 ⚪               onSignOutClicked = {},
+⚪               onDeleteAccountClicked = {},
 ⚪               onErrorDismissed = {},
 ⚪               onInvalidCredentialsErrorDismissed = {},
 ⚪               modifier = Modifier.fillMaxSize(),
@@ -292,6 +310,7 @@
 ⚪               onSignInSubmit = {},
 ⚪               onSignUpButtonClicked = {},
 ⚪               onSignOutClicked = {},
+⚪               onDeleteAccountClicked = {},
 ⚪               onErrorDismissed = {},
 ⚪               onInvalidCredentialsErrorDismissed = {},
 ⚪               modifier = Modifier.fillMaxSize(),
@@ -311,6 +330,7 @@
 ⚪               onSignInSubmit = {},
 ⚪               onSignUpButtonClicked = {},
 ⚪               onSignOutClicked = {},
+⚪               onDeleteAccountClicked = {},
 ⚪               onErrorDismissed = {},
 ⚪               onInvalidCredentialsErrorDismissed = {},
 ⚪               modifier = Modifier.fillMaxSize(),
