@@ -11,6 +11,7 @@ import timber.log.Timber
 class AccountRepository(
     private val remoteDataSource: AccountRemoteDataSource,
     private val localDataSource: AccountLocalDataSource,
+    private val sessionProvider: SessionProvider = SessionProvider(),
 ) {
     val session: Flow<Session?> = localDataSource.session
 
@@ -26,9 +27,11 @@ class AccountRepository(
         runCatching {
             val token = remoteDataSource.signIn(email, password)
             localDataSource.saveSession(token, email)
+            sessionProvider.token = token
         }.onFailure { Timber.e(it, "Failed to sign in") }
 
     suspend fun signOut(): Result<Unit> = runCatching {
+        sessionProvider.token = null
         val token = localDataSource.session.first()?.token
         if (token != null) {
             runCatching { remoteDataSource.signOut(token) }

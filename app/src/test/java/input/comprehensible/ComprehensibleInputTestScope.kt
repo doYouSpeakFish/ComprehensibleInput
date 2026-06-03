@@ -10,6 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.TextAdventuresTestData
+import input.comprehensible.data.account.SessionProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
@@ -204,10 +205,12 @@ class ComprehensibleInputTestScope(
 
     suspend fun saveAccountSession(token: String, email: String) {
         realAccountLocalDataSource.saveSession(token, email)
+        SessionProvider().token = token
     }
 
     suspend fun clearAccountSession() {
         realAccountLocalDataSource.clearSession()
+        SessionProvider().token = null
     }
 
     /**

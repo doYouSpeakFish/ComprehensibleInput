@@ -27,44 +27,35 @@ class TextAdventureMigration7To8 : Migration(
         db.execSQL("DELETE FROM `TextAdventureEntity`")
 
         db.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `TextAdventureMessageEntity` (
-                `id` TEXT NOT NULL,
-                `adventureId` TEXT NOT NULL,
-                `parentId` TEXT,
-                `sender` TEXT NOT NULL,
-                `isEnding` INTEGER NOT NULL,
-                `createdAt` INTEGER NOT NULL,
-                PRIMARY KEY(`id`),
-                FOREIGN KEY(`adventureId`) REFERENCES `TextAdventureEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
-            )
-            """.trimIndent()
+            "CREATE TABLE IF NOT EXISTS `TextAdventureMessageEntity` " +
+                "(`id` TEXT NOT NULL, `adventureId` TEXT NOT NULL, `parentId` TEXT, " +
+                "`sender` TEXT NOT NULL, `isEnding` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, " +
+                "PRIMARY KEY(`id`), " +
+                "FOREIGN KEY(`adventureId`) REFERENCES `TextAdventureEntity`(`id`) " +
+                "ON UPDATE NO ACTION ON DELETE CASCADE , " +
+                "FOREIGN KEY(`parentId`) REFERENCES `TextAdventureMessageEntity`(`id`) " +
+                "ON UPDATE NO ACTION ON DELETE SET NULL )"
         )
         db.execSQL(
-            """
-            CREATE INDEX IF NOT EXISTS `index_TextAdventureMessageEntity_adventureId`
-            ON `TextAdventureMessageEntity` (`adventureId`)
-            """.trimIndent()
+            "CREATE INDEX IF NOT EXISTS `index_TextAdventureMessageEntity_adventureId` " +
+                "ON `TextAdventureMessageEntity` (`adventureId`)"
+        )
+        db.execSQL(
+            "CREATE INDEX IF NOT EXISTS `index_TextAdventureMessageEntity_parentId` " +
+                "ON `TextAdventureMessageEntity` (`parentId`)"
         )
 
         db.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `TextAdventureSentenceEntity` (
-                `messageId` TEXT NOT NULL,
-                `paragraphIndex` INTEGER NOT NULL,
-                `sentenceIndex` INTEGER NOT NULL,
-                `language` TEXT NOT NULL,
-                `text` TEXT NOT NULL,
-                PRIMARY KEY(`messageId`, `paragraphIndex`, `sentenceIndex`, `language`),
-                FOREIGN KEY(`messageId`) REFERENCES `TextAdventureMessageEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
-            )
-            """.trimIndent()
+            "CREATE TABLE IF NOT EXISTS `TextAdventureSentenceEntity` " +
+                "(`messageId` TEXT NOT NULL, `paragraphIndex` INTEGER NOT NULL, " +
+                "`sentenceIndex` INTEGER NOT NULL, `language` TEXT NOT NULL, `text` TEXT NOT NULL, " +
+                "PRIMARY KEY(`messageId`, `paragraphIndex`, `sentenceIndex`, `language`), " +
+                "FOREIGN KEY(`messageId`) REFERENCES `TextAdventureMessageEntity`(`id`) " +
+                "ON UPDATE NO ACTION ON DELETE CASCADE )"
         )
         db.execSQL(
-            """
-            CREATE INDEX IF NOT EXISTS `index_TextAdventureSentenceEntity_messageId`
-            ON `TextAdventureSentenceEntity` (`messageId`)
-            """.trimIndent()
+            "CREATE INDEX IF NOT EXISTS `index_TextAdventureSentenceEntity_messageId` " +
+                "ON `TextAdventureSentenceEntity` (`messageId`)"
         )
 
         db.execSQL(
@@ -75,18 +66,10 @@ class TextAdventureMigration7To8 : Migration(
             |        adventure.learningLanguage AS learningLanguage,
             |        adventure.translationLanguage AS translationLanguage,
             |        adventure.updatedAt AS updatedAt,
-            |        COALESCE((
-            |            SELECT m.isEnding
-            |            FROM TextAdventureMessageEntity m
-            |            WHERE m.adventureId = adventure.id
-            |            AND m.id NOT IN (
-            |                SELECT c.parentId
-            |                FROM TextAdventureMessageEntity c
-            |                WHERE c.adventureId = adventure.id
-            |                AND c.parentId IS NOT NULL
-            |            )
-            |            LIMIT 1
-            |        ), 0) AS isComplete
+            |        CASE WHEN EXISTS (
+            |            SELECT 1 FROM TextAdventureMessageEntity m
+            |            WHERE m.adventureId = adventure.id AND m.isEnding = 1
+            |        ) THEN 1 ELSE 0 END AS isComplete
             |    FROM TextAdventureEntity AS adventure
             """.trimMargin()
         )

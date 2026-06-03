@@ -24,7 +24,6 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     override suspend fun startAdventure(
         learningLanguage: String,
         translationLanguage: String,
-        token: String,
     ): TextAdventureRemoteResponse {
         val script = scriptedAdventures.removeFirstOrNull()
             ?: error("No scripted adventures available")
@@ -37,7 +36,6 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
         adventureId: String,
         parentId: String,
         text: String,
-        token: String,
     ): TextAdventureMessageRemoteResponse = TextAdventureMessageRemoteResponse(
         id = nextMessageId(),
         parentId = parentId,
@@ -55,7 +53,6 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     override suspend fun postAiMessage(
         adventureId: String,
         parentId: String,
-        token: String,
     ): TextAdventureMessageRemoteResponse {
         val responses = responsesByAdventureId[adventureId]
             ?: error("No scripted responses available for adventure $adventureId")

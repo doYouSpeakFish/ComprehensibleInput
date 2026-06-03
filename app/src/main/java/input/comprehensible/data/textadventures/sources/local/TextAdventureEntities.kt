@@ -24,9 +24,15 @@ data class TextAdventureEntity(
             parentColumns = ["id"],
             childColumns = ["adventureId"],
             onDelete = ForeignKey.CASCADE,
-        )
+        ),
+        ForeignKey(
+            entity = TextAdventureMessageEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["parentId"],
+            onDelete = ForeignKey.SET_NULL,
+        ),
     ],
-    indices = [Index("adventureId")],
+    indices = [Index("adventureId"), Index("parentId")],
 )
 data class TextAdventureMessageEntity(
     @PrimaryKey val id: String,
@@ -65,18 +71,10 @@ data class TextAdventureSentenceEntity(
         adventure.learningLanguage AS learningLanguage,
         adventure.translationLanguage AS translationLanguage,
         adventure.updatedAt AS updatedAt,
-        COALESCE((
-            SELECT m.isEnding
-            FROM TextAdventureMessageEntity m
-            WHERE m.adventureId = adventure.id
-            AND m.id NOT IN (
-                SELECT c.parentId
-                FROM TextAdventureMessageEntity c
-                WHERE c.adventureId = adventure.id
-                AND c.parentId IS NOT NULL
-            )
-            LIMIT 1
-        ), 0) AS isComplete
+        CASE WHEN EXISTS (
+            SELECT 1 FROM TextAdventureMessageEntity m
+            WHERE m.adventureId = adventure.id AND m.isEnding = 1
+        ) THEN 1 ELSE 0 END AS isComplete
     FROM TextAdventureEntity AS adventure
     """
 )

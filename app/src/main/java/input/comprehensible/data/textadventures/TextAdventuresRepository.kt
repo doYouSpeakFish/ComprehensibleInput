@@ -1,7 +1,6 @@
 package input.comprehensible.data.textadventures
 
 import com.ktin.Singleton
-import input.comprehensible.data.account.AccountRepository
 import input.comprehensible.data.textadventures.model.TextAdventure
 import input.comprehensible.data.textadventures.model.TextAdventureMessage
 import input.comprehensible.data.textadventures.model.TextAdventureMessageSender
@@ -19,14 +18,12 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 
 class TextAdventuresRepository(
     private val localDataSource: TextAdventuresLocalDataSource,
     private val remoteDataSource: TextAdventureRemoteDataSource,
-    private val accountRepository: AccountRepository,
     private val clock: () -> Long = { System.currentTimeMillis() },
 ) {
     fun getAdventures(): Flow<TextAdventuresListResult> = localDataSource
@@ -60,11 +57,9 @@ class TextAdventuresRepository(
         learningLanguage: String,
         translationsLanguage: String,
     ): String {
-        val token = getToken()
         val response = remoteDataSource.startAdventure(
             learningLanguage = learningLanguage,
             translationLanguage = translationsLanguage,
-            token = token,
         )
         val now = clock()
         val adventureId = response.adventureId
@@ -93,7 +88,6 @@ class TextAdventuresRepository(
             Timber.e("Text adventure %s not found when responding", adventureId)
             return
         }
-        val token = getToken()
         val leafMessageId = localDataSource.getLeafMessageId(adventureId) ?: run {
             Timber.e("No leaf message found for adventure %s", adventureId)
             return
@@ -103,7 +97,6 @@ class TextAdventuresRepository(
             adventureId = adventureId,
             parentId = leafMessageId,
             text = userMessage,
-            token = token,
         )
         localDataSource.insertMessageAndSentences(
             userMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = clock()),
@@ -116,7 +109,6 @@ class TextAdventuresRepository(
         val aiMessageResponse = remoteDataSource.postAiMessage(
             adventureId = adventureId,
             parentId = userMessageResponse.id,
-            token = token,
         )
         val now = clock()
         localDataSource.insertMessageAndSentences(
@@ -128,9 +120,6 @@ class TextAdventuresRepository(
         )
         localDataSource.updateAdventureUpdatedAt(id = adventureId, updatedAt = now)
     }
-
-    private suspend fun getToken(): String =
-        accountRepository.session.first()?.token ?: error("User not authenticated")
 
     private suspend fun insertStartResponse(
         adventureId: String,
@@ -178,7 +167,6 @@ class TextAdventuresRepository(
         override fun create() = TextAdventuresRepository(
             localDataSource = TextAdventuresLocalDataSource(),
             remoteDataSource = TextAdventureRemoteDataSource(),
-            accountRepository = AccountRepository(),
         )
     }
 }

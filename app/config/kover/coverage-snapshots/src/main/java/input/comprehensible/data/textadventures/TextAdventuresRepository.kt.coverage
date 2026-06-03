@@ -12,7 +12,7 @@
 ⚪   import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
 ⚪   import input.comprehensible.data.textadventures.sources.local.TextAdventureSummaryView
 ⚪   import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
-⚪   import input.comprehensible.data.textadventures.sources.remote.TextAdventureHistoryMessage
+⚪   import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 ⚪   import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 ⚪   import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 ⚪   import kotlinx.coroutines.flow.Flow
@@ -49,21 +49,17 @@
 ⚪           }
 🟢           .distinctUntilChanged()
 🟢           .catch { throwable ->
-🔴           Timber.e(throwable, "Failed to load text adventure %s", id)
-🔴           emit(TextAdventureResult.Error)
-⚪       }
+🔴               Timber.e(throwable, "Failed to load text adventure %s", id)
+🔴               emit(TextAdventureResult.Error)
+⚪           }
 ⚪   
 ⚪       suspend fun startNewAdventure(
 ⚪           learningLanguage: String,
 ⚪           translationsLanguage: String,
 ⚪       ): String {
-🟢           val languages = TextAdventureLanguages(
-🟢               learningLanguage = learningLanguage,
-🟢               translationLanguage = translationsLanguage,
-⚪           )
 🟢           val response = remoteDataSource.startAdventure(
 🟢               learningLanguage = learningLanguage,
-🟢               translationsLanguage = translationsLanguage,
+🟢               translationLanguage = translationsLanguage,
 ⚪           )
 🟢           val now = clock()
 🟢           val adventureId = response.adventureId
@@ -77,11 +73,11 @@
 🟢                   updatedAt = now,
 ⚪               )
 ⚪           )
-🟢           insertAiResponse(
+🟢           insertStartResponse(
 🟢               adventureId = adventureId,
 🟢               response = response,
-🟢               languages = languages,
-🟢               messageIndex = 0,
+🟢               learningLanguage = learningLanguage,
+🟢               translationLanguage = translationsLanguage,
 🟢               createdAt = now,
 ⚪           )
 🟢           return adventureId
@@ -92,93 +88,62 @@
 🔴               Timber.e("Text adventure %s not found when responding", adventureId)
 🟢               return
 ⚪           }
-🟢           val languages = TextAdventureLanguages(
-🟢               learningLanguage = adventure.learningLanguage,
-🟢               translationLanguage = adventure.translationLanguage,
-⚪           )
-🟡           val nextIndex = (localDataSource.getLatestMessageIndex(adventureId) ?: -1) + 1
-🟢           val now = clock()
-🟢           insertUserMessage(
+🟡           val leafMessageId = localDataSource.getLeafMessageId(adventureId) ?: run {
+🔴               Timber.e("No leaf message found for adventure %s", adventureId)
+🟢               return
+⚪           }
+⚪   
+🟢           val userMessageResponse = remoteDataSource.postUserMessage(
 🟢               adventureId = adventureId,
-🟢               message = userMessage,
-🟢               language = adventure.learningLanguage,
-🟢               messageIndex = nextIndex,
-🟢               createdAt = now,
+🟢               parentId = leafMessageId,
+🟢               text = userMessage,
 ⚪           )
-🟢           val response = remoteDataSource.respondToUser(
-🟢               adventureId = adventureId,
-🟢               learningLanguage = adventure.learningLanguage,
-🟢               translationsLanguage = adventure.translationLanguage,
-🟢               userMessage = userMessage,
-🟢               history = buildHistory(
-🟢                   localDataSource = localDataSource,
-🟢                   adventureId = adventureId,
+🟢           localDataSource.insertMessageAndSentences(
+🟢               userMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = clock()),
+🟢               userMessageResponse.toSentenceEntities(
 🟢                   learningLanguage = adventure.learningLanguage,
+🟢                   translationLanguage = adventure.translationLanguage,
 ⚪               ),
 ⚪           )
-🟢           insertAiResponse(
+⚪   
+🟢           val aiMessageResponse = remoteDataSource.postAiMessage(
 🟢               adventureId = adventureId,
-🟢               response = response,
-🟢               languages = languages,
-🟢               messageIndex = nextIndex + 1,
-🟢               createdAt = now,
+🟢               parentId = userMessageResponse.id,
 ⚪           )
-🟢           localDataSource.updateAdventureUpdatedAt(
-🟢               id = adventureId,
-🟢               updatedAt = now,
+🟢           val now = clock()
+🟢           localDataSource.insertMessageAndSentences(
+🟢               aiMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = now),
+🟢               aiMessageResponse.toSentenceEntities(
+🟢                   learningLanguage = adventure.learningLanguage,
+🟢                   translationLanguage = adventure.translationLanguage,
+⚪               ),
 ⚪           )
+🟢           localDataSource.updateAdventureUpdatedAt(id = adventureId, updatedAt = now)
 ⚪       }
 ⚪   
-⚪       private suspend fun insertUserMessage(
-⚪           adventureId: String,
-⚪           message: String,
-⚪           language: String,
-⚪           messageIndex: Int,
-⚪           createdAt: Long,
-⚪       ) {
-🟢           val messageEntity = TextAdventureMessageEntity(
-🟢               adventureId = adventureId,
-🟢               sender = TextAdventureMessageSender.USER,
-🟢               isEnding = false,
-🟢               createdAt = createdAt,
-🟢               messageIndex = messageIndex,
-⚪           )
-🟢           val sentenceEntities = listOf(
-🟢               TextAdventureSentenceEntity(
-🟢                   adventureId = adventureId,
-🟢                   messageIndex = messageIndex,
-🟢                   paragraphIndex = 0,
-🟢                   language = language,
-🟢                   sentenceIndex = 0,
-🟢                   text = message,
-⚪               )
-⚪           )
-🟢           localDataSource.insertMessageAndSentences(messageEntity, sentenceEntities)
-⚪       }
-⚪   
-⚪       private suspend fun insertAiResponse(
+⚪       private suspend fun insertStartResponse(
 ⚪           adventureId: String,
 ⚪           response: TextAdventureRemoteResponse,
-⚪           languages: TextAdventureLanguages,
-⚪           messageIndex: Int,
+⚪           learningLanguage: String,
+⚪           translationLanguage: String,
 ⚪           createdAt: Long,
 ⚪       ) {
 🟢           val messageEntity = TextAdventureMessageEntity(
+🟢               id = response.messageId,
 🟢               adventureId = adventureId,
+🟢               parentId = null,
 🟢               sender = TextAdventureMessageSender.AI,
 🟢               isEnding = response.isEnding,
 🟢               createdAt = createdAt,
-🟢               messageIndex = messageIndex,
 ⚪           )
 🟢           val sentenceEntities = buildList {
 🟢               response.sentences.forEachIndexed { index, sentence ->
 🟢                   add(
 🟢                       TextAdventureSentenceEntity(
-🟢                           adventureId = adventureId,
-🟢                           messageIndex = messageIndex,
+🟢                           messageId = response.messageId,
 🟢                           paragraphIndex = 0,
-🟢                           language = languages.learningLanguage,
 🟢                           sentenceIndex = index,
+🟢                           language = learningLanguage,
 🟢                           text = sentence,
 ⚪                       )
 ⚪                   )
@@ -186,11 +151,10 @@
 🟢               response.translatedSentences.forEachIndexed { index, sentence ->
 🟢                   add(
 🟢                       TextAdventureSentenceEntity(
-🟢                           adventureId = adventureId,
-🟢                           messageIndex = messageIndex,
+🟢                           messageId = response.messageId,
 🟢                           paragraphIndex = 0,
-🟢                           language = languages.translationLanguage,
 🟢                           sentenceIndex = index,
+🟢                           language = translationLanguage,
 🟢                           text = sentence,
 ⚪                       )
 ⚪                   )
@@ -198,11 +162,6 @@
 🟢           }
 🟢           localDataSource.insertMessageAndSentences(messageEntity, sentenceEntities)
 ⚪       }
-⚪   
-🟢       private data class TextAdventureLanguages(
-🟢           val learningLanguage: String,
-🟢           val translationLanguage: String,
-⚪       )
 ⚪   
 ⚪       companion object : Singleton<TextAdventuresRepository>() {
 🟢           override fun create() = TextAdventuresRepository(
@@ -217,6 +176,11 @@
 🔴       object Error : TextAdventuresListResult
 ⚪   }
 ⚪   
+⚪   sealed interface TextAdventureResult {
+🟢       data class Success(val adventure: TextAdventure) : TextAdventureResult
+🟢       object Error : TextAdventureResult
+⚪   }
+⚪   
 🟢   private fun TextAdventureSummaryView.toSummary() = TextAdventureSummary(
 🟢       id = adventureId,
 🟢       title = title,
@@ -226,22 +190,23 @@
 ⚪   
 ⚪   private fun List<TextAdventureMessageSentenceView>.toDomain(): TextAdventure {
 🟢       val adventure = first()
-🟢       val messageGroups = groupBy { it.messageIndex }
-🟢       val messageUi = messageGroups.keys.sorted().map { messageIndex ->
-🟢           val messageRows = messageGroups.getValue(messageIndex)
-🟢           val paragraphs = messageRows
-🟢               .groupBy { it.paragraphIndex }
-🟢               .toSortedMap()
-🟢               .map { (paragraphIndex, paragraphRows) ->
-🟢                   paragraphRows.toDomain(
-🟢                       messageIndex = messageIndex,
-🟢                       paragraphIndex = paragraphIndex,
-🟢                       learningLanguage = adventure.learningLanguage,
-🟢                       translationLanguage = adventure.translationLanguage,
-🟢                   )
-⚪               }
-🟢           messageRows.first().toMessageEntity().toDomain(paragraphs = paragraphs)
-⚪       }
+⚪       // groupBy preserves insertion order (LinkedHashMap); rows arrive ordered by parent-chain
+⚪       // depth from the recursive CTE query, so entries() is already in conversation order.
+🟢       val messageGroups = groupBy { it.messageId }
+🟢       val messageUi = messageGroups.entries.map { (messageId, messageRows) ->
+🟢               val paragraphs = messageRows
+🟢                   .groupBy { it.paragraphIndex }
+🟢                   .toSortedMap()
+🟢                   .map { (paragraphIndex, paragraphRows) ->
+🟢                       paragraphRows.toDomain(
+🟢                           messageId = messageId,
+🟢                           paragraphIndex = paragraphIndex,
+🟢                           learningLanguage = adventure.learningLanguage,
+🟢                           translationLanguage = adventure.translationLanguage,
+🟢                       )
+⚪                   }
+🟢               messageRows.first().toDomainMessage(paragraphs = paragraphs)
+⚪           }
 🟢       return TextAdventure(
 🟢           id = adventure.adventureId,
 🟢           title = adventure.title,
@@ -252,76 +217,67 @@
 ⚪       )
 ⚪   }
 ⚪   
-⚪   private fun TextAdventureMessageEntity.toDomain(
+⚪   private fun TextAdventureMessageSentenceView.toDomainMessage(
 ⚪       paragraphs: List<TextAdventureParagraph>,
 🟢   ) = TextAdventureMessage(
-🟢       id = "${adventureId}-${messageIndex}",
+🟢       id = messageId,
 🟢       sender = sender,
 🟢       paragraphs = paragraphs,
 🟢       isEnding = isEnding,
 ⚪   )
 ⚪   
 ⚪   private fun List<TextAdventureMessageSentenceView>.toDomain(
-⚪       messageIndex: Int,
+⚪       messageId: String,
 ⚪       paragraphIndex: Int,
 ⚪       learningLanguage: String,
 ⚪       translationLanguage: String,
 ⚪   ): TextAdventureParagraph {
-🟢       val sentencesByLanguage = sortedBy { it.sentenceIndex }
-🟢           .groupBy { it.language }
-🟡       val adventureId = firstOrNull()?.adventureId.orEmpty()
+🟢       val sentencesByLanguage = sortedBy { it.sentenceIndex }.groupBy { it.language }
 🟢       return TextAdventureParagraph(
-🟢           id = "${adventureId}-${messageIndex}-$paragraphIndex",
+🟢           id = "$messageId-$paragraphIndex",
 🟡           sentences = sentencesByLanguage[learningLanguage].orEmpty().map { it.text },
-🟢           translatedSentences = sentencesByLanguage[translationLanguage].orEmpty().map { it.text },
+🟡           translatedSentences = sentencesByLanguage[translationLanguage].orEmpty().map { it.text },
 ⚪       )
 ⚪   }
 ⚪   
-🟢   private fun TextAdventureMessageSentenceView.toMessageEntity() = TextAdventureMessageEntity(
+⚪   private fun TextAdventureMessageRemoteResponse.toMessageEntity(
+⚪       adventureId: String,
+⚪       createdAt: Long,
+🟢   ) = TextAdventureMessageEntity(
+🟢       id = id,
 🟢       adventureId = adventureId,
-🟢       sender = sender,
+🟢       parentId = parentId,
+🟢       sender = if (type == "AI") TextAdventureMessageSender.AI else TextAdventureMessageSender.USER,
 🟢       isEnding = isEnding,
-🟢       createdAt = 0L,
-🟢       messageIndex = messageIndex,
+🟢       createdAt = createdAt,
 ⚪   )
 ⚪   
-⚪   private suspend fun buildHistory(
-⚪       localDataSource: TextAdventuresLocalDataSource,
-⚪       adventureId: String,
+⚪   private fun TextAdventureMessageRemoteResponse.toSentenceEntities(
 ⚪       learningLanguage: String,
-⚪   ): List<TextAdventureHistoryMessage> {
-🟢       val messages = localDataSource.getMessagesSnapshot(adventureId)
-🟢           .sortedBy { it.messageIndex }
-🟢       val sentencesByMessageIndex = localDataSource.getSentencesSnapshot(adventureId)
-🟢           .filter { it.language == learningLanguage }
-🟢           .groupBy { it.messageIndex }
-🟢       return messages.mapNotNull { message ->
-🟡           val text = sentencesByMessageIndex[message.messageIndex]
-🟢               .orEmpty()
-🟢               .groupBy { it.paragraphIndex }
-🟢               .toSortedMap()
-🟢               .mapNotNull { (_, paragraphSentences) ->
-🟢                   val sentenceText = paragraphSentences
-🟢                       .sortedBy { it.sentenceIndex }
-🟢                       .joinToString(" ") { it.text.trim() }
-🟢                       .trim()
-🟡                   sentenceText.takeIf { it.isNotBlank() }
-⚪               }
-🟢               .joinToString("\n\n")
-🟢               .trim()
-🟡           text.takeIf { it.isNotBlank() }?.let {
-🟢               TextAdventureHistoryMessage(
-🟢                   role = when (message.sender) {
-🟢                       TextAdventureMessageSender.USER -> "user"
-🟢                       TextAdventureMessageSender.AI -> "assistant"
-⚪                   },
-🟢                   text = it,
-🟢               )
+⚪       translationLanguage: String,
+🟢   ): List<TextAdventureSentenceEntity> = buildList {
+🟢       paragraphs.forEachIndexed { paragraphIndex, paragraph ->
+🟢           paragraph.sentences.forEachIndexed { sentenceIndex, sentence ->
+🟢               add(
+🟢                   TextAdventureSentenceEntity(
+🟢                       messageId = id,
+🟢                       paragraphIndex = paragraphIndex,
+🟢                       sentenceIndex = sentenceIndex,
+🟢                       language = learningLanguage,
+🟢                       text = sentence,
+⚪                   )
+⚪               )
 🟢           }
-⚪       }
-⚪   }
-⚪   
-⚪   sealed interface TextAdventureResult {
-🟢       data class Success(val adventure: TextAdventure) : TextAdventureResult
-🟢       object Error : TextAdventureResult
-⚪   }
+🟢           paragraph.translatedSentences.forEachIndexed { sentenceIndex, sentence ->
+🟢               add(
+🟢                   TextAdventureSentenceEntity(
+🟢                       messageId = id,
+🟢                       paragraphIndex = paragraphIndex,
+🟢                       sentenceIndex = sentenceIndex,
+🟢                       language = translationLanguage,
+🟢                       text = sentence,
+⚪                   )
+⚪               )
+🟢           }
+🟢       }
+🟢   }

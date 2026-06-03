@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventures.sources.remote
 
 import input.comprehensible.BuildConfig
+import input.comprehensible.data.account.SessionProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -18,6 +19,7 @@ import kotlinx.serialization.json.Json
 private const val TIMEOUT_MILLIS = 60_000L
 
 class DefaultTextAdventureRemoteDataSource(
+    private val sessionProvider: SessionProvider = SessionProvider(),
     private val httpClient: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -31,56 +33,65 @@ class DefaultTextAdventureRemoteDataSource(
     override suspend fun startAdventure(
         learningLanguage: String,
         translationLanguage: String,
-        token: String,
-    ): TextAdventureRemoteResponse = httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/adventures") {
-        header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
-        header("Authorization", "Bearer $token")
-        contentType(ContentType.Application.Json)
-        setBody(
-            StartTextAdventureV1Request(
-                learningLanguage = learningLanguage,
-                translationLanguage = translationLanguage,
+    ): TextAdventureRemoteResponse {
+        val token = requireToken()
+        return httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/adventures") {
+            header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+            header("Authorization", "Bearer $token")
+            contentType(ContentType.Application.Json)
+            setBody(
+                StartTextAdventureV1Request(
+                    learningLanguage = learningLanguage,
+                    translationLanguage = translationLanguage,
+                )
             )
-        )
-    }.body()
+        }.body()
+    }
 
     override suspend fun postUserMessage(
         adventureId: String,
         parentId: String,
         text: String,
-        token: String,
-    ): TextAdventureMessageRemoteResponse = httpClient.post(
-        "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
-    ) {
-        header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
-        header("Authorization", "Bearer $token")
-        contentType(ContentType.Application.Json)
-        setBody(
-            PostTextAdventureMessageV1Request(
-                type = MESSAGE_TYPE_USER,
-                parentId = parentId,
-                text = text,
+    ): TextAdventureMessageRemoteResponse {
+        val token = requireToken()
+        return httpClient.post(
+            "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
+        ) {
+            header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+            header("Authorization", "Bearer $token")
+            contentType(ContentType.Application.Json)
+            setBody(
+                PostTextAdventureMessageV1Request(
+                    type = MESSAGE_TYPE_USER,
+                    parentId = parentId,
+                    text = text,
+                )
             )
-        )
-    }.body()
+        }.body()
+    }
 
     override suspend fun postAiMessage(
         adventureId: String,
         parentId: String,
-        token: String,
-    ): TextAdventureMessageRemoteResponse = httpClient.post(
-        "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
-    ) {
-        header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
-        header("Authorization", "Bearer $token")
-        contentType(ContentType.Application.Json)
-        setBody(
-            PostTextAdventureMessageV1Request(
-                type = MESSAGE_TYPE_AI,
-                parentId = parentId,
+    ): TextAdventureMessageRemoteResponse {
+        val token = requireToken()
+        return httpClient.post(
+            "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
+        ) {
+            header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
+            header("Authorization", "Bearer $token")
+            contentType(ContentType.Application.Json)
+            setBody(
+                PostTextAdventureMessageV1Request(
+                    type = MESSAGE_TYPE_AI,
+                    parentId = parentId,
+                )
             )
-        )
-    }.body()
+        }.body()
+    }
+
+    private fun requireToken(): String =
+        sessionProvider.token ?: error("User not authenticated")
 
     private companion object {
         const val MESSAGE_TYPE_USER = "user"
