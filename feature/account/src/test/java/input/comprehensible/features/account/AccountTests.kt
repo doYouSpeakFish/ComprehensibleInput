@@ -157,6 +157,54 @@ class AccountTests(private val themeMode: ThemeMode) {
     }
 
     @Test
+    fun `sign in error dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN a generic sign in error has occurred
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+        }
+        fakeAccountRemoteDataSource.enqueueSignInResult(Result.failure(Exception("Network error")))
+        onAccount { tapSignIn() }
+        awaitIdle()
+        onAccount { errorDialog.assertIsShown() }
+
+        // WHEN the error dialog is dismissed
+        onAccount { errorDialog.dismiss() }
+        awaitIdle()
+
+        // THEN the sign in form is restored and the submit button is enabled
+        onAccount {
+            assertSignInSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `sign in invalid credentials dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN an invalid credentials error has occurred
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("wrongpassword12345")
+        }
+        fakeAccountRemoteDataSource.enqueueSignInResult(Result.failure(InvalidCredentialsException()))
+        onAccount { tapSignIn() }
+        awaitIdle()
+        onAccount { assertInvalidCredentialsDialogIsShown() }
+
+        // WHEN the invalid credentials dialog is dismissed
+        onAccount { dismissInvalidCredentialsDialog() }
+        awaitIdle()
+
+        // THEN the sign in form is restored and the submit button is enabled
+        onAccount {
+            assertSignInSubmitIsEnabled()
+        }
+    }
+
+    @Test
     fun `sign in shows invalid credentials dialog on 401 error`() = testRule.runAccountFeatureTest {
         // GIVEN the account screen is open with fields filled
         goToAccount()

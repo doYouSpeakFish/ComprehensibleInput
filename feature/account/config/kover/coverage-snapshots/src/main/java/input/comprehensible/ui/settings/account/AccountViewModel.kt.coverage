@@ -80,11 +80,11 @@
 ⚪       }
 ⚪   
 ⚪       fun onErrorDismissed() {
-🔴           _uiState.update { it.copy(showError = false) }
+🟢           _uiState.update { it.copy(showError = false) }
 ⚪       }
 ⚪   
 ⚪       fun onInvalidCredentialsErrorDismissed() {
-🔴           _uiState.update { it.copy(showInvalidCredentialsError = false) }
+🟢           _uiState.update { it.copy(showInvalidCredentialsError = false) }
 ⚪       }
 ⚪   }
 ⚪   
