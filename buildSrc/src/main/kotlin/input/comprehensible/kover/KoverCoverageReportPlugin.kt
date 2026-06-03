@@ -17,6 +17,7 @@ class KoverCoverageReportPlugin : Plugin<Project> {
             reportFiles.from(extension.reportFile)
             outputDir.set(extension.outputDir)
             rootDir.set(project.layout.projectDirectory)
+            rootDirPath.set(project.layout.projectDirectory.asFile.absolutePath)
             sourceRoots.set(extension.sourceRoots)
             dependsOn(project.tasks.named("koverXmlReport"))
         }
