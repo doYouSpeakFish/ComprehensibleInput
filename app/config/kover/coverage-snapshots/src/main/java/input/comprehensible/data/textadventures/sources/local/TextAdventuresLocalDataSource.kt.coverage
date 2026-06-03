@@ -70,13 +70,13 @@
 ⚪   
 ⚪       @Query(
 ⚪           """
-⚪               SELECT id FROM TextAdventureMessageEntity
-⚪               WHERE adventureId = :adventureId
-⚪               AND id NOT IN (
-⚪                   SELECT parentId FROM TextAdventureMessageEntity
-⚪                   WHERE adventureId = :adventureId AND parentId IS NOT NULL
+⚪               SELECT m.id FROM TextAdventureMessageEntity m
+⚪               WHERE m.adventureId = :adventureId
+⚪               AND NOT EXISTS (
+⚪                   SELECT 1 FROM TextAdventureMessageEntity child
+⚪                   WHERE child.adventureId = :adventureId AND child.parentId = m.id
 ⚪               )
-⚪               ORDER BY createdAt DESC
+⚪               ORDER BY m.createdAt DESC
 ⚪               LIMIT 1
 ⚪           """
 ⚪       )
