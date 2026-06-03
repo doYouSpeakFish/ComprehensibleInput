@@ -24,8 +24,23 @@ class GenericErrorDialogRobot(private val composeTestRule: ComposeTestRule) {
     }
 }
 
+class InvalidCredentialsDialogRobot(private val composeTestRule: ComposeTestRule) {
+    fun assertIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_invalid_credentials_dialog")
+            .assertIsDisplayed()
+    }
+
+    fun dismiss() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
 class AccountRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule)
 
     fun assertAccountTitleIsVisible() {
         composeTestRule
@@ -82,18 +97,6 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
     fun tapSignUpFromSignIn() {
         composeTestRule
             .onNodeWithTag("account_sign_up_button")
-            .performClick()
-    }
-
-    fun assertInvalidCredentialsDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag("account_invalid_credentials_dialog")
-            .assertIsDisplayed()
-    }
-
-    fun dismissInvalidCredentialsDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
             .performClick()
     }
 

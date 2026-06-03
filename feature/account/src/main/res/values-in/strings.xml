@@ -17,4 +17,13 @@
     <string name="account_verify_email_message">Kami telah mengirimkan kode verifikasi 6 digit ke %1$s</string>
     <string name="account_verify_email_code_label">Kode verifikasi</string>
     <string name="account_verify_email_submit_button">Verifikasi</string>
+    <string name="account_delete_account_button">Hapus akun</string>
+    <string name="delete_account_screen_title">Hapus akun</string>
+    <string name="delete_account_explainer">Menghapus akun Anda akan menghapus semua data Anda secara permanen, termasuk kemajuan dan pengaturan Anda.</string>
+    <string name="delete_account_warning">Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="delete_account_password_label">Kata sandi</string>
+    <string name="delete_account_submit_button">Hapus akun</string>
+    <string name="delete_account_invalid_credentials_dialog_title">Kata sandi salah</string>
+    <string name="delete_account_invalid_credentials_dialog_message">Kata sandi yang Anda masukkan salah. Silakan coba lagi.</string>
+    <string name="delete_account_invalid_credentials_dialog_button">Oke</string>
 </resources>

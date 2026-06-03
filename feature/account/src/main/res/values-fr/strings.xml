@@ -17,4 +17,13 @@
     <string name="account_verify_email_message">Nous avons envoyé un code de vérification à 6 chiffres à %1$s</string>
     <string name="account_verify_email_code_label">Code de vérification</string>
     <string name="account_verify_email_submit_button">Vérifier</string>
+    <string name="account_delete_account_button">Supprimer le compte</string>
+    <string name="delete_account_screen_title">Supprimer le compte</string>
+    <string name="delete_account_explainer">La suppression de votre compte supprimera définitivement toutes vos données, y compris votre progression et vos paramètres.</string>
+    <string name="delete_account_warning">Cette action est irréversible.</string>
+    <string name="delete_account_password_label">Mot de passe</string>
+    <string name="delete_account_submit_button">Supprimer le compte</string>
+    <string name="delete_account_invalid_credentials_dialog_title">Mot de passe incorrect</string>
+    <string name="delete_account_invalid_credentials_dialog_message">Le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.</string>
+    <string name="delete_account_invalid_credentials_dialog_button">OK</string>
 </resources>
