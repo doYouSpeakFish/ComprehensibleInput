@@ -69,7 +69,7 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         onAccount {
             // THEN the sign in button is disabled
-            assertSignInSubmitIsDisabled()
+            assertSignInSubmitEnabled(isEnabled = false)
         }
     }
 
@@ -84,7 +84,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
 
             // THEN the sign in button is disabled
-            assertSignInSubmitIsDisabled()
+            assertSignInSubmitEnabled(isEnabled = false)
         }
     }
 
@@ -99,7 +99,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInPassword("password12345")
 
             // THEN the sign in button is disabled
-            assertSignInSubmitIsDisabled()
+            assertSignInSubmitEnabled(isEnabled = false)
         }
     }
 
@@ -115,7 +115,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInPassword("password12345")
 
             // THEN the sign in button is enabled
-            assertSignInSubmitIsEnabled()
+            assertSignInSubmitEnabled(isEnabled = true)
         }
     }
 
@@ -138,7 +138,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         // THEN the loading indicator is shown, sign in button is disabled, and sign up button is disabled
         onAccount {
             assertSignInLoadingIndicatorIsShown()
-            assertSignInSubmitIsDisabled()
+            assertSignInSubmitEnabled(isEnabled = false)
             assertSignUpFromSignInEnabled(isEnabled = false)
         }
     }
@@ -184,7 +184,7 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         // THEN the sign in form is restored and the submit button is enabled
         onAccount {
-            assertSignInSubmitIsEnabled()
+            assertSignInSubmitEnabled(isEnabled = true)
         }
     }
 
@@ -208,7 +208,7 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         // THEN the sign in form is restored and the submit button is enabled
         onAccount {
-            assertSignInSubmitIsEnabled()
+            assertSignInSubmitEnabled(isEnabled = true)
         }
     }
 

@@ -47,16 +47,12 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .performTextInput(password)
     }
 
-    fun assertSignInSubmitIsEnabled() {
-        composeTestRule
-            .onNodeWithTag("account_sign_in_submit_button")
-            .assertIsEnabled()
-    }
-
-    fun assertSignInSubmitIsDisabled() {
-        composeTestRule
-            .onNodeWithTag("account_sign_in_submit_button")
-            .assertIsNotEnabled()
+    fun assertSignInSubmitEnabled(isEnabled: Boolean) {
+        if (isEnabled) {
+            composeTestRule.onNodeWithTag("account_sign_in_submit_button").assertIsEnabled()
+        } else {
+            composeTestRule.onNodeWithTag("account_sign_in_submit_button").assertIsNotEnabled()
+        }
     }
 
     fun tapSignIn() {
