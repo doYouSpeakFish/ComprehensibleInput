@@ -98,27 +98,25 @@ class TextAdventuresRepository(
             parentId = leafMessageId,
             text = userMessage,
         )
-        localDataSource.insertMessageAndSentences(
-            userMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = clock()),
-            userMessageResponse.toSentenceEntities(
-                learningLanguage = adventure.learningLanguage,
-                translationLanguage = adventure.translationLanguage,
-            ),
-        )
-
         val aiMessageResponse = remoteDataSource.postAiMessage(
             adventureId = adventureId,
             parentId = userMessageResponse.id,
         )
         val now = clock()
-        localDataSource.insertMessageAndSentences(
-            aiMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = now),
-            aiMessageResponse.toSentenceEntities(
+        localDataSource.insertResponsePair(
+            userMessage = userMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = now),
+            userSentences = userMessageResponse.toSentenceEntities(
                 learningLanguage = adventure.learningLanguage,
                 translationLanguage = adventure.translationLanguage,
             ),
+            aiMessage = aiMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = now),
+            aiSentences = aiMessageResponse.toSentenceEntities(
+                learningLanguage = adventure.learningLanguage,
+                translationLanguage = adventure.translationLanguage,
+            ),
+            adventureId = adventureId,
+            updatedAt = now,
         )
-        localDataSource.updateAdventureUpdatedAt(id = adventureId, updatedAt = now)
     }
 
     private suspend fun insertStartResponse(
@@ -196,7 +194,6 @@ private fun List<TextAdventureMessageSentenceView>.toDomain(): TextAdventure {
     val messageUi = messageGroups.entries.map { (messageId, messageRows) ->
             val paragraphs = messageRows
                 .groupBy { it.paragraphIndex }
-                .toSortedMap()
                 .map { (paragraphIndex, paragraphRows) ->
                     paragraphRows.toDomain(
                         messageId = messageId,
@@ -232,7 +229,7 @@ private fun List<TextAdventureMessageSentenceView>.toDomain(
     learningLanguage: String,
     translationLanguage: String,
 ): TextAdventureParagraph {
-    val sentencesByLanguage = sortedBy { it.sentenceIndex }.groupBy { it.language }
+    val sentencesByLanguage = groupBy { it.language }
     return TextAdventureParagraph(
         id = "$messageId-$paragraphIndex",
         sentences = sentencesByLanguage[learningLanguage].orEmpty().map { it.text },

@@ -5,7 +5,6 @@ import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.Session
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
 class AccountRepository(
@@ -31,13 +30,13 @@ class AccountRepository(
         }.onFailure { Timber.e(it, "Failed to sign in") }
 
     suspend fun signOut(): Result<Unit> = runCatching {
+        val token = sessionProvider.token
+        localDataSource.clearSession()
         sessionProvider.token = null
-        val token = localDataSource.session.first()?.token
         if (token != null) {
             runCatching { remoteDataSource.signOut(token) }
                 .onFailure { Timber.e(it, "Failed to revoke server session") }
         }
-        localDataSource.clearSession()
     }.onFailure { Timber.e(it, "Failed to sign out") }
 
     companion object : Singleton<AccountRepository>() {

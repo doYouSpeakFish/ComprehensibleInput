@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.ktin.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,20 @@ interface TextAdventuresLocalDataSource {
         message: TextAdventureMessageEntity,
         sentences: List<TextAdventureSentenceEntity>,
     )
+
+    @Transaction
+    suspend fun insertResponsePair(
+        userMessage: TextAdventureMessageEntity,
+        userSentences: List<TextAdventureSentenceEntity>,
+        aiMessage: TextAdventureMessageEntity,
+        aiSentences: List<TextAdventureSentenceEntity>,
+        adventureId: String,
+        updatedAt: Long,
+    ) {
+        insertMessageAndSentences(userMessage, userSentences)
+        insertMessageAndSentences(aiMessage, aiSentences)
+        updateAdventureUpdatedAt(id = adventureId, updatedAt = updatedAt)
+    }
 
     @Query(
         """
@@ -63,6 +78,7 @@ interface TextAdventuresLocalDataSource {
                 SELECT parentId FROM TextAdventureMessageEntity
                 WHERE adventureId = :adventureId AND parentId IS NOT NULL
             )
+            ORDER BY createdAt DESC
             LIMIT 1
         """
     )

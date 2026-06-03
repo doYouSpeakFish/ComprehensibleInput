@@ -64,12 +64,14 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
             type = "AI",
             sender = "AI",
             isEnding = response.isEnding,
-            paragraphs = listOf(
-                TextAdventureParagraphRemoteResponse(
-                    sentences = response.sentences,
-                    translatedSentences = response.translatedSentences,
+            paragraphs = response.paragraphs.ifEmpty {
+                listOf(
+                    TextAdventureParagraphRemoteResponse(
+                        sentences = response.sentences,
+                        translatedSentences = response.translatedSentences,
+                    )
                 )
-            ),
+            },
         )
     }
 }

@@ -1,0 +1,3 @@
+package input.comprehensible.data
+
+class NotAuthenticatedException : Exception("User not authenticated")

@@ -13,6 +13,7 @@ data class TextAdventureRemoteResponse(
     val sentences: List<String>,
     val translatedSentences: List<String>,
     val isEnding: Boolean,
+    val paragraphs: List<TextAdventureParagraphRemoteResponse> = emptyList(),
 )
 
 /**

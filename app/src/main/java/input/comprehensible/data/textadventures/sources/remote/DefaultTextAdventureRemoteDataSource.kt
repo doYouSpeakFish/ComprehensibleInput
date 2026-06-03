@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventures.sources.remote
 
 import input.comprehensible.BuildConfig
+import input.comprehensible.data.NotAuthenticatedException
 import input.comprehensible.data.account.SessionProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -91,7 +92,7 @@ class DefaultTextAdventureRemoteDataSource(
     }
 
     private fun requireToken(): String =
-        sessionProvider.token ?: error("User not authenticated")
+        sessionProvider.token ?: throw NotAuthenticatedException()
 
     private companion object {
         const val MESSAGE_TYPE_USER = "user"
