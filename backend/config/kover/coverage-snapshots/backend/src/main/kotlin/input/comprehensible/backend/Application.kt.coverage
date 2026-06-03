@@ -162,19 +162,17 @@
 ⚪   }
 ⚪   
 ⚪   private fun emailFromQueryParamOrIp(call: io.ktor.server.application.ApplicationCall): String =
-🟡       call.request.queryParameters["email"]
+🟢       call.request.queryParameters["email"]
 🟢           ?: call.request.headers["X-Forwarded-For"]
 🟢           ?: call.request.local.remoteHost
 ⚪   
 ⚪   private suspend fun emailFromBodyOrIp(call: io.ktor.server.application.ApplicationCall): String =
-🟡       runCatching {
+🟢       runCatching {
 🟡           Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
-🟡       }.getOrNull() ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
+🟢       }.getOrNull() ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
 ⚪   
 ⚪   private fun tokenOrIp(call: io.ktor.server.application.ApplicationCall): String =
-🟡       call.request.headers["Authorization"]
-🔴           ?: call.request.headers["X-Forwarded-For"]
-🟢           ?: call.request.local.remoteHost
+🟡       call.request.headers["Authorization"] ?: call.request.local.remoteHost
 ⚪   
 ⚪   fun Application.configureRouting(
 ⚪       textAdventureService: TextAdventureGenerationService,

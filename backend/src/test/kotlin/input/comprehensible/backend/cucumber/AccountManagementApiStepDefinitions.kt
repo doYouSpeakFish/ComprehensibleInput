@@ -223,6 +223,70 @@ class AccountManagementApiStepDefinitions {
             }
         },
     )
+    @When("I attempt to delete me a second time with malformed body")
+    fun deleteMeSecondAttemptMalformedBody() = runTwoCalls(
+        first = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("not-json")
+            }
+        },
+        second = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("not-json")
+            }
+        },
+    )
+    @When("I attempt to delete me a second time with malformed body and forwarded IP")
+    fun deleteMeSecondAttemptMalformedBodyWithForwardedIp() = runTwoCalls(
+        first = {
+            delete("/v1/me") {
+                header("X-Forwarded-For", "192.168.1.1")
+                contentType(ContentType.Application.Json)
+                setBody("not-json")
+            }
+        },
+        second = {
+            delete("/v1/me") {
+                header("X-Forwarded-For", "192.168.1.1")
+                contentType(ContentType.Application.Json)
+                setBody("not-json")
+            }
+        },
+    )
+    @When("I attempt to verify email a second time with email in query parameter")
+    fun verifyEmailSecondAttemptWithQueryParam() = runTwoCalls(
+        first = {
+            post("/v1/email-verifications?email=$currentEmail") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+            }
+        },
+        second = {
+            post("/v1/email-verifications?email=$currentEmail") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+            }
+        },
+    )
+    @When("I attempt to verify email a second time with forwarded IP")
+    fun verifyEmailSecondAttemptWithForwardedIp() = runTwoCalls(
+        first = {
+            post("/v1/email-verifications") {
+                header("X-Forwarded-For", "192.168.1.1")
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+            }
+        },
+        second = {
+            post("/v1/email-verifications") {
+                header("X-Forwarded-For", "192.168.1.1")
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"code\":\"$nextVerificationCode\"}")
+            }
+        },
+    )
 
     @When("I sign out current session")
     fun signOutCurrent() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }

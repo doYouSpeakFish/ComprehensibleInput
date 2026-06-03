@@ -161,6 +161,26 @@ Feature: Account management API
     When I attempt to delete me a second time
     Then account API status should be 429
 
+  Scenario: Rate limiting account deletion by IP when JSON body is malformed
+    When I attempt to delete me a second time with malformed body
+    Then account API status should be 429
+
+  Scenario: Rate limiting account deletion by X-Forwarded-For when JSON body is malformed
+    When I attempt to delete me a second time with malformed body and forwarded IP
+    Then account API status should be 429
+
+  Scenario: Rate limiting email verification by email in query parameter
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    When I attempt to verify email a second time with email in query parameter
+    Then account API status should be 429
+
+  Scenario: Rate limiting email verification by X-Forwarded-For when email is not in query parameter
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    When I attempt to verify email a second time with forwarded IP
+    Then account API status should be 429
+
   Scenario: Signing out current session
     Given existing user "alice@example.com" with password "SecurePass123!"
     And the next verification code will be "123456"

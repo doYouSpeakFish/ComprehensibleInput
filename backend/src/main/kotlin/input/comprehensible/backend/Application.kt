@@ -172,9 +172,7 @@ private suspend fun emailFromBodyOrIp(call: io.ktor.server.application.Applicati
     }.getOrNull() ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
 
 private fun tokenOrIp(call: io.ktor.server.application.ApplicationCall): String =
-    call.request.headers["Authorization"]
-        ?: call.request.headers["X-Forwarded-For"]
-        ?: call.request.local.remoteHost
+    call.request.headers["Authorization"] ?: call.request.local.remoteHost
 
 fun Application.configureRouting(
     textAdventureService: TextAdventureGenerationService,
