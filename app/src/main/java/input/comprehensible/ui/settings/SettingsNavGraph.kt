@@ -26,10 +26,7 @@ internal fun NavGraphBuilder.settingsNavGraph(navController: NavController) {
             onGoToAccount = { navController.navigate(AccountRoute) },
             onGoToSoftwareLicences = { navController.navigate(SoftwareLicencesRoute) },
         )
-        accountNavGraph(
-            navController = navController,
-            onNavigateUp = navController::navigateUp,
-        )
+        accountNavGraph(navController = navController)
         softwareLicences(
             onNavigateUp = navController::navigateUp,
         )

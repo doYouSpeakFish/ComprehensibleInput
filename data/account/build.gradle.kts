@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kover)
+    id("input.comprehensible.kover-coverage-report")
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
 }
 

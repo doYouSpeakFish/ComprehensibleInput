@@ -3,9 +3,9 @@ package input.comprehensible.ui.settings.account
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 
-fun NavGraphBuilder.accountNavGraph(navController: NavController, onNavigateUp: () -> Unit) {
+fun NavGraphBuilder.accountNavGraph(navController: NavController) {
     accountScreen(
-        onNavigateUp = onNavigateUp,
+        onNavigateUp = navController::navigateUp,
         onGoToSignUp = { navController.navigate(SignUpRoute) },
     )
     signUpScreen(

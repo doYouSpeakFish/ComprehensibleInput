@@ -71,10 +71,7 @@ class AccountFeatureTestScope(
                     navController = _navController,
                     startDestination = AccountRoute,
                 ) {
-                    accountNavGraph(
-                        navController = _navController,
-                        onNavigateUp = {},
-                    )
+                    accountNavGraph(navController = _navController)
                     composable<TestDisposeRoute> {}
                 }
             }

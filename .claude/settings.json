@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "agent",
-            "prompt": "run `./gradlew detekt`, `./gradlew lint`, and `./gradlew :app:testProductionDebugUnitTest`, reporting back any problems",
+            "prompt": "run `./gradlew detekt`, `./gradlew lint`, and `./gradlew test`, reporting back any problems",
             "timeout": 600
           },
           {
