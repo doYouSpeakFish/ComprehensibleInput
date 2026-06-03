@@ -1,6 +1,7 @@
 package input.comprehensible.data.account.sources.remote
 
 import input.comprehensible.data.account.InvalidCredentialsException
+import input.comprehensible.data.account.InvalidResetCodeException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -98,6 +99,9 @@ class DefaultAccountRemoteDataSource(
             header("X-Api-Key", apiKey)
             contentType(ContentType.Application.Json)
             setBody(PasswordResetRequest(email = email, password = password, code = code))
+        }
+        if (response.status == HttpStatusCode.Unauthorized) {
+            throw InvalidResetCodeException()
         }
         if (!response.status.isSuccess()) {
             error("Reset password failed: ${response.status}")

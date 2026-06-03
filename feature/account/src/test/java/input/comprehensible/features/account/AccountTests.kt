@@ -7,6 +7,7 @@ import input.comprehensible.AccountFeatureTestScope
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.data.account.InvalidCredentialsException
+import input.comprehensible.data.account.InvalidResetCodeException
 import input.comprehensible.delayAccountRequests
 import input.comprehensible.enqueueCreateAccountResult
 import input.comprehensible.enqueueSignInResult
@@ -909,6 +910,53 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         // WHEN the error dialog is dismissed
         onPasswordReset { errorDialog.dismiss() }
+        awaitIdle()
+
+        // THEN the password reset form is restored and the submit button is enabled
+        onPasswordReset {
+            assertSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `password reset shows invalid code dialog when reset code is invalid or expired`() = testRule.runAccountFeatureTest {
+        // GIVEN the password reset screen is shown with all fields filled
+        goToPasswordReset("user@example.com")
+        awaitIdle()
+        onPasswordReset {
+            enterResetCode("123456")
+            enterNewPassword("newpassword12345")
+            enterConfirmNewPassword("newpassword12345")
+        }
+        enqueueResetPasswordResult(Result.failure<Unit>(InvalidResetCodeException()))
+
+        // WHEN the reset request fails with an invalid code
+        onPasswordReset { tapSubmit() }
+        awaitIdle()
+
+        // THEN the invalid code dialog is shown instead of the generic error dialog
+        onPasswordReset {
+            invalidCodeErrorDialog.assertIsShown()
+        }
+    }
+
+    @Test
+    fun `password reset invalid code dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN an invalid code error has occurred
+        goToPasswordReset("user@example.com")
+        awaitIdle()
+        onPasswordReset {
+            enterResetCode("123456")
+            enterNewPassword("newpassword12345")
+            enterConfirmNewPassword("newpassword12345")
+        }
+        enqueueResetPasswordResult(Result.failure<Unit>(InvalidResetCodeException()))
+        onPasswordReset { tapSubmit() }
+        awaitIdle()
+        onPasswordReset { invalidCodeErrorDialog.assertIsShown() }
+
+        // WHEN the invalid code dialog is dismissed
+        onPasswordReset { invalidCodeErrorDialog.dismiss() }
         awaitIdle()
 
         // THEN the password reset form is restored and the submit button is enabled

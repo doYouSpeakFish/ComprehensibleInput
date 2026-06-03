@@ -1,5 +1,6 @@
 package input.comprehensible.ui.settings.account
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.account.usecases.RequestPasswordResetCodeUseCase
@@ -43,6 +44,5 @@ class ForgotPasswordViewModel(
 }
 
 internal fun ForgotPasswordUiState.isSubmitEnabled(): Boolean {
-    val trimmedEmail = email.trim()
-    return trimmedEmail.isNotBlank() && trimmedEmail.contains('@')
+    return Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()
 }

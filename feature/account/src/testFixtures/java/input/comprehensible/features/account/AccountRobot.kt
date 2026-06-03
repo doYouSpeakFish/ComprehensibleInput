@@ -203,8 +203,23 @@ class ForgotPasswordRobot(private val composeTestRule: ComposeTestRule) {
     }
 }
 
+class InvalidResetCodeDialogRobot(private val composeTestRule: ComposeTestRule) {
+    fun assertIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_invalid_reset_code_dialog")
+            .assertIsDisplayed()
+    }
+
+    fun dismiss() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
 class PasswordResetRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val invalidCodeErrorDialog = InvalidResetCodeDialogRobot(composeTestRule)
 
     fun assertResetCodeMessageIsShown(email: String) {
         composeTestRule

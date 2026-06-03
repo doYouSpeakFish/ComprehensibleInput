@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import input.comprehensible.account.usecases.ResetPasswordUseCase
+import input.comprehensible.data.account.InvalidResetCodeException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal const val PASSWORD_RESET_CODE_LENGTH = 6
+private const val MINIMUM_PASSWORD_LENGTH = 12
 
 class PasswordResetViewModel(
     savedStateHandle: SavedStateHandle,
@@ -42,14 +44,22 @@ class PasswordResetViewModel(
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false, passwordReset = true) }
                 }
-                .onFailure {
-                    _uiState.update { it.copy(isLoading = false, showError = true) }
+                .onFailure { throwable ->
+                    if (throwable is InvalidResetCodeException) {
+                        _uiState.update { it.copy(isLoading = false, showInvalidCodeError = true) }
+                    } else {
+                        _uiState.update { it.copy(isLoading = false, showError = true) }
+                    }
                 }
         }
     }
 
     fun onErrorDismissed() {
         _uiState.update { it.copy(showError = false) }
+    }
+
+    fun onInvalidCodeErrorDismissed() {
+        _uiState.update { it.copy(showInvalidCodeError = false) }
     }
 
     fun onNavigationConsumed() {
