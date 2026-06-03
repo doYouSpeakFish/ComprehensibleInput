@@ -122,6 +122,7 @@ jobs:
           ./gradlew :app:assembleRelease :app:appDistributionUploadRelease \
             -PprNumber="$PR_NUMBER" \
             -PprBackendBaseUrl="http://${{ secrets.BACKEND_STAGING_IP_ADDRESS }}:${BACKEND_PORT}" \
+            -PenableAllFeatureFlags=true \
             -PfirebaseReleaseNotes="$RELEASE_NOTES"
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
