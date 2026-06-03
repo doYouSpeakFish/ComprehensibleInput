@@ -26,15 +26,7 @@
 ⚪       override fun sample(): List<String> {
 🟡           if (words.isEmpty()) return emptyList()
 🟢           val count = sampleSize.coerceIn(0, words.size)
-🟢           val chosenIndices = HashSet<Int>(count * 2)
-🟢           val sampled = ArrayList<String>(count)
-🟢           while (sampled.size < count) {
-🟢               val index = random.nextInt(words.size)
-🟢               if (chosenIndices.add(index)) {
-🟢                   sampled.add(words[index])
-⚪               }
-⚪           }
-🟢           return sampled
+🟢           return words.shuffled(random).take(count)
 ⚪       }
 ⚪   
 ⚪       companion object {
