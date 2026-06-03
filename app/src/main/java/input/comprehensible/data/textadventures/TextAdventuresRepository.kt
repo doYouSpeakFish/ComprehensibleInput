@@ -93,6 +93,7 @@ class TextAdventuresRepository(
             return
         }
 
+        val now = clock()
         val userMessageResponse = remoteDataSource.postUserMessage(
             adventureId = adventureId,
             parentId = leafMessageId,
@@ -102,7 +103,6 @@ class TextAdventuresRepository(
             adventureId = adventureId,
             parentId = userMessageResponse.id,
         )
-        val now = clock()
         localDataSource.insertResponsePair(
             userMessage = userMessageResponse.toMessageEntity(adventureId = adventureId, createdAt = now),
             userSentences = userMessageResponse.toSentenceEntities(
