@@ -157,7 +157,22 @@ roborazzi {
     }
 }
 
+koverCoverageReport {
+    sourceProjects(
+        project(":common"),
+        project(":data:account"),
+        project(":feature:account"),
+        project(":textadventuremodels"),
+    )
+}
+
 kover {
+    dependencies {
+        kover(project(":common"))
+        kover(project(":data:account"))
+        kover(project(":feature:account"))
+        kover(project(":textadventuremodels"))
+    }
     reports {
         filters {
             excludes {
@@ -165,7 +180,6 @@ kover {
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
                     "input.comprehensible.data.textadventures.sources.remote",
-                    "input.comprehensible.data.account.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -193,6 +207,9 @@ kover {
 }
 
 dependencies {
+    implementation(project(":common"))
+    implementation(project(":feature:account"))
+    implementation(project(":data:account"))
     implementation(project(":textadventuremodels"))
 
     implementation(platform(libs.androidx.compose.bom))
@@ -209,20 +226,22 @@ dependencies {
     implementation(libs.coroutines)
     implementation(libs.timber)
     implementation(libs.serialization.json)
+    implementation(libs.aboutLibraries.core)
+    implementation(libs.aboutLibraries.compose)
+    implementation(libs.androidx.adaptive.android)
+    implementation(libs.bundles.androidx.room)
+    implementation(libs.ktin.core)
+    implementation(libs.androidx.dataStore)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.aboutLibraries.core)
-    implementation(libs.aboutLibraries.compose)
-    implementation(libs.androidx.adaptive.android)
-    implementation(libs.androidx.dataStore)
-    implementation(libs.bundles.androidx.room)
-    implementation(libs.ktin.core)
 
     ksp(libs.androidx.room.compiler)
 
+    testImplementation(project(":commontest"))
+    testImplementation(testFixtures(project(":feature:account")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

@@ -39,6 +39,16 @@ tasks.test {
     useJUnitPlatform()
 }
 
+koverCoverageReport {
+    sourceProjects(project(":textadventuremodels"))
+}
+
+kover {
+    dependencies {
+        kover(project(":textadventuremodels"))
+    }
+}
+
 dependencies {
     implementation(project(":textadventuremodels"))
     implementation(libs.ktor.server.core)

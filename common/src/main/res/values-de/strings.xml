@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up">Nach oben navigieren</string>
+    <string name="generic_error_dialog_title">Etwas ist schiefgelaufen</string>
+    <string name="generic_error_dialog_message">Bitte versuchen Sie es später noch einmal.</string>
+    <string name="generic_error_dialog_button">OK</string>
+    <string name="generic_error_dialog_content_description">Illustration eines traurigen Roboters</string>
+</resources>

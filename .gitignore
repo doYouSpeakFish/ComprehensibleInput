@@ -21,3 +21,4 @@ local.properties
 /firebase-app-distribution-key.json
 /buildSrc/.kotlin/
 .claude/worktrees/
+*.log

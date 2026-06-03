@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_screen_title">Cuenta</string>
+    <string name="account_sign_in_email_label">Correo electrónico</string>
+    <string name="account_sign_in_password_label">Contraseña</string>
+    <string name="account_sign_in_submit_button">Iniciar sesión</string>
+    <string name="account_sign_up_button">Registrarse</string>
+    <string name="account_sign_out_button">Cerrar sesión</string>
+    <string name="account_signed_in_label">Conectado como</string>
+    <string name="account_invalid_credentials_dialog_title">Correo electrónico o contraseña incorrectos</string>
+    <string name="account_invalid_credentials_dialog_message">El correo electrónico o la contraseña que ingresaste son incorrectos. Por favor, inténtalo de nuevo.</string>
+    <string name="account_invalid_credentials_dialog_button">Aceptar</string>
+    <string name="account_sign_up_email_label">Correo electrónico</string>
+    <string name="account_sign_up_password_label">Contraseña</string>
+    <string name="account_sign_up_confirm_password_label">Confirmar contraseña</string>
+    <string name="account_sign_up_submit_button">Registrarse</string>
+    <string name="account_verify_email_message">Hemos enviado un código de verificación de 6 dígitos a %1$s</string>
+    <string name="account_verify_email_code_label">Código de verificación</string>
+    <string name="account_verify_email_submit_button">Verificar</string>
+</resources>

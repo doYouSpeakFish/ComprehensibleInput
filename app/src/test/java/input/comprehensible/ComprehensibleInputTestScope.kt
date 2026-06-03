@@ -17,7 +17,6 @@ import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
-import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
@@ -28,9 +27,6 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemo
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
-import input.comprehensible.ui.settings.account.AccountRoute
-import input.comprehensible.ui.settings.account.SignUpRoute
-import input.comprehensible.ui.settings.account.VerifyEmailRoute
 import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -57,7 +53,6 @@ class ComprehensibleInputTestScope(
     private val storiesTestData = StoriesTestData()
     private val fakeTextAdventureRemoteDataSource = FakeTextAdventureRemoteDataSource()
     private val textAdventuresTestData = TextAdventuresTestData(fakeTextAdventureRemoteDataSource)
-    private val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
         .inMemoryDatabaseBuilder<AppDb>(context = appContext)
@@ -98,7 +93,12 @@ class ComprehensibleInputTestScope(
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
         TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
         TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
-        AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
+        AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
+            override suspend fun createAccount(email: String, password: String) = Unit
+            override suspend fun verifyEmail(email: String, code: String) = Unit
+            override suspend fun signIn(email: String, password: String) = ""
+            override suspend fun signOut(token: String) = Unit
+        } }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
     }
 
@@ -125,18 +125,6 @@ class ComprehensibleInputTestScope(
 
     fun goToStoryReader(id: String) {
         navController.navigate(StoryReaderRoute(storyId = id))
-    }
-
-    fun goToAccount() {
-        navController.navigate(AccountRoute)
-    }
-
-    fun goToSignUp() {
-        navController.navigate(SignUpRoute)
-    }
-
-    fun goToVerifyEmail(email: String) {
-        navController.navigate(VerifyEmailRoute(email))
     }
 
     fun goToSoftwareLicences() {
@@ -185,22 +173,6 @@ class ComprehensibleInputTestScope(
         responses: List<TextAdventureRemoteResponse>,
     ) {
         textAdventuresTestData.enqueueAdventure(scenario, responses)
-    }
-
-    fun delayAccountRequests(delayMillis: Long) {
-        fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
-    }
-
-    fun enqueueCreateAccountResult(result: Result<Unit>) {
-        fakeAccountRemoteDataSource.enqueueCreateAccountResult(result)
-    }
-
-    fun enqueueVerifyEmailResult(result: Result<Unit>) {
-        fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
-    }
-
-    fun enqueueSignInResult(result: Result<String>) {
-        fakeAccountRemoteDataSource.enqueueSignInResult(result)
     }
 
     suspend fun saveAccountSession(token: String, email: String) {

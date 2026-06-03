@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">ComprehensibleInput</string>
-    <string name="navigate_up">Naviguer vers le haut</string>
     <string name="settings_button_description">Paramètres</string>
     <string name="settings_screen_title">Paramètres</string>
     <string name="settings_item_account">Compte</string>
-    <string name="account_screen_title">Compte</string>
     <string name="settings_item_software_licences">Licences des logiciels</string>
     <string name="software_licences_screen_title">Licences des logiciels</string>
     <string name="language_selector_en_content_description">Sélectionner l\'anglais</string>
@@ -51,24 +49,4 @@
     <string name="story_reader_error_dialog_message">Nous n\'avons pas pu ouvrir cette histoire. Veuillez réessayer plus tard.</string>
     <string name="story_reader_error_dialog_button">OK</string>
     <string name="story_reader_error_dialog_content_description">Illustration d\'un robot triste</string>
-    <string name="account_sign_in_email_label">E-mail</string>
-    <string name="account_sign_in_password_label">Mot de passe</string>
-    <string name="account_sign_in_submit_button">Se connecter</string>
-    <string name="account_sign_up_button">S\'inscrire</string>
-    <string name="account_sign_out_button">Se déconnecter</string>
-    <string name="account_signed_in_label">Connecté en tant que</string>
-    <string name="account_invalid_credentials_dialog_title">E-mail ou mot de passe incorrect</string>
-    <string name="account_invalid_credentials_dialog_message">L\'e-mail ou le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.</string>
-    <string name="account_invalid_credentials_dialog_button">OK</string>
-    <string name="account_sign_up_email_label">E-mail</string>
-    <string name="account_sign_up_password_label">Mot de passe</string>
-    <string name="account_sign_up_confirm_password_label">Confirmer le mot de passe</string>
-    <string name="account_sign_up_submit_button">S\'inscrire</string>
-    <string name="account_verify_email_message">Nous avons envoyé un code de vérification à 6 chiffres à %1$s</string>
-    <string name="account_verify_email_code_label">Code de vérification</string>
-    <string name="account_verify_email_submit_button">Vérifier</string>
-    <string name="generic_error_dialog_title">Une erreur s\'est produite</string>
-    <string name="generic_error_dialog_message">Veuillez réessayer plus tard.</string>
-    <string name="generic_error_dialog_button">OK</string>
-    <string name="generic_error_dialog_content_description">Illustration d\'un robot triste</string>
 </resources>
