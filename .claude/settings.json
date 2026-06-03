@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "agent",
-            "prompt": "run `./gradlew detekt`, `./gradlew lint`, and `./gradlew :app:testDebugUnitTest`, reporting back any problems",
+            "prompt": "run `./gradlew detekt`, `./gradlew lint`, and `./gradlew :app:testProductionDebugUnitTest`, reporting back any problems",
             "timeout": 600
           },
           {
@@ -22,7 +22,7 @@
           },
           {
             "type": "command",
-            "command": "./gradlew koverMarkdownSnapshotDebug --console=plain 2>&1 | tail -n 40",
+            "command": "./gradlew koverCoverageSnapshot --console=plain 2>&1 | tail -n 40",
             "timeout": 600
           },
           {

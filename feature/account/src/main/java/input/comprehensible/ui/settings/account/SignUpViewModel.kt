@@ -2,7 +2,7 @@ package input.comprehensible.ui.settings.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import input.comprehensible.data.account.AccountRepository
+import input.comprehensible.account.usecases.CreateAccountUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 internal const val MINIMUM_PASSWORD_LENGTH = 12
 
 class SignUpViewModel(
-    private val accountRepository: AccountRepository = AccountRepository(),
+    private val createAccount: CreateAccountUseCase = CreateAccountUseCase(),
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
@@ -33,7 +33,7 @@ class SignUpViewModel(
         val state = _uiState.value
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            accountRepository.createAccount(state.email, state.password)
+            createAccount(state.email, state.password)
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false, accountCreatedForEmail = state.email) }
                 }
