@@ -69,52 +69,50 @@ class TextAdventureMigration7To8 : Migration(
 
         db.execSQL(
             """
-            CREATE VIEW `TextAdventureSummaryView` AS
-            SELECT
-                adventure.id AS adventureId,
-                adventure.title AS title,
-                adventure.learningLanguage AS learningLanguage,
-                adventure.translationLanguage AS translationLanguage,
-                adventure.updatedAt AS updatedAt,
-                COALESCE((
-                    SELECT m.isEnding
-                    FROM TextAdventureMessageEntity m
-                    WHERE m.adventureId = adventure.id
-                    AND m.id NOT IN (
-                        SELECT c.parentId
-                        FROM TextAdventureMessageEntity c
-                        WHERE c.adventureId = adventure.id
-                        AND c.parentId IS NOT NULL
-                    )
-                    LIMIT 1
-                ), 0) AS isComplete
-            FROM TextAdventureEntity AS adventure
-            """.trimIndent()
+            |CREATE VIEW `TextAdventureSummaryView` AS SELECT
+            |        adventure.id AS adventureId,
+            |        adventure.title AS title,
+            |        adventure.learningLanguage AS learningLanguage,
+            |        adventure.translationLanguage AS translationLanguage,
+            |        adventure.updatedAt AS updatedAt,
+            |        COALESCE((
+            |            SELECT m.isEnding
+            |            FROM TextAdventureMessageEntity m
+            |            WHERE m.adventureId = adventure.id
+            |            AND m.id NOT IN (
+            |                SELECT c.parentId
+            |                FROM TextAdventureMessageEntity c
+            |                WHERE c.adventureId = adventure.id
+            |                AND c.parentId IS NOT NULL
+            |            )
+            |            LIMIT 1
+            |        ), 0) AS isComplete
+            |    FROM TextAdventureEntity AS adventure
+            """.trimMargin()
         )
 
         db.execSQL(
             """
-            CREATE VIEW `TextAdventureMessageSentenceView` AS
-            SELECT
-                adventure.id AS adventureId,
-                adventure.title AS title,
-                adventure.learningLanguage AS learningLanguage,
-                adventure.translationLanguage AS translationLanguage,
-                messages.id AS messageId,
-                messages.parentId AS parentId,
-                messages.createdAt AS createdAt,
-                messages.sender AS sender,
-                messages.isEnding AS isEnding,
-                sentences.paragraphIndex AS paragraphIndex,
-                sentences.sentenceIndex AS sentenceIndex,
-                sentences.language AS language,
-                sentences.text AS text
-            FROM TextAdventureEntity AS adventure
-            INNER JOIN TextAdventureMessageEntity AS messages
-                ON messages.adventureId = adventure.id
-            INNER JOIN TextAdventureSentenceEntity AS sentences
-                ON sentences.messageId = messages.id
-            """.trimIndent()
+            |CREATE VIEW `TextAdventureMessageSentenceView` AS SELECT
+            |        adventure.id AS adventureId,
+            |        adventure.title AS title,
+            |        adventure.learningLanguage AS learningLanguage,
+            |        adventure.translationLanguage AS translationLanguage,
+            |        messages.id AS messageId,
+            |        messages.parentId AS parentId,
+            |        messages.createdAt AS createdAt,
+            |        messages.sender AS sender,
+            |        messages.isEnding AS isEnding,
+            |        sentences.paragraphIndex AS paragraphIndex,
+            |        sentences.sentenceIndex AS sentenceIndex,
+            |        sentences.language AS language,
+            |        sentences.text AS text
+            |    FROM TextAdventureEntity AS adventure
+            |    INNER JOIN TextAdventureMessageEntity AS messages
+            |        ON messages.adventureId = adventure.id
+            |    INNER JOIN TextAdventureSentenceEntity AS sentences
+            |        ON sentences.messageId = messages.id
+            """.trimMargin()
         )
     }
 }
