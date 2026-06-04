@@ -28,6 +28,7 @@ fun createPreviewTester(): ComposePreviewTester<AndroidPreviewJUnit4TestParamete
             .ignoreIdFor("showBackground")
             .ignoreIdFor("uiMode")
             .ignoreIdFor("fontScale")
+            .ignoreIdFor("locale")
             .ignoreIdFor("widthDp")
             .ignoreIdFor("heightDp")
             .ignoreIdFor("backgroundColor")
