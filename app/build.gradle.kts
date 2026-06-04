@@ -146,7 +146,17 @@ android {
 roborazzi {
     generateComposePreviewRobolectricTests {
         enable = true
-        packages = listOf("input.comprehensible")
+        // Only scan packages owned by this module (plus shared previews from :common).
+        // The account previews live in :feature:account, which generates their screenshots
+        // itself, so they are intentionally excluded here to avoid duplicate screenshots.
+        packages = listOf(
+            "input.comprehensible.ui.components",
+            "input.comprehensible.ui.settings.settings",
+            "input.comprehensible.ui.settings.softwarelicences",
+            "input.comprehensible.ui.storylist",
+            "input.comprehensible.ui.storyreader",
+            "input.comprehensible.ui.textadventure",
+        )
         includePrivatePreviews = false
         testerQualifiedClassName = "input.comprehensible.PreviewScreenshotTester"
         robolectricConfig = mapOf(

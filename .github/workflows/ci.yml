@@ -25,8 +25,13 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+      - name: Setup Gradle cache
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          job-id: android
+          # Only the main branch updates the cache; PR/branch builds restore
+          # from it read-only to avoid cache write contention.
+          read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Setup keystore file
         run: |
@@ -47,17 +52,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Android lint
-        run: ./gradlew :app:lint
-
-      - name: Run Detekt
-        run: ./gradlew :app:detekt
-
-      - name: Assemble with Gradle
-        run: ./gradlew :app:assemble
-
-      - name: Run tests with coverage
-        run: ./gradlew :app:koverCoverageSnapshotCheck
+      - name: Run lint, Detekt, tests with coverage and assemble release
+        run: ./gradlew :app:lint :app:detekt :app:koverCoverageSnapshotCheck :app:assembleRelease
 
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
@@ -151,8 +147,13 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+      - name: Setup Gradle cache
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          job-id: backend
+          # Only the main branch updates the cache; PR/branch builds restore
+          # from it read-only to avoid cache write contention.
+          read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
