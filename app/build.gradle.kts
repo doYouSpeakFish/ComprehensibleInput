@@ -130,6 +130,7 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.maxHeapSize = "4g"
             }
         }
     }

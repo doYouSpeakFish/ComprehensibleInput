@@ -26,4 +26,15 @@
     <string name="delete_account_invalid_credentials_dialog_title">Kata sandi salah</string>
     <string name="delete_account_invalid_credentials_dialog_message">Kata sandi yang Anda masukkan salah. Silakan coba lagi.</string>
     <string name="delete_account_invalid_credentials_dialog_button">Oke</string>
+    <string name="account_forgot_password_button">Lupa kata sandi?</string>
+    <string name="account_forgot_password_email_label">Email</string>
+    <string name="account_forgot_password_submit_button">Kirim kode</string>
+    <string name="account_password_reset_message">Kami telah mengirimkan kode reset 6 digit ke %1$s</string>
+    <string name="account_password_reset_code_label">Kode reset</string>
+    <string name="account_password_reset_password_label">Kata sandi baru</string>
+    <string name="account_password_reset_confirm_password_label">Konfirmasi kata sandi baru</string>
+    <string name="account_password_reset_submit_button">Reset kata sandi</string>
+    <string name="account_invalid_reset_code_dialog_title">Kode reset tidak valid</string>
+    <string name="account_invalid_reset_code_dialog_message">Kode reset yang dimasukkan tidak valid atau sudah kedaluwarsa. Silakan minta kode baru.</string>
+    <string name="account_invalid_reset_code_dialog_button">OK</string>
 </resources>
