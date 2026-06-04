@@ -1,6 +1,7 @@
 ⚪   package input.comprehensible.data.account.sources.remote
 ⚪   
 ⚪   import input.comprehensible.data.account.InvalidCredentialsException
+⚪   import input.comprehensible.data.account.InvalidResetCodeException
 ⚪   import io.ktor.client.HttpClient
 ⚪   import io.ktor.client.call.body
 ⚪   import io.ktor.client.engine.cio.CIO
@@ -81,6 +82,31 @@
 🔴               error("Sign out failed: ${response.status}")
 ⚪           }
 ⚪       }
+⚪   
+⚪       override suspend fun requestPasswordResetCode(email: String) {
+🔴           val response = httpClient.post("$baseUrl/v1/password-reset-codes") {
+🔴               header("X-Api-Key", apiKey)
+🔴               contentType(ContentType.Application.Json)
+🔴               setBody(PasswordResetCodeRequest(email = email))
+🔴           }
+🔴           if (!response.status.isSuccess()) {
+🔴               error("Request password reset code failed: ${response.status}")
+⚪           }
+⚪       }
+⚪   
+⚪       override suspend fun resetPassword(email: String, password: String, code: String) {
+🔴           val response = httpClient.post("$baseUrl/v1/password-resets") {
+🔴               header("X-Api-Key", apiKey)
+🔴               contentType(ContentType.Application.Json)
+🔴               setBody(PasswordResetRequest(email = email, password = password, code = code))
+🔴           }
+🔴           if (response.status == HttpStatusCode.Unauthorized) {
+🔴               throw InvalidResetCodeException()
+⚪           }
+🔴           if (!response.status.isSuccess()) {
+🔴               error("Reset password failed: ${response.status}")
+⚪           }
+⚪       }
 ⚪   }
 ⚪   
 🔴   @Serializable
@@ -96,3 +122,9 @@
 ⚪   private data class SignInResponse(
 🔴       @SerialName("access_token") val accessToken: String,
 ⚪   )
+⚪   
+🔴   @Serializable
+🔴   private data class PasswordResetCodeRequest(val email: String)
+⚪   
+🔴   @Serializable
+🔴   private data class PasswordResetRequest(val email: String, val password: String, val code: String)

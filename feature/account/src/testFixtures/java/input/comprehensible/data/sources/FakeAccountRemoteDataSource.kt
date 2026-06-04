@@ -7,6 +7,8 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
     private val signInResults = ArrayDeque<Result<String>>()
+    private val requestPasswordResetCodeResults = ArrayDeque<Result<Unit>>()
+    private val resetPasswordResults = ArrayDeque<Result<Unit>>()
 
     /**
      * When greater than zero, requests suspend for this many milliseconds before completing. This
@@ -24,6 +26,14 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     fun enqueueSignInResult(result: Result<String>) {
         signInResults.add(result)
+    }
+
+    fun enqueueRequestPasswordResetCodeResult(result: Result<Unit>) {
+        requestPasswordResetCodeResults.add(result)
+    }
+
+    fun enqueueResetPasswordResult(result: Result<Unit>) {
+        resetPasswordResults.add(result)
     }
 
     override suspend fun createAccount(email: String, password: String) {
@@ -49,5 +59,19 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     override suspend fun signOut(token: String) {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
+    }
+
+    override suspend fun requestPasswordResetCode(email: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+        requestPasswordResetCodeResults.removeFirstOrNull()
+            ?.getOrThrow()
+            ?: error("No scripted request password reset code result available")
+    }
+
+    override suspend fun resetPassword(email: String, password: String, code: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+        resetPasswordResults.removeFirstOrNull()
+            ?.getOrThrow()
+            ?: error("No scripted reset password result available")
     }
 }
