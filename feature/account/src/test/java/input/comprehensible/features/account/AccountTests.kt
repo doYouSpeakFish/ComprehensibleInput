@@ -43,7 +43,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     // Sign in tests
 
     @Test
-    fun `account sign in screenshot`() = testRule.runAccountFeatureTest {
+    fun `account sign in screen is shown when no session exists`() = testRule.runAccountFeatureTest {
         // GIVEN the account screen is open with no session
         goToAccount()
         awaitIdle()
@@ -61,10 +61,8 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
-        onAccount {
-            // THEN the sign in button is disabled
-            assertSignInSubmitEnabled(isEnabled = false)
-        }
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
     }
 
     @Test
@@ -73,13 +71,11 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
-        onAccount {
-            // WHEN only the email is filled
-            enterSignInEmail("user@example.com")
+        // WHEN only the email is filled
+        onAccount { enterSignInEmail("user@example.com") }
 
-            // THEN the sign in button is disabled
-            assertSignInSubmitEnabled(isEnabled = false)
-        }
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
     }
 
     @Test
@@ -88,13 +84,11 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
-        onAccount {
-            // WHEN only the password is filled
-            enterSignInPassword("password12345")
+        // WHEN only the password is filled
+        onAccount { enterSignInPassword("password12345") }
 
-            // THEN the sign in button is disabled
-            assertSignInSubmitEnabled(isEnabled = false)
-        }
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
     }
 
     @Test
@@ -103,38 +97,71 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
+        // WHEN both fields are filled
         onAccount {
-            // WHEN both fields are filled
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
-
-            // THEN the sign in button is enabled
-            assertSignInSubmitEnabled(isEnabled = true)
         }
+
+        // THEN the sign in button is enabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = true) }
     }
 
     @Test
-    fun `sign in shows loading state while request is in progress`() = testRule.runAccountFeatureTest {
-        // GIVEN the account screen is open with valid fields filled
+    fun `sign in loading indicator is shown while request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the account screen is open with valid fields filled and a delayed sign in request
         goToAccount()
         awaitIdle()
         onAccount {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        // The request is kept in-flight so the loading state can be observed before it completes
         delayAccountRequests(delayMillis = 1_000L)
         enqueueSignInResult(Result.success("token123"))
 
         // WHEN the sign in button is tapped
         onAccount { tapSignIn() }
 
-        // THEN the loading indicator is shown, sign in button is disabled, and sign up button is disabled
+        // THEN the loading indicator is shown
+        onAccount { assertSignInLoadingIndicatorIsShown() }
+    }
+
+    @Test
+    fun `sign in button is disabled while request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the account screen is open with valid fields filled and a delayed sign in request
+        goToAccount()
+        awaitIdle()
         onAccount {
-            assertSignInLoadingIndicatorIsShown()
-            assertSignInSubmitEnabled(isEnabled = false)
-            assertSignUpFromSignInEnabled(isEnabled = false)
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
         }
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueSignInResult(Result.success("token123"))
+
+        // WHEN the sign in button is tapped
+        onAccount { tapSignIn() }
+
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
+    }
+
+    @Test
+    fun `sign up button is disabled while sign in request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the account screen is open with valid fields filled and a delayed sign in request
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+        }
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueSignInResult(Result.success("token123"))
+
+        // WHEN the sign in button is tapped
+        onAccount { tapSignIn() }
+
+        // THEN the sign up button is disabled
+        onAccount { assertSignUpFromSignInEnabled(isEnabled = false) }
     }
 
     @Test
@@ -351,13 +378,11 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToDeleteAccount()
         awaitIdle()
 
-        onDeleteAccount {
-            // WHEN the password is entered
-            enterPassword("password12345")
+        // WHEN the password is entered
+        onDeleteAccount { enterPassword("password12345") }
 
-            // THEN the submit button is enabled
-            assertSubmitIsEnabled()
-        }
+        // THEN the submit button is enabled
+        onDeleteAccount { assertSubmitIsEnabled() }
     }
 
     @Test
