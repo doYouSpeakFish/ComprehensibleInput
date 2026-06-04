@@ -52,17 +52,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Android lint
-        run: ./gradlew :app:lint
-
-      - name: Run Detekt
-        run: ./gradlew :app:detekt
-
-      - name: Assemble with Gradle
-        run: ./gradlew :app:assemble
-
-      - name: Run tests with coverage
-        run: ./gradlew :app:koverCoverageSnapshotCheck
+      - name: Run lint, Detekt and tests with coverage
+        run: ./gradlew :app:lint :app:detekt :app:koverCoverageSnapshotCheck
 
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
