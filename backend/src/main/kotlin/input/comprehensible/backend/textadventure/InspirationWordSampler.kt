@@ -30,7 +30,7 @@ class DefaultInspirationWordSampler(
     }
 
     companion object {
-        const val DEFAULT_SAMPLE_SIZE = 15
+        const val DEFAULT_SAMPLE_SIZE = 100
         private const val WORDS_RESOURCE = "/textadventure/inspiration-words.txt"
 
         private fun loadWords(): List<String> =

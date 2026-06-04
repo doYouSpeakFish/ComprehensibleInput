@@ -8,6 +8,7 @@ import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
+import input.comprehensible.backend.textadventure.testing.FakeInspirationWordSampler
 import input.comprehensible.backend.textadventure.testing.FakeTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.testing.PostgreSqlTestDatabase
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
@@ -39,6 +40,7 @@ import org.junit.Assert.assertTrue
 class TextAdventureApiStepDefinitions {
     private lateinit var database: Database
     private lateinit var fakeExecutor: FakeTextAdventureStructuredPromptExecutor
+    private lateinit var fakeInspirationWordSampler: FakeInspirationWordSampler
     private lateinit var textAdventureService: TextAdventureGenerationService
     private val validApiKey = "test"
     private val invalidApiKey = "invalid"
@@ -52,9 +54,11 @@ class TextAdventureApiStepDefinitions {
     fun setUpScenario() {
         database = connectDatabase(PostgreSqlTestDatabase.createConfig())
         fakeExecutor = FakeTextAdventureStructuredPromptExecutor()
+        fakeInspirationWordSampler = FakeInspirationWordSampler()
         textAdventureService = TextAdventureGenerationService(
             structuredPromptExecutor = fakeExecutor,
             adventureRepository = DatabaseAdventureRepository(database = database),
+            inspirationWordSampler = fakeInspirationWordSampler,
         )
         latestResponseStatus = null
         latestResponseBody = ""
@@ -256,24 +260,33 @@ class TextAdventureApiStepDefinitions {
         assertEquals(payload.messages.size, payload.messages.count { it.sender == "AI" })
     }
 
-    @Then("the AI received inspiration words for the opening scene")
-    fun aiReceivedInspirationWordsForOpeningScene() {
-        assertInspirationWordsProvided(promptName = "text-adventure-start")
+    @Given("the AI will be offered inspiration words {string} next")
+    fun aiWillBeOfferedInspirationWords(words: String) {
+        fakeInspirationWordSampler.enqueueSample(words.toWordList())
     }
 
-    @Then("the AI received inspiration words for the continuation")
-    fun aiReceivedInspirationWordsForContinuation() {
-        assertInspirationWordsProvided(promptName = "text-adventure-continue")
+    @Then("the opening scene prompt includes the inspiration words {string}")
+    fun openingScenePromptIncludesInspirationWords(words: String) {
+        assertPromptIncludesInspirationWords(promptName = "text-adventure-start", words = words)
     }
 
-    private fun assertInspirationWordsProvided(promptName: String) {
+    @Then("the continuation prompt includes the inspiration words {string}")
+    fun continuationPromptIncludesInspirationWords(words: String) {
+        assertPromptIncludesInspirationWords(promptName = "text-adventure-continue", words = words)
+    }
+
+    private fun assertPromptIncludesInspirationWords(promptName: String, words: String) {
         val invocation = fakeExecutor.invocations.firstOrNull { it.promptName == promptName }
         assertTrue("Expected an invocation for $promptName", invocation != null)
-        assertTrue(
-            "Expected inspiration words in the $promptName system prompt",
-            invocation!!.systemPrompt.contains("loose inspiration:"),
-        )
+        words.toWordList().forEach { word ->
+            assertTrue(
+                "Expected inspiration word '$word' in the $promptName system prompt",
+                invocation!!.systemPrompt.contains(word),
+            )
+        }
     }
+
+    private fun String.toWordList(): List<String> = split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
     @Then("the messages response keeps {string} before {string}")
     fun messagesResponseKeepsOrder(

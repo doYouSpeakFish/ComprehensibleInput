@@ -226,7 +226,7 @@
 ⚪   
 ⚪       private fun inspirationPromptSection(): String {
 🟢           val words = inspirationWordSampler.sample()
-🟡           if (words.isEmpty()) return ""
+🟢           if (words.isEmpty()) return ""
 ⚪           return "\n\n" + """
 🟢               For added variety, here are some random words as loose inspiration: ${words.joinToString(", ")}.
 ⚪               They are only a creative spark to make the story feel fresh.
