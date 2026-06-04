@@ -51,12 +51,14 @@ class CucumberComposeUiTest {
 
     @Test
     fun runsCucumberScenariosWithComposeRule() {
+        // GIVEN the scenarios discovered from the feature files by the Cucumber engine
         val launcher = LauncherFactory.create()
         val testPlan = launcher.discover(discoveryRequest(selectPackage(FEATURES_PACKAGE)))
         val scenarioIds = testPlan.leafTestIds()
-
         check(scenarioIds.isNotEmpty()) { "No Cucumber scenarios were discovered." }
 
+        // WHEN each scenario is executed inside its own freshly applied Compose rule
+        // THEN any scenario failure is rethrown by runScenarioWithComposeRule and fails this test
         scenarioIds.forEach { scenarioId -> runScenarioWithComposeRule(launcher, scenarioId) }
     }
 

@@ -51,7 +51,8 @@ Crucially, scenarios still run on the **Cucumber JUnit Platform engine**
 | --- | --- |
 | `src/main/.../DemoScreen.kt` | A tiny Composable under test (a greeting + a button). |
 | `src/test/resources/features/demo.feature` | The Gherkin scenarios. |
-| `src/test/.../DemoStepDefinitions.kt` | Ordinary Cucumber glue that drives the Compose UI. |
+| `src/test/.../DemoStepDefinitions.kt` | Ordinary Cucumber glue, written as user-facing actions. |
+| `src/test/.../DemoRobot.kt` | Robot/page-object hiding the Compose APIs behind those actions. |
 | `src/test/.../ComposeRuleHolder.kt` | Bridges the host-owned rule into the glue. |
 | `src/test/.../CucumberComposeUiTest.kt` | The JUnit 4 host: Robolectric + Compose rule + Launcher. |
 
