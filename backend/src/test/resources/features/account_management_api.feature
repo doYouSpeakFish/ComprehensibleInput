@@ -162,7 +162,6 @@ Feature: Account management API
     Then account API status should be 429
 
   Scenario: Rejecting repeated me deletion with malformed body due to rate limiting
-    Given any client IP
     When I attempt to delete me a second time with malformed body
     Then account API status should be 429
 

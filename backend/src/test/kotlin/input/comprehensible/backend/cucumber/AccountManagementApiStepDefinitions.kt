@@ -81,9 +81,6 @@ class AccountManagementApiStepDefinitions {
         nextVerificationCode = code
     }
 
-    @Given("any client IP")
-    fun anyClientIp() = Unit
-
     @Given("time advances by {int} minutes and {int} seconds")
     fun timeAdvancesBy(minutes: Int, seconds: Int) {
         now += ((minutes * 60L) + seconds) * 1000L
