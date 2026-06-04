@@ -27,12 +27,12 @@
 🟢       private val adventureFlow = getTextAdventureUseCase(adventureId)
 🟢       private val selectedText = MutableStateFlow<TextAdventureUiState.SelectedText?>(null)
 🟢       private val inputText = MutableStateFlow("")
-🟢       private val currentSession = MutableStateFlow<Session?>(null)
+⚪       private var currentSession: Session? = null
 ⚪   
 🟢       init {
 🟢           viewModelScope.launch {
 🟢               accountRepository.session.collect { session ->
-🟢                   currentSession.value = session
+🟢                   currentSession = session
 ⚪               }
 ⚪           }
 🟢       }
@@ -63,7 +63,7 @@
 ⚪       }
 ⚪   
 ⚪       fun onSendMessage() {
-🟡           val token = currentSession.value?.token ?: return
+🟡           val token = currentSession?.token ?: return
 🟢           val message = inputText.value.trim()
 🟡           if (message.isBlank()) return
 🟢           viewModelScope.launch {

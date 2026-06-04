@@ -13,7 +13,6 @@ import input.comprehensible.usecases.GetTextAdventuresUseCase
 import input.comprehensible.usecases.StartTextAdventureUseCase
 import input.comprehensible.util.FeatureFlags
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
@@ -31,12 +30,12 @@ class StoryListViewModel(
     private val _events = MutableSharedFlow<StoryListEvent>()
     val events = _events.asSharedFlow()
 
-    private val currentSession = MutableStateFlow<Session?>(null)
+    private var currentSession: Session? = null
 
     init {
         viewModelScope.launch {
             accountRepository.session.collect { session ->
-                currentSession.value = session
+                currentSession = session
             }
         }
     }
@@ -106,7 +105,7 @@ class StoryListViewModel(
 
     fun onStartTextAdventure() {
         if (!featureFlags.aiTextAdventuresEnabled) return
-        val session = currentSession.value ?: return
+        val session = currentSession ?: return
         viewModelScope.launch {
             val adventureId = startTextAdventureUseCase(session)
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
