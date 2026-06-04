@@ -197,6 +197,14 @@ private fun DeleteAccountInvalidCredentialsDialog(
 
 @DefaultPreview
 @Composable
+fun PreviewDeleteAccountInvalidCredentialsDialog() {
+    ComprehensibleInputTheme {
+        DeleteAccountInvalidCredentialsDialog(onDismissRequest = {})
+    }
+}
+
+@DefaultPreview
+@Composable
 fun PreviewDeleteAccount() {
     ComprehensibleInputTheme {
         DeleteAccountScreen(
