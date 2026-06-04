@@ -102,18 +102,6 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    fun assertInvalidCredentialsDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag("account_invalid_credentials_dialog")
-            .assertIsDisplayed()
-    }
-
-    fun dismissInvalidCredentialsDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
-            .performClick()
-    }
-
     // Signed in step
 
     fun assertSignedInEmailIsShown(email: String) {

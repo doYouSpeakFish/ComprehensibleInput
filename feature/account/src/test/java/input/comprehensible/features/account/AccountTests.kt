@@ -194,10 +194,10 @@ class AccountTests(private val themeMode: ThemeMode) {
         enqueueSignInResult(Result.failure<String>(InvalidCredentialsException()))
         onAccount { tapSignIn() }
         awaitIdle()
-        onAccount { assertInvalidCredentialsDialogIsShown() }
+        onAccount { invalidCredentialsDialog.assertIsShown() }
 
         // WHEN the invalid credentials dialog is dismissed
-        onAccount { dismissInvalidCredentialsDialog() }
+        onAccount { invalidCredentialsDialog.dismiss() }
         awaitIdle()
 
         // THEN the sign in form is restored and the submit button is enabled
@@ -223,7 +223,7 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         // THEN the invalid credentials dialog is shown
         onAccount {
-            assertInvalidCredentialsDialogIsShown()
+            invalidCredentialsDialog.assertIsShown()
         }
     }
 
