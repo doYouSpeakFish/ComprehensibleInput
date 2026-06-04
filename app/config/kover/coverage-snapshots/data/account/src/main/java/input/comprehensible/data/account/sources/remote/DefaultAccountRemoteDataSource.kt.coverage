@@ -24,9 +24,9 @@
 ⚪   private const val TIMEOUT_MILLIS = 30_000L
 ⚪   
 ⚪   class DefaultAccountRemoteDataSource(
-🔴       private val baseUrl: String,
-🔴       private val apiKey: String,
-🔴       private val httpClient: HttpClient = HttpClient(CIO) {
+🟢       private val baseUrl: String,
+🟢       private val apiKey: String,
+🟢       private val httpClient: HttpClient = HttpClient(CIO) {
 🔴           install(ContentNegotiation) {
 🔴               json(Json { ignoreUnknownKeys = true })
 ⚪           }
@@ -84,16 +84,16 @@
 ⚪       }
 ⚪   
 ⚪       override suspend fun deleteAccount(email: String, password: String) {
-🔴           val response = httpClient.delete("$baseUrl/v1/me") {
-🔴               header("X-Api-Key", apiKey)
-🔴               contentType(ContentType.Application.Json)
-🔴               setBody(DeleteAccountRequest(email = email, password = password))
-🔴           }
-🔴           if (response.status == HttpStatusCode.Unauthorized) {
-🔴               throw InvalidCredentialsException()
+🟢           val response = httpClient.delete("$baseUrl/v1/me") {
+🟢               header("X-Api-Key", apiKey)
+🟢               contentType(ContentType.Application.Json)
+🟢               setBody(DeleteAccountRequest(email = email, password = password))
+🟢           }
+🟢           if (response.status == HttpStatusCode.Unauthorized) {
+🟢               throw InvalidCredentialsException()
 ⚪           }
-🔴           if (!response.status.isSuccess()) {
-🔴               error("Delete account failed: ${response.status}")
+🟢           if (!response.status.isSuccess()) {
+🟢               error("Delete account failed: ${response.status}")
 ⚪           }
 ⚪       }
 ⚪   
@@ -138,7 +138,7 @@
 ⚪   )
 ⚪   
 🔴   @Serializable
-🔴   private data class DeleteAccountRequest(val email: String, val password: String)
+🟢   private data class DeleteAccountRequest(val email: String, val password: String)
 ⚪   
 🔴   @Serializable
 🔴   private data class PasswordResetCodeRequest(val email: String)
