@@ -24,10 +24,13 @@ class GenericErrorDialogRobot(private val composeTestRule: ComposeTestRule) {
     }
 }
 
-class InvalidCredentialsDialogRobot(private val composeTestRule: ComposeTestRule) {
+class InvalidCredentialsDialogRobot(
+    private val composeTestRule: ComposeTestRule,
+    private val tag: String,
+) {
     fun assertIsShown() {
         composeTestRule
-            .onNodeWithTag("account_invalid_credentials_dialog")
+            .onNodeWithTag(tag)
             .assertIsDisplayed()
     }
 
@@ -40,7 +43,7 @@ class InvalidCredentialsDialogRobot(private val composeTestRule: ComposeTestRule
 
 class AccountRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
-    val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule)
+    val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule, "account_invalid_credentials_dialog")
 
     fun assertAccountTitleIsVisible() {
         composeTestRule
@@ -327,6 +330,7 @@ class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
 
 class DeleteAccountRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule, "delete_account_invalid_credentials_dialog")
 
     fun assertExplainerIsShown() {
         composeTestRule
@@ -370,15 +374,4 @@ class DeleteAccountRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
-    fun assertInvalidCredentialsDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag("delete_account_invalid_credentials_dialog")
-            .assertIsDisplayed()
-    }
-
-    fun dismissInvalidCredentialsDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
-            .performClick()
-    }
 }

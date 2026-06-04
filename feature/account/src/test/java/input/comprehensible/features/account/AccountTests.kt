@@ -417,7 +417,7 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         // THEN the invalid credentials dialog is shown
         onDeleteAccount {
-            assertInvalidCredentialsDialogIsShown()
+            invalidCredentialsDialog.assertIsShown()
         }
     }
 
@@ -472,10 +472,10 @@ class AccountTests(private val themeMode: ThemeMode) {
         enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
         onDeleteAccount { tapSubmit() }
         awaitIdle()
-        onDeleteAccount { assertInvalidCredentialsDialogIsShown() }
+        onDeleteAccount { invalidCredentialsDialog.assertIsShown() }
 
         // WHEN the invalid credentials dialog is dismissed
-        onDeleteAccount { dismissInvalidCredentialsDialog() }
+        onDeleteAccount { invalidCredentialsDialog.dismiss() }
         awaitIdle()
 
         // THEN the submit button is re-enabled
