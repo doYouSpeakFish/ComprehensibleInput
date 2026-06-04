@@ -27,7 +27,7 @@ class TextAdventureViewModel(
     private val adventureFlow = getTextAdventureUseCase(adventureId)
     private val selectedText = MutableStateFlow<TextAdventureUiState.SelectedText?>(null)
     private val inputText = MutableStateFlow("")
-    private var currentSession: Session? = null
+    @Volatile private var currentSession: Session? = null
 
     init {
         viewModelScope.launch {

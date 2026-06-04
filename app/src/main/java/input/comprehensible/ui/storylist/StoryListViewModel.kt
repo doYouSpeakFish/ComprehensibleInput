@@ -30,7 +30,7 @@ class StoryListViewModel(
     private val _events = MutableSharedFlow<StoryListEvent>()
     val events = _events.asSharedFlow()
 
-    private var currentSession: Session? = null
+    @Volatile private var currentSession: Session? = null
 
     init {
         viewModelScope.launch {
