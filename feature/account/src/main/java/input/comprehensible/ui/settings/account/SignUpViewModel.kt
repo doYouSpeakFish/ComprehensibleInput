@@ -1,5 +1,6 @@
 package input.comprehensible.ui.settings.account
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.account.usecases.CreateAccountUseCase
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal const val MINIMUM_PASSWORD_LENGTH = 12
+private const val MINIMUM_PASSWORD_LENGTH = 12
 
 class SignUpViewModel(
     private val createAccount: CreateAccountUseCase = CreateAccountUseCase(),
@@ -54,8 +55,7 @@ class SignUpViewModel(
 
 internal fun SignUpUiState.isSubmitEnabled(): Boolean {
     val trimmedEmail = email.trim()
-    return trimmedEmail.isNotBlank() &&
-        trimmedEmail.contains('@') &&
+    return Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches() &&
         password.length >= MINIMUM_PASSWORD_LENGTH &&
         password == confirmPassword
 }
