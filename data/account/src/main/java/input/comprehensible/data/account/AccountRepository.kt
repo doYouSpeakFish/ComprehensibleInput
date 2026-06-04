@@ -32,6 +32,14 @@ class AccountRepository(
             )
         }.onFailure { Timber.e(it, "Failed to sign in") }
 
+    suspend fun requestPasswordResetCode(email: String): Result<Unit> =
+        runCatching { remoteDataSource.requestPasswordResetCode(email) }
+            .onFailure { Timber.e(it, "Failed to request password reset code") }
+
+    suspend fun resetPassword(email: String, password: String, code: String): Result<Unit> =
+        runCatching { remoteDataSource.resetPassword(email, password, code) }
+            .onFailure { Timber.e(it, "Failed to reset password") }
+
     suspend fun signOut(): Result<Unit> = runCatching {
         val token = localDataSource.session.first()?.token
         localDataSource.clearSession()

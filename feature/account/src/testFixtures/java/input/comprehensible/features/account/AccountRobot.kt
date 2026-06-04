@@ -47,16 +47,12 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .performTextInput(password)
     }
 
-    fun assertSignInSubmitIsEnabled() {
-        composeTestRule
-            .onNodeWithTag("account_sign_in_submit_button")
-            .assertIsEnabled()
-    }
-
-    fun assertSignInSubmitIsDisabled() {
-        composeTestRule
-            .onNodeWithTag("account_sign_in_submit_button")
-            .assertIsNotEnabled()
+    fun assertSignInSubmitEnabled(isEnabled: Boolean) {
+        if (isEnabled) {
+            composeTestRule.onNodeWithTag("account_sign_in_submit_button").assertIsEnabled()
+        } else {
+            composeTestRule.onNodeWithTag("account_sign_in_submit_button").assertIsNotEnabled()
+        }
     }
 
     fun tapSignIn() {
@@ -82,6 +78,12 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
     fun tapSignUpFromSignIn() {
         composeTestRule
             .onNodeWithTag("account_sign_up_button")
+            .performClick()
+    }
+
+    fun tapForgotPassword() {
+        composeTestRule
+            .onNodeWithTag("account_forgot_password_button")
             .performClick()
     }
 
@@ -163,6 +165,107 @@ class SignUpRobot(private val composeTestRule: ComposeTestRule) {
     fun assertSignUpLoadingIndicatorIsShown() {
         composeTestRule
             .onNodeWithTag("account_sign_up_loading_indicator")
+            .assertIsDisplayed()
+    }
+}
+
+class ForgotPasswordRobot(private val composeTestRule: ComposeTestRule) {
+    val errorDialog = GenericErrorDialogRobot(composeTestRule)
+
+    fun enterEmail(email: String) {
+        composeTestRule
+            .onNodeWithTag("account_forgot_password_email_field")
+            .performTextInput(email)
+    }
+
+    fun assertSubmitIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("account_forgot_password_submit_button")
+            .assertIsEnabled()
+    }
+
+    fun assertSubmitIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("account_forgot_password_submit_button")
+            .assertIsNotEnabled()
+    }
+
+    fun tapSubmit() {
+        composeTestRule
+            .onNodeWithTag("account_forgot_password_submit_button")
+            .performClick()
+    }
+
+    fun assertLoadingIndicatorIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_forgot_password_loading_indicator")
+            .assertIsDisplayed()
+    }
+}
+
+class InvalidResetCodeDialogRobot(private val composeTestRule: ComposeTestRule) {
+    fun assertIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_invalid_reset_code_dialog")
+            .assertIsDisplayed()
+    }
+
+    fun dismiss() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
+class PasswordResetRobot(private val composeTestRule: ComposeTestRule) {
+    val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val invalidCodeErrorDialog = InvalidResetCodeDialogRobot(composeTestRule)
+
+    fun assertResetCodeMessageIsShown(email: String) {
+        composeTestRule
+            .onNodeWithText(email, substring = true)
+            .assertIsDisplayed()
+    }
+
+    fun enterResetCode(code: String) {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_code_field")
+            .performTextInput(code)
+    }
+
+    fun enterNewPassword(password: String) {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_password_field")
+            .performTextInput(password)
+    }
+
+    fun enterConfirmNewPassword(password: String) {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_confirm_password_field")
+            .performTextInput(password)
+    }
+
+    fun assertSubmitIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_submit_button")
+            .assertIsEnabled()
+    }
+
+    fun assertSubmitIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_submit_button")
+            .assertIsNotEnabled()
+    }
+
+    fun tapSubmit() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_submit_button")
+            .performClick()
+    }
+
+    fun assertLoadingIndicatorIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_loading_indicator")
             .assertIsDisplayed()
     }
 }
