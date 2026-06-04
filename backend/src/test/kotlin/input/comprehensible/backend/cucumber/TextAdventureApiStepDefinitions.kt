@@ -260,18 +260,23 @@ class TextAdventureApiStepDefinitions {
         assertEquals(payload.messages.size, payload.messages.count { it.sender == "AI" })
     }
 
-    @Given("the AI will be offered inspiration words {string} next")
-    fun aiWillBeOfferedInspirationWords(words: String) {
+    @Given("the next adventure will draw inspiration from the words {string}")
+    fun nextAdventureWillDrawInspirationFromWords(words: String) {
         fakeInspirationWordSampler.enqueueSample(words.toWordList())
     }
 
-    @Then("the opening scene prompt includes the inspiration words {string}")
-    fun openingScenePromptIncludesInspirationWords(words: String) {
+    @Given("the next adventure continuation will draw inspiration from the words {string}")
+    fun nextAdventureContinuationWillDrawInspirationFromWords(words: String) {
+        fakeInspirationWordSampler.enqueueSample(words.toWordList())
+    }
+
+    @Then("the opening scene incorporates the inspiration words {string}")
+    fun openingSceneIncorporatesInspirationWords(words: String) {
         assertPromptIncludesInspirationWords(promptName = "text-adventure-start", words = words)
     }
 
-    @Then("the continuation prompt includes the inspiration words {string}")
-    fun continuationPromptIncludesInspirationWords(words: String) {
+    @Then("the adventure continuation incorporates the inspiration words {string}")
+    fun adventureContinuationIncorporatesInspirationWords(words: String) {
         assertPromptIncludesInspirationWords(promptName = "text-adventure-continue", words = words)
     }
 
