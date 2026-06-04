@@ -3,6 +3,7 @@ package input.comprehensible.data.account
 import com.ktin.Singleton
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.Session
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -25,6 +26,7 @@ class AccountRepository(
     suspend fun signIn(email: String, password: String): Result<Unit> =
         runCatching {
             val signInData = remoteDataSource.signIn(email, password)
+            UserLocalDataSource().insertUser(signInData.userId)
             localDataSource.saveSession(
                 token = signInData.token,
                 email = email,

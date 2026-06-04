@@ -13,6 +13,7 @@ import input.comprehensible.data.TextAdventuresTestData
 import input.comprehensible.data.UserEntity
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.account.sources.remote.SignInData
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
@@ -103,6 +104,11 @@ class ComprehensibleInputTestScope(
             override suspend fun resetPassword(email: String, password: String, code: String) = Unit
         } }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
+        UserLocalDataSource.inject { object : UserLocalDataSource {
+            override suspend fun insertUser(userId: String) {
+                appDb.getUserDao().insertUser(UserEntity(id = userId))
+            }
+        } }
     }
 
     fun launchAppUi() {
