@@ -296,7 +296,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `account shows signed in state when session exists`() = testRule.runAccountFeatureTest {
         // GIVEN a session has been saved
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
 
         // WHEN the account screen is opened
         goToAccount()
@@ -311,7 +311,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `sign out returns to sign in state`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToAccount()
         awaitIdle()
 
@@ -330,7 +330,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account button is shown when signed in`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToAccount()
         awaitIdle()
 
@@ -343,7 +343,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account button navigates to delete account screen`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in and on the account screen
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToAccount()
         awaitIdle()
 
@@ -361,7 +361,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account submit is disabled when password is empty`() = testRule.runAccountFeatureTest {
         // GIVEN the delete account screen is shown
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
 
@@ -374,7 +374,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account submit is enabled when password is filled`() = testRule.runAccountFeatureTest {
         // GIVEN the delete account screen is shown
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
 
@@ -388,7 +388,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account shows loading state while request is in progress`() = testRule.runAccountFeatureTest {
         // GIVEN the delete account screen is shown with a password entered
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
         onDeleteAccount { enterPassword("password12345") }
@@ -409,7 +409,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account navigates to sign in screen on success`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in and on the delete account screen
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToAccount()
         awaitIdle()
         goToDeleteAccount()
@@ -430,7 +430,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account shows invalid credentials error on wrong password`() = testRule.runAccountFeatureTest {
         // GIVEN the delete account screen is shown with a password entered
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
         onDeleteAccount { enterPassword("wrongpassword") }
@@ -449,7 +449,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account shows generic error on other failure`() = testRule.runAccountFeatureTest {
         // GIVEN the delete account screen is shown with a password entered
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
         onDeleteAccount { enterPassword("password12345") }
@@ -468,7 +468,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account generic error dialog can be dismissed`() = testRule.runAccountFeatureTest {
         // GIVEN a generic delete account error has occurred
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
         onDeleteAccount { enterPassword("password12345") }
@@ -490,7 +490,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account invalid credentials dialog can be dismissed`() = testRule.runAccountFeatureTest {
         // GIVEN an invalid credentials error has occurred
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
         onDeleteAccount { enterPassword("wrongpassword") }
@@ -512,7 +512,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `delete account does not clear session on failure`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in and the delete account request fails
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToDeleteAccount()
         awaitIdle()
         onDeleteAccount { enterPassword("wrongpassword") }

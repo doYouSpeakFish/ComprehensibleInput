@@ -86,6 +86,10 @@ class AccountFeatureTestScope(
         _isLaunched = true
     }
 
+    suspend fun signInAs(email: String) {
+        realAccountLocalDataSource.saveSession(token = "test-token", email = email)
+    }
+
     fun goToAccount() {
         if (!_isLaunched) launch()
         _navController.navigate(AccountRoute)
