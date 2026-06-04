@@ -130,6 +130,7 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.maxHeapSize = "4g"
             }
         }
     }
@@ -164,6 +165,26 @@ roborazzi {
             "qualifiers" to "\"w360dp-h640dp-mdpi\"",
             "application" to "android.app.Application::class",
         )
+    }
+}
+
+// AGP 9.2.0 built_in_kotlinc mode stores compiled Kotlin classes outside the JAR that unit
+// tests receive on their classpath. This wires the directory in explicitly.
+// afterEvaluate is required because AGP registers these tasks late in the config phase.
+// Track: https://issuetracker.google.com/issues/388556987
+val builtInKotlincClasses = layout.buildDirectory.dir(
+    "intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"
+)
+afterEvaluate {
+    tasks.named(
+        "compileDebugUnitTestKotlin",
+        org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile::class.java,
+    ) {
+        dependsOn("compileDebugKotlin")
+        libraries.from(builtInKotlincClasses)
+    }
+    tasks.named("testDebugUnitTest", Test::class.java) {
+        classpath += files(builtInKotlincClasses)
     }
 }
 

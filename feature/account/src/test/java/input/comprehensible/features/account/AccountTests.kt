@@ -8,8 +8,10 @@ import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.data.account.InvalidCredentialsException
 import input.comprehensible.delayAccountRequests
+import input.comprehensible.enqueueDeleteAccountResult
 import input.comprehensible.enqueueSignInResult
 import input.comprehensible.onAccount
+import input.comprehensible.onDeleteAccount
 import input.comprehensible.onSignUp
 import input.comprehensible.runAccountFeatureTest
 import org.junit.Rule
@@ -18,7 +20,6 @@ import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-
 @RunWith(ParameterizedRobolectricTestRunner::class)
 @Config(
     manifest = Config.NONE,
@@ -42,7 +43,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     // Sign in tests
 
     @Test
-    fun `account sign in screenshot`() = testRule.runAccountFeatureTest {
+    fun `account sign in screen is shown when no session exists`() = testRule.runAccountFeatureTest {
         // GIVEN the account screen is open with no session
         goToAccount()
         awaitIdle()
@@ -60,10 +61,8 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
-        onAccount {
-            // THEN the sign in button is disabled
-            assertSignInSubmitEnabled(isEnabled = false)
-        }
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
     }
 
     @Test
@@ -72,13 +71,11 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
-        onAccount {
-            // WHEN only the email is filled
-            enterSignInEmail("user@example.com")
+        // WHEN only the email is filled
+        onAccount { enterSignInEmail("user@example.com") }
 
-            // THEN the sign in button is disabled
-            assertSignInSubmitEnabled(isEnabled = false)
-        }
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
     }
 
     @Test
@@ -87,13 +84,11 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
-        onAccount {
-            // WHEN only the password is filled
-            enterSignInPassword("password12345")
+        // WHEN only the password is filled
+        onAccount { enterSignInPassword("password12345") }
 
-            // THEN the sign in button is disabled
-            assertSignInSubmitEnabled(isEnabled = false)
-        }
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
     }
 
     @Test
@@ -102,38 +97,71 @@ class AccountTests(private val themeMode: ThemeMode) {
         goToAccount()
         awaitIdle()
 
+        // WHEN both fields are filled
         onAccount {
-            // WHEN both fields are filled
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
-
-            // THEN the sign in button is enabled
-            assertSignInSubmitEnabled(isEnabled = true)
         }
+
+        // THEN the sign in button is enabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = true) }
     }
 
     @Test
-    fun `sign in shows loading state while request is in progress`() = testRule.runAccountFeatureTest {
-        // GIVEN the account screen is open with valid fields filled
+    fun `sign in loading indicator is shown while request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the account screen is open with valid fields filled and a delayed sign in request
         goToAccount()
         awaitIdle()
         onAccount {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        // The request is kept in-flight so the loading state can be observed before it completes
         delayAccountRequests(delayMillis = 1_000L)
         enqueueSignInResult(Result.success("token123"))
 
         // WHEN the sign in button is tapped
         onAccount { tapSignIn() }
 
-        // THEN the loading indicator is shown, sign in button is disabled, and sign up button is disabled
+        // THEN the loading indicator is shown
+        onAccount { assertSignInLoadingIndicatorIsShown() }
+    }
+
+    @Test
+    fun `sign in button is disabled while request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the account screen is open with valid fields filled and a delayed sign in request
+        goToAccount()
+        awaitIdle()
         onAccount {
-            assertSignInLoadingIndicatorIsShown()
-            assertSignInSubmitEnabled(isEnabled = false)
-            assertSignUpFromSignInEnabled(isEnabled = false)
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
         }
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueSignInResult(Result.success("token123"))
+
+        // WHEN the sign in button is tapped
+        onAccount { tapSignIn() }
+
+        // THEN the sign in button is disabled
+        onAccount { assertSignInSubmitEnabled(isEnabled = false) }
+    }
+
+    @Test
+    fun `sign up button is disabled while sign in request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the account screen is open with valid fields filled and a delayed sign in request
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            enterSignInEmail("user@example.com")
+            enterSignInPassword("password12345")
+        }
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueSignInResult(Result.success("token123"))
+
+        // WHEN the sign in button is tapped
+        onAccount { tapSignIn() }
+
+        // THEN the sign up button is disabled
+        onAccount { assertSignUpFromSignInEnabled(isEnabled = false) }
     }
 
     @Test
@@ -193,10 +221,10 @@ class AccountTests(private val themeMode: ThemeMode) {
         enqueueSignInResult(Result.failure<String>(InvalidCredentialsException()))
         onAccount { tapSignIn() }
         awaitIdle()
-        onAccount { assertInvalidCredentialsDialogIsShown() }
+        onAccount { invalidCredentialsDialog.assertIsShown() }
 
         // WHEN the invalid credentials dialog is dismissed
-        onAccount { dismissInvalidCredentialsDialog() }
+        onAccount { invalidCredentialsDialog.dismiss() }
         awaitIdle()
 
         // THEN the sign in form is restored and the submit button is enabled
@@ -222,7 +250,7 @@ class AccountTests(private val themeMode: ThemeMode) {
 
         // THEN the invalid credentials dialog is shown
         onAccount {
-            assertInvalidCredentialsDialogIsShown()
+            invalidCredentialsDialog.assertIsShown()
         }
     }
 
@@ -268,7 +296,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `account shows signed in state when session exists`() = testRule.runAccountFeatureTest {
         // GIVEN a session has been saved
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
 
         // WHEN the account screen is opened
         goToAccount()
@@ -283,7 +311,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `sign out returns to sign in state`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        signInAs("user@example.com")
         goToAccount()
         awaitIdle()
 
@@ -294,6 +322,209 @@ class AccountTests(private val themeMode: ThemeMode) {
         // THEN the sign in state is shown
         onAccount {
             assertSignInScreenIsShown()
+        }
+    }
+
+    // Delete account tests
+
+    @Test
+    fun `delete account button is shown when signed in`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in
+        signInAs("user@example.com")
+        goToAccount()
+        awaitIdle()
+
+        // THEN the delete account button is shown
+        onAccount {
+            assertDeleteAccountButtonIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account button navigates to delete account screen`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in and on the account screen
+        signInAs("user@example.com")
+        goToAccount()
+        awaitIdle()
+
+        // WHEN the delete account button is tapped
+        onAccount { tapDeleteAccount() }
+        awaitIdle()
+
+        // THEN the delete account screen is shown with the explainer and warning
+        onDeleteAccount {
+            assertExplainerIsShown()
+            assertWarningIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account submit is disabled when password is empty`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+
+        // THEN the submit button is disabled
+        onDeleteAccount {
+            assertSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `delete account submit is enabled when password is filled`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+
+        // WHEN the password is entered
+        onDeleteAccount { enterPassword("password12345") }
+
+        // THEN the submit button is enabled
+        onDeleteAccount { assertSubmitIsEnabled() }
+    }
+
+    @Test
+    fun `delete account shows loading state while request is in progress`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown with a password entered
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        // The request is kept in-flight so the loading state can be observed before it completes
+        delayAccountRequests(delayMillis = 1_000L)
+        enqueueDeleteAccountResult(Result.success(Unit))
+
+        // WHEN the delete button is tapped
+        onDeleteAccount { tapSubmit() }
+
+        // THEN the loading indicator is shown and the button is disabled before the request completes
+        onDeleteAccount {
+            assertLoadingIndicatorIsShown()
+            assertSubmitIsDisabled()
+        }
+    }
+
+    @Test
+    fun `delete account navigates to sign in screen on success`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in and on the delete account screen
+        signInAs("user@example.com")
+        goToAccount()
+        awaitIdle()
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        enqueueDeleteAccountResult(Result.success(Unit))
+
+        // WHEN the delete account request succeeds
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN the sign in screen is shown (session has been cleared)
+        onAccount {
+            assertSignInScreenIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account shows invalid credentials error on wrong password`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown with a password entered
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("wrongpassword") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
+
+        // WHEN the delete request fails with invalid credentials
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN the invalid credentials dialog is shown
+        onDeleteAccount {
+            invalidCredentialsDialog.assertIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account shows generic error on other failure`() = testRule.runAccountFeatureTest {
+        // GIVEN the delete account screen is shown with a password entered
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(Exception("Network error")))
+
+        // WHEN the delete request fails with a generic error
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN the generic error dialog is shown
+        onDeleteAccount {
+            errorDialog.assertIsShown()
+        }
+    }
+
+    @Test
+    fun `delete account generic error dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN a generic delete account error has occurred
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("password12345") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(Exception("Network error")))
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+        onDeleteAccount { errorDialog.assertIsShown() }
+
+        // WHEN the error dialog is dismissed
+        onDeleteAccount { errorDialog.dismiss() }
+        awaitIdle()
+
+        // THEN the submit button is re-enabled
+        onDeleteAccount {
+            assertSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `delete account invalid credentials dialog can be dismissed`() = testRule.runAccountFeatureTest {
+        // GIVEN an invalid credentials error has occurred
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("wrongpassword") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+        onDeleteAccount { invalidCredentialsDialog.assertIsShown() }
+
+        // WHEN the invalid credentials dialog is dismissed
+        onDeleteAccount { invalidCredentialsDialog.dismiss() }
+        awaitIdle()
+
+        // THEN the submit button is re-enabled
+        onDeleteAccount {
+            assertSubmitIsEnabled()
+        }
+    }
+
+    @Test
+    fun `delete account does not clear session on failure`() = testRule.runAccountFeatureTest {
+        // GIVEN the user is signed in and the delete account request fails
+        signInAs("user@example.com")
+        goToDeleteAccount()
+        awaitIdle()
+        onDeleteAccount { enterPassword("wrongpassword") }
+        enqueueDeleteAccountResult(Result.failure<Unit>(InvalidCredentialsException()))
+        onDeleteAccount { tapSubmit() }
+        awaitIdle()
+
+        // THEN navigating to the account screen still shows the signed-in state
+        goToAccount()
+        awaitIdle()
+        onAccount {
+            assertSignedInEmailIsShown("user@example.com")
         }
     }
 }

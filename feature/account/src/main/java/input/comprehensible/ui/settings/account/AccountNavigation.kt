@@ -10,12 +10,14 @@ data object AccountRoute
 fun NavGraphBuilder.accountScreen(
     onNavigateUp: () -> Unit,
     onGoToSignUp: () -> Unit,
+    onGoToDeleteAccount: () -> Unit,
     onGoToForgotPassword: () -> Unit,
 ) {
     composable<AccountRoute> {
         AccountScreen(
             onNavigateUp = onNavigateUp,
             onGoToSignUp = onGoToSignUp,
+            onGoToDeleteAccount = onGoToDeleteAccount,
             onGoToForgotPassword = onGoToForgotPassword,
         )
     }

@@ -7,6 +7,7 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
     private val signInResults = ArrayDeque<Result<String>>()
+    private val deleteAccountResults = ArrayDeque<Result<Unit>>()
     private val requestPasswordResetCodeResults = ArrayDeque<Result<Unit>>()
     private val resetPasswordResults = ArrayDeque<Result<Unit>>()
 
@@ -26,6 +27,10 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     fun enqueueSignInResult(result: Result<String>) {
         signInResults.add(result)
+    }
+
+    fun enqueueDeleteAccountResult(result: Result<Unit>) {
+        deleteAccountResults.add(result)
     }
 
     fun enqueueRequestPasswordResetCodeResult(result: Result<Unit>) {
@@ -59,6 +64,13 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     override suspend fun signOut(token: String) {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
+    }
+
+    override suspend fun deleteAccount(email: String, password: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+        deleteAccountResults.removeFirstOrNull()
+            ?.getOrThrow()
+            ?: error("No scripted delete account result available")
     }
 
     override suspend fun requestPasswordResetCode(email: String) {

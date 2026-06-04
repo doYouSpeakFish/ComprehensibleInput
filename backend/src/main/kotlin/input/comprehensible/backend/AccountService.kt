@@ -146,11 +146,13 @@ class AccountService(
         return if (verified) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
     }
 
-    fun deleteMe(accountId: String, password: String?): HttpStatusCode {
-        if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
-        val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
+    fun deleteMe(email: String?, password: String?): HttpStatusCode {
+        if (email.isNullOrBlank() || password.isNullOrBlank()) return HttpStatusCode.BadRequest
+        val normalizedEmail = normalizeEmail(email)
+        if (!isValidEmail(normalizedEmail)) return HttpStatusCode.BadRequest
+        val account = accountsDao.findAccountByEmail(normalizedEmail) ?: return HttpStatusCode.Unauthorized
         if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
-        accountsDao.deleteAccount(accountId)
+        accountsDao.deleteAccount(account[AccountsTable.id])
         return HttpStatusCode.NoContent
     }
 

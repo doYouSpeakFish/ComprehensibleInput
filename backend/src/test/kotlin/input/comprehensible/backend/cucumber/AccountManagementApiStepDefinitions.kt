@@ -38,6 +38,7 @@ class AccountManagementApiStepDefinitions {
     private var latestStatus: HttpStatusCode? = null
     private var latestBody: String = ""
     private var bearerToken: String = ""
+    private var currentEmail: String = ""
     private var currentPassword: String = ""
     private var nextVerificationCode: String = "123456"
     private var now: Long = 1_000_000L
@@ -65,6 +66,7 @@ class AccountManagementApiStepDefinitions {
     @Given("I am signed in with email {string} and password {string}")
     fun signInGiven(email: String, password: String) {
         signIn(email, password)
+        currentEmail = email
         currentPassword = password
         if (latestStatus == HttpStatusCode.OK) bearerToken = json.decodeFromString<SignInResponse>(latestBody).accessToken
     }
@@ -195,19 +197,64 @@ class AccountManagementApiStepDefinitions {
     @When("I delete me")
     fun deleteMe() = runCall {
         delete("/v1/me") {
-            header(HttpHeaders.Authorization, "Bearer $bearerToken")
             contentType(ContentType.Application.Json)
-            setBody("{\"password\":\"$currentPassword\"}")
+            setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
         }
     }
-    @When("I delete me without authorization")
-    fun deleteMeNoAuth() = runCall {
+    @When("I delete me with wrong password")
+    fun deleteMeWithWrongPassword() = runCall {
         delete("/v1/me") {
             contentType(ContentType.Application.Json)
-            setBody("{\"password\":\"$currentPassword\"}")
+            setBody("{\"email\":\"$currentEmail\",\"password\":\"wrongpassword\"}")
         }
     }
-
+    @When("I attempt to delete me a second time")
+    fun deleteMeSecondAttempt() = runTwoCalls(
+        first = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
+            }
+        },
+        second = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$currentEmail\",\"password\":\"$currentPassword\"}")
+            }
+        },
+        expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
+    )
+    @When("I attempt to delete me a second time with malformed body")
+    fun deleteMeSecondAttemptMalformedBody() = runTwoCalls(
+        first = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("not-json")
+            }
+        },
+        second = {
+            delete("/v1/me") {
+                contentType(ContentType.Application.Json)
+                setBody("not-json")
+            }
+        },
+    )
+    @When("I attempt to verify email {string} a second time using code {string} rate-limited by email in query parameter")
+    fun verifyEmailSecondAttemptWithQueryParam(email: String, code: String) = runTwoCalls(
+        first = {
+            post("/v1/email-verifications?email=$email") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
+            }
+        },
+        second = {
+            post("/v1/email-verifications?email=$email") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"email\":\"$email\",\"code\":\"$code\"}")
+            }
+        },
+        expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
+    )
     @When("I sign out current session")
     fun signOutCurrent() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }
 
@@ -239,6 +286,30 @@ class AccountManagementApiStepDefinitions {
                 )
             }
             val response = client.block()
+            latestStatus = response.status
+            latestBody = response.bodyAsText()
+        }
+    }
+
+    private fun runTwoCalls(
+        first: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse,
+        second: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse,
+        expectedFirstStatus: io.ktor.http.HttpStatusCode? = null,
+    ) {
+        testApplication {
+            application {
+                configureRouting(
+                    textAdventureService = TextAdventureGenerationService(
+                        FakeTextAdventureStructuredPromptExecutor(),
+                        DatabaseAdventureRepository(database),
+                    ),
+                    appApiKey = "test",
+                    accountService = accountService,
+                )
+            }
+            val firstResponse = client.first()
+            if (expectedFirstStatus != null) assertEquals(expectedFirstStatus, firstResponse.status)
+            val response = client.second()
             latestStatus = response.status
             latestBody = response.bodyAsText()
         }

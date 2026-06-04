@@ -132,44 +132,47 @@
 🟢           global { rateLimiter(limit = 20, refillPeriod = 10.minutes) }
 🟢           register(RateLimitName("email-verification")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢               requestKey { call ->
-🟡                   call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪               }
+🟢               requestKey { call -> emailFromQueryParamOrIp(call) }
 ⚪           }
 🟢           register(RateLimitName("password-reset-request")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢               requestKey { call ->
-🟡                   call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪               }
+🟢               requestKey { call -> emailFromQueryParamOrIp(call) }
 ⚪           }
 🟢           register(RateLimitName("password-reset-attempt")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢               requestKey { call ->
-🟡                   call.request.queryParameters["email"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪               }
+🟢               requestKey { call -> emailFromQueryParamOrIp(call) }
 ⚪           }
 🟢           register(RateLimitName("email-verification-code")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢               requestKey { call ->
-🟡                   runCatching {
-🟡                       Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
-🟡                   }.getOrNull() ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪               }
+🟢               requestKey { call -> emailFromBodyOrIp(call) }
 ⚪           }
 🟢           register(RateLimitName("email-change-current-verification-code")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢               requestKey { call ->
-🟡                   call.request.headers["Authorization"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪               }
+🟢               requestKey { call -> tokenOrIp(call) }
 ⚪           }
 🟢           register(RateLimitName("email-change-new-verification-code")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
-🟢               requestKey { call ->
-🟡                   call.request.headers["Authorization"] ?: call.request.headers["X-Forwarded-For"] ?: call.request.local.remoteHost
-⚪               }
+🟢               requestKey { call -> tokenOrIp(call) }
+⚪           }
+🟢           register(RateLimitName("account-deletion")) {
+🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
+🟢               requestKey { call -> emailFromBodyOrIp(call) }
 ⚪           }
 ⚪       }
 ⚪   }
+⚪   
+⚪   private fun emailFromQueryParamOrIp(call: io.ktor.server.application.ApplicationCall): String =
+🟢       call.request.queryParameters["email"]
+🟢           ?: call.request.local.remoteHost
+⚪   
+⚪   private suspend fun emailFromBodyOrIp(call: io.ktor.server.application.ApplicationCall): String =
+🟢       runCatching {
+🟡           Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
+🟢       }.getOrNull() ?: call.request.local.remoteHost
+⚪   
+⚪   private fun tokenOrIp(call: io.ktor.server.application.ApplicationCall): String =
+🟡       call.request.headers["Authorization"]
+🟢           ?: call.request.local.remoteHost
 ⚪   
 ⚪   fun Application.configureRouting(
 ⚪       textAdventureService: TextAdventureGenerationService,

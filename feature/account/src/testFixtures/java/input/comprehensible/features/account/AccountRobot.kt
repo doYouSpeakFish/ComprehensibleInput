@@ -24,8 +24,26 @@ class GenericErrorDialogRobot(private val composeTestRule: ComposeTestRule) {
     }
 }
 
+class InvalidCredentialsDialogRobot(
+    private val composeTestRule: ComposeTestRule,
+    private val tag: String,
+) {
+    fun assertIsShown() {
+        composeTestRule
+            .onNodeWithTag(tag)
+            .assertIsDisplayed()
+    }
+
+    fun dismiss() {
+        composeTestRule
+            .onNodeWithText("OK")
+            .performClick()
+    }
+}
+
 class AccountRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule, "account_invalid_credentials_dialog")
 
     fun assertAccountTitleIsVisible() {
         composeTestRule
@@ -87,18 +105,6 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    fun assertInvalidCredentialsDialogIsShown() {
-        composeTestRule
-            .onNodeWithTag("account_invalid_credentials_dialog")
-            .assertIsDisplayed()
-    }
-
-    fun dismissInvalidCredentialsDialog() {
-        composeTestRule
-            .onNodeWithText("OK")
-            .performClick()
-    }
-
     // Signed in step
 
     fun assertSignedInEmailIsShown(email: String) {
@@ -119,6 +125,18 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
     fun assertSignInScreenIsShown() {
         composeTestRule
             .onNodeWithTag("account_sign_in_email_field")
+            .assertIsDisplayed()
+    }
+
+    fun tapDeleteAccount() {
+        composeTestRule
+            .onNodeWithTag("account_delete_account_button")
+            .performClick()
+    }
+
+    fun assertDeleteAccountButtonIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_delete_account_button")
             .assertIsDisplayed()
     }
 }
@@ -308,4 +326,52 @@ class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
             .onNodeWithTag("account_verify_email_loading_indicator")
             .assertIsDisplayed()
     }
+}
+
+class DeleteAccountRobot(private val composeTestRule: ComposeTestRule) {
+    val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule, "delete_account_invalid_credentials_dialog")
+
+    fun assertExplainerIsShown() {
+        composeTestRule
+            .onNodeWithTag("delete_account_explainer")
+            .assertIsDisplayed()
+    }
+
+    fun assertWarningIsShown() {
+        composeTestRule
+            .onNodeWithTag("delete_account_warning")
+            .assertIsDisplayed()
+    }
+
+    fun enterPassword(password: String) {
+        composeTestRule
+            .onNodeWithTag("delete_account_password_field")
+            .performTextInput(password)
+    }
+
+    fun assertSubmitIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("delete_account_submit_button")
+            .assertIsEnabled()
+    }
+
+    fun assertSubmitIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("delete_account_submit_button")
+            .assertIsNotEnabled()
+    }
+
+    fun tapSubmit() {
+        composeTestRule
+            .onNodeWithTag("delete_account_submit_button")
+            .performClick()
+    }
+
+    fun assertLoadingIndicatorIsShown() {
+        composeTestRule
+            .onNodeWithTag("delete_account_loading_indicator")
+            .assertIsDisplayed()
+    }
+
 }

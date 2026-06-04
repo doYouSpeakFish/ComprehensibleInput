@@ -15,11 +15,13 @@ import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.features.account.AccountRobot
+import input.comprehensible.features.account.DeleteAccountRobot
 import input.comprehensible.features.account.ForgotPasswordRobot
 import input.comprehensible.features.account.PasswordResetRobot
 import input.comprehensible.features.account.SignUpRobot
 import input.comprehensible.features.account.VerifyEmailRobot
 import input.comprehensible.ui.settings.account.AccountRoute
+import input.comprehensible.ui.settings.account.DeleteAccountRoute
 import input.comprehensible.ui.settings.account.ForgotPasswordRoute
 import input.comprehensible.ui.settings.account.PasswordResetRoute
 import input.comprehensible.ui.settings.account.SignUpRoute
@@ -84,6 +86,10 @@ class AccountFeatureTestScope(
         _isLaunched = true
     }
 
+    suspend fun signInAs(email: String) {
+        realAccountLocalDataSource.saveSession(token = "test-token", email = email)
+    }
+
     fun goToAccount() {
         if (!_isLaunched) launch()
         _navController.navigate(AccountRoute)
@@ -97,6 +103,11 @@ class AccountFeatureTestScope(
     fun goToVerifyEmail(email: String) {
         if (!_isLaunched) launch()
         _navController.navigate(VerifyEmailRoute(email))
+    }
+
+    fun goToDeleteAccount() {
+        if (!_isLaunched) launch()
+        _navController.navigate(DeleteAccountRoute)
     }
 
     fun goToForgotPassword() {
@@ -160,6 +171,10 @@ fun AccountFeatureTestScope.enqueueVerifyEmailResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
 }
 
+fun AccountFeatureTestScope.enqueueDeleteAccountResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueDeleteAccountResult(result)
+}
+
 fun AccountFeatureTestScope.enqueueRequestPasswordResetCodeResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueRequestPasswordResetCodeResult(result)
 }
@@ -179,6 +194,10 @@ suspend fun AccountFeatureTestScope.onSignUp(
 suspend fun AccountFeatureTestScope.onVerifyEmail(
     block: suspend VerifyEmailRobot.() -> Unit = {},
 ) = VerifyEmailRobot(composeRule).apply { block() }
+
+suspend fun AccountFeatureTestScope.onDeleteAccount(
+    block: suspend DeleteAccountRobot.() -> Unit = {},
+) = DeleteAccountRobot(composeRule).apply { block() }
 
 suspend fun AccountFeatureTestScope.onForgotPassword(
     block: suspend ForgotPasswordRobot.() -> Unit = {},

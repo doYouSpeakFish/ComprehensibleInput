@@ -7,6 +7,7 @@ fun NavGraphBuilder.accountNavGraph(navController: NavController) {
     accountScreen(
         onNavigateUp = navController::navigateUp,
         onGoToSignUp = { navController.navigate(SignUpRoute) },
+        onGoToDeleteAccount = { navController.navigate(DeleteAccountRoute) },
         onGoToForgotPassword = { navController.navigate(ForgotPasswordRoute) },
     )
     signUpScreen(
@@ -16,6 +17,10 @@ fun NavGraphBuilder.accountNavGraph(navController: NavController) {
     verifyEmailScreen(
         onNavigateUp = navController::navigateUp,
         onVerified = { navController.popBackStack(AccountRoute, inclusive = false) },
+    )
+    deleteAccountScreen(
+        onNavigateUp = navController::navigateUp,
+        onAccountDeleted = { navController.popBackStack(AccountRoute, inclusive = false) },
     )
     forgotPasswordScreen(
         onNavigateUp = navController::navigateUp,

@@ -83,6 +83,20 @@
 ⚪           }
 ⚪       }
 ⚪   
+⚪       override suspend fun deleteAccount(email: String, password: String) {
+🔴           val response = httpClient.delete("$baseUrl/v1/me") {
+🔴               header("X-Api-Key", apiKey)
+🔴               contentType(ContentType.Application.Json)
+🔴               setBody(DeleteAccountRequest(email = email, password = password))
+🔴           }
+🔴           if (response.status == HttpStatusCode.Unauthorized) {
+🔴               throw InvalidCredentialsException()
+⚪           }
+🔴           if (!response.status.isSuccess()) {
+🔴               error("Delete account failed: ${response.status}")
+⚪           }
+⚪       }
+⚪   
 ⚪       override suspend fun requestPasswordResetCode(email: String) {
 🔴           val response = httpClient.post("$baseUrl/v1/password-reset-codes") {
 🔴               header("X-Api-Key", apiKey)
@@ -122,6 +136,9 @@
 ⚪   private data class SignInResponse(
 🔴       @SerialName("access_token") val accessToken: String,
 ⚪   )
+⚪   
+🔴   @Serializable
+🔴   private data class DeleteAccountRequest(val email: String, val password: String)
 ⚪   
 🔴   @Serializable
 🔴   private data class PasswordResetCodeRequest(val email: String)

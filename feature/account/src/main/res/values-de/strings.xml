@@ -17,6 +17,15 @@
     <string name="account_verify_email_message">Wir haben einen 6-stelligen Bestätigungscode an %1$s gesendet</string>
     <string name="account_verify_email_code_label">Bestätigungscode</string>
     <string name="account_verify_email_submit_button">Bestätigen</string>
+    <string name="account_delete_account_button">Konto löschen</string>
+    <string name="delete_account_screen_title">Konto löschen</string>
+    <string name="delete_account_explainer">Das Löschen Ihres Kontos entfernt dauerhaft alle Ihre Daten, einschließlich Ihres Fortschritts und Ihrer Einstellungen.</string>
+    <string name="delete_account_warning">Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_account_password_label">Passwort</string>
+    <string name="delete_account_submit_button">Konto löschen</string>
+    <string name="delete_account_invalid_credentials_dialog_title">Falsches Passwort</string>
+    <string name="delete_account_invalid_credentials_dialog_message">Das eingegebene Passwort war falsch. Bitte versuchen Sie es erneut.</string>
+    <string name="delete_account_invalid_credentials_dialog_button">OK</string>
     <string name="account_forgot_password_button">Passwort vergessen?</string>
     <string name="account_forgot_password_email_label">E-Mail</string>
     <string name="account_forgot_password_submit_button">Code senden</string>
