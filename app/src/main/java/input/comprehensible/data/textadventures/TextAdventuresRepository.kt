@@ -1,7 +1,6 @@
 package input.comprehensible.data.textadventures
 
 import com.ktin.Singleton
-import input.comprehensible.data.UserEntity
 import input.comprehensible.data.textadventures.model.TextAdventure
 import input.comprehensible.data.textadventures.model.TextAdventureMessage
 import input.comprehensible.data.textadventures.model.TextAdventureMessageSender
@@ -64,7 +63,6 @@ class TextAdventuresRepository(
         learningLanguage: String,
         translationsLanguage: String,
     ): String {
-        localDataSource.upsertUser(UserEntity(id = userId))
         val response = remoteDataSource.startAdventure(
             token = token,
             learningLanguage = learningLanguage,

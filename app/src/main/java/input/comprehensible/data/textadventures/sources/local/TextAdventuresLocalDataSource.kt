@@ -6,14 +6,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.ktin.InjectedSingleton
-import input.comprehensible.data.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TextAdventuresLocalDataSource {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertUser(user: UserEntity)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAdventure(adventure: TextAdventureEntity)
 

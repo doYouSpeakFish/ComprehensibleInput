@@ -13,6 +13,7 @@ import input.comprehensible.data.textadventures.sources.local.TextAdventureMessa
 import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageSentenceView
 import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureSummaryView
+import input.comprehensible.data.account.UserDao
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.di.ApplicationProvider
 
@@ -39,6 +40,7 @@ import input.comprehensible.di.ApplicationProvider
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
     abstract fun getTextAdventuresDao(): TextAdventuresLocalDataSource
+    abstract fun getUserDao(): UserDao
 
     companion object : Singleton<AppDb>() {
         override fun create() = Room

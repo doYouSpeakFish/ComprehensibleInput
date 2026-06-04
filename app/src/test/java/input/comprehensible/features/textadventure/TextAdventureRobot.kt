@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -29,6 +30,12 @@ class TextAdventureRobot(
         composeTestRule
             .onNodeWithText(text, substring = true)
             .assertIsDisplayed()
+    }
+
+    fun assertTranslationHidden(text: String) {
+        composeTestRule
+            .onAllNodesWithText(text, substring = true)
+            .assertCountEquals(0)
     }
 
     fun enterResponse(text: String) {

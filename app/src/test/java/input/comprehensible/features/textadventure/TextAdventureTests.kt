@@ -87,6 +87,12 @@ class TextAdventureTests(private val themeMode: ThemeMode) {
             // THEN the translation is shown
             assertTranslationVisible("Una linterna parpadea en el muelle.")
 
+            // WHEN the reader taps the same sentence again
+            tapOnSentence("A lantern flickers on the dock.")
+
+            // THEN the translation is hidden
+            assertTranslationHidden("Una linterna parpadea en el muelle.")
+
             // WHEN the reader responds again
             enterResponse("I take the lantern.")
             sendResponse()

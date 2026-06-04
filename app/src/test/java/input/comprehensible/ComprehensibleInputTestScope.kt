@@ -10,6 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.TextAdventuresTestData
+import input.comprehensible.data.UserEntity
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
@@ -178,6 +179,7 @@ class ComprehensibleInputTestScope(
     }
 
     suspend fun saveAccountSession(token: String, email: String, userId: String = "test-user-id") {
+        appDb.getUserDao().insertUser(UserEntity(id = userId))
         realAccountLocalDataSource.saveSession(token = token, email = email, userId = userId)
     }
 

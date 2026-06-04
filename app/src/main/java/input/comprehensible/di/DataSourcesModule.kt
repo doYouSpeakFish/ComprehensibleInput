@@ -2,8 +2,8 @@ package input.comprehensible.di
 
 import input.comprehensible.BuildConfig
 import input.comprehensible.data.AppDb
+import input.comprehensible.data.account.AppAccountLocalDataSource
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
-import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.account.sources.remote.DefaultAccountRemoteDataSource
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
@@ -29,6 +29,6 @@ object DataSourcesModule {
                 apiKey = BuildConfig.BACKEND_API_KEY,
             )
         }
-        AccountLocalDataSource.inject { DefaultAccountLocalDataSource() }
+        AccountLocalDataSource.inject { AppAccountLocalDataSource() }
     }
 }
