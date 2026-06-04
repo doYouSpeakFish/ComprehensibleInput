@@ -22,6 +22,7 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     }
 
     override suspend fun startAdventure(
+        token: String,
         learningLanguage: String,
         translationLanguage: String,
     ): TextAdventureRemoteResponse {
@@ -33,6 +34,7 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     }
 
     override suspend fun postUserMessage(
+        token: String,
         adventureId: String,
         parentId: String,
         text: String,
@@ -51,6 +53,7 @@ class FakeTextAdventureRemoteDataSource : TextAdventureRemoteDataSource {
     )
 
     override suspend fun postAiMessage(
+        token: String,
         adventureId: String,
         parentId: String,
     ): TextAdventureMessageRemoteResponse {

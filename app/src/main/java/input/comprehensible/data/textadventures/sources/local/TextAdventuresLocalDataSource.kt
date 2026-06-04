@@ -6,10 +6,14 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.ktin.InjectedSingleton
+import input.comprehensible.data.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TextAdventuresLocalDataSource {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertUser(user: UserEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAdventure(adventure: TextAdventureEntity)
 
@@ -34,10 +38,11 @@ interface TextAdventuresLocalDataSource {
     @Query(
         """
             SELECT * FROM TextAdventureSummaryView
+            WHERE userId = :userId
             ORDER BY updatedAt DESC
         """
     )
-    fun getAdventureSummaries(): Flow<List<TextAdventureSummaryView>>
+    fun getAdventureSummaries(userId: String): Flow<List<TextAdventureSummaryView>>
 
     @Query(
         """

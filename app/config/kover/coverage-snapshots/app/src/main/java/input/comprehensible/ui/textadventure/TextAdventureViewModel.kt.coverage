@@ -2,6 +2,8 @@
 ⚪   
 ⚪   import androidx.lifecycle.ViewModel
 ⚪   import androidx.lifecycle.viewModelScope
+⚪   import input.comprehensible.data.account.AccountRepository
+⚪   import input.comprehensible.data.account.sources.local.Session
 ⚪   import input.comprehensible.data.textadventures.TextAdventureResult
 ⚪   import input.comprehensible.data.textadventures.model.TextAdventureMessage
 ⚪   import input.comprehensible.data.textadventures.model.TextAdventureMessageSender
@@ -18,12 +20,22 @@
 ⚪   
 ⚪   class TextAdventureViewModel(
 🟢       private val adventureId: String,
+🟢       accountRepository: AccountRepository = AccountRepository(),
 🟢       getTextAdventureUseCase: GetTextAdventureUseCase = GetTextAdventureUseCase(),
 🟢       private val continueTextAdventureUseCase: ContinueTextAdventureUseCase = ContinueTextAdventureUseCase(),
 ⚪   ) : ViewModel() {
 🟢       private val adventureFlow = getTextAdventureUseCase(adventureId)
 🟢       private val selectedText = MutableStateFlow<TextAdventureUiState.SelectedText?>(null)
 🟢       private val inputText = MutableStateFlow("")
+🟢       private val currentSession = MutableStateFlow<Session?>(null)
+⚪   
+🟢       init {
+🟢           viewModelScope.launch {
+🟢               accountRepository.session.collect { session ->
+🟢                   currentSession.value = session
+⚪               }
+⚪           }
+🟢       }
 ⚪   
 🟢       val state = combine(
 🟢           adventureFlow,
@@ -51,11 +63,16 @@
 ⚪       }
 ⚪   
 ⚪       fun onSendMessage() {
+🟡           val token = currentSession.value?.token ?: return
 🟢           val message = inputText.value.trim()
 🟡           if (message.isBlank()) return
 🟢           viewModelScope.launch {
 🟢               inputText.value = ""
-🟢               continueTextAdventureUseCase(adventureId = adventureId, userMessage = message)
+🟢               continueTextAdventureUseCase(
+🟢                   token = token,
+🟢                   adventureId = adventureId,
+🟢                   userMessage = message,
+⚪               )
 ⚪           }
 ⚪       }
 ⚪   

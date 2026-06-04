@@ -2,7 +2,6 @@ package input.comprehensible.di
 
 import input.comprehensible.BuildConfig
 import input.comprehensible.data.AppDb
-import input.comprehensible.data.account.SessionProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
@@ -15,10 +14,6 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
 import input.comprehensible.data.textadventures.sources.remote.DefaultTextAdventureRemoteDataSource
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 object DataSourcesModule {
     // CoroutinesModule.inject() must run before this so that AppScope() is available.
@@ -35,10 +30,5 @@ object DataSourcesModule {
             )
         }
         AccountLocalDataSource.inject { DefaultAccountLocalDataSource() }
-
-        AccountLocalDataSource().session
-            .onEach { SessionProvider().token = it?.token }
-            .catch { Timber.e(it, "Failed to observe account session") }
-            .launchIn(AppScope())
     }
 }

@@ -2,41 +2,48 @@ package input.comprehensible.ui.storylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import input.comprehensible.data.account.AccountRepository
+import input.comprehensible.data.account.sources.local.Session
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesListResult
 import input.comprehensible.data.textadventures.TextAdventuresListResult
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.usecases.GetStoriesListUseCase
-import input.comprehensible.usecases.GetTextAdventuresListUseCase
+import input.comprehensible.usecases.GetTextAdventuresUseCase
 import input.comprehensible.usecases.StartTextAdventureUseCase
 import input.comprehensible.util.FeatureFlags
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/**
- * A ViewModel for the StoryList screen.
- */
 class StoryListViewModel(
     private val featureFlags: FeatureFlags = FeatureFlags(),
     private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
+    accountRepository: AccountRepository = AccountRepository(),
     getStoriesListUseCase: GetStoriesListUseCase = GetStoriesListUseCase(),
-    getTextAdventuresListUseCase: GetTextAdventuresListUseCase = GetTextAdventuresListUseCase(),
+    getTextAdventuresUseCase: GetTextAdventuresUseCase = GetTextAdventuresUseCase(),
     private val startTextAdventureUseCase: StartTextAdventureUseCase = StartTextAdventureUseCase(),
 ) : ViewModel() {
     private val _events = MutableSharedFlow<StoryListEvent>()
     val events = _events.asSharedFlow()
 
-    private val textAdventuresFlow: Flow<TextAdventuresListResult> =
-        getTextAdventuresListUseCase()
+    private val currentSession = MutableStateFlow<Session?>(null)
+
+    init {
+        viewModelScope.launch {
+            accountRepository.session.collect { session ->
+                currentSession.value = session
+            }
+        }
+    }
 
     val state = combine(
         getStoriesListUseCase(),
-        textAdventuresFlow,
+        getTextAdventuresUseCase(),
         languageSettingsRepository.learningLanguage,
         languageSettingsRepository.translationsLanguage,
     ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
@@ -85,18 +92,12 @@ class StoryListViewModel(
             initialValue = StoryListUiState.INITIAL
         )
 
-    /**
-     * Called when the user selects a language to learn.
-     */
     fun onLearningLanguageSelected(learningLanguage: LanguageSelection) {
         viewModelScope.launch {
             languageSettingsRepository.setLearningLanguage(learningLanguage.languageCode)
         }
     }
 
-    /**
-     * Called when the user selects a language to learn.
-     */
     fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
         viewModelScope.launch {
             languageSettingsRepository.setTranslationLanguage(translationLanguage.languageCode)
@@ -105,8 +106,9 @@ class StoryListViewModel(
 
     fun onStartTextAdventure() {
         if (!featureFlags.aiTextAdventuresEnabled) return
+        val session = currentSession.value ?: return
         viewModelScope.launch {
-            val adventureId = startTextAdventureUseCase()
+            val adventureId = startTextAdventureUseCase(session)
             _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
         }
     }

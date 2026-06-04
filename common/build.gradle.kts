@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.androidx.compose.icons)
     implementation(libs.coroutines)
     implementation(libs.ktin.core)
+    implementation(libs.bundles.androidx.room)
 
     debugImplementation(libs.androidx.ui.tooling)
 }

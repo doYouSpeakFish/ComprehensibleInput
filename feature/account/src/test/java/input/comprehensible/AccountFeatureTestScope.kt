@@ -134,7 +134,7 @@ fun AccountFeatureTestScope.delayAccountRequests(delayMillis: Long) {
     fakeAccountRemoteDataSource.requestDelayMillis = delayMillis
 }
 
-fun AccountFeatureTestScope.enqueueSignInResult(result: Result<String>) {
+fun AccountFeatureTestScope.enqueueSignInResult(result: Result<input.comprehensible.data.account.sources.remote.SignInData>) {
     fakeAccountRemoteDataSource.enqueueSignInResult(result)
 }
 

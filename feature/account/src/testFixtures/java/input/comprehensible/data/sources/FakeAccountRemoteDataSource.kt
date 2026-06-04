@@ -1,12 +1,13 @@
 package input.comprehensible.data.sources
 
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.account.sources.remote.SignInData
 import kotlinx.coroutines.delay
 
 class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
-    private val signInResults = ArrayDeque<Result<String>>()
+    private val signInResults = ArrayDeque<Result<SignInData>>()
 
     /**
      * When greater than zero, requests suspend for this many milliseconds before completing. This
@@ -22,7 +23,7 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
         verifyEmailResults.add(result)
     }
 
-    fun enqueueSignInResult(result: Result<String>) {
+    fun enqueueSignInResult(result: Result<SignInData>) {
         signInResults.add(result)
     }
 
@@ -40,7 +41,7 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
             ?: error("No scripted verify email result available")
     }
 
-    override suspend fun signIn(email: String, password: String): String {
+    override suspend fun signIn(email: String, password: String): SignInData {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
         return signInResults.removeFirstOrNull()
             ?.getOrThrow()

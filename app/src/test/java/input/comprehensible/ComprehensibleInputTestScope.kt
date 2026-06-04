@@ -10,10 +10,10 @@ import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.TextAdventuresTestData
-import input.comprehensible.data.account.SessionProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.account.sources.remote.SignInData
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
@@ -96,7 +96,7 @@ class ComprehensibleInputTestScope(
         AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
             override suspend fun createAccount(email: String, password: String) = Unit
             override suspend fun verifyEmail(email: String, code: String) = Unit
-            override suspend fun signIn(email: String, password: String) = ""
+            override suspend fun signIn(email: String, password: String) = SignInData(token = "", userId = "")
             override suspend fun signOut(token: String) = Unit
         } }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
@@ -175,14 +175,12 @@ class ComprehensibleInputTestScope(
         textAdventuresTestData.enqueueAdventure(scenario, responses)
     }
 
-    suspend fun saveAccountSession(token: String, email: String) {
-        realAccountLocalDataSource.saveSession(token, email)
-        SessionProvider().token = token
+    suspend fun saveAccountSession(token: String, email: String, userId: String = "test-user-id") {
+        realAccountLocalDataSource.saveSession(token = token, email = email, userId = userId)
     }
 
     suspend fun clearAccountSession() {
         realAccountLocalDataSource.clearSession()
-        SessionProvider().token = null
     }
 
     /**

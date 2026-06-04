@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import com.ktin.Singleton
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import input.comprehensible.data.UserEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageEntity
 import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageSentenceView
@@ -18,6 +19,7 @@ import input.comprehensible.di.ApplicationProvider
 @Database(
     entities = [
         StoryEntity::class,
+        UserEntity::class,
         TextAdventureEntity::class,
         TextAdventureMessageEntity::class,
         TextAdventureSentenceEntity::class,
@@ -26,7 +28,7 @@ import input.comprehensible.di.ApplicationProvider
         TextAdventureSummaryView::class,
         TextAdventureMessageSentenceView::class,
     ],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -44,6 +46,7 @@ abstract class AppDb : RoomDatabase() {
             .addMigrations(TextAdventureMigration5To6())
             .addMigrations(TextAdventureMigration6To7())
             .addMigrations(TextAdventureMigration7To8())
+            .addMigrations(TextAdventureMigration8To9())
             .build()
     }
 }

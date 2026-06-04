@@ -5,12 +5,12 @@ import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.Session
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
 class AccountRepository(
     private val remoteDataSource: AccountRemoteDataSource,
     private val localDataSource: AccountLocalDataSource,
-    private val sessionProvider: SessionProvider = SessionProvider(),
 ) {
     val session: Flow<Session?> = localDataSource.session
 
@@ -24,15 +24,17 @@ class AccountRepository(
 
     suspend fun signIn(email: String, password: String): Result<Unit> =
         runCatching {
-            val token = remoteDataSource.signIn(email, password)
-            localDataSource.saveSession(token, email)
-            sessionProvider.token = token
+            val signInData = remoteDataSource.signIn(email, password)
+            localDataSource.saveSession(
+                token = signInData.token,
+                email = email,
+                userId = signInData.userId,
+            )
         }.onFailure { Timber.e(it, "Failed to sign in") }
 
     suspend fun signOut(): Result<Unit> = runCatching {
-        val token = sessionProvider.token
+        val token = localDataSource.session.first()?.token
         localDataSource.clearSession()
-        sessionProvider.token = null
         if (token != null) {
             runCatching { remoteDataSource.signOut(token) }
                 .onFailure { Timber.e(it, "Failed to revoke server session") }

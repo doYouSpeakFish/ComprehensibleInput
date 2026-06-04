@@ -1,8 +1,6 @@
 package input.comprehensible.data.textadventures.sources.remote
 
 import input.comprehensible.BuildConfig
-import input.comprehensible.data.NotAuthenticatedException
-import input.comprehensible.data.account.SessionProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -20,7 +18,6 @@ import kotlinx.serialization.json.Json
 private const val TIMEOUT_MILLIS = 60_000L
 
 class DefaultTextAdventureRemoteDataSource(
-    private val sessionProvider: SessionProvider = SessionProvider(),
     private val httpClient: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -32,11 +29,11 @@ class DefaultTextAdventureRemoteDataSource(
     },
 ) : TextAdventureRemoteDataSource {
     override suspend fun startAdventure(
+        token: String,
         learningLanguage: String,
         translationLanguage: String,
-    ): TextAdventureRemoteResponse {
-        val token = requireToken()
-        return httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/adventures") {
+    ): TextAdventureRemoteResponse =
+        httpClient.post("${BuildConfig.BACKEND_BASE_URL}/v1/adventures") {
             header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
             header("Authorization", "Bearer $token")
             contentType(ContentType.Application.Json)
@@ -47,15 +44,14 @@ class DefaultTextAdventureRemoteDataSource(
                 )
             )
         }.body()
-    }
 
     override suspend fun postUserMessage(
+        token: String,
         adventureId: String,
         parentId: String,
         text: String,
-    ): TextAdventureMessageRemoteResponse {
-        val token = requireToken()
-        return httpClient.post(
+    ): TextAdventureMessageRemoteResponse =
+        httpClient.post(
             "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
         ) {
             header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
@@ -69,14 +65,13 @@ class DefaultTextAdventureRemoteDataSource(
                 )
             )
         }.body()
-    }
 
     override suspend fun postAiMessage(
+        token: String,
         adventureId: String,
         parentId: String,
-    ): TextAdventureMessageRemoteResponse {
-        val token = requireToken()
-        return httpClient.post(
+    ): TextAdventureMessageRemoteResponse =
+        httpClient.post(
             "${BuildConfig.BACKEND_BASE_URL}/v1/adventures/$adventureId/messages"
         ) {
             header("X-Api-Key", BuildConfig.BACKEND_API_KEY)
@@ -89,10 +84,6 @@ class DefaultTextAdventureRemoteDataSource(
                 )
             )
         }.body()
-    }
-
-    private fun requireToken(): String =
-        sessionProvider.token ?: throw NotAuthenticatedException()
 
     private companion object {
         const val MESSAGE_TYPE_USER = "user"

@@ -1,6 +1,7 @@
 ⚪   package input.comprehensible.data.textadventures
 ⚪   
 ⚪   import com.ktin.Singleton
+⚪   import input.comprehensible.data.UserEntity
 ⚪   import input.comprehensible.data.textadventures.model.TextAdventure
 ⚪   import input.comprehensible.data.textadventures.model.TextAdventureMessage
 ⚪   import input.comprehensible.data.textadventures.model.TextAdventureMessageSender
@@ -18,6 +19,7 @@
 ⚪   import kotlinx.coroutines.flow.Flow
 ⚪   import kotlinx.coroutines.flow.catch
 ⚪   import kotlinx.coroutines.flow.distinctUntilChanged
+⚪   import kotlinx.coroutines.flow.flowOf
 ⚪   import kotlinx.coroutines.flow.map
 ⚪   import timber.log.Timber
 ⚪   
@@ -26,17 +28,20 @@
 🟢       private val remoteDataSource: TextAdventureRemoteDataSource,
 🟢       private val clock: () -> Long = { System.currentTimeMillis() },
 ⚪   ) {
-🟢       fun getAdventures(): Flow<TextAdventuresListResult> = localDataSource
-🟢           .getAdventureSummaries()
-🟢           .map { summaries ->
-🟢               TextAdventuresListResult.Success(
-🟢                   summaries.map { summary -> summary.toSummary() }
-🟢               ) as TextAdventuresListResult
-⚪           }
-🟢           .catch { throwable ->
-🔴               Timber.e(throwable, "Failed to load text adventures list")
-🔴               emit(TextAdventuresListResult.Error)
-⚪           }
+⚪       fun getAdventures(userId: String?): Flow<TextAdventuresListResult> {
+🟢           if (userId == null) return flowOf(TextAdventuresListResult.Success(emptyList()))
+🟢           return localDataSource
+🟢               .getAdventureSummaries(userId)
+🟢               .map { summaries ->
+🟢                   TextAdventuresListResult.Success(
+🟢                       summaries.map { summary -> summary.toSummary() }
+🟢                   ) as TextAdventuresListResult
+⚪               }
+🟢               .catch { throwable ->
+🔴                   Timber.e(throwable, "Failed to load text adventures list")
+🔴                   emit(TextAdventuresListResult.Error)
+⚪               }
+⚪       }
 ⚪   
 🟢       fun getAdventure(id: String): Flow<TextAdventureResult> = localDataSource
 🟢           .getAdventureSentenceRows(id)
@@ -54,10 +59,14 @@
 ⚪           }
 ⚪   
 ⚪       suspend fun startNewAdventure(
+⚪           token: String,
+⚪           userId: String,
 ⚪           learningLanguage: String,
 ⚪           translationsLanguage: String,
 ⚪       ): String {
+🟢           localDataSource.upsertUser(UserEntity(id = userId))
 🟢           val response = remoteDataSource.startAdventure(
+🟢               token = token,
 🟢               learningLanguage = learningLanguage,
 🟢               translationLanguage = translationsLanguage,
 ⚪           )
@@ -71,6 +80,7 @@
 🟢                   translationLanguage = translationsLanguage,
 🟢                   createdAt = now,
 🟢                   updatedAt = now,
+🟢                   userId = userId,
 ⚪               )
 ⚪           )
 🟢           insertStartResponse(
@@ -83,7 +93,7 @@
 🟢           return adventureId
 ⚪       }
 ⚪   
-⚪       suspend fun respondToAdventure(adventureId: String, userMessage: String) {
+⚪       suspend fun respondToAdventure(token: String, adventureId: String, userMessage: String) {
 🟡           val adventure = localDataSource.getAdventureSnapshot(adventureId) ?: run {
 🔴               Timber.e("Text adventure %s not found when responding", adventureId)
 🟢               return
@@ -95,11 +105,13 @@
 ⚪   
 🟢           val now = clock()
 🟢           val userMessageResponse = remoteDataSource.postUserMessage(
+🟢               token = token,
 🟢               adventureId = adventureId,
 🟢               parentId = leafMessageId,
 🟢               text = userMessage,
 ⚪           )
 🟢           val aiMessageResponse = remoteDataSource.postAiMessage(
+🟢               token = token,
 🟢               adventureId = adventureId,
 🟢               parentId = userMessageResponse.id,
 ⚪           )

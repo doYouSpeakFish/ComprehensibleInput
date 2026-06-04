@@ -7,6 +7,7 @@ import input.comprehensible.AccountFeatureTestScope
 import input.comprehensible.ComprehensibleInputTestRule
 import input.comprehensible.ThemeMode
 import input.comprehensible.data.account.InvalidCredentialsException
+import input.comprehensible.data.account.sources.remote.SignInData
 import input.comprehensible.delayAccountRequests
 import input.comprehensible.enqueueCreateAccountResult
 import input.comprehensible.enqueueSignInResult
@@ -126,7 +127,7 @@ class AccountTests(private val themeMode: ThemeMode) {
         }
         // The request is kept in-flight so the loading state can be observed before it completes
         delayAccountRequests(delayMillis = 1_000L)
-        enqueueSignInResult(Result.success("token123"))
+        enqueueSignInResult(Result.success(SignInData(token = "token123", userId = "user-123")))
 
         // WHEN the sign in button is tapped
         onAccount { tapSignIn() }
@@ -148,7 +149,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        enqueueSignInResult(Result.success("token123"))
+        enqueueSignInResult(Result.success(SignInData(token = "token123", userId = "user-123")))
 
         // WHEN the sign in request succeeds
         onAccount { tapSignIn() }
@@ -169,7 +170,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        enqueueSignInResult(Result.failure<String>(Exception("Network error")))
+        enqueueSignInResult(Result.failure<SignInData>(Exception("Network error")))
         onAccount { tapSignIn() }
         awaitIdle()
         onAccount { errorDialog.assertIsShown() }
@@ -193,7 +194,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("wrongpassword12345")
         }
-        enqueueSignInResult(Result.failure<String>(InvalidCredentialsException()))
+        enqueueSignInResult(Result.failure<SignInData>(InvalidCredentialsException()))
         onAccount { tapSignIn() }
         awaitIdle()
         onAccount { assertInvalidCredentialsDialogIsShown() }
@@ -217,7 +218,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("wrongpassword12345")
         }
-        enqueueSignInResult(Result.failure<String>(InvalidCredentialsException()))
+        enqueueSignInResult(Result.failure<SignInData>(InvalidCredentialsException()))
 
         // WHEN the sign in request fails with invalid credentials
         onAccount { tapSignIn() }
@@ -238,7 +239,7 @@ class AccountTests(private val themeMode: ThemeMode) {
             enterSignInEmail("user@example.com")
             enterSignInPassword("password12345")
         }
-        enqueueSignInResult(Result.failure<String>(Exception("Network error")))
+        enqueueSignInResult(Result.failure<SignInData>(Exception("Network error")))
 
         // WHEN the sign in request fails with a generic error
         onAccount { tapSignIn() }
@@ -271,7 +272,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `account shows signed in state when session exists`() = testRule.runAccountFeatureTest {
         // GIVEN a session has been saved
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com", userId = "test-user-id")
 
         // WHEN the account screen is opened
         goToAccount()
@@ -286,7 +287,7 @@ class AccountTests(private val themeMode: ThemeMode) {
     @Test
     fun `sign out returns to sign in state`() = testRule.runAccountFeatureTest {
         // GIVEN the user is signed in
-        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com")
+        realAccountLocalDataSource.saveSession(token = "test-token", email = "user@example.com", userId = "test-user-id")
         goToAccount()
         awaitIdle()
 

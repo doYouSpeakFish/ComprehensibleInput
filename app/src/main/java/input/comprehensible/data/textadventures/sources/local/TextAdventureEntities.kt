@@ -5,9 +5,20 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import input.comprehensible.data.UserEntity
 import input.comprehensible.data.textadventures.model.TextAdventureMessageSender
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [Index("userId")],
+)
 data class TextAdventureEntity(
     @PrimaryKey val id: String,
     val title: String,
@@ -15,6 +26,7 @@ data class TextAdventureEntity(
     val translationLanguage: String,
     val createdAt: Long,
     val updatedAt: Long,
+    val userId: String,
 )
 
 @Entity(
@@ -71,6 +83,7 @@ data class TextAdventureSentenceEntity(
         adventure.learningLanguage AS learningLanguage,
         adventure.translationLanguage AS translationLanguage,
         adventure.updatedAt AS updatedAt,
+        adventure.userId AS userId,
         CASE WHEN EXISTS (
             SELECT 1 FROM TextAdventureMessageEntity m
             WHERE m.adventureId = adventure.id AND m.isEnding = 1
@@ -84,6 +97,7 @@ data class TextAdventureSummaryView(
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
+    val userId: String,
     val isComplete: Boolean,
 )
 

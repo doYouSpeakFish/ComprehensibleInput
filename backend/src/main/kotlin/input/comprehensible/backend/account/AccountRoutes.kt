@@ -114,6 +114,7 @@ fun Route.accountRoutes(accountService: AccountService) {
 data class SignInRemoteResponse(
     @SerialName("access_token") val accessToken: String,
     @SerialName("token_type") val tokenType: String,
+    @SerialName("user_id") val userId: String,
 )
 
-private fun SignInPayload.toRemote() = SignInRemoteResponse(accessToken, tokenType)
+private fun SignInPayload.toRemote() = SignInRemoteResponse(accessToken, tokenType, userId)
