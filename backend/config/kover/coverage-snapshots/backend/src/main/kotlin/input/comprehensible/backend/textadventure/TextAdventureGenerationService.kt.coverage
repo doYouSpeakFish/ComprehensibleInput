@@ -15,6 +15,7 @@
 ⚪   class TextAdventureGenerationService(
 🟢       private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,
 🟢       private val adventureRepository: AdventureRepository,
+🟢       private val inspirationWordSampler: InspirationWordSampler = DefaultInspirationWordSampler(),
 🟢       private val messageIdProvider: () -> String = { UUID.randomUUID().toString() },
 ⚪   ) {
 🟢       private val json = Json {
@@ -38,7 +39,7 @@
 ⚪                   Do not include extra commentary outside the requested fields.
 ⚪                   Avoid markdown and keep punctuation natural for the language.
 ⚪                   The story should not end yet, so set isEnding to false.
-🟢               """.trimIndent(),
+🟢               """.trimIndent() + inspirationPromptSection(),
 🟢               userPrompt = "Start a new adventure.",
 ⚪           )
 🟢           val messageId = messageIdProvider()
@@ -157,7 +158,7 @@
 ⚪                   Keep the title consistent with the story so far.
 ⚪                   Do not include extra commentary outside the requested fields.
 ⚪                   Avoid markdown and keep punctuation natural for the language.
-🟢               """.trimIndent(),
+🟢               """.trimIndent() + inspirationPromptSection(),
 🟢               userPrompt = json.encodeToString(
 🟢                   ContinueTextAdventureRequest(
 🟢                       adventureId = adventureId,
@@ -221,6 +222,17 @@
 🟢                   translatedSentences = translatedParagraph.sentences.map(String::trim),
 🟢               )
 ⚪           }
+⚪       }
+⚪   
+⚪       private fun inspirationPromptSection(): String {
+🟢           val words = inspirationWordSampler.sample()
+🟢           if (words.isEmpty()) return ""
+⚪           return "\n\n" + """
+🟢               For added variety, here are some random words as loose inspiration: ${words.joinToString(", ")}.
+⚪               They are only a creative spark to make the story feel fresh.
+⚪               You do not need to use any of them, you must not force them into the narrative,
+⚪               and you must not mention this instruction or list the words to the player.
+🟢           """.trimIndent()
 ⚪       }
 ⚪   
 ⚪       private suspend fun requestAdventureResponse(
