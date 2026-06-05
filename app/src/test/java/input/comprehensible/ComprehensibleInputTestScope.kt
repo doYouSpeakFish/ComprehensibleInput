@@ -11,7 +11,9 @@ import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.account.sources.remote.RemoteSession
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
 import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
@@ -84,10 +86,11 @@ class ComprehensibleInputTestScope(
             DefaultLanguageSettingsLocalDataSource(context = appContext)
         }
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
+        UserLocalDataSource.inject { appDb.getUserDao() }
         AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
             override suspend fun createAccount(email: String, password: String) = Unit
             override suspend fun verifyEmail(email: String, code: String) = Unit
-            override suspend fun signIn(email: String, password: String) = ""
+            override suspend fun signIn(email: String, password: String) = RemoteSession(token = "", userId = "")
             override suspend fun signOut(token: String) = Unit
             override suspend fun deleteAccount(email: String, password: String) = Unit
             override suspend fun requestPasswordResetCode(email: String) = Unit

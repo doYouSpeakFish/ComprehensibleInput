@@ -7,23 +7,28 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ktin.Singleton
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.ApplicationProvider
 
 @Database(
     entities = [
         StoryEntity::class,
+        UserEntity::class,
     ],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4),
+        AutoMigration(from = 8, to = 9),
     ]
 )
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
+    abstract fun getUserDao(): UserLocalDataSource
 
     companion object : Singleton<AppDb>() {
         override fun create(): AppDb {

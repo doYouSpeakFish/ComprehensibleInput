@@ -1,6 +1,7 @@
 package input.comprehensible.data.sources
 
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.account.sources.remote.RemoteSession
 import kotlinx.coroutines.delay
 
 class FakeAccountRemoteDataSource : AccountRemoteDataSource {
@@ -16,6 +17,9 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
      * keeps a request in-flight so tests can observe the loading state before it finishes.
      */
     var requestDelayMillis: Long = 0L
+
+    /** The user id returned alongside the token by the next successful sign in. */
+    var nextSignInUserId: String = "test-user-id"
 
     fun enqueueCreateAccountResult(result: Result<Unit>) {
         createAccountResults.add(result)
@@ -55,11 +59,12 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
             ?: error("No scripted verify email result available")
     }
 
-    override suspend fun signIn(email: String, password: String): String {
+    override suspend fun signIn(email: String, password: String): RemoteSession {
         if (requestDelayMillis > 0) delay(requestDelayMillis)
-        return signInResults.removeFirstOrNull()
+        val token = signInResults.removeFirstOrNull()
             ?.getOrThrow()
             ?: error("No scripted sign in result available")
+        return RemoteSession(token = token, userId = nextSignInUserId)
     }
 
     override suspend fun signOut(token: String) {

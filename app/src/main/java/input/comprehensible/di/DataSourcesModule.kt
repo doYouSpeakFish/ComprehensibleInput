@@ -4,6 +4,7 @@ import input.comprehensible.BuildConfig
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.account.sources.remote.DefaultAccountRemoteDataSource
 import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
@@ -15,6 +16,7 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 object DataSourcesModule {
     fun inject() {
         StoriesInfoLocalDataSource.inject { AppDb.getInstance().getStoriesInfoDao() }
+        UserLocalDataSource.inject { AppDb.getInstance().getUserDao() }
         StoriesLocalDataSource.inject { DefaultStoriesLocalDataSource() }
         LanguageSettingsLocalDataSource.inject { DefaultLanguageSettingsLocalDataSource() }
         AccountRemoteDataSource.inject {

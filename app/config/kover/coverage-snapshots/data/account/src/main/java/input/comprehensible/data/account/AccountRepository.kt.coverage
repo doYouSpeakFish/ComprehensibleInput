@@ -3,16 +3,23 @@
 ⚪   import com.ktin.Singleton
 ⚪   import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 ⚪   import input.comprehensible.data.account.sources.local.Session
+⚪   import input.comprehensible.data.account.sources.local.UserLocalDataSource
 ⚪   import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+⚪   import input.comprehensible.data.user.UserEntity
 ⚪   import kotlinx.coroutines.flow.Flow
 ⚪   import kotlinx.coroutines.flow.first
+⚪   import kotlinx.coroutines.flow.map
 ⚪   import timber.log.Timber
 ⚪   
 🟢   class AccountRepository(
 🟢       private val remoteDataSource: AccountRemoteDataSource,
 🟢       private val localDataSource: AccountLocalDataSource,
+🟢       private val userLocalDataSource: UserLocalDataSource,
 ⚪   ) {
 🟢       val session: Flow<Session?> = localDataSource.session
+🟢       val user: Flow<UserEntity?> = localDataSource.session.map { current ->
+🟢           current?.let { UserEntity(id = it.userId, email = it.email) }
+⚪       }
 ⚪   
 ⚪       suspend fun createAccount(email: String, password: String): Result<Unit> =
 🟢           runCatching { remoteDataSource.createAccount(email, password) }
@@ -24,8 +31,9 @@
 ⚪   
 ⚪       suspend fun signIn(email: String, password: String): Result<Unit> =
 🟢           runCatching {
-🟢               val token = remoteDataSource.signIn(email, password)
-🟢               localDataSource.saveSession(token, email)
+🟢               val remoteSession = remoteDataSource.signIn(email, password)
+🟢               localDataSource.saveSession(remoteSession.token, email, remoteSession.userId)
+🟢               userLocalDataSource.upsertUser(UserEntity(id = remoteSession.userId, email = email))
 🟢           }.onFailure { Timber.e(it, "Failed to sign in") }
 ⚪   
 ⚪       suspend fun requestPasswordResetCode(email: String): Result<Unit> =
@@ -46,9 +54,9 @@
 🟡       }.onFailure { Timber.e(it, "Failed to sign out") }
 ⚪   
 🟢       suspend fun deleteAccount(password: String): Result<Unit> = runCatching {
-🟡           val email = localDataSource.session.first()?.email
-🔴               ?: throw InvalidCredentialsException()
-🟢           remoteDataSource.deleteAccount(email, password)
+🟡           val current = localDataSource.session.first() ?: throw InvalidCredentialsException()
+🟢           remoteDataSource.deleteAccount(current.email, password)
+🟢           userLocalDataSource.deleteUser(current.userId)
 🟢           localDataSource.clearSession()
 🟢       }.onFailure { Timber.e(it, "Failed to delete account") }
 ⚪   
@@ -56,6 +64,7 @@
 🟢           override fun create() = AccountRepository(
 🟢               remoteDataSource = AccountRemoteDataSource(),
 🟢               localDataSource = AccountLocalDataSource(),
+🟢               userLocalDataSource = UserLocalDataSource(),
 ⚪           )
 ⚪       }
 ⚪   }

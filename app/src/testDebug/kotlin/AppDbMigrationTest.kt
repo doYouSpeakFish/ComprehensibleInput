@@ -80,6 +80,6 @@ class AppDbMigrationTest {
         private const val TEST_DB = "migration-test"
         private const val EARLIEST_VERSION = 1
         private const val TEXT_ADVENTURE_VERSION = 7
-        private const val CURRENT_VERSION = 8
+        private const val CURRENT_VERSION = 9
     }
 }

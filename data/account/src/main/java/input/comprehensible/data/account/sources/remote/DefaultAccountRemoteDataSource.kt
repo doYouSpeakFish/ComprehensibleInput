@@ -58,7 +58,7 @@ class DefaultAccountRemoteDataSource(
         }
     }
 
-    override suspend fun signIn(email: String, password: String): String {
+    override suspend fun signIn(email: String, password: String): RemoteSession {
         val response = httpClient.post("$baseUrl/v1/auth/sessions") {
             header("X-Api-Key", apiKey)
             contentType(ContentType.Application.Json)
@@ -70,7 +70,8 @@ class DefaultAccountRemoteDataSource(
         if (!response.status.isSuccess()) {
             error("Sign in failed: ${response.status}")
         }
-        return response.body<SignInResponse>().accessToken
+        val body = response.body<SignInResponse>()
+        return RemoteSession(token = body.accessToken, userId = body.userId)
     }
 
     override suspend fun signOut(token: String) {
@@ -135,6 +136,7 @@ private data class SignInRequest(val email: String, val password: String)
 @Serializable
 private data class SignInResponse(
     @SerialName("access_token") val accessToken: String,
+    @SerialName("user_id") val userId: String,
 )
 
 @Serializable

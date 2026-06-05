@@ -28,6 +28,7 @@ android {
 dependencies {
     implementation(project(":common"))
 
+    implementation(libs.androidx.room.runtime)
     implementation(libs.ktin.core)
     implementation(libs.coroutines)
     implementation(libs.timber)

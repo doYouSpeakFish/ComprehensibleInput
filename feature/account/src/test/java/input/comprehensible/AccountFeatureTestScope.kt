@@ -8,10 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
+import input.comprehensible.data.account.AccountRepository
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
+import input.comprehensible.data.sources.FakeUserLocalDataSource
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.settings.account.AccountRoute
@@ -25,6 +29,7 @@ import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -43,6 +48,7 @@ class AccountFeatureTestScope(
     private val darkTheme: Boolean,
 ) {
     val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
+    val fakeUserLocalDataSource = FakeUserLocalDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
 
@@ -62,6 +68,7 @@ class AccountFeatureTestScope(
         AppScope.inject { testScope }
         AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
+        UserLocalDataSource.inject { fakeUserLocalDataSource }
     }
 
     fun launch() {
@@ -82,8 +89,9 @@ class AccountFeatureTestScope(
         _isLaunched = true
     }
 
-    suspend fun signInAs(email: String) {
-        realAccountLocalDataSource.saveSession(token = "test-token", email = email)
+    suspend fun signInAs(email: String, userId: String = "test-user-id") {
+        realAccountLocalDataSource.saveSession(token = "test-token", email = email, userId = userId)
+        fakeUserLocalDataSource.upsertUser(UserEntity(id = userId, email = email))
     }
 
     /**
@@ -91,10 +99,20 @@ class AccountFeatureTestScope(
      * coroutine. The session is persisted on the injected (test) dispatcher, so draining the
      * scheduler completes the write before the UI under test reads it.
      */
-    fun signInAsBlocking(email: String) {
-        testScope.launch { signInAs(email) }
+    fun signInAsBlocking(email: String, userId: String = "test-user-id") {
+        testScope.launch { signInAs(email, userId) }
         testScope.advanceUntilIdle()
     }
+
+    /** The current user exposed by the account repository, drained on the test scheduler. */
+    fun currentUser(): UserEntity? {
+        var user: UserEntity? = null
+        testScope.launch { user = AccountRepository().user.first() }
+        testScope.advanceUntilIdle()
+        return user
+    }
+
+    fun userRecordExists(id: String): Boolean = fakeUserLocalDataSource.users.containsKey(id)
 
     fun goToAccount() {
         if (!_isLaunched) launch()
