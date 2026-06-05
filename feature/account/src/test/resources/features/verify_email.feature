@@ -37,3 +37,12 @@ Feature: Verify email
     When I enter the verification code "123456"
     And I submit the verify email form
     Then the error dialog is shown
+
+  Scenario: The verify email error dialog can be dismissed
+    Given the email verification screen for "user@example.com" is open
+    And the verify email request will fail
+    And I enter the verification code "123456"
+    And I submit the verify email form
+    And the error dialog is shown
+    When I dismiss the error dialog
+    Then the verify email submit button is enabled
