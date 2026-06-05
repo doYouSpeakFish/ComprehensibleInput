@@ -21,7 +21,6 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
-import input.comprehensible.ComprehensibleInputTestScope
 import input.comprehensible.data.sample.TestStoryPart
 
 class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
@@ -133,7 +132,7 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             .performTouchInput { swipeRight() }
     }
 
-    suspend fun skipToSentence(sentence: String) {
+    fun skipToSentence(sentence: String) {
         val scrollNode = composeTestRule.onNodeWithTag(
             testTag = "story_reader_page_list",
             useUnmergedTree = true,
@@ -145,7 +144,7 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             } catch (_: IllegalArgumentException) {
                 break
             }
-            composeTestRule.awaitIdle()
+            composeTestRule.waitForIdle()
             index++
         }
         check(isSentenceDisplayed(sentence)) {
@@ -160,7 +159,3 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
         .onNodeWithText(sentence, substring = true, useUnmergedTree = true)
         .isDisplayed()
 }
-
-suspend fun ComprehensibleInputTestScope.onStoryReader(
-    block: suspend StoryReaderRobot.() -> Unit = {}
-) = StoryReaderRobot(composeRule).apply { block() }

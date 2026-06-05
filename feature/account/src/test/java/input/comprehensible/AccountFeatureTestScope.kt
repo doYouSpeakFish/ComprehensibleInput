@@ -14,12 +14,6 @@ import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
-import input.comprehensible.features.account.AccountRobot
-import input.comprehensible.features.account.DeleteAccountRobot
-import input.comprehensible.features.account.ForgotPasswordRobot
-import input.comprehensible.features.account.PasswordResetRobot
-import input.comprehensible.features.account.SignUpRobot
-import input.comprehensible.features.account.VerifyEmailRobot
 import input.comprehensible.ui.settings.account.AccountRoute
 import input.comprehensible.ui.settings.account.DeleteAccountRoute
 import input.comprehensible.ui.settings.account.ForgotPasswordRoute
@@ -31,7 +25,9 @@ import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.setMain
 import kotlinx.serialization.Serializable
@@ -90,6 +86,16 @@ class AccountFeatureTestScope(
         realAccountLocalDataSource.saveSession(token = "test-token", email = email)
     }
 
+    /**
+     * Non-suspending variant of [signInAs] for Cucumber step definitions, which run outside a
+     * coroutine. The session is persisted on the injected (test) dispatcher, so draining the
+     * scheduler completes the write before the UI under test reads it.
+     */
+    fun signInAsBlocking(email: String) {
+        testScope.launch { signInAs(email) }
+        testScope.advanceUntilIdle()
+    }
+
     fun goToAccount() {
         if (!_isLaunched) launch()
         _navController.navigate(AccountRoute)
@@ -127,6 +133,15 @@ class AccountFeatureTestScope(
     suspend fun awaitIdle() {
         testScope.runCurrent()
         composeRule.awaitIdle()
+    }
+
+    /**
+     * Non-suspending equivalent of [awaitIdle] for Cucumber step definitions: pumps the test
+     * scheduler and then the Compose/Robolectric main looper so the UI reflects pending work.
+     */
+    fun idle() {
+        testScope.runCurrent()
+        composeRule.waitForIdle()
     }
 
     suspend fun clearAccountSession() {
@@ -182,27 +197,3 @@ fun AccountFeatureTestScope.enqueueRequestPasswordResetCodeResult(result: Result
 fun AccountFeatureTestScope.enqueueResetPasswordResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueResetPasswordResult(result)
 }
-
-suspend fun AccountFeatureTestScope.onAccount(
-    block: suspend AccountRobot.() -> Unit = {},
-) = AccountRobot(composeRule).apply { block() }
-
-suspend fun AccountFeatureTestScope.onSignUp(
-    block: suspend SignUpRobot.() -> Unit = {},
-) = SignUpRobot(composeRule).apply { block() }
-
-suspend fun AccountFeatureTestScope.onVerifyEmail(
-    block: suspend VerifyEmailRobot.() -> Unit = {},
-) = VerifyEmailRobot(composeRule).apply { block() }
-
-suspend fun AccountFeatureTestScope.onDeleteAccount(
-    block: suspend DeleteAccountRobot.() -> Unit = {},
-) = DeleteAccountRobot(composeRule).apply { block() }
-
-suspend fun AccountFeatureTestScope.onForgotPassword(
-    block: suspend ForgotPasswordRobot.() -> Unit = {},
-) = ForgotPasswordRobot(composeRule).apply { block() }
-
-suspend fun AccountFeatureTestScope.onPasswordReset(
-    block: suspend PasswordResetRobot.() -> Unit = {},
-) = PasswordResetRobot(composeRule).apply { block() }

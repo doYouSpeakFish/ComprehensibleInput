@@ -8,7 +8,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import input.comprehensible.ComprehensibleInputTestScope
 
 class TextAdventureRobot(
     private val composeTestRule: ComposeContentTestRule,
@@ -55,7 +54,3 @@ class TextAdventureRobot(
             .assertIsDisplayed()
     }
 }
-
-suspend fun ComprehensibleInputTestScope.onTextAdventure(
-    block: suspend TextAdventureRobot.() -> Unit = {},
-) = TextAdventureRobot(composeRule).apply { block() }

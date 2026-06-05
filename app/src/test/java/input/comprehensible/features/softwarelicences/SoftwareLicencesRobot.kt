@@ -7,7 +7,6 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performScrollTo
-import input.comprehensible.ComprehensibleInputTestScope
 
 class SoftwareLicencesRobot(private val composeTestRule: ComposeTestRule) {
     fun assertSoftwareLicencesTitleIsVisible() {
@@ -34,7 +33,3 @@ class SoftwareLicencesRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 }
-
-suspend fun ComprehensibleInputTestScope.onSoftwareLicences(
-    block: suspend SoftwareLicencesRobot.() -> Unit = {}
-) = SoftwareLicencesRobot(composeRule).apply { block() }
