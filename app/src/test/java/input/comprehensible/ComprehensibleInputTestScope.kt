@@ -21,6 +21,7 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
+import input.comprehensible.ui.home.HomeRoute
 import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
@@ -106,6 +107,10 @@ class ComprehensibleInputTestScope(
         }
         testScope.runCurrent()
         isAppUiLaunched = true
+    }
+
+    fun goToHome() {
+        navController.navigate(HomeRoute)
     }
 
     fun goToStoryList() {

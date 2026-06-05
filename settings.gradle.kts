@@ -27,6 +27,7 @@ include(":common")
 include(":commontest")
 include(":data:account")
 include(":feature:account")
+include(":feature:home")
 
 include(":backend")
 include(":textadventuremodels")

@@ -5,6 +5,8 @@
 ⚪   import androidx.compose.ui.Modifier
 ⚪   import androidx.navigation.NavHostController
 ⚪   import androidx.navigation.compose.NavHost
+⚪   import input.comprehensible.ui.home.HomeRoute
+⚪   import input.comprehensible.ui.home.homeScreen
 ⚪   import input.comprehensible.ui.settings.settings.SettingsRoute
 ⚪   import input.comprehensible.ui.settings.settingsNavGraph
 ⚪   import input.comprehensible.ui.storylist.StoryListRoute
@@ -12,6 +14,7 @@
 ⚪   import input.comprehensible.ui.storyreader.StoryReaderRoute
 ⚪   import input.comprehensible.ui.storyreader.storyReader
 ⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
+⚪   import input.comprehensible.util.FeatureFlags
 ⚪   
 ⚪   /**
 ⚪    * The root composable function for the app.
@@ -25,8 +28,15 @@
 🟢           NavHost(
 🟢               modifier = Modifier.fillMaxSize(),
 🟢               navController = navController,
-🟢               startDestination = StoryListRoute,
+🟢               startDestination = HomeRoute,
 🟢           ) {
+🟢               homeScreen(
+🟢                   textAdventuresEnabled = FeatureFlags().aiTextAdventuresEnabled,
+🟢                   onStoriesClick = { navController.navigate(StoryListRoute) },
+⚪                   // Wired up in the text adventures increment; the option is feature flagged until then.
+🔴                   onTextAdventuresClick = {},
+🟢                   onSettingsClick = { navController.navigate(SettingsRoute) },
+⚪               )
 🟢               settingsNavGraph(navController)
 🟢               storyReader(
 🟢                   onErrorDismissed = { navController.popBackStack() }

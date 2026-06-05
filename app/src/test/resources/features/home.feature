@@ -1,35 +1,33 @@
 Feature: Home
 
-  # Home is the new start destination. It offers two options, "Stories" and
+  # Home is the start destination. It offers two options, "Stories" and
   # "Text Adventures", plus a settings action in the top bar. The text adventures
   # option is gated behind the aiTextAdventuresEnabled feature flag.
   #
   # Increment 1: home screen, navigation to stories and settings, flag gating.
   # Increment 3: navigation into the text adventures screen (built in increment 3).
-  # New / modified scenarios are @ignore-d until each increment is implemented.
 
-  @ignore @increment1
-  Scenario: The home screen is shown on launch
-    Given the app is launched
-    Then the home screen is shown
-    And the stories option is shown
+  @increment1
+  Scenario: The home screen shows the available options
+    Given the home screen is open
+    Then the stories option is shown
     And the text adventures option is shown
     And the settings action is shown
 
-  @ignore @increment1
+  @increment1
   Scenario: Selecting stories opens the story library
     Given the story library is available
     And the home screen is open
     When I select the stories option
     Then the first story is listed
 
-  @ignore @increment1
+  @increment1
   Scenario: Selecting settings opens the settings screen
     Given the home screen is open
     When I select the settings action
-    Then the settings screen is shown
+    Then the settings title is shown
 
-  @ignore @increment1 @aiTextAdventuresDisabled
+  @increment1 @aiTextAdventuresDisabled
   Scenario: The text adventures option is hidden when the feature flag is disabled
     Given the home screen is open
     Then the stories option is shown

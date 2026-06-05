@@ -236,6 +236,7 @@ kover {
 dependencies {
     implementation(project(":common"))
     implementation(project(":feature:account"))
+    implementation(project(":feature:home"))
     implementation(project(":data:account"))
 
     implementation(platform(libs.androidx.compose.bom))
@@ -268,6 +269,7 @@ dependencies {
 
     testImplementation(project(":commontest"))
     testImplementation(testFixtures(project(":feature:account")))
+    testImplementation(testFixtures(project(":feature:home")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)
