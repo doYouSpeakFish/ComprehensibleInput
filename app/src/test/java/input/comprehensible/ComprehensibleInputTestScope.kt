@@ -224,8 +224,15 @@ fun ComprehensibleInputTestRule.runTest(
         accountManagementEnabled = accountManagementEnabled,
     ).apply {
         clearAccountSession()
-        block()
-        disposeUiUnderTest()
-        close()
+        try {
+            block()
+        } finally {
+            // Always dispose the UI under test, even when the test body fails. Disposal cancels
+            // the screen's infinite animations (e.g. the text field cursor); skipping it leaves
+            // them running and hangs runTest's final drain, turning a plain assertion failure
+            // into an indefinite hang instead of a reported failure.
+            disposeUiUnderTest()
+            close()
+        }
     }
 }

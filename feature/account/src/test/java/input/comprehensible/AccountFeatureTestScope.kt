@@ -10,6 +10,7 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.di.AppScope
@@ -64,6 +65,9 @@ class AccountFeatureTestScope(
         AppScope.inject { testScope }
         AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
+        UserLocalDataSource.inject { object : UserLocalDataSource {
+            override suspend fun insertUser(userId: String) = Unit
+        } }
     }
 
     fun launch() {
@@ -139,8 +143,15 @@ fun ComprehensibleInputTestRule.runAccountFeatureTest(
         darkTheme = themeMode.isDarkTheme,
     ).apply {
         clearAccountSession()
-        block()
-        disposeUiUnderTest()
+        try {
+            block()
+        } finally {
+            // Always dispose the UI under test, even when the test body fails. Disposal cancels
+            // the screen's infinite animations (e.g. the text field cursor); skipping it leaves
+            // them running and hangs runTest's final drain, turning a plain assertion failure
+            // into an indefinite hang instead of a reported failure.
+            disposeUiUnderTest()
+        }
     }
 }
 
