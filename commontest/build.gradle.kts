@@ -43,4 +43,11 @@ dependencies {
     api(libs.coroutines.test)
     api(libs.robolectric)
     api(libs.timber)
+
+    // Cucumber harness for behavioural UI tests. Exposed as `api` so the consuming modules'
+    // test source sets (which hold the feature files and step definitions) pick it up through
+    // their existing `testImplementation(project(":commontest"))` dependency.
+    api(libs.cucumber.java)
+    api(libs.cucumber.junit.platform.engine)
+    api(libs.junit.platform.launcher)
 }
