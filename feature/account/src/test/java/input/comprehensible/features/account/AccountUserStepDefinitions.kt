@@ -25,6 +25,11 @@ class AccountUserStepDefinitions {
         scope.signInAsBlocking(email, userId)
     }
 
+    @Given("saving the local user record will fail")
+    fun savingTheLocalUserRecordWillFail() {
+        scope.fakeUserLocalDataSource.upsertError = RuntimeException("Unable to save local user record")
+    }
+
     @Then("a local user record exists with id {string}")
     fun aLocalUserRecordExistsWithId(id: String) {
         assertTrue(scope.userRecordExists(id))

@@ -207,6 +207,7 @@ kover {
                 packages(
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.data.account.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -220,6 +221,7 @@ kover {
                     "input.comprehensible.data.AppDb_Impl",
                     "input.comprehensible.data.languages.LanguagesDao_Impl",
                     "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.account.sources.local.UserLocalDataSource_Impl",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
                 )

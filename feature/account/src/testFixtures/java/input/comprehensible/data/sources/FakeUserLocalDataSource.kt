@@ -8,7 +8,11 @@ class FakeUserLocalDataSource : UserLocalDataSource {
 
     val users: Map<String, UserEntity> get() = storedUsers
 
+    /** When set, [upsertUser] throws this to simulate a local persistence failure. */
+    var upsertError: Throwable? = null
+
     override suspend fun upsertUser(user: UserEntity) {
+        upsertError?.let { throw it }
         storedUsers[user.id] = user
     }
 

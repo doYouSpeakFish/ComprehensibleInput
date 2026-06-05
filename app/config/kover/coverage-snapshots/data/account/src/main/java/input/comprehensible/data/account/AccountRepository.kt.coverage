@@ -33,8 +33,18 @@
 🟢           runCatching {
 🟢               val remoteSession = remoteDataSource.signIn(email, password)
 🟢               localDataSource.saveSession(remoteSession.token, email, remoteSession.userId)
-🟢               userLocalDataSource.upsertUser(UserEntity(id = remoteSession.userId, email = email))
+🟢               cacheUser(id = remoteSession.userId, email = email)
 🟢           }.onFailure { Timber.e(it, "Failed to sign in") }
+⚪   
+⚪       /**
+⚪        * Caches the signed-in user locally for offline use. Best-effort: by this point the user is
+⚪        * already authenticated and their session is saved, so a failure here is logged but must not
+⚪        * fail sign-in, which would immediately sign the user back out.
+⚪        */
+⚪       private suspend fun cacheUser(id: String, email: String) {
+🟢           runCatching { userLocalDataSource.upsertUser(UserEntity(id = id, email = email)) }
+🟢               .onFailure { Timber.e(it, "Failed to cache local user record after sign in") }
+⚪       }
 ⚪   
 ⚪       suspend fun requestPasswordResetCode(email: String): Result<Unit> =
 🟢           runCatching { remoteDataSource.requestPasswordResetCode(email) }
@@ -56,7 +66,8 @@
 🟢       suspend fun deleteAccount(password: String): Result<Unit> = runCatching {
 🟡           val current = localDataSource.session.first() ?: throw InvalidCredentialsException()
 🟢           remoteDataSource.deleteAccount(current.email, password)
-🟢           userLocalDataSource.deleteUser(current.userId)
+🟢           runCatching { userLocalDataSource.deleteUser(current.userId) }
+🟡               .onFailure { Timber.e(it, "Failed to remove local user record on account deletion") }
 🟢           localDataSource.clearSession()
 🟢       }.onFailure { Timber.e(it, "Failed to delete account") }
 ⚪   

@@ -17,6 +17,18 @@ Feature: Account user record
     And I submit the sign in form
     Then a local user record exists with id "user-1"
 
+  # Authentication must not depend on the local cache write: if persisting the user
+  # record fails, the user is still signed in rather than being bounced back out.
+  @increment2
+  Scenario: Signing in succeeds even when the local user record cannot be saved
+    Given the account screen is open
+    And the sign in request will succeed with user id "user-1"
+    And saving the local user record will fail
+    When I enter the sign in email "user@example.com"
+    And I enter the sign in password "password12345"
+    And I submit the sign in form
+    Then the signed in email "user@example.com" is shown
+
   @increment2
   Scenario: The current user is exposed after signing in
     Given the account screen is open
