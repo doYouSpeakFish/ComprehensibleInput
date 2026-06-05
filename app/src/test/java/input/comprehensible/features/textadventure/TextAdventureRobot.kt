@@ -1,7 +1,9 @@
 package input.comprehensible.features.textadventure
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
@@ -9,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
 import input.comprehensible.ComprehensibleInputTestScope
 
 class TextAdventureRobot(
@@ -23,7 +26,9 @@ class TextAdventureRobot(
     fun tapOnSentence(sentence: String) {
         composeTestRule
             .onNodeWithText(sentence, substring = true)
-            .performClick()
+            .performTouchInput {
+                click(Offset(1f, 1f))
+            }
     }
 
     fun assertTranslationVisible(text: String) {
