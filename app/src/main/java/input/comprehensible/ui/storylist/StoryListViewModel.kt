@@ -4,16 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.languages.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesListResult
-import input.comprehensible.data.textadventures.TextAdventuresListResult
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.usecases.GetStoriesListUseCase
-import input.comprehensible.usecases.GetTextAdventuresListUseCase
-import input.comprehensible.usecases.StartTextAdventureUseCase
-import input.comprehensible.util.FeatureFlags
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,24 +15,14 @@ import kotlinx.coroutines.launch
  * A ViewModel for the StoryList screen.
  */
 class StoryListViewModel(
-    private val featureFlags: FeatureFlags = FeatureFlags(),
     private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
     getStoriesListUseCase: GetStoriesListUseCase = GetStoriesListUseCase(),
-    getTextAdventuresListUseCase: GetTextAdventuresListUseCase = GetTextAdventuresListUseCase(),
-    private val startTextAdventureUseCase: StartTextAdventureUseCase = StartTextAdventureUseCase(),
 ) : ViewModel() {
-    private val _events = MutableSharedFlow<StoryListEvent>()
-    val events = _events.asSharedFlow()
-
-    private val textAdventuresFlow: Flow<TextAdventuresListResult> =
-        getTextAdventuresListUseCase()
-
     val state = combine(
         getStoriesListUseCase(),
-        textAdventuresFlow,
         languageSettingsRepository.learningLanguage,
         languageSettingsRepository.translationsLanguage,
-    ) { storiesResult, adventuresResult, learningLanguage, translationsLanguage ->
+    ) { storiesResult, learningLanguage, translationsLanguage ->
         val storyItems = when (storiesResult) {
             is StoriesListResult.Success -> storiesResult.storiesList.stories.map { story ->
                 StoryListUiState.StoryListItem.Story(
@@ -52,26 +35,8 @@ class StoryListViewModel(
 
             StoriesListResult.Error -> emptyList()
         }
-        val adventureItems = when (adventuresResult) {
-            is TextAdventuresListResult.Success -> adventuresResult.adventures.map { adventure ->
-                StoryListUiState.StoryListItem.TextAdventure(
-                    id = adventure.id,
-                    title = adventure.title,
-                    isComplete = adventure.isComplete,
-                )
-            }
-
-            TextAdventuresListResult.Error -> emptyList()
-        }
-        val items = buildList {
-            addAll(storyItems)
-            if (featureFlags.aiTextAdventuresEnabled) {
-                addAll(adventureItems)
-                add(StoryListUiState.StoryListItem.StartTextAdventure)
-            }
-        }
         StoryListUiState(
-            items = items,
+            items = storyItems,
             learningLanguage = LanguageSelection.entries
                 .firstOrNull { it.languageCode == learningLanguage },
             translationLanguage = LanguageSelection.entries
@@ -102,16 +67,4 @@ class StoryListViewModel(
             languageSettingsRepository.setTranslationLanguage(translationLanguage.languageCode)
         }
     }
-
-    fun onStartTextAdventure() {
-        if (!featureFlags.aiTextAdventuresEnabled) return
-        viewModelScope.launch {
-            val adventureId = startTextAdventureUseCase()
-            _events.emit(StoryListEvent.TextAdventureStarted(adventureId))
-        }
-    }
-}
-
-sealed interface StoryListEvent {
-    data class TextAdventureStarted(val adventureId: String) : StoryListEvent
 }

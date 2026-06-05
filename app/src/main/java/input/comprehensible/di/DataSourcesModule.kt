@@ -11,17 +11,12 @@ import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSour
 import input.comprehensible.data.stories.sources.stories.local.DefaultStoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
-import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
-import input.comprehensible.data.textadventures.sources.remote.DefaultTextAdventureRemoteDataSource
-import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
 
 object DataSourcesModule {
     fun inject() {
         StoriesInfoLocalDataSource.inject { AppDb.getInstance().getStoriesInfoDao() }
         StoriesLocalDataSource.inject { DefaultStoriesLocalDataSource() }
         LanguageSettingsLocalDataSource.inject { DefaultLanguageSettingsLocalDataSource() }
-        TextAdventuresLocalDataSource.inject { AppDb.getInstance().getTextAdventuresDao() }
-        TextAdventureRemoteDataSource.inject { DefaultTextAdventureRemoteDataSource() }
         AccountRemoteDataSource.inject {
             DefaultAccountRemoteDataSource(
                 baseUrl = BuildConfig.BACKEND_BASE_URL,

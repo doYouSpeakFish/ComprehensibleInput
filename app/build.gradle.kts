@@ -156,7 +156,6 @@ roborazzi {
             "input.comprehensible.ui.settings.softwarelicences",
             "input.comprehensible.ui.storylist",
             "input.comprehensible.ui.storyreader",
-            "input.comprehensible.ui.textadventure",
         )
         includePrivatePreviews = false
         testerQualifiedClassName = "input.comprehensible.PreviewScreenshotTester"
@@ -193,7 +192,6 @@ koverCoverageReport {
         project(":common"),
         project(":data:account"),
         project(":feature:account"),
-        project(":textadventuremodels"),
     )
 }
 
@@ -202,7 +200,6 @@ kover {
         kover(project(":common"))
         kover(project(":data:account"))
         kover(project(":feature:account"))
-        kover(project(":textadventuremodels"))
     }
     reports {
         filters {
@@ -210,7 +207,6 @@ kover {
                 packages(
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
-                    "input.comprehensible.data.textadventures.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -241,7 +237,6 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":feature:account"))
     implementation(project(":data:account"))
-    implementation(project(":textadventuremodels"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)

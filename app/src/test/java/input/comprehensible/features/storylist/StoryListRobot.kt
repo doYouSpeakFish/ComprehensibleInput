@@ -133,30 +133,4 @@ class StoryListRobot(
             .onNodeWithText(title)
             .assertExists()
     }
-
-    fun startTextAdventure() {
-        composeTestRule
-            .onNodeWithTag("text_adventure_start_button")
-            .performScrollTo()
-            .performClick()
-    }
-
-    fun assertStartTextAdventureIsHidden() {
-        composeTestRule
-            .onAllNodesWithTag("text_adventure_start_button")
-            .assertCountEquals(0)
-    }
-
-    fun assertTextAdventureIsVisible(title: String) {
-        composeTestRule
-            .onNodeWithText(title)
-            .assertIsDisplayed()
-    }
-
-    fun selectTextAdventure(title: String) {
-        composeTestRule
-            .onNodeWithText(title)
-            .performScrollTo()
-            .performClick()
-    }
 }
