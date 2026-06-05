@@ -98,4 +98,13 @@ subprojects {
             sarif.required.set(false)
         }
     }
+
+    tasks.withType<Test>().configureEach {
+        // The forked unit-test worker defaults to roughly 512 MB of heap, which is not enough for
+        // the Robolectric NATIVE-graphics screenshot tests combined with kover bytecode
+        // instrumentation during koverCoverageSnapshot. Without headroom the worker runs out of
+        // heap and dies mid-run, surfacing as an EOFException/NoSuchFileException on its results
+        // file even though every test passes. Give it room so the run completes.
+        maxHeapSize = "2g"
+    }
 }
