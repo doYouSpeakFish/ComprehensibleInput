@@ -22,3 +22,4 @@ local.properties
 /buildSrc/.kotlin/
 .claude/worktrees/
 *.log
+*_output.txt
