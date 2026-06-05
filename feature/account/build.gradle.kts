@@ -37,6 +37,12 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                // The 66 Robolectric NATIVE-graphics preview screenshot tests plus kover bytecode
+                // instrumentation exhaust the forked worker's ~512 MB default heap during
+                // koverCoverageSnapshot, crashing the worker (EOFException on its results file)
+                // even though every test passes. Scope the larger heap to this module so the
+                // parallel coverage run's overall memory footprint stays bounded.
+                it.maxHeapSize = "1536m"
             }
         }
     }
