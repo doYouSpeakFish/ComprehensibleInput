@@ -1,5 +1,6 @@
 package input.comprehensible.ui.textadventure
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import input.comprehensible.util.DefaultPreview
 internal fun TextAdventuresListScreen(
     onSignInClick: () -> Unit,
     onStartAdventure: () -> Unit,
+    onAdventureClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TextAdventuresListViewModel = viewModel(),
 ) {
@@ -51,6 +53,7 @@ internal fun TextAdventuresListScreen(
         state = state,
         onSignInClick = onSignInClick,
         onStartAdventure = onStartAdventure,
+        onAdventureClick = onAdventureClick,
         onDeleteAdventure = viewModel::onDeleteAdventure,
         modifier = modifier,
     )
@@ -62,6 +65,7 @@ private fun TextAdventuresListScreen(
     state: TextAdventuresListUiState,
     onSignInClick: () -> Unit,
     onStartAdventure: () -> Unit,
+    onAdventureClick: (String) -> Unit,
     onDeleteAdventure: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,6 +94,7 @@ private fun TextAdventuresListScreen(
             if (state.isSignedIn) {
                 SignedInContent(
                     state = state,
+                    onAdventureClick = onAdventureClick,
                     onDeleteAdventure = onDeleteAdventure,
                 )
             } else {
@@ -102,6 +107,7 @@ private fun TextAdventuresListScreen(
 @Composable
 private fun SignedInContent(
     state: TextAdventuresListUiState,
+    onAdventureClick: (String) -> Unit,
     onDeleteAdventure: (String) -> Unit,
 ) {
     Column(
@@ -122,6 +128,7 @@ private fun SignedInContent(
 
             state.adventures.isNotEmpty() -> AdventureList(
                 adventures = state.adventures,
+                onAdventureClick = onAdventureClick,
                 onDeleteAdventure = onDeleteAdventure,
             )
 
@@ -138,6 +145,7 @@ private fun SignedInContent(
 @Composable
 private fun AdventureList(
     adventures: List<AdventureItem>,
+    onAdventureClick: (String) -> Unit,
     onDeleteAdventure: (String) -> Unit,
 ) {
     LazyColumn(
@@ -149,6 +157,7 @@ private fun AdventureList(
         items(items = adventures, key = { it.id }) { adventure ->
             AdventureRow(
                 adventure = adventure,
+                onClick = { onAdventureClick(adventure.id) },
                 onDelete = { onDeleteAdventure(adventure.id) },
             )
         }
@@ -158,12 +167,14 @@ private fun AdventureList(
 @Composable
 private fun AdventureRow(
     adventure: AdventureItem,
+    onClick: () -> Unit,
     onDelete: () -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("adventure_${adventure.title}"),
+            .testTag("adventure_${adventure.title}")
+            .clickable(onClick = onClick),
     ) {
         Row(
             modifier = Modifier
@@ -304,6 +315,7 @@ private fun PreviewScreen(state: TextAdventuresListUiState) {
         state = state,
         onSignInClick = {},
         onStartAdventure = {},
+        onAdventureClick = {},
         onDeleteAdventure = {},
         modifier = Modifier.fillMaxSize(),
     )

@@ -17,7 +17,7 @@ Feature: Text adventure chat
   # Increment 4 - starting a new adventure
   # ---------------------------------------------------------------------------
 
-  @ignore @increment4
+  @increment4
   Scenario: Starting a new adventure shows the chat in a loading state
     Given I am signed in as "user@example.com"
     And the start adventure request is delayed
@@ -25,14 +25,14 @@ Feature: Text adventure chat
     Then the text adventure chat is shown
     And a generating message placeholder is shown
 
-  @ignore @increment4
+  @increment4
   Scenario: The placeholder cycles through phrases while generating
     Given I am signed in as "user@example.com"
     And the start adventure request is delayed
     When I start a new adventure
     Then the generating message placeholder cycles through phrases
 
-  @ignore @increment4
+  @increment4
   Scenario: The first message is shown when the adventure starts
     Given I am signed in as "user@example.com"
     And starting an adventure returns "You arrive at a quiet harbor."
@@ -40,7 +40,7 @@ Feature: Text adventure chat
     Then the generating message placeholder is hidden
     And the text adventure shows "You arrive at a quiet harbor."
 
-  @ignore @increment4
+  @increment4
   Scenario: An error and retry are shown when the first message fails
     Given I am signed in as "user@example.com"
     And the start adventure request will fail
@@ -49,7 +49,7 @@ Feature: Text adventure chat
     And the generation error message is shown
     And the retry button is shown
 
-  @ignore @increment4
+  @increment4
   Scenario: Retrying after a failed start shows the placeholder again
     Given I am signed in as "user@example.com"
     And the start adventure request will fail
@@ -59,7 +59,7 @@ Feature: Text adventure chat
     Then the generation error message is hidden
     And a generating message placeholder is shown
 
-  @ignore @increment4
+  @increment4
   Scenario: An AI sentence can be translated by tapping it
     Given I am signed in as "user@example.com"
     And starting an adventure returns "You arrive at a quiet harbor." translated as "Llegas a un puerto tranquilo."
@@ -67,7 +67,7 @@ Feature: Text adventure chat
     And I tap "You arrive at a quiet harbor." to translate it
     Then the text adventure shows "Llegas a un puerto tranquilo."
 
-  @ignore @increment4
+  @increment4
   Scenario: A translated AI sentence can be switched back to the learning language
     Given I am signed in as "user@example.com"
     And starting an adventure returns "You arrive at a quiet harbor." translated as "Llegas a un puerto tranquilo."
@@ -76,7 +76,7 @@ Feature: Text adventure chat
     And I tap "Llegas a un puerto tranquilo." to translate it
     Then the text adventure shows "You arrive at a quiet harbor."
 
-  @ignore @increment4
+  @increment4
   Scenario: A cached adventure shows its messages immediately
     Given I am signed in as "user@example.com"
     And the "Lantern Trail" adventure is cached with message "A lantern lights the way."

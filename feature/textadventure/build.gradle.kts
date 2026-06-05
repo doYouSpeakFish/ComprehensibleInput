@@ -82,9 +82,11 @@ dependencies {
     testFixturesImplementation(libs.androidx.ui.test.junit4)
     testFixturesImplementation(project(":common"))
     testFixturesImplementation(project(":data:textadventure"))
+    testFixturesImplementation(project(":textadventuremodels"))
     testFixturesImplementation(libs.coroutines)
 
     testImplementation(project(":commontest"))
+    testImplementation(project(":textadventuremodels"))
     testImplementation(testFixtures(project(":feature:account")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

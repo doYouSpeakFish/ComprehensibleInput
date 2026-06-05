@@ -1,15 +1,22 @@
 package input.comprehensible.data.textadventure.sources.remote
 
 import com.ktin.InjectedSingleton
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 
 /**
- * Remote source for the authenticated v1 text-adventure endpoints used by the list screen. Defined
- * as an interface so it can be faked in tests; the real Ktor implementation is
- * [DefaultAdventureRemoteDataSource].
+ * Remote source for the authenticated v1 text-adventure endpoints. Defined as an interface so it
+ * can be faked in tests; the real Ktor implementation is [DefaultAdventureRemoteDataSource].
  */
 interface AdventureRemoteDataSource {
     suspend fun getAdventures(token: String): List<RemoteAdventure>
     suspend fun deleteAdventure(token: String, adventureId: String)
+    suspend fun startAdventure(
+        token: String,
+        learningLanguage: String,
+        translationLanguage: String,
+    ): TextAdventureRemoteResponse
+    suspend fun getMessages(token: String, adventureId: String): TextAdventureMessagesRemoteResponse
 
     companion object : InjectedSingleton<AdventureRemoteDataSource>()
 }

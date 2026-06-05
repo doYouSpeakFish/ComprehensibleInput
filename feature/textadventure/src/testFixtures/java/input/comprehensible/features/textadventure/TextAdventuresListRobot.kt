@@ -52,6 +52,10 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("delete_adventure_$title").performClick()
     }
 
+    fun openAdventure(title: String) {
+        composeTestRule.onNodeWithTag("adventure_$title").performClick()
+    }
+
     fun startNewAdventure() {
         composeTestRule.onNodeWithTag("text_adventures_new_button").performClick()
     }

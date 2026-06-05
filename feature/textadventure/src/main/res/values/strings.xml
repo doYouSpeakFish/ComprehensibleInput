@@ -7,4 +7,10 @@
     <string name="text_adventures_error">Couldn\'t load your adventures. Please try again.</string>
     <string name="text_adventures_new">New adventure</string>
     <string name="text_adventures_delete_content_description">Delete adventure</string>
+    <string name="text_adventure_chat_title">Adventure</string>
+    <string name="text_adventure_generating_1">Plotting your adventure…</string>
+    <string name="text_adventure_generating_2">Imagining what happens next…</string>
+    <string name="text_adventure_generating_3">Setting the scene…</string>
+    <string name="text_adventure_generation_error">Something went wrong telling the story. Please try again.</string>
+    <string name="text_adventure_retry">Retry</string>
 </resources>

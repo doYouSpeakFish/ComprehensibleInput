@@ -1,7 +1,9 @@
 package input.comprehensible.data.textadventure.sources.local
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import com.ktin.InjectedSingleton
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +28,19 @@ interface AdventureLocalDataSource {
 
     @Query("DELETE FROM adventure WHERE id = :id")
     suspend fun deleteAdventure(id: String)
+
+    @Transaction
+    @Query("SELECT * FROM message WHERE adventureId = :adventureId ORDER BY position")
+    fun observeMessages(adventureId: String): Flow<List<MessageWithSentences>>
+
+    @Upsert
+    suspend fun upsertMessage(message: MessageEntity)
+
+    @Insert
+    suspend fun insertSentences(sentences: List<SentenceEntity>)
+
+    @Query("DELETE FROM message WHERE adventureId = :adventureId")
+    suspend fun deleteMessages(adventureId: String)
 
     companion object : InjectedSingleton<AdventureLocalDataSource>()
 }

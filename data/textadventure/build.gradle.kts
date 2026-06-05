@@ -27,6 +27,7 @@ android {
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":textadventuremodels"))
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.ktin.core)

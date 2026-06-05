@@ -20,7 +20,9 @@ import input.comprehensible.data.sample.TestStory
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
+import input.comprehensible.data.textadventure.LanguagePreferences
 import input.comprehensible.data.textadventure.fakes.FakeAdventureRemoteDataSource
+import input.comprehensible.data.textadventure.fakes.FakeLanguagePreferences
 import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
 import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
 import input.comprehensible.data.user.UserEntity
@@ -95,6 +97,7 @@ class ComprehensibleInputTestScope(
         UserLocalDataSource.inject { appDb.getUserDao() }
         AdventureLocalDataSource.inject { appDb.getAdventureDao() }
         AdventureRemoteDataSource.inject { FakeAdventureRemoteDataSource() }
+        LanguagePreferences.inject { FakeLanguagePreferences() }
         AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
             override suspend fun createAccount(email: String, password: String) = Unit
             override suspend fun verifyEmail(email: String, code: String) = Unit

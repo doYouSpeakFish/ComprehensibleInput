@@ -3,15 +3,20 @@
 ⚪   import com.ktin.Singleton
 ⚪   import input.comprehensible.data.textadventure.sources.local.AdventureEntity
 ⚪   import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+⚪   import input.comprehensible.data.textadventure.sources.local.MessageEntity
+⚪   import input.comprehensible.data.textadventure.sources.local.MessageWithSentences
+⚪   import input.comprehensible.data.textadventure.sources.local.SentenceEntity
 ⚪   import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
 ⚪   import input.comprehensible.data.textadventure.sources.remote.RemoteAdventure
+⚪   import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
+⚪   import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 ⚪   import kotlinx.coroutines.flow.Flow
 ⚪   import kotlinx.coroutines.flow.map
 ⚪   import timber.log.Timber
 ⚪   
 ⚪   /**
-⚪    * Offline-first access to the signed-in user's text adventures. The local database is the source of
-⚪    * truth that the UI observes; [refreshAdventures] and [deleteAdventure] reconcile it with the v1
+⚪    * Offline-first access to the signed-in user's text adventures and their conversations. The local
+⚪    * database is the source of truth that the UI observes; the network calls reconcile it with the v1
 ⚪    * backend. Reads are scoped by the local user id; network calls take the session token.
 ⚪    */
 🟢   class TextAdventureRepository(
@@ -30,7 +35,7 @@
 ⚪   
 ⚪       /**
 ⚪        * Deletes an adventure optimistically: the local row is removed immediately (so the UI updates
-⚪        * at once) and restored if the backend call fails, surfacing the failure to the caller.
+⚪        * at once) and restored if the backend rejects the delete, surfacing the failure to the caller.
 ⚪        */
 ⚪       suspend fun deleteAdventure(token: String, adventureId: String): Result<Unit> {
 🟢           val backup = localDataSource.getAdventure(adventureId)
@@ -40,6 +45,73 @@
 🟢                   Timber.e(it, "Failed to delete adventure")
 🟡                   if (backup != null) localDataSource.upsertAdventure(backup)
 🟢               }
+⚪       }
+⚪   
+⚪       /** The conversation for an adventure, observed from the local database. */
+⚪       fun getMessages(adventureId: String): Flow<List<AdventureMessage>> =
+🟢           localDataSource.observeMessages(adventureId).map { messages ->
+🟢               messages.map { it.toMessage() }
+⚪           }
+⚪   
+⚪       /**
+⚪        * Starts a new adventure on the backend, persists the created adventure and its first AI message
+⚪        * locally, and returns the new adventure id.
+⚪        */
+⚪       suspend fun startAdventure(
+⚪           token: String,
+⚪           userId: String,
+⚪           learningLanguage: String,
+⚪           translationLanguage: String,
+🟢       ): Result<String> = runCatching {
+🟢           val response = remoteDataSource.startAdventure(token, learningLanguage, translationLanguage)
+🟢           localDataSource.upsertAdventure(
+🟢               AdventureEntity(
+🟢                   id = response.adventureId,
+🟢                   userId = userId,
+🟢                   title = response.title,
+🟢                   learningLanguage = learningLanguage,
+🟢                   translationLanguage = translationLanguage,
+🟢                   updatedAt = System.currentTimeMillis(),
+⚪               ),
+⚪           )
+🟢           localDataSource.deleteMessages(response.adventureId)
+🟢           persistFirstMessage(response)
+🟢           response.adventureId
+🟢       }.onFailure { Timber.e(it, "Failed to start adventure") }
+⚪   
+⚪       /** Replaces the locally cached conversation for an adventure with the backend's. */
+🟢       suspend fun refreshMessages(token: String, adventureId: String): Result<Unit> = runCatching {
+🟢           val response = remoteDataSource.getMessages(token, adventureId)
+🟢           localDataSource.deleteMessages(adventureId)
+🟢           response.messages.forEachIndexed { position, message ->
+🟢               localDataSource.upsertMessage(message.toEntity(adventureId, position))
+🟢               localDataSource.insertSentences(message.toSentenceEntities())
+🟢           }
+🟡       }.onFailure { Timber.e(it, "Failed to refresh messages") }
+⚪   
+⚪       private suspend fun persistFirstMessage(response: TextAdventureRemoteResponse) {
+🟡           val messageId = response.messageId.ifBlank { "${response.adventureId}-0" }
+🟢           localDataSource.upsertMessage(
+🟢               MessageEntity(
+🟢                   id = messageId,
+🟢                   adventureId = response.adventureId,
+🟢                   parentId = null,
+🟢                   sender = AdventureMessageSender.AI.name,
+🟢                   isEnding = response.isEnding,
+🟢                   position = 0,
+⚪               ),
+⚪           )
+🟢           localDataSource.insertSentences(
+🟢               response.sentences.mapIndexed { index, sentence ->
+🟢                   SentenceEntity(
+🟢                       messageId = messageId,
+🟢                       paragraphIndex = 0,
+🟢                       sentenceIndex = index,
+🟢                       text = sentence,
+🟡                       translation = response.translatedSentences.getOrElse(index) { "" },
+🟢                   )
+⚪               },
+⚪           )
 ⚪       }
 ⚪   
 ⚪       companion object : Singleton<TextAdventureRepository>() {
@@ -66,3 +138,52 @@
 🟢       translationLanguage = translationLanguage,
 🟢       updatedAt = updatedAt,
 ⚪   )
+⚪   
+⚪   private fun MessageWithSentences.toMessage(): AdventureMessage {
+🟢       val paragraphs = sentences
+🟢           .groupBy { it.paragraphIndex }
+🟢           .toSortedMap()
+🟢           .map { (_, paragraphSentences) ->
+🟢               val ordered = paragraphSentences.sortedBy { it.sentenceIndex }
+🟢               AdventureMessage.Paragraph(
+🟢                   sentences = ordered.map { it.text },
+🟢                   translatedSentences = ordered.map { it.translation },
+🟢               )
+⚪           }
+🟢       return AdventureMessage(
+🟢           id = message.id,
+🟢           sender = AdventureMessageSender.valueOf(message.sender),
+🟢           isEnding = message.isEnding,
+🟢           paragraphs = paragraphs,
+⚪       )
+⚪   }
+⚪   
+⚪   private fun TextAdventureMessageRemoteResponse.toEntity(adventureId: String, position: Int) =
+🟢       MessageEntity(
+🟢           id = id,
+🟢           adventureId = adventureId,
+🟢           parentId = parentId,
+🟢           sender = senderName(type),
+🟢           isEnding = isEnding,
+🟢           position = position,
+⚪       )
+⚪   
+⚪   private fun TextAdventureMessageRemoteResponse.toSentenceEntities(): List<SentenceEntity> =
+🟡       paragraphs.flatMapIndexed { paragraphIndex, paragraph ->
+🟢           paragraph.sentences.mapIndexed { sentenceIndex, sentence ->
+🟢               SentenceEntity(
+🟢                   messageId = id,
+🟢                   paragraphIndex = paragraphIndex,
+🟢                   sentenceIndex = sentenceIndex,
+🟢                   text = sentence,
+🟡                   translation = paragraph.translatedSentences.getOrElse(sentenceIndex) { "" },
+🟢               )
+🟢           }
+⚪       }
+⚪   
+⚪   private fun senderName(type: String): String =
+🟢       if (type.equals("user", ignoreCase = true)) {
+🟢           AdventureMessageSender.USER.name
+⚪       } else {
+🟢           AdventureMessageSender.AI.name
+⚪       }

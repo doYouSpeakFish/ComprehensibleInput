@@ -3,17 +3,19 @@ package input.comprehensible.ui.textadventure
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object TextAdventuresListRoute
 
 @Serializable
-data object TextAdventureChatRoute
+data class TextAdventureChatRoute(val adventureId: String? = null)
 
 /**
- * Registers the text adventure destinations. Navigation from the list into the chat is internal;
- * [onSignInClick] is supplied by the host so the signed-out prompt can open the account screen.
+ * Registers the text adventure destinations. The list opens the chat for a new adventure (no id) or
+ * an existing one; [onSignInClick] is supplied by the host so the signed-out prompt can open the
+ * account screen.
  */
 fun NavGraphBuilder.textAdventureNavGraph(
     navController: NavController,
@@ -22,10 +24,13 @@ fun NavGraphBuilder.textAdventureNavGraph(
     composable<TextAdventuresListRoute> {
         TextAdventuresListScreen(
             onSignInClick = onSignInClick,
-            onStartAdventure = { navController.navigate(TextAdventureChatRoute) },
+            onStartAdventure = { navController.navigate(TextAdventureChatRoute()) },
+            onAdventureClick = { adventureId ->
+                navController.navigate(TextAdventureChatRoute(adventureId))
+            },
         )
     }
-    composable<TextAdventureChatRoute> {
-        TextAdventureChatScreen()
+    composable<TextAdventureChatRoute> { entry ->
+        TextAdventureChatScreen(adventureId = entry.toRoute<TextAdventureChatRoute>().adventureId)
     }
 }

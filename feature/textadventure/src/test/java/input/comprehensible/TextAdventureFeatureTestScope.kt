@@ -18,12 +18,18 @@ import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeUserLocalDataSource
+import input.comprehensible.data.textadventure.AdventureMessageSender
+import input.comprehensible.data.textadventure.LanguagePreferences
 import input.comprehensible.data.textadventure.fakes.FakeAdventureLocalDataSource
 import input.comprehensible.data.textadventure.fakes.FakeAdventureRemoteDataSource
+import input.comprehensible.data.textadventure.fakes.FakeLanguagePreferences
 import input.comprehensible.data.textadventure.sources.local.AdventureEntity
 import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+import input.comprehensible.data.textadventure.sources.local.MessageEntity
+import input.comprehensible.data.textadventure.sources.local.SentenceEntity
 import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
 import input.comprehensible.data.textadventure.sources.remote.RemoteAdventure
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.textadventure.TextAdventuresListRoute
@@ -34,6 +40,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.setMain
@@ -48,8 +55,8 @@ internal data object TestDisposeRoute
 /**
  * Per-scenario environment for the text adventures feature tests. Injects the account dependencies
  * (a real DataStore session plus account fakes) needed to construct the account repository, and the
- * text adventure fakes the screen actually exercises. The list screen is hosted in a `NavHost` with
- * placeholder destinations standing in for the account screen and the (not-yet-built) chat screen.
+ * text adventure fakes the screens exercise. The list screen is hosted in a `NavHost` with a
+ * placeholder standing in for the account screen.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class TextAdventureFeatureTestScope(
@@ -62,6 +69,7 @@ class TextAdventureFeatureTestScope(
     val fakeLocalDataSource = FakeAdventureLocalDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
+    private var currentEmail = "user@example.com"
 
     private lateinit var navController: TestNavHostController
     private var isLaunched = false
@@ -82,6 +90,7 @@ class TextAdventureFeatureTestScope(
         UserLocalDataSource.inject { FakeUserLocalDataSource() }
         AdventureRemoteDataSource.inject { fakeRemoteDataSource }
         AdventureLocalDataSource.inject { fakeLocalDataSource }
+        LanguagePreferences.inject { FakeLanguagePreferences() }
     }
 
     private fun launch() {
@@ -111,6 +120,7 @@ class TextAdventureFeatureTestScope(
     }
 
     fun signInAs(email: String) {
+        currentEmail = email
         testScope.launch {
             realAccountLocalDataSource.saveSession(
                 token = "test-token",
@@ -142,20 +152,56 @@ class TextAdventureFeatureTestScope(
         fakeRemoteDataSource.failDeleteAdventure = true
     }
 
+    fun failStart() {
+        fakeRemoteDataSource.failStartAdventure = true
+    }
+
+    fun startReturns(text: String, translation: String) {
+        fakeRemoteDataSource.startResponse = TextAdventureRemoteResponse(
+            messageId = "message-1",
+            adventureId = "adventure-1",
+            title = "Adventure",
+            sentences = listOf(text),
+            translatedSentences = listOf(translation),
+            isEnding = false,
+        )
+    }
+
     fun cacheAdventure(title: String, email: String) {
-        fakeLocalDataSource.seed(
-            AdventureEntity(
-                id = title,
-                userId = userIdFor(email),
-                title = title,
-                learningLanguage = "German",
-                translationLanguage = "English",
-                updatedAt = 0L,
+        fakeLocalDataSource.seed(adventureEntity(title, email))
+    }
+
+    fun cacheAdventureWithMessage(title: String, message: String) {
+        fakeLocalDataSource.seed(adventureEntity(title, currentEmail))
+        val messageId = "$title-message"
+        fakeLocalDataSource.seedMessage(
+            MessageEntity(
+                id = messageId,
+                adventureId = title,
+                parentId = null,
+                sender = AdventureMessageSender.AI.name,
+                isEnding = false,
+                position = 0,
+            ),
+            listOf(
+                SentenceEntity(
+                    messageId = messageId,
+                    paragraphIndex = 0,
+                    sentenceIndex = 0,
+                    text = message,
+                    translation = "$message (translated)",
+                ),
             ),
         )
     }
 
     fun idle() {
+        testScope.runCurrent()
+        composeContentRule.waitForIdle()
+    }
+
+    fun advanceTime(millis: Long) {
+        testScope.advanceTimeBy(millis)
         testScope.runCurrent()
         composeContentRule.waitForIdle()
     }
@@ -171,6 +217,15 @@ class TextAdventureFeatureTestScope(
         composeContentRule.awaitIdle()
     }
 
+    private fun adventureEntity(title: String, email: String) = AdventureEntity(
+        id = title,
+        userId = userIdFor(email),
+        title = title,
+        learningLanguage = "German",
+        translationLanguage = "English",
+        updatedAt = 0L,
+    )
+
     private fun remoteAdventure(title: String) = RemoteAdventure(
         id = title,
         title = title,
@@ -182,7 +237,7 @@ class TextAdventureFeatureTestScope(
     private fun userIdFor(email: String) = "user-id-$email"
 
     private companion object {
-        const val IN_FLIGHT_DELAY_MILLIS = 1_000L
+        const val IN_FLIGHT_DELAY_MILLIS = 60_000L
     }
 }
 

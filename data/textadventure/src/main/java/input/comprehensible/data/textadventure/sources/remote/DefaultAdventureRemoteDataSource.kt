@@ -1,5 +1,7 @@
 package input.comprehensible.data.textadventure.sources.remote
 
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -9,6 +11,10 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerialName
@@ -50,7 +56,44 @@ class DefaultAdventureRemoteDataSource(
             error("Delete adventure failed: ${response.status}")
         }
     }
+
+    override suspend fun startAdventure(
+        token: String,
+        learningLanguage: String,
+        translationLanguage: String,
+    ): TextAdventureRemoteResponse {
+        val response = httpClient.post("$baseUrl/v1/adventures") {
+            header("X-Api-Key", apiKey)
+            header("Authorization", "Bearer $token")
+            contentType(ContentType.Application.Json)
+            setBody(StartAdventureRequest(learningLanguage, translationLanguage))
+        }
+        if (!response.status.isSuccess()) {
+            error("Start adventure failed: ${response.status}")
+        }
+        return response.body()
+    }
+
+    override suspend fun getMessages(
+        token: String,
+        adventureId: String,
+    ): TextAdventureMessagesRemoteResponse {
+        val response = httpClient.get("$baseUrl/v1/adventures/$adventureId/messages") {
+            header("X-Api-Key", apiKey)
+            header("Authorization", "Bearer $token")
+        }
+        if (!response.status.isSuccess()) {
+            error("Get messages failed: ${response.status}")
+        }
+        return response.body()
+    }
 }
+
+@Serializable
+private data class StartAdventureRequest(
+    val learningLanguage: String,
+    val translationLanguage: String,
+)
 
 @Serializable
 private data class AdventureListResponse(

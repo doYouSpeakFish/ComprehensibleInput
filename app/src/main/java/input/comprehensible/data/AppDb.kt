@@ -12,6 +12,8 @@ import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLoca
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
 import input.comprehensible.data.textadventure.sources.local.AdventureEntity
 import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+import input.comprehensible.data.textadventure.sources.local.MessageEntity
+import input.comprehensible.data.textadventure.sources.local.SentenceEntity
 import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.ApplicationProvider
 
@@ -20,14 +22,17 @@ import input.comprehensible.di.ApplicationProvider
         StoryEntity::class,
         UserEntity::class,
         AdventureEntity::class,
+        MessageEntity::class,
+        SentenceEntity::class,
     ],
-    version = 10,
+    version = 11,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 8, to = 9),
         AutoMigration(from = 9, to = 10),
+        AutoMigration(from = 10, to = 11),
     ]
 )
 abstract class AppDb : RoomDatabase() {
