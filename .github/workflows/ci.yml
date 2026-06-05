@@ -93,7 +93,7 @@ jobs:
           mkdir ./service-account
           echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
           echo $APP_TESTERS > testers.txt
-          ./gradlew :app:assembleDebug :app:appDistributionUploadDebug \
+          ./gradlew :app:assembleRelease :app:appDistributionUploadRelease \
             -PenableAllFeatureFlags=true
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
@@ -115,7 +115,7 @@ jobs:
           fi
           RELEASE_NOTES="$(printf '%s\n\n%s' "$PR_TITLE" "$RELEASE_NOTES_BODY")"
 
-          ./gradlew :app:assembleRelease :app:appDistributionUploadRelease \
+          ./gradlew :app:assembleDebug :app:appDistributionUploadDebug \
             -PprNumber="$PR_NUMBER" \
             -PprBackendBaseUrl="http://${{ secrets.BACKEND_STAGING_IP_ADDRESS }}:${BACKEND_PORT}" \
             -PenableAllFeatureFlags=true \
