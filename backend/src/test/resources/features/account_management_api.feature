@@ -44,6 +44,23 @@ Feature: Account management API
     When I sign in with email "alice@example.com" and password "SecurePass123!"
     Then account API status should be 200
 
+  Scenario: Signing in returns the user id
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    When I sign in with email "alice@example.com" and password "SecurePass123!"
+    Then account API status should be 200
+    And the sign in response includes the user id
+
+  Scenario: The signed in user id matches the profile id
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I verify email "alice@example.com" using code "123456"
+    And I am signed in with email "alice@example.com" and password "SecurePass123!"
+    When I request me profile
+    Then account API status should be 200
+    And the me profile id matches the sign in user id
+
   Scenario: Rejecting verification with wrong code using generic error
     Given existing user "alice@example.com" with password "SecurePass123!"
     When I verify email "alice@example.com" using code "000000"

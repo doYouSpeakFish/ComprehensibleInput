@@ -19,10 +19,12 @@ scenarios are excluded from discovery by `CucumberComposeScenarios` (see that fi
   - `:feature:textadventure` — list + chat screens, view models, use cases, navigation.
   - The `User` entity lives in `:common` (so it can be the FK target for adventures);
     upserting the user is the responsibility of `:data:account`.
-- **User id** comes from the backend: after sign-in the account module calls
-  `GET /v1/me` (returns `{ id, email }`) and upserts a local `User(id, email)`. This
-  id equals the backend `account_id`, so it scopes locally-cached adventures correctly.
-  No backend change is required.
+- **User id** comes from the backend. The sign-in response (`POST /v1/auth/sessions`)
+  now also returns `user_id` (a small additive backend change — see "Backend change"
+  below), so the account module gets the id atomically at sign-in and upserts a local
+  `User(id, email)` with no extra round-trip. This id equals the backend `account_id`,
+  so it scopes locally-cached adventures correctly. (`GET /v1/me` also returns
+  `{ id, email }` and remains the zero-change fallback if we ever need it.)
 - **Feature flag**: reuse the existing `aiTextAdventuresEnabled` flag (and the existing
   `@aiTextAdventuresDisabled` Cucumber tag). The flag hides the Text Adventures option
   on the home screen.
@@ -47,10 +49,20 @@ scenarios are excluded from discovery by `CucumberComposeScenarios` (see that fi
 - **Adventure deletion**: included in the list screen increment, wired to
   `DELETE /v1/adventures/{id}`, with optimistic removal + restore on failure.
 
-## Backend v1 contract (reference, unchanged)
+## Backend change (done up front)
+
+The only backend change for this work: `POST /v1/auth/sessions` now returns `user_id`
+alongside `access_token` / `token_type` (additive, non-breaking — existing clients
+ignore the extra field). This lets the account module create the local `User` record
+atomically at sign-in. Implemented in `AccountService.signIn` / `SignInPayload` and
+`AccountRoutes.SignInRemoteResponse`, covered by two new scenarios in
+`account_management_api.feature` ("Signing in returns the user id" and "The signed in
+user id matches the profile id"). Backend Kover snapshots were regenerated.
+
+## Backend v1 contract (reference)
 
 Authenticated with `Authorization: Bearer {token}` (`POST /v1/auth/sessions` →
-`{access_token, token_type}`; the local user id comes from `GET /v1/me`).
+`{access_token, token_type, user_id}`).
 
 - `POST /v1/adventures` `{learningLanguage, translationLanguage}` → 201
   `TextAdventureRemoteResponse` (first AI message).
@@ -143,8 +155,10 @@ init { viewModelScope.launch { sessionUseCase().collect { session = it } } }
 - Add `UserEntity(id, email)` to `:common`; add `UserLocalDataSource` (@Dao: upsert /
   get / observe / delete) to `:data:account` (+ Room deps); register both in `AppDb`
   and DI; migration adds the `user` table.
-- Extend the account remote source with `GET /v1/me`. On successful sign-in: fetch
-  `/v1/me`, upsert `User(id, email)`, store the user id in the DataStore session.
+- Read `user_id` from the sign-in response (added in "Backend change" above). On
+  successful sign-in: upsert `User(id, email)` and store the user id in the DataStore
+  session (no extra `/v1/me` round-trip). The client's `SignInResponse` DTO gains the
+  `user_id` field.
 - Expose `AccountRepository.user: Flow<User?>` and the session/token flow; delete the
   local user on account deletion (drives the adventures cascade later).
 - Feature file: `feature/account/.../features/account_user.feature` (`@increment2`).
@@ -163,6 +177,13 @@ init { viewModelScope.launch { sessionUseCase().collect { session = it } } }
   restore on failure), and a "new adventure" entry point. Public `@DefaultPreview`s for
   every state; `TextAdventuresListRobot` in `testFixtures`. Wire `Home -> Text
   Adventures` to the real screen and `Account` navigation for the sign-in prompt.
+- **Register the module so its specs actually run**: add `:data:textadventure` and
+  `:feature:textadventure` to `settings.gradle.kts`, give `:feature:textadventure` a
+  Cucumber host (mirroring `:feature:account`'s `AccountFeatureCucumberTest` +
+  scenario holder), and add it to the root `kover` block. Done-criterion: confirm the
+  `text_adventures_list` / `text_adventure_chat` scenarios are discovered and run once
+  un-`@ignore`d (they currently live under `feature/textadventure/` but are inert until
+  the module exists — this is the gap the PR reviewer flagged).
 - Feature file: `feature/textadventure/.../features/text_adventures_list.feature`
   (`@increment3`) and the `@increment3` home navigation scenario.
 - **Verify**: signed-out prompt; signed-in list from cache + refresh; only own
