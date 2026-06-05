@@ -16,6 +16,7 @@ import org.junit.runners.model.Statement
 /** A discovered Cucumber scenario. [toString] is the readable label used in test reports. */
 class CucumberScenario internal constructor(
     val uniqueId: String,
+    val tags: Set<String>,
     private val label: String,
 ) {
     override fun toString(): String = label
@@ -99,7 +100,8 @@ object CucumberComposeScenarios {
             if (children.isEmpty()) {
                 if (identifier.isTest) {
                     val label = if (parentLabel.isEmpty()) identifier.displayName else "$parentLabel – ${identifier.displayName}"
-                    scenarios += CucumberScenario(identifier.uniqueId, label)
+                    val tags = identifier.tags.map { it.name.removePrefix("@") }.toSet()
+                    scenarios += CucumberScenario(identifier.uniqueId, tags, label)
                 }
             } else {
                 children.forEach { visit(it, identifier.displayName) }

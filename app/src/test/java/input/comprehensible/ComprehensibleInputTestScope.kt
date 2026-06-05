@@ -146,6 +146,15 @@ class ComprehensibleInputTestScope(
         composeRule.awaitIdle()
     }
 
+    /**
+     * Non-suspending equivalent of [awaitIdle] for Cucumber step definitions: pumps the test
+     * scheduler and then the Compose/Robolectric main looper so the UI reflects pending work.
+     */
+    fun idle() {
+        testScope.runCurrent()
+        composeRule.waitForIdle()
+    }
+
     fun setLocalStories(stories: List<TestStory>) {
         storiesTestData.setLocalStories(stories)
     }

@@ -7,7 +7,6 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import input.comprehensible.ComprehensibleInputTestScope
 
 class SettingsRobot(private val composeTestRule: ComposeTestRule) {
     fun assertSettingsTitleIsVisible() {
@@ -52,7 +51,3 @@ class SettingsRobot(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 }
-
-suspend fun ComprehensibleInputTestScope.onSettings(
-    block: suspend SettingsRobot.() -> Unit = {}
-) = SettingsRobot(composeRule).apply { block() }
