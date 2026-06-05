@@ -30,4 +30,3 @@ include(":feature:account")
 
 include(":backend")
 include(":textadventuremodels")
-include(":cucumberuidemo")
