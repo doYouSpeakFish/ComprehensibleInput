@@ -37,6 +37,12 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                // Restart the test worker every 20 tests. The Robolectric NATIVE-graphics preview
+                // screenshot renders use off-heap native memory (not bounded by -Xmx) that
+                // accumulates across this module's 164 tests in a single long-lived worker; under
+                // kover instrumentation that peak RSS gets the worker killed mid-run on
+                // memory-constrained machines. Forking periodically releases it.
+                it.setForkEvery(20L)
             }
         }
     }
