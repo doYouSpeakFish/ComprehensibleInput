@@ -191,7 +191,9 @@ koverCoverageReport {
     sourceProjects(
         project(":common"),
         project(":data:account"),
+        project(":data:textadventure"),
         project(":feature:account"),
+        project(":feature:textadventure"),
     )
 }
 
@@ -199,7 +201,9 @@ kover {
     dependencies {
         kover(project(":common"))
         kover(project(":data:account"))
+        kover(project(":data:textadventure"))
         kover(project(":feature:account"))
+        kover(project(":feature:textadventure"))
     }
     reports {
         filters {
@@ -208,6 +212,7 @@ kover {
                     "input.comprehensible.data.stories.sources",
                     "input.comprehensible.data.languages.sources",
                     "input.comprehensible.data.account.sources.remote",
+                    "input.comprehensible.data.textadventure.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -222,6 +227,7 @@ kover {
                     "input.comprehensible.data.languages.LanguagesDao_Impl",
                     "input.comprehensible.data.stories.StoriesDao_Impl",
                     "input.comprehensible.data.account.sources.local.UserLocalDataSource_Impl",
+                    "input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource_Impl",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
                 )
@@ -239,7 +245,9 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":feature:account"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:textadventure"))
     implementation(project(":data:account"))
+    implementation(project(":data:textadventure"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
@@ -272,6 +280,7 @@ dependencies {
     testImplementation(project(":commontest"))
     testImplementation(testFixtures(project(":feature:account")))
     testImplementation(testFixtures(project(":feature:home")))
+    testImplementation(testFixtures(project(":feature:textadventure")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

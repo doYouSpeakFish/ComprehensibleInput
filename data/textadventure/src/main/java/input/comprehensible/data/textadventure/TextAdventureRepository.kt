@@ -1,0 +1,68 @@
+package input.comprehensible.data.textadventure
+
+import com.ktin.Singleton
+import input.comprehensible.data.textadventure.sources.local.AdventureEntity
+import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
+import input.comprehensible.data.textadventure.sources.remote.RemoteAdventure
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import timber.log.Timber
+
+/**
+ * Offline-first access to the signed-in user's text adventures. The local database is the source of
+ * truth that the UI observes; [refreshAdventures] and [deleteAdventure] reconcile it with the v1
+ * backend. Reads are scoped by the local user id; network calls take the session token.
+ */
+class TextAdventureRepository(
+    private val remoteDataSource: AdventureRemoteDataSource,
+    private val localDataSource: AdventureLocalDataSource,
+) {
+    fun getAdventures(userId: String): Flow<List<AdventureSummary>> =
+        localDataSource.observeAdventures(userId).map { adventures ->
+            adventures.map { it.toSummary() }
+        }
+
+    suspend fun refreshAdventures(token: String, userId: String): Result<Unit> = runCatching {
+        val remote = remoteDataSource.getAdventures(token)
+        localDataSource.upsertAdventures(remote.map { it.toEntity(userId) })
+    }.onFailure { Timber.e(it, "Failed to refresh adventures") }
+
+    /**
+     * Deletes an adventure optimistically: the local row is removed immediately (so the UI updates
+     * at once) and restored if the backend call fails, surfacing the failure to the caller.
+     */
+    suspend fun deleteAdventure(token: String, adventureId: String): Result<Unit> {
+        val backup = localDataSource.getAdventure(adventureId)
+        localDataSource.deleteAdventure(adventureId)
+        return runCatching { remoteDataSource.deleteAdventure(token, adventureId) }
+            .onFailure {
+                Timber.e(it, "Failed to delete adventure")
+                if (backup != null) localDataSource.upsertAdventure(backup)
+            }
+    }
+
+    companion object : Singleton<TextAdventureRepository>() {
+        override fun create() = TextAdventureRepository(
+            remoteDataSource = AdventureRemoteDataSource(),
+            localDataSource = AdventureLocalDataSource(),
+        )
+    }
+}
+
+private fun AdventureEntity.toSummary() = AdventureSummary(
+    id = id,
+    title = title,
+    learningLanguage = learningLanguage,
+    translationLanguage = translationLanguage,
+    updatedAt = updatedAt,
+)
+
+private fun RemoteAdventure.toEntity(userId: String) = AdventureEntity(
+    id = id,
+    userId = userId,
+    title = title,
+    learningLanguage = learningLanguage,
+    translationLanguage = translationLanguage,
+    updatedAt = updatedAt,
+)

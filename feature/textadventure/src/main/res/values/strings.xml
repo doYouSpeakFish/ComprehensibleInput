@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_adventures_title">Text adventures</string>
+    <string name="text_adventures_sign_in_message">Sign in to start playing text adventures.</string>
+    <string name="text_adventures_sign_in_button">Sign in</string>
+    <string name="text_adventures_empty">You don\'t have any adventures yet. Start one!</string>
+    <string name="text_adventures_error">Couldn\'t load your adventures. Please try again.</string>
+    <string name="text_adventures_new">New adventure</string>
+    <string name="text_adventures_delete_content_description">Delete adventure</string>
+</resources>

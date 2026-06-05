@@ -20,6 +20,10 @@ import input.comprehensible.data.sample.TestStory
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
+import input.comprehensible.data.textadventure.fakes.FakeAdventureRemoteDataSource
+import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
@@ -32,7 +36,9 @@ import input.comprehensible.util.FeatureFlags
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.setMain
 
@@ -87,6 +93,8 @@ class ComprehensibleInputTestScope(
         }
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
         UserLocalDataSource.inject { appDb.getUserDao() }
+        AdventureLocalDataSource.inject { appDb.getAdventureDao() }
+        AdventureRemoteDataSource.inject { FakeAdventureRemoteDataSource() }
         AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
             override suspend fun createAccount(email: String, password: String) = Unit
             override suspend fun verifyEmail(email: String, code: String) = Unit
@@ -114,6 +122,14 @@ class ComprehensibleInputTestScope(
 
     fun goToHome() {
         navController.navigate(HomeRoute)
+    }
+
+    fun signInAs(email: String, userId: String = "test-user-id") {
+        testScope.launch {
+            realAccountLocalDataSource.saveSession(token = "test-token", email = email, userId = userId)
+            appDb.getUserDao().upsertUser(UserEntity(id = userId, email = email))
+        }
+        testScope.advanceUntilIdle()
     }
 
     fun goToStoryList() {

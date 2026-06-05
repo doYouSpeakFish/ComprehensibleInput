@@ -33,7 +33,7 @@ Feature: Home
     Then the stories option is shown
     And the text adventures option is hidden
 
-  @ignore @increment3
+  @increment3
   Scenario: Selecting text adventures opens the text adventures screen
     Given I am signed in as "user@example.com"
     And the home screen is open

@@ -1,0 +1,93 @@
+package input.comprehensible.ui.textadventure
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import input.comprehensible.data.account.AccountRepository
+import input.comprehensible.data.account.sources.local.Session
+import input.comprehensible.data.textadventure.AdventureSummary
+import input.comprehensible.data.textadventure.TextAdventureRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+/**
+ * Drives the text adventures list screen. The list itself is offline-first (observed from the local
+ * database via [GetAdventuresUseCase]); this view model layers on the signed-in state, a refresh of
+ * the v1 backend, and optimistic deletion.
+ *
+ * Loading and error are derived reactively from the refresh status combined with the current cache,
+ * so a refresh failure only surfaces an error when there is nothing cached to show.
+ */
+class TextAdventuresListViewModel(
+    private val accountRepository: AccountRepository = AccountRepository(),
+    private val textAdventureRepository: TextAdventureRepository = TextAdventureRepository(),
+    getAdventures: GetAdventuresUseCase = GetAdventuresUseCase(),
+) : ViewModel() {
+
+    private val refreshStatus = MutableStateFlow(RefreshStatus.IDLE)
+    private val deleteFailed = MutableStateFlow(false)
+    private var session: Session? = null
+
+    val state: StateFlow<TextAdventuresListUiState> = combine(
+        accountRepository.user,
+        getAdventures(),
+        refreshStatus,
+        deleteFailed,
+    ) { user, adventures, status, deleteError ->
+        TextAdventuresListUiState(
+            isSignedIn = user != null,
+            isLoading = status == RefreshStatus.LOADING && adventures.isEmpty(),
+            adventures = adventures.map { it.toItem() },
+            showError = (status == RefreshStatus.ERROR && adventures.isEmpty()) || deleteError,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+        initialValue = TextAdventuresListUiState.INITIAL,
+    )
+
+    init {
+        viewModelScope.launch {
+            accountRepository.session.collectLatest { current ->
+                session = current
+                if (current != null) refresh(current)
+            }
+        }
+    }
+
+    /**
+     * Deletes an adventure. The repository removes it locally at once and restores it if the backend
+     * rejects the delete, in which case the error is surfaced to the user.
+     */
+    fun onDeleteAdventure(adventureId: String) {
+        val current = session ?: return
+        viewModelScope.launch {
+            deleteFailed.value = false
+            textAdventureRepository.deleteAdventure(current.token, adventureId)
+                .onFailure { deleteFailed.value = true }
+        }
+    }
+
+    private suspend fun refresh(current: Session) {
+        deleteFailed.value = false
+        refreshStatus.value = RefreshStatus.LOADING
+        val result = textAdventureRepository.refreshAdventures(current.token, current.userId)
+        refreshStatus.value = if (result.isSuccess) RefreshStatus.SUCCESS else RefreshStatus.ERROR
+    }
+
+    private enum class RefreshStatus { IDLE, LOADING, SUCCESS, ERROR }
+
+    private companion object {
+        const val STOP_TIMEOUT_MILLIS = 5_000L
+    }
+}
+
+private fun AdventureSummary.toItem() = TextAdventuresListUiState.AdventureItem(
+    id = id,
+    title = title,
+    subtitle = learningLanguage,
+)
