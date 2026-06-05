@@ -49,7 +49,7 @@ class AppDbMigrationTest {
             close()
         }
 
-        // WHEN it upgrades, THEN it reaches version 8 with every text adventure object dropped.
+        // WHEN it upgrades, THEN it reaches version 9 with every text adventure object dropped.
         helper.runMigrationsAndValidate(
             CURRENT_VERSION,
             dropTextAdventureMigrations().toList(),
@@ -62,7 +62,7 @@ class AppDbMigrationTest {
         recreateDatabaseFile()
         helper.createDatabase(EARLIEST_VERSION).close()
 
-        // WHEN it upgrades, THEN every migration up to version 8 applies cleanly.
+        // WHEN it upgrades, THEN every migration up to version 9 applies cleanly.
         helper.runMigrationsAndValidate(
             CURRENT_VERSION,
             dropTextAdventureMigrations().toList(),
