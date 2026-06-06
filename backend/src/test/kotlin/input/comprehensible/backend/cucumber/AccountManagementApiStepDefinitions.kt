@@ -313,17 +313,21 @@ class AccountManagementApiStepDefinitions {
                     globalRateLimit = globalLimit,
                 )
             }
-            // WHEN the same client sends one more sign-in request than the limit allows
-            repeat(globalLimit + 1) {
-                val response = client.post("/v1/auth/sessions") {
+            // WHEN the same client first uses up the whole allowance ...
+            repeat(globalLimit) {
+                client.post("/v1/auth/sessions") {
                     contentType(ContentType.Application.Json)
                     setBody(credentialsBody("nobody@example.com", "whatever"))
                 }
-                // THEN the latest response is kept; after the over-limit request the scenario
-                // asserts it was rejected with 429
-                latestStatus = response.status
-                latestBody = response.bodyAsText()
             }
+            // ... and then makes one more request, over the limit
+            val response = client.post("/v1/auth/sessions") {
+                contentType(ContentType.Application.Json)
+                setBody(credentialsBody("nobody@example.com", "whatever"))
+            }
+            // THEN that final, over-limit request is the one the scenario asserts was rejected (429)
+            latestStatus = response.status
+            latestBody = response.bodyAsText()
         }
     }
 
