@@ -27,6 +27,7 @@ class TextAdventureRepositoryTest {
 
     @Test
     fun `refreshMessages replaces the local conversation with the backend's`() = runTest {
+        // GIVEN the backend returns a conversation of an AI message followed by a user message
         val remote = StubRemoteDataSource(
             TextAdventureMessagesRemoteResponse(
                 adventureId = "adventure-1",
@@ -41,9 +42,11 @@ class TextAdventureRepositoryTest {
         )
         val local = RecordingLocalDataSource()
 
+        // WHEN the local conversation is refreshed from the backend
         val result = TextAdventureRepository(remote, local)
             .refreshMessages(token = "token", adventureId = "adventure-1")
 
+        // THEN the local store is replaced with the backend's messages, in order
         assertTrue(result.isSuccess)
         assertEquals(listOf("adventure-1"), local.deletedAdventureIds)
         assertEquals(listOf("m1", "m2"), local.upsertedMessages.map { it.id })
@@ -58,15 +61,18 @@ class TextAdventureRepositoryTest {
 
     @Test
     fun `sendUserMessage persists the created message after the latest one`() = runTest {
+        // GIVEN a backend that accepts the user message and a local store whose latest message is at position 0
         val remote = StubRemoteDataSource(
             messages = emptyMessages(),
             userMessageResponse = userMessage(),
         )
         val local = RecordingLocalDataSource(maxPosition = 0)
 
+        // WHEN the user sends a message
         val result = TextAdventureRepository(remote, local)
             .sendUserMessage(token = "token", adventureId = "adventure-1", parentId = "m1", text = "I go.")
 
+        // THEN it is persisted just after the latest message and returned
         assertTrue(result.isSuccess)
         val message = result.getOrThrow()
         assertEquals("m2", message.id)
@@ -78,15 +84,18 @@ class TextAdventureRepositoryTest {
 
     @Test
     fun `generateAiMessage persists the AI reply at the first position when none exist`() = runTest {
+        // GIVEN a backend that returns an AI reply and a local store with no messages yet
         val remote = StubRemoteDataSource(
             messages = emptyMessages(),
             aiMessageResponse = aiMessage(),
         )
         val local = RecordingLocalDataSource(maxPosition = null)
 
+        // WHEN the AI reply is generated
         val result = TextAdventureRepository(remote, local)
             .generateAiMessage(token = "token", adventureId = "adventure-1", parentId = "m1")
 
+        // THEN the reply is persisted at the first position with its sentences
         assertTrue(result.isSuccess)
         val message = result.getOrThrow()
         assertEquals("m1", message.id)
