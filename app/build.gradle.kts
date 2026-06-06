@@ -82,6 +82,13 @@ android {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
             buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
             buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "true")
+            // PR builds are distributed as debug so logs are available for diagnosis.
+            firebaseAppDistribution {
+                artifactType = "APK"
+                testersFile = "./testers.txt"
+                serviceCredentialsFile = "./firebase-app-distribution-key.json"
+                releaseNotes = (project.findProperty("firebaseReleaseNotes") as String?)?.trim()
+            }
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
