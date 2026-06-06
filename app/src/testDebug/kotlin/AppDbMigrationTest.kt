@@ -6,7 +6,10 @@ import androidx.sqlite.execSQL
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import input.comprehensible.data.AppDb
-import input.comprehensible.data.dropTextAdventureMigrations
+import input.comprehensible.data.RemoveTextAdventurePrototypeSpec
+import input.comprehensible.data.TextAdventureMigration4To5
+import input.comprehensible.data.TextAdventureMigration5To6
+import input.comprehensible.data.TextAdventureMigration6To7
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,11 +30,15 @@ class AppDbMigrationTest {
         driver = AndroidSQLiteDriver(),
         databaseClass = AppDb::class,
         databaseFactory = {
-            val builder = Room.databaseBuilder(context, AppDb::class.java, TEST_DB)
-            dropTextAdventureMigrations().forEach { builder.addMigrations(it) }
-            builder.build()
+            Room.databaseBuilder(context, AppDb::class.java, TEST_DB)
+                .addMigrations(TextAdventureMigration5To6())
+                .addMigrations(TextAdventureMigration6To7())
+                .build()
         },
-        autoMigrationSpecs = emptyList(),
+        autoMigrationSpecs = listOf(
+            TextAdventureMigration4To5(),
+            RemoveTextAdventurePrototypeSpec(),
+        ),
     )
 
     @Test
@@ -49,10 +56,10 @@ class AppDbMigrationTest {
             close()
         }
 
-        // WHEN it upgrades, THEN it reaches version 9 with every text adventure object dropped.
+        // WHEN it upgrades, THEN it reaches version 8 with every prototype object dropped.
         helper.runMigrationsAndValidate(
             CURRENT_VERSION,
-            dropTextAdventureMigrations().toList(),
+            listOf(TextAdventureMigration5To6(), TextAdventureMigration6To7()),
         ).close()
     }
 
@@ -62,10 +69,10 @@ class AppDbMigrationTest {
         recreateDatabaseFile()
         helper.createDatabase(EARLIEST_VERSION).close()
 
-        // WHEN it upgrades, THEN every migration up to version 9 applies cleanly.
+        // WHEN it upgrades, THEN every migration up to version 8 applies cleanly.
         helper.runMigrationsAndValidate(
             CURRENT_VERSION,
-            dropTextAdventureMigrations().toList(),
+            listOf(TextAdventureMigration5To6(), TextAdventureMigration6To7()),
         ).close()
     }
 
@@ -80,6 +87,6 @@ class AppDbMigrationTest {
         private const val TEST_DB = "migration-test"
         private const val EARLIEST_VERSION = 1
         private const val TEXT_ADVENTURE_VERSION = 7
-        private const val CURRENT_VERSION = 11
+        private const val CURRENT_VERSION = 8
     }
 }
