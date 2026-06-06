@@ -1,4 +1,4 @@
-package input.comprehensible.data.languages.sources
+package input.comprehensible.data.languagesettings.sources
 
 import com.ktin.InjectedSingleton
 import kotlinx.coroutines.flow.Flow

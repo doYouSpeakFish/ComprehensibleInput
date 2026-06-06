@@ -61,6 +61,7 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":data:textadventure"))
     implementation(project(":data:account"))
+    implementation(project(":data:languagesettings"))
     implementation(libs.ktin.core)
 
     implementation(platform(libs.androidx.compose.bom))
@@ -87,6 +88,7 @@ dependencies {
 
     testImplementation(project(":commontest"))
     testImplementation(project(":textadventuremodels"))
+    testImplementation(testFixtures(project(":data:languagesettings")))
     testImplementation(testFixtures(project(":feature:account")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

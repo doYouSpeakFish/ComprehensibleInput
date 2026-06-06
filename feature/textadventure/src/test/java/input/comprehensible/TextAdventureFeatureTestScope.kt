@@ -16,13 +16,13 @@ import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
 import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.languagesettings.fakes.FakeLanguageSettingsLocalDataSource
+import input.comprehensible.data.languagesettings.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
 import input.comprehensible.data.sources.FakeUserLocalDataSource
 import input.comprehensible.data.textadventure.AdventureMessageSender
-import input.comprehensible.data.textadventure.LanguagePreferences
 import input.comprehensible.data.textadventure.fakes.FakeAdventureLocalDataSource
 import input.comprehensible.data.textadventure.fakes.FakeAdventureRemoteDataSource
-import input.comprehensible.data.textadventure.fakes.FakeLanguagePreferences
 import input.comprehensible.data.textadventure.sources.local.AdventureEntity
 import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
 import input.comprehensible.data.textadventure.sources.local.MessageEntity
@@ -90,7 +90,7 @@ class TextAdventureFeatureTestScope(
         UserLocalDataSource.inject { FakeUserLocalDataSource() }
         AdventureRemoteDataSource.inject { fakeRemoteDataSource }
         AdventureLocalDataSource.inject { fakeLocalDataSource }
-        LanguagePreferences.inject { FakeLanguagePreferences() }
+        LanguageSettingsLocalDataSource.inject { FakeLanguageSettingsLocalDataSource() }
     }
 
     private fun launch() {

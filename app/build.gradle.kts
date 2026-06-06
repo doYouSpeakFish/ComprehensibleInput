@@ -191,6 +191,7 @@ koverCoverageReport {
     sourceProjects(
         project(":common"),
         project(":data:account"),
+        project(":data:languagesettings"),
         project(":data:textadventure"),
         project(":feature:account"),
         project(":feature:textadventure"),
@@ -201,6 +202,7 @@ kover {
     dependencies {
         kover(project(":common"))
         kover(project(":data:account"))
+        kover(project(":data:languagesettings"))
         kover(project(":data:textadventure"))
         kover(project(":feature:account"))
         kover(project(":feature:textadventure"))
@@ -210,7 +212,7 @@ kover {
             excludes {
                 packages(
                     "input.comprehensible.data.stories.sources",
-                    "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.data.languagesettings.sources",
                     "input.comprehensible.data.account.sources.remote",
                     "input.comprehensible.data.textadventure.sources.remote",
                     "input.comprehensible.di",
@@ -247,6 +249,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:textadventure"))
     implementation(project(":data:account"))
+    implementation(project(":data:languagesettings"))
     implementation(project(":data:textadventure"))
 
     implementation(platform(libs.androidx.compose.bom))
@@ -278,6 +281,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(project(":commontest"))
+    testImplementation(testFixtures(project(":data:languagesettings")))
     testImplementation(testFixtures(project(":feature:account")))
     testImplementation(testFixtures(project(":feature:home")))
     testImplementation(testFixtures(project(":feature:textadventure")))

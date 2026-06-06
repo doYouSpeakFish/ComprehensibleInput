@@ -1,4 +1,4 @@
-package input.comprehensible.data.languages.sources
+package input.comprehensible.data.languagesettings.sources
 
 import android.content.Context
 import androidx.datastore.core.DataStore

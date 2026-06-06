@@ -2,7 +2,7 @@ package input.comprehensible.ui.storylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import input.comprehensible.data.languages.LanguageSettingsRepository
+import input.comprehensible.data.languagesettings.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesListResult
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.usecases.GetStoriesListUseCase

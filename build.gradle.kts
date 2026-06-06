@@ -22,6 +22,7 @@ dependencies {
     kover(project(":app"))
     kover(project(":common"))
     kover(project(":data:account"))
+    kover(project(":data:languagesettings"))
     kover(project(":data:textadventure"))
     kover(project(":feature:account"))
     kover(project(":feature:textadventure"))
@@ -47,7 +48,7 @@ kover {
             excludes {
                 packages(
                     "input.comprehensible.data.stories.sources",
-                    "input.comprehensible.data.languages.sources",
+                    "input.comprehensible.data.languagesettings.sources",
                     "input.comprehensible.di",
                 )
                 classes(

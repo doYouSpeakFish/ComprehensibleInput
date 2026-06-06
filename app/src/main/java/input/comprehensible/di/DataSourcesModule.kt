@@ -7,13 +7,11 @@ import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSo
 import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.account.sources.remote.DefaultAccountRemoteDataSource
-import input.comprehensible.data.languages.LanguageSettingsRepository
-import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
-import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
+import input.comprehensible.data.languagesettings.sources.DefaultLanguageSettingsLocalDataSource
+import input.comprehensible.data.languagesettings.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.DefaultStoriesLocalDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
-import input.comprehensible.data.textadventure.LanguagePreferences
 import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
 import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
 import input.comprehensible.data.textadventure.sources.remote.DefaultAdventureRemoteDataSource
@@ -28,13 +26,6 @@ object DataSourcesModule {
                 baseUrl = BuildConfig.BACKEND_BASE_URL,
                 apiKey = BuildConfig.BACKEND_API_KEY,
             )
-        }
-        LanguagePreferences.inject {
-            object : LanguagePreferences {
-                private val repository = LanguageSettingsRepository()
-                override val learningLanguage = repository.learningLanguage
-                override val translationLanguage = repository.translationsLanguage
-            }
         }
         StoriesLocalDataSource.inject { DefaultStoriesLocalDataSource() }
         LanguageSettingsLocalDataSource.inject { DefaultLanguageSettingsLocalDataSource() }

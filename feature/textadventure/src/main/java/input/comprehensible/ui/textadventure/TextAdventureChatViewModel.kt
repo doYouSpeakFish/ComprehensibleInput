@@ -3,7 +3,7 @@ package input.comprehensible.ui.textadventure
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.account.AccountRepository
-import input.comprehensible.data.textadventure.LanguagePreferences
+import input.comprehensible.data.languagesettings.LanguageSettingsRepository
 import input.comprehensible.data.textadventure.TextAdventureRepository
 import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +29,7 @@ class TextAdventureChatViewModel(
     private val adventureId: String?,
     private val accountRepository: AccountRepository = AccountRepository(),
     private val textAdventureRepository: TextAdventureRepository = TextAdventureRepository(),
-    private val languagePreferences: LanguagePreferences = LanguagePreferences(),
+    private val languageSettingsRepository: LanguageSettingsRepository = LanguageSettingsRepository(),
 ) : ViewModel() {
 
     private val currentAdventureId = MutableStateFlow(adventureId)
@@ -88,8 +88,8 @@ class TextAdventureChatViewModel(
             showError.value = false
             isGenerating.value = true
             val session = accountRepository.session.filterNotNull().first()
-            val learningLanguage = languagePreferences.learningLanguage.first()
-            val translationLanguage = languagePreferences.translationLanguage.first()
+            val learningLanguage = languageSettingsRepository.learningLanguage.first()
+            val translationLanguage = languageSettingsRepository.translationsLanguage.first()
             textAdventureRepository
                 .startAdventure(session.token, session.userId, learningLanguage, translationLanguage)
                 .onSuccess { newAdventureId ->
