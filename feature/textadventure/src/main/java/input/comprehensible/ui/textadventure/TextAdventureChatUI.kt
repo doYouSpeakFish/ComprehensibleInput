@@ -2,23 +2,35 @@ package input.comprehensible.ui.textadventure
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -26,12 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.data.textadventure.AdventureMessage
-import input.comprehensible.data.textadventure.AdventureMessageSender
 import input.comprehensible.feature.textadventure.R
 import input.comprehensible.ui.components.TranslatableText
 import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
-import input.comprehensible.ui.theme.ComprehensibleInputTheme
-import input.comprehensible.util.DefaultPreview
 import kotlinx.coroutines.delay
 
 internal const val PLACEHOLDER_CYCLE_MILLIS = 1_500L
@@ -47,16 +56,20 @@ internal fun TextAdventureChatScreen(
         state = state,
         onSentenceSelected = viewModel::onSentenceSelected,
         onRetry = viewModel::onRetry,
+        // A lambda rather than a bound method reference: bound references get non-deterministic
+        // partial coverage here, which trips the coverage snapshot check.
+        onSendMessage = { viewModel.onSendMessage(it) },
         modifier = modifier,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TextAdventureChatScreen(
+internal fun TextAdventureChatScreen(
     state: TextAdventureChatUiState,
     onSentenceSelected: (String, Int, Int) -> Unit,
     onRetry: () -> Unit,
+    onSendMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -64,26 +77,66 @@ private fun TextAdventureChatScreen(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.text_adventure_chat_title)) })
         },
+        bottomBar = {
+            if (!state.isInputHidden) {
+                ChatInput(onSendMessage = onSendMessage)
+            }
+        },
     ) { paddingValues ->
-        LazyColumn(
+        Conversation(
+            state = state,
+            onSentenceSelected = onSentenceSelected,
+            onRetry = onRetry,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            items(items = state.messages, key = { it.id }) { message ->
-                MessageItem(
-                    message = message,
-                    selectedSentence = state.selectedSentence,
-                    onSentenceSelected = onSentenceSelected,
+                .padding(paddingValues),
+        )
+    }
+}
+
+@Composable
+private fun Conversation(
+    state: TextAdventureChatUiState,
+    onSentenceSelected: (String, Int, Int) -> Unit,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val listState = rememberLazyListState()
+    val itemCount = state.displayedMessages.size + if (state.isGenerating) 1 else 0
+    LaunchedEffect(itemCount) {
+        if (itemCount > 0) listState.animateScrollToItem(itemCount - 1)
+    }
+    LazyColumn(
+        state = listState,
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        items(items = state.displayedMessages, key = { it.id }) { message ->
+            MessageItem(
+                message = message,
+                selectedSentence = state.selectedSentence,
+                onSentenceSelected = onSentenceSelected,
+            )
+        }
+        if (state.isGenerating) {
+            item(key = "generating") { GeneratingPlaceholder() }
+        }
+        if (state.showError) {
+            item(key = "error") {
+                ErrorWithRetry(
+                    message = stringResource(R.string.text_adventure_generation_error),
+                    testTag = "generation_error",
+                    onRetry = onRetry,
                 )
             }
-            if (state.isGenerating) {
-                item(key = "generating") { GeneratingPlaceholder() }
-            }
-            if (state.showError) {
-                item(key = "error") { GenerationError(onRetry = onRetry) }
+        }
+        if (state.showMessageError) {
+            item(key = "message_error") {
+                ErrorWithRetry(
+                    message = stringResource(R.string.text_adventure_message_error),
+                    testTag = "message_error",
+                    onRetry = onRetry,
+                )
             }
         }
     }
@@ -137,12 +190,12 @@ private fun GeneratingPlaceholder() {
 }
 
 @Composable
-private fun GenerationError(onRetry: () -> Unit) {
+private fun ErrorWithRetry(message: String, testTag: String, onRetry: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = stringResource(R.string.text_adventure_generation_error),
+            text = message,
             color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.testTag("generation_error"),
+            modifier = Modifier.testTag(testTag),
         )
         Button(onClick = onRetry, modifier = Modifier.testTag("retry_button")) {
             Text(stringResource(R.string.text_adventure_retry))
@@ -150,92 +203,42 @@ private fun GenerationError(onRetry: () -> Unit) {
     }
 }
 
-private val previewMessage = AdventureMessage(
-    id = "1",
-    sender = AdventureMessageSender.AI,
-    isEnding = false,
-    paragraphs = listOf(
-        AdventureMessage.Paragraph(
-            sentences = listOf("You arrive at a quiet harbor.", "Boats sway in the mist."),
-            translatedSentences = listOf(
-                "Llegas a un puerto tranquilo.",
-                "Los barcos se mecen en la niebla.",
-            ),
-        ),
-    ),
-)
-
-@DefaultPreview
 @Composable
-fun PreviewTextAdventureChatLoading() {
-    ComprehensibleInputTheme {
-        PreviewChatScreen(
-            TextAdventureChatUiState(
-                messages = emptyList(),
-                isGenerating = true,
-                showError = false,
-                selectedSentence = null,
-            ),
-        )
+private fun ChatInput(onSendMessage: (String) -> Unit) {
+    var text by remember { mutableStateOf("") }
+    Surface(tonalElevation = 3.dp) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .imePadding()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("message_input"),
+                placeholder = { Text(stringResource(R.string.text_adventure_message_hint)) },
+            )
+            IconButton(
+                onClick = {
+                    if (text.isNotBlank()) {
+                        onSendMessage(text)
+                        text = ""
+                    }
+                },
+                modifier = Modifier.testTag("send_message_button"),
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Send,
+                    contentDescription = stringResource(R.string.text_adventure_send),
+                )
+            }
+        }
     }
 }
 
-@DefaultPreview
-@Composable
-fun PreviewTextAdventureChatLoaded() {
-    ComprehensibleInputTheme {
-        PreviewChatScreen(
-            TextAdventureChatUiState(
-                messages = listOf(previewMessage),
-                isGenerating = false,
-                showError = false,
-                selectedSentence = null,
-            ),
-        )
-    }
-}
-
-@DefaultPreview
-@Composable
-fun PreviewTextAdventureChatTranslated() {
-    ComprehensibleInputTheme {
-        PreviewChatScreen(
-            TextAdventureChatUiState(
-                messages = listOf(previewMessage),
-                isGenerating = false,
-                showError = false,
-                selectedSentence = SelectedSentence(
-                    messageId = "1",
-                    paragraphIndex = 0,
-                    sentenceIndex = 0,
-                    isTranslated = true,
-                ),
-            ),
-        )
-    }
-}
-
-@DefaultPreview
-@Composable
-fun PreviewTextAdventureChatError() {
-    ComprehensibleInputTheme {
-        PreviewChatScreen(
-            TextAdventureChatUiState(
-                messages = emptyList(),
-                isGenerating = false,
-                showError = true,
-                selectedSentence = null,
-            ),
-        )
-    }
-}
-
-@Composable
-private fun PreviewChatScreen(state: TextAdventureChatUiState) {
-    TextAdventureChatScreen(
-        state = state,
-        onSentenceSelected = { _, _, _ -> },
-        onRetry = {},
-        modifier = Modifier.fillMaxSize(),
-    )
-}

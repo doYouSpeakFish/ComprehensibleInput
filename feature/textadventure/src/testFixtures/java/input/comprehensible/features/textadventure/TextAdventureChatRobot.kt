@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 
 /**
@@ -38,6 +39,14 @@ class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("generation_error").assertIsDisplayed()
     }
 
+    fun assertMessageErrorIsShown() {
+        composeTestRule.onNodeWithTag("message_error").assertIsDisplayed()
+    }
+
+    fun assertInputIsHidden() {
+        composeTestRule.onAllNodesWithTag("message_input").assertCountEquals(0)
+    }
+
     fun assertErrorIsHidden() {
         composeTestRule.onAllNodesWithTag("generation_error").assertCountEquals(0)
     }
@@ -54,6 +63,11 @@ class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule
             .onNodeWithText(text, substring = true)
             .performTouchInput { click(Offset(1f, 1f)) }
+    }
+
+    fun sendMessage(text: String) {
+        composeTestRule.onNodeWithTag("message_input").performTextInput(text)
+        composeTestRule.onNodeWithTag("send_message_button").performClick()
     }
 
     /** The text currently shown by the generating placeholder, for verifying it cycles. */

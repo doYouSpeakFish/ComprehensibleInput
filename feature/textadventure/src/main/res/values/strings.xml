@@ -12,5 +12,8 @@
     <string name="text_adventure_generating_2">Imagining what happens next…</string>
     <string name="text_adventure_generating_3">Setting the scene…</string>
     <string name="text_adventure_generation_error">Something went wrong telling the story. Please try again.</string>
+    <string name="text_adventure_message_error">Your message couldn\'t be sent. Please try again.</string>
     <string name="text_adventure_retry">Retry</string>
+    <string name="text_adventure_message_hint">Type your next move…</string>
+    <string name="text_adventure_send">Send message</string>
 </resources>

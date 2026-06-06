@@ -33,6 +33,9 @@ interface AdventureLocalDataSource {
     @Query("SELECT * FROM message WHERE adventureId = :adventureId ORDER BY position")
     fun observeMessages(adventureId: String): Flow<List<MessageWithSentences>>
 
+    @Query("SELECT MAX(position) FROM message WHERE adventureId = :adventureId")
+    suspend fun maxMessagePosition(adventureId: String): Int?
+
     @Upsert
     suspend fun upsertMessage(message: MessageEntity)
 

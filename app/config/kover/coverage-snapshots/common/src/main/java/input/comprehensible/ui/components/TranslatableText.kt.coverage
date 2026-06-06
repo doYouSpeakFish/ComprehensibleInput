@@ -47,7 +47,7 @@
 🟢   }
 ⚪   
 ⚪   @Composable
-🔴   fun TranslatableText(
+🟢   fun TranslatableText(
 🟢       modifier: Modifier = Modifier,
 ⚪       sentences: List<String>,
 ⚪       translatedSentences: List<String>,

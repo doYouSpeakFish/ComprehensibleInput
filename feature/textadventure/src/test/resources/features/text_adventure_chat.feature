@@ -88,7 +88,7 @@ Feature: Text adventure chat
   # Increment 5 - sending user messages and generating AI responses
   # ---------------------------------------------------------------------------
 
-  @ignore @increment5
+  @increment5
   Scenario: A user message is shown as soon as it is sent
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -96,7 +96,7 @@ Feature: Text adventure chat
     When I send the message "I walk toward the dock."
     Then the text adventure shows "I walk toward the dock."
 
-  @ignore @increment5
+  @increment5
   Scenario: A user message can be translated once it has been submitted
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -105,7 +105,7 @@ Feature: Text adventure chat
     And I tap "I walk toward the dock." to translate it
     Then the text adventure shows "Camino hacia el muelle."
 
-  @ignore @increment5
+  @increment5
   Scenario: An error and retry are shown when submitting a user message fails
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -114,7 +114,7 @@ Feature: Text adventure chat
     Then the message error is shown
     And the retry button is shown
 
-  @ignore @increment5
+  @increment5
   Scenario: A generating placeholder is shown while the AI responds
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -122,7 +122,7 @@ Feature: Text adventure chat
     When I send the message "I walk toward the dock."
     Then a generating message placeholder is shown
 
-  @ignore @increment5
+  @increment5
   Scenario: The AI response is shown when generation completes
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -131,7 +131,7 @@ Feature: Text adventure chat
     Then the generating message placeholder is hidden
     And the text adventure shows "A lantern flickers on the dock."
 
-  @ignore @increment5
+  @increment5
   Scenario: An error and retry are shown when the AI response fails
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -141,7 +141,7 @@ Feature: Text adventure chat
     And the generation error message is shown
     And the retry button is shown
 
-  @ignore @increment5
+  @increment5
   Scenario: Retrying a failed AI response shows the placeholder again
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -152,7 +152,7 @@ Feature: Text adventure chat
     Then the generation error message is hidden
     And a generating message placeholder is shown
 
-  @ignore @increment5
+  @increment5
   Scenario: The chat scrolls to a newly added message
     Given I am signed in as "user@example.com"
     And an adventure has started with a long opening passage
@@ -160,7 +160,7 @@ Feature: Text adventure chat
     When I send the message "I walk toward the dock."
     Then the text adventure shows "A lantern flickers on the dock."
 
-  @ignore @increment5
+  @increment5
   Scenario: The input is hidden when the adventure ends
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."

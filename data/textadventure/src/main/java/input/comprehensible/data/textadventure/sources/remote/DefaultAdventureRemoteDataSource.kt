@@ -1,5 +1,6 @@
 package input.comprehensible.data.textadventure.sources.remote
 
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import io.ktor.client.HttpClient
@@ -87,12 +88,62 @@ class DefaultAdventureRemoteDataSource(
         }
         return response.body()
     }
+
+    override suspend fun sendUserMessage(
+        token: String,
+        adventureId: String,
+        parentId: String,
+        text: String,
+    ): TextAdventureMessageRemoteResponse =
+        postMessage(
+            token = token,
+            adventureId = adventureId,
+            request = PostMessageRequest(type = "user", parentId = parentId, text = text),
+            failureMessage = "Send user message failed",
+        )
+
+    override suspend fun generateAiMessage(
+        token: String,
+        adventureId: String,
+        parentId: String,
+    ): TextAdventureMessageRemoteResponse =
+        postMessage(
+            token = token,
+            adventureId = adventureId,
+            request = PostMessageRequest(type = "AI", parentId = parentId),
+            failureMessage = "Generate AI message failed",
+        )
+
+    private suspend fun postMessage(
+        token: String,
+        adventureId: String,
+        request: PostMessageRequest,
+        failureMessage: String,
+    ): TextAdventureMessageRemoteResponse {
+        val response = httpClient.post("$baseUrl/v1/adventures/$adventureId/messages") {
+            header("X-Api-Key", apiKey)
+            header("Authorization", "Bearer $token")
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+        if (!response.status.isSuccess()) {
+            error("$failureMessage: ${response.status}")
+        }
+        return response.body()
+    }
 }
 
 @Serializable
 private data class StartAdventureRequest(
     val learningLanguage: String,
     val translationLanguage: String,
+)
+
+@Serializable
+private data class PostMessageRequest(
+    val type: String,
+    val parentId: String,
+    val text: String? = null,
 )
 
 @Serializable

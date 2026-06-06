@@ -167,6 +167,53 @@ class TextAdventureFeatureTestScope(
         )
     }
 
+    fun startReturnsLongPassage() {
+        val sentences = (1..LONG_PASSAGE_SENTENCES).map { "Opening sentence number $it of a long passage." }
+        fakeRemoteDataSource.startResponse = TextAdventureRemoteResponse(
+            messageId = "message-1",
+            adventureId = "adventure-1",
+            title = "Adventure",
+            sentences = sentences,
+            translatedSentences = sentences.map { "$it (translated)" },
+            isEnding = false,
+        )
+    }
+
+    fun delayUserMessage() {
+        fakeRemoteDataSource.userMessageDelayMillis = IN_FLIGHT_DELAY_MILLIS
+    }
+
+    fun delayAiMessage() {
+        fakeRemoteDataSource.aiMessageDelayMillis = IN_FLIGHT_DELAY_MILLIS
+    }
+
+    fun failUserMessage() {
+        fakeRemoteDataSource.failSendUserMessage = true
+    }
+
+    fun failAiMessage() {
+        fakeRemoteDataSource.failGenerateAiMessage = true
+    }
+
+    fun userMessageReturnsTranslation(text: String, translation: String) {
+        fakeRemoteDataSource.userMessageResponse = FakeAdventureRemoteDataSource.messageResponse(
+            id = "user-message-1",
+            type = "user",
+            text = text,
+            translation = translation,
+        )
+    }
+
+    fun aiRespondsWith(text: String, isEnding: Boolean = false) {
+        fakeRemoteDataSource.aiMessageResponse = FakeAdventureRemoteDataSource.messageResponse(
+            id = "ai-message-1",
+            type = "AI",
+            text = text,
+            translation = "$text (translated)",
+            isEnding = isEnding,
+        )
+    }
+
     fun cacheAdventure(title: String, email: String) {
         fakeLocalDataSource.seed(adventureEntity(title, email))
     }
@@ -238,6 +285,7 @@ class TextAdventureFeatureTestScope(
 
     private companion object {
         const val IN_FLIGHT_DELAY_MILLIS = 60_000L
+        const val LONG_PASSAGE_SENTENCES = 40
     }
 }
 

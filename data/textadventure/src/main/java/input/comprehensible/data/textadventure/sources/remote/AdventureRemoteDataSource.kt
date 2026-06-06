@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventure.sources.remote
 
 import com.ktin.InjectedSingleton
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 
@@ -17,6 +18,17 @@ interface AdventureRemoteDataSource {
         translationLanguage: String,
     ): TextAdventureRemoteResponse
     suspend fun getMessages(token: String, adventureId: String): TextAdventureMessagesRemoteResponse
+    suspend fun sendUserMessage(
+        token: String,
+        adventureId: String,
+        parentId: String,
+        text: String,
+    ): TextAdventureMessageRemoteResponse
+    suspend fun generateAiMessage(
+        token: String,
+        adventureId: String,
+        parentId: String,
+    ): TextAdventureMessageRemoteResponse
 
     companion object : InjectedSingleton<AdventureRemoteDataSource>()
 }

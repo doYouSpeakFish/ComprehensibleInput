@@ -79,6 +79,43 @@
 🟢           response.adventureId
 🟢       }.onFailure { Timber.e(it, "Failed to start adventure") }
 ⚪   
+⚪       /**
+⚪        * Sends the user's message to the backend, which structures and translates it, then persists the
+⚪        * created message locally (so it becomes tap-to-translate) and returns it.
+⚪        */
+⚪       suspend fun sendUserMessage(
+⚪           token: String,
+⚪           adventureId: String,
+⚪           parentId: String,
+⚪           text: String,
+🟢       ): Result<AdventureMessage> = runCatching {
+🟢           val response = remoteDataSource.sendUserMessage(token, adventureId, parentId, text)
+🟢           persistMessage(adventureId, response)
+🟢       }.onFailure { Timber.e(it, "Failed to send user message") }
+⚪   
+⚪       /**
+⚪        * Asks the backend to generate the AI's reply to a message, persists it locally and returns it.
+⚪        */
+⚪       suspend fun generateAiMessage(
+⚪           token: String,
+⚪           adventureId: String,
+⚪           parentId: String,
+🟢       ): Result<AdventureMessage> = runCatching {
+🟢           val response = remoteDataSource.generateAiMessage(token, adventureId, parentId)
+🟢           persistMessage(adventureId, response)
+🟢       }.onFailure { Timber.e(it, "Failed to generate AI message") }
+⚪   
+⚪       private suspend fun persistMessage(
+⚪           adventureId: String,
+⚪           response: TextAdventureMessageRemoteResponse,
+⚪       ): AdventureMessage {
+🟢           val position = (localDataSource.maxMessagePosition(adventureId) ?: -1) + 1
+🟢           val entity = response.toEntity(adventureId, position)
+🟢           localDataSource.upsertMessage(entity)
+🟢           localDataSource.insertSentences(response.toSentenceEntities())
+🟢           return MessageWithSentences(entity, response.toSentenceEntities()).toMessage()
+⚪       }
+⚪   
 ⚪       /** Replaces the locally cached conversation for an adventure with the backend's. */
 🟢       suspend fun refreshMessages(token: String, adventureId: String): Result<Unit> = runCatching {
 🟢           val response = remoteDataSource.getMessages(token, adventureId)

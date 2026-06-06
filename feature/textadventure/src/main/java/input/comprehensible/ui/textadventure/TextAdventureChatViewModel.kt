@@ -3,7 +3,10 @@ package input.comprehensible.ui.textadventure
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.data.account.AccountRepository
+import input.comprehensible.data.account.sources.local.Session
 import input.comprehensible.data.languagesettings.LanguageSettingsRepository
+import input.comprehensible.data.textadventure.AdventureMessage
+import input.comprehensible.data.textadventure.AdventureMessageSender
 import input.comprehensible.data.textadventure.TextAdventureRepository
 import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,8 +25,13 @@ import kotlinx.coroutines.launch
 /**
  * Drives the chat screen. A new adventure ([adventureId] is null) is started immediately, showing a
  * generating placeholder until the first AI message arrives or an error and retry appear. An
- * existing adventure shows its cached messages at once while it refreshes from the backend. AI
- * sentences can be tapped to toggle their translation, mirroring the story reader.
+ * existing adventure shows its cached messages at once while it refreshes from the backend.
+ *
+ * The user continues the conversation through the input bar: their message is shown optimistically
+ * at once, submitted ([TextAdventureRepository.sendUserMessage]) so it becomes tap-to-translate, and
+ * then the AI reply is generated behind the cycling placeholder. A failed submit or generation shows
+ * an error with a retry that resumes from where it failed. AI (and submitted user) sentences can be
+ * tapped to toggle their translation, mirroring the story reader.
  */
 class TextAdventureChatViewModel(
     private val adventureId: String?,
@@ -35,7 +43,10 @@ class TextAdventureChatViewModel(
     private val currentAdventureId = MutableStateFlow(adventureId)
     private val isGenerating = MutableStateFlow(false)
     private val showError = MutableStateFlow(false)
+    private val showMessageError = MutableStateFlow(false)
+    private val optimisticUserMessage = MutableStateFlow<AdventureMessage?>(null)
     private val selectedSentence = MutableStateFlow<SelectedSentence?>(null)
+    private var pendingRetry: (() -> Unit)? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val messages = currentAdventureId.flatMapLatest { id ->
@@ -46,12 +57,14 @@ class TextAdventureChatViewModel(
         messages,
         isGenerating,
         showError,
-        selectedSentence,
-    ) { messages, generating, error, selected ->
+        combine(showMessageError, optimisticUserMessage, selectedSentence, ::Triple),
+    ) { messages, generating, error, (messageError, optimistic, selected) ->
         TextAdventureChatUiState(
             messages = messages,
             isGenerating = generating,
             showError = error,
+            showMessageError = messageError,
+            optimisticUserMessage = optimistic,
             selectedSentence = selected,
         )
     }.stateIn(
@@ -65,7 +78,15 @@ class TextAdventureChatViewModel(
     }
 
     fun onRetry() {
-        startAdventure()
+        pendingRetry?.invoke()
+    }
+
+    /** Sends a user message: shown optimistically, then submitted and answered by the AI. */
+    fun onSendMessage(text: String) {
+        val trimmed = text.trim()
+        if (trimmed.isEmpty()) return
+        optimisticUserMessage.value = optimisticMessage(trimmed)
+        submitUserMessage(trimmed)
     }
 
     /** Toggles the translation of a tapped sentence, or selects a newly tapped one. */
@@ -84,10 +105,11 @@ class TextAdventureChatViewModel(
     }
 
     private fun startAdventure() {
+        pendingRetry = ::startAdventure
         viewModelScope.launch {
             showError.value = false
             isGenerating.value = true
-            val session = accountRepository.session.filterNotNull().first()
+            val session = currentSession()
             val learningLanguage = languageSettingsRepository.learningLanguage.first()
             val translationLanguage = languageSettingsRepository.translationsLanguage.first()
             textAdventureRepository
@@ -103,14 +125,56 @@ class TextAdventureChatViewModel(
         }
     }
 
-    private fun refreshMessages(id: String) {
+    private fun submitUserMessage(text: String) {
+        pendingRetry = { submitUserMessage(text) }
         viewModelScope.launch {
-            val session = accountRepository.session.filterNotNull().first()
-            textAdventureRepository.refreshMessages(session.token, id)
+            showMessageError.value = false
+            val adventureId = currentAdventureId.value ?: return@launch
+            val parentId = messages.first().lastOrNull()?.id ?: return@launch
+            textAdventureRepository
+                .sendUserMessage(currentSession().token, adventureId, parentId, text)
+                .onSuccess { userMessage ->
+                    optimisticUserMessage.value = null
+                    generateAiMessage(adventureId, userMessage.id)
+                }
+                .onFailure { showMessageError.value = true }
         }
     }
 
+    private fun generateAiMessage(adventureId: String, parentId: String) {
+        pendingRetry = { generateAiMessage(adventureId, parentId) }
+        viewModelScope.launch {
+            showError.value = false
+            isGenerating.value = true
+            textAdventureRepository
+                .generateAiMessage(currentSession().token, adventureId, parentId)
+                .onSuccess { isGenerating.value = false }
+                .onFailure {
+                    isGenerating.value = false
+                    showError.value = true
+                }
+        }
+    }
+
+    private fun refreshMessages(id: String) {
+        viewModelScope.launch {
+            textAdventureRepository.refreshMessages(currentSession().token, id)
+        }
+    }
+
+    private suspend fun currentSession(): Session = accountRepository.session.filterNotNull().first()
+
+    private fun optimisticMessage(text: String) = AdventureMessage(
+        id = OPTIMISTIC_USER_MESSAGE_ID,
+        sender = AdventureMessageSender.USER,
+        isEnding = false,
+        paragraphs = listOf(
+            AdventureMessage.Paragraph(sentences = listOf(text), translatedSentences = listOf("")),
+        ),
+    )
+
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L
+        const val OPTIMISTIC_USER_MESSAGE_ID = "optimistic-user-message"
     }
 }

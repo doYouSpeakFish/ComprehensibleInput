@@ -56,6 +56,53 @@ class TextAdventureRepositoryTest {
         assertEquals(listOf("m1", "m1", "m2"), local.insertedSentences.map { it.messageId })
     }
 
+    @Test
+    fun `sendUserMessage persists the created message after the latest one`() = runTest {
+        val remote = StubRemoteDataSource(
+            messages = emptyMessages(),
+            userMessageResponse = userMessage(),
+        )
+        val local = RecordingLocalDataSource(maxPosition = 0)
+
+        val result = TextAdventureRepository(remote, local)
+            .sendUserMessage(token = "token", adventureId = "adventure-1", parentId = "m1", text = "I go.")
+
+        assertTrue(result.isSuccess)
+        val message = result.getOrThrow()
+        assertEquals("m2", message.id)
+        assertEquals(AdventureMessageSender.USER, message.sender)
+        assertEquals(listOf("I go."), message.paragraphs.single().sentences)
+        assertEquals(listOf("m2"), local.upsertedMessages.map { it.id })
+        assertEquals(listOf(1), local.upsertedMessages.map { it.position })
+    }
+
+    @Test
+    fun `generateAiMessage persists the AI reply at the first position when none exist`() = runTest {
+        val remote = StubRemoteDataSource(
+            messages = emptyMessages(),
+            aiMessageResponse = aiMessage(),
+        )
+        val local = RecordingLocalDataSource(maxPosition = null)
+
+        val result = TextAdventureRepository(remote, local)
+            .generateAiMessage(token = "token", adventureId = "adventure-1", parentId = "m1")
+
+        assertTrue(result.isSuccess)
+        val message = result.getOrThrow()
+        assertEquals("m1", message.id)
+        assertEquals(AdventureMessageSender.AI, message.sender)
+        assertEquals(listOf(0), local.upsertedMessages.map { it.position })
+        assertEquals(listOf("Hello.", "World."), local.insertedSentences.map { it.text })
+    }
+
+    private fun emptyMessages() = TextAdventureMessagesRemoteResponse(
+        adventureId = "adventure-1",
+        title = "Lantern Trail",
+        learningLanguage = "en",
+        translationsLanguage = "es",
+        messages = emptyList(),
+    )
+
     private fun aiMessage() = TextAdventureMessageRemoteResponse(
         id = "m1",
         parentId = null,
@@ -87,6 +134,8 @@ class TextAdventureRepositoryTest {
 
 private class StubRemoteDataSource(
     private val messages: TextAdventureMessagesRemoteResponse,
+    private val userMessageResponse: TextAdventureMessageRemoteResponse? = null,
+    private val aiMessageResponse: TextAdventureMessageRemoteResponse? = null,
 ) : AdventureRemoteDataSource {
     override suspend fun getMessages(token: String, adventureId: String) = messages
     override suspend fun getAdventures(token: String): List<RemoteAdventure> = emptyList()
@@ -96,9 +145,24 @@ private class StubRemoteDataSource(
         learningLanguage: String,
         translationLanguage: String,
     ): TextAdventureRemoteResponse = error("not used")
+
+    override suspend fun sendUserMessage(
+        token: String,
+        adventureId: String,
+        parentId: String,
+        text: String,
+    ): TextAdventureMessageRemoteResponse = requireNotNull(userMessageResponse)
+
+    override suspend fun generateAiMessage(
+        token: String,
+        adventureId: String,
+        parentId: String,
+    ): TextAdventureMessageRemoteResponse = requireNotNull(aiMessageResponse)
 }
 
-private class RecordingLocalDataSource : AdventureLocalDataSource {
+private class RecordingLocalDataSource(
+    private val maxPosition: Int? = null,
+) : AdventureLocalDataSource {
     val deletedAdventureIds = mutableListOf<String>()
     val upsertedMessages = mutableListOf<MessageEntity>()
     val insertedSentences = mutableListOf<SentenceEntity>()
@@ -106,6 +170,8 @@ private class RecordingLocalDataSource : AdventureLocalDataSource {
     override suspend fun deleteMessages(adventureId: String) {
         deletedAdventureIds += adventureId
     }
+
+    override suspend fun maxMessagePosition(adventureId: String): Int? = maxPosition
 
     override suspend fun upsertMessage(message: MessageEntity) {
         upsertedMessages += message

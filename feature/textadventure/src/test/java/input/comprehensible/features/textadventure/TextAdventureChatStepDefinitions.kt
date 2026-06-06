@@ -45,6 +45,61 @@ class TextAdventureChatStepDefinitions {
         scope.cacheAdventureWithMessage(title, message)
     }
 
+    @Given("an adventure has started with {string}")
+    fun anAdventureHasStartedWith(text: String) {
+        scope.startReturns(text, "$text (translated)")
+        list.startNewAdventure()
+        scope.idle()
+    }
+
+    @Given("an adventure has started with a long opening passage")
+    fun anAdventureHasStartedWithALongOpeningPassage() {
+        scope.startReturnsLongPassage()
+        list.startNewAdventure()
+        scope.idle()
+    }
+
+    @Given("the user message request is delayed")
+    fun theUserMessageRequestIsDelayed() {
+        scope.delayUserMessage()
+    }
+
+    @Given("the user message request will fail")
+    fun theUserMessageRequestWillFail() {
+        scope.failUserMessage()
+    }
+
+    @Given("submitting {string} returns the translation {string}")
+    fun submittingReturnsTheTranslation(text: String, translation: String) {
+        scope.userMessageReturnsTranslation(text, translation)
+    }
+
+    @Given("the AI response request is delayed")
+    fun theAiResponseRequestIsDelayed() {
+        scope.delayAiMessage()
+    }
+
+    @Given("the AI response request will fail")
+    fun theAiResponseRequestWillFail() {
+        scope.failAiMessage()
+    }
+
+    @Given("the AI responds with {string}")
+    fun theAiRespondsWith(text: String) {
+        scope.aiRespondsWith(text)
+    }
+
+    @Given("the AI responds with the ending {string}")
+    fun theAiRespondsWithTheEnding(text: String) {
+        scope.aiRespondsWith(text, isEnding = true)
+    }
+
+    @When("I send the message {string}")
+    fun iSendTheMessage(text: String) {
+        chat.sendMessage(text)
+        scope.idle()
+    }
+
     @When("I open the {string} adventure")
     fun iOpenTheAdventure(title: String) {
         list.openAdventure(title)
@@ -101,5 +156,15 @@ class TextAdventureChatStepDefinitions {
     @Then("the retry button is shown")
     fun theRetryButtonIsShown() {
         chat.assertRetryIsShown()
+    }
+
+    @Then("the message error is shown")
+    fun theMessageErrorIsShown() {
+        chat.assertMessageErrorIsShown()
+    }
+
+    @Then("the text adventure input is hidden")
+    fun theTextAdventureInputIsHidden() {
+        chat.assertInputIsHidden()
     }
 }

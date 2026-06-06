@@ -50,6 +50,11 @@ class FakeAdventureLocalDataSource : AdventureLocalDataSource {
                 }
         }
 
+    override suspend fun maxMessagePosition(adventureId: String): Int? =
+        messageRows.value
+            .filter { it.adventureId == adventureId }
+            .maxOfOrNull { it.position }
+
     override suspend fun upsertMessage(message: MessageEntity) {
         messageRows.value = messageRows.value.filterNot { it.id == message.id } + message
     }
