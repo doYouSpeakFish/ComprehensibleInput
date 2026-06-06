@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -44,14 +45,14 @@ class TextAdventureChatViewModel(
     private val isGenerating = MutableStateFlow(false)
     private val showError = MutableStateFlow(false)
     private val showMessageError = MutableStateFlow(false)
-    private val optimisticUserMessage = MutableStateFlow<AdventureMessage?>(null)
+    private val optimisticUserMessage = MutableStateFlow<ChatMessage?>(null)
     private val selectedSentence = MutableStateFlow<SelectedSentence?>(null)
     private var pendingRetry: (() -> Unit)? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val messages = currentAdventureId.flatMapLatest { id ->
         if (id == null) flowOf(emptyList()) else textAdventureRepository.getMessages(id)
-    }
+    }.map { messages -> messages.map { it.toChatMessage() } }
 
     val state: StateFlow<TextAdventureChatUiState> = combine(
         messages,
@@ -164,12 +165,14 @@ class TextAdventureChatViewModel(
 
     private suspend fun currentSession(): Session = accountRepository.session.filterNotNull().first()
 
-    private fun optimisticMessage(text: String) = AdventureMessage(
+    private fun optimisticMessage(text: String) = ChatMessage(
         id = OPTIMISTIC_USER_MESSAGE_ID,
-        sender = AdventureMessageSender.USER,
+        sender = ChatMessageSender.USER,
         isEnding = false,
         paragraphs = listOf(
-            AdventureMessage.Paragraph(sentences = listOf(text), translatedSentences = listOf("")),
+            // The translation is the text itself until the real one arrives, so tapping the
+            // optimistic message to translate it leaves the same text visible rather than blank.
+            ChatMessage.Paragraph(sentences = listOf(text), translatedSentences = listOf(text)),
         ),
     )
 
@@ -178,3 +181,18 @@ class TextAdventureChatViewModel(
         const val OPTIMISTIC_USER_MESSAGE_ID = "optimistic-user-message"
     }
 }
+
+private fun AdventureMessage.toChatMessage() = ChatMessage(
+    id = id,
+    sender = when (sender) {
+        AdventureMessageSender.AI -> ChatMessageSender.AI
+        AdventureMessageSender.USER -> ChatMessageSender.USER
+    },
+    isEnding = isEnding,
+    paragraphs = paragraphs.map { paragraph ->
+        ChatMessage.Paragraph(
+            sentences = paragraph.sentences,
+            translatedSentences = paragraph.translatedSentences,
+        )
+    },
+)

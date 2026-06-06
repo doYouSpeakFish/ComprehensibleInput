@@ -5,6 +5,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -45,6 +46,11 @@ class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
 
     fun assertInputIsHidden() {
         composeTestRule.onAllNodesWithTag("message_input").assertCountEquals(0)
+    }
+
+    fun assertInputIsDisabled() {
+        composeTestRule.onNodeWithTag("message_input").assertIsNotEnabled()
+        composeTestRule.onNodeWithTag("send_message_button").assertIsNotEnabled()
     }
 
     fun assertErrorIsHidden() {

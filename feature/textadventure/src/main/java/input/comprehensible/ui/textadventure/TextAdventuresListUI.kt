@@ -54,9 +54,7 @@ internal fun TextAdventuresListScreen(
         onSignInClick = onSignInClick,
         onStartAdventure = onStartAdventure,
         onAdventureClick = onAdventureClick,
-        // A lambda rather than a `viewModel::onDeleteAdventure` reference: bound method references
-        // get non-deterministic partial coverage here, which trips the coverage snapshot check.
-        onDeleteAdventure = { viewModel.onDeleteAdventure(it) },
+        onDeleteAdventure = viewModel::onDeleteAdventure,
         modifier = modifier,
     )
 }

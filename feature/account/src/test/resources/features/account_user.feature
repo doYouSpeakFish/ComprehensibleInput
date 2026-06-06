@@ -5,10 +5,7 @@ Feature: Account user record
   # response. Adventures reference this record by foreign key with cascade-on-delete,
   # so the record is removed when the account is deleted. The account module also
   # exposes the current user reactively as a flow.
-  #
-  # Increment 2: this whole feature.
 
-  @increment2
   Scenario: Signing in creates a local user record
     Given the account screen is open
     And the sign in request will succeed with user id "user-1"
@@ -19,7 +16,6 @@ Feature: Account user record
 
   # Authentication must not depend on the local cache write: if persisting the user
   # record fails, the user is still signed in rather than being bounced back out.
-  @increment2
   Scenario: Signing in succeeds even when the local user record cannot be saved
     Given the account screen is open
     And the sign in request will succeed with user id "user-1"
@@ -29,7 +25,6 @@ Feature: Account user record
     And I submit the sign in form
     Then the signed in email "user@example.com" is shown
 
-  @increment2
   Scenario: The current user is exposed after signing in
     Given the account screen is open
     And the sign in request will succeed with user id "user-1"
@@ -38,19 +33,16 @@ Feature: Account user record
     And I submit the sign in form
     Then the current user id is "user-1"
 
-  @increment2
   Scenario: No user is exposed when signed out
     Given the account screen is open
     Then there is no current user
 
-  @increment2
   Scenario: Signing out keeps the local user record for offline data
     Given I am signed in as "user@example.com" with id "user-1"
     And the account screen is open
     When I tap the sign out button
     Then a local user record exists with id "user-1"
 
-  @increment2
   Scenario: Deleting the account removes the local user record
     Given I am signed in as "user@example.com" with id "user-1"
     And the delete account screen is open

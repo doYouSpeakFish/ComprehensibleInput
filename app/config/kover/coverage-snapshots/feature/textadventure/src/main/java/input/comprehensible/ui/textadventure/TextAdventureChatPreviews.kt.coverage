@@ -3,18 +3,16 @@
 ⚪   import androidx.compose.foundation.layout.fillMaxSize
 ⚪   import androidx.compose.runtime.Composable
 ⚪   import androidx.compose.ui.Modifier
-⚪   import input.comprehensible.data.textadventure.AdventureMessage
-⚪   import input.comprehensible.data.textadventure.AdventureMessageSender
 ⚪   import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
 ⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
 ⚪   import input.comprehensible.util.DefaultPreview
 ⚪   
-🟢   private val previewAiMessage = AdventureMessage(
+🟢   private val previewAiMessage = ChatMessage(
 🟢       id = "1",
-🟢       sender = AdventureMessageSender.AI,
+🟢       sender = ChatMessageSender.AI,
 🟢       isEnding = false,
 🟢       paragraphs = listOf(
-🟢           AdventureMessage.Paragraph(
+🟢           ChatMessage.Paragraph(
 🟢               sentences = listOf("You arrive at a quiet harbor.", "Boats sway in the mist."),
 🟢               translatedSentences = listOf(
 🟢                   "Llegas a un puerto tranquilo.",
@@ -24,12 +22,12 @@
 ⚪       ),
 ⚪   )
 ⚪   
-🟢   private val previewUserMessage = AdventureMessage(
+🟢   private val previewUserMessage = ChatMessage(
 🟢       id = "2",
-🟢       sender = AdventureMessageSender.USER,
+🟢       sender = ChatMessageSender.USER,
 🟢       isEnding = false,
 🟢       paragraphs = listOf(
-🟢           AdventureMessage.Paragraph(
+🟢           ChatMessage.Paragraph(
 🟢               sentences = listOf("I walk toward the dock."),
 🟢               translatedSentences = listOf("Camino hacia el muelle."),
 ⚪           ),
@@ -137,7 +135,7 @@
 ⚪                           id = "3",
 ⚪                           isEnding = true,
 ⚪                           paragraphs = listOf(
-⚪                               AdventureMessage.Paragraph(
+⚪                               ChatMessage.Paragraph(
 ⚪                                   sentences = listOf("The fog lifts and the journey ends."),
 ⚪                                   translatedSentences = listOf("La niebla se disipa y el viaje termina."),
 ⚪                               ),

@@ -9,6 +9,7 @@ import input.comprehensible.data.textadventure.sources.local.SentenceEntity
 import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
 import input.comprehensible.data.textadventure.sources.remote.RemoteAdventure
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
+import input.comprehensible.data.textadventures.sources.remote.TextAdventureParagraphRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -75,7 +76,7 @@ class TextAdventureRepository(
             ),
         )
         localDataSource.deleteMessages(response.adventureId)
-        persistFirstMessage(response)
+        persistMessage(response.adventureId, response.toMessageResponse())
         response.adventureId
     }.onFailure { Timber.e(it, "Failed to start adventure") }
 
@@ -125,31 +126,6 @@ class TextAdventureRepository(
             localDataSource.insertSentences(message.toSentenceEntities())
         }
     }.onFailure { Timber.e(it, "Failed to refresh messages") }
-
-    private suspend fun persistFirstMessage(response: TextAdventureRemoteResponse) {
-        val messageId = response.messageId.ifBlank { "${response.adventureId}-0" }
-        localDataSource.upsertMessage(
-            MessageEntity(
-                id = messageId,
-                adventureId = response.adventureId,
-                parentId = null,
-                sender = AdventureMessageSender.AI.name,
-                isEnding = response.isEnding,
-                position = 0,
-            ),
-        )
-        localDataSource.insertSentences(
-            response.sentences.mapIndexed { index, sentence ->
-                SentenceEntity(
-                    messageId = messageId,
-                    paragraphIndex = 0,
-                    sentenceIndex = index,
-                    text = sentence,
-                    translation = response.translatedSentences.getOrElse(index) { "" },
-                )
-            },
-        )
-    }
 
     companion object : Singleton<TextAdventureRepository>() {
         override fun create() = TextAdventureRepository(
@@ -224,3 +200,18 @@ private fun senderName(type: String): String =
     } else {
         AdventureMessageSender.AI.name
     }
+
+/** The first AI message of a started adventure, in the shared message form so it can be persisted. */
+private fun TextAdventureRemoteResponse.toMessageResponse() = TextAdventureMessageRemoteResponse(
+    id = messageId,
+    parentId = null,
+    type = AdventureMessageSender.AI.name,
+    sender = AdventureMessageSender.AI.name,
+    isEnding = isEnding,
+    paragraphs = listOf(
+        TextAdventureParagraphRemoteResponse(
+            sentences = sentences,
+            translatedSentences = translatedSentences,
+        ),
+    ),
+)

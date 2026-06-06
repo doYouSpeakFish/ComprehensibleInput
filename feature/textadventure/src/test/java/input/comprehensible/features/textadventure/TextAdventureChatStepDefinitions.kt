@@ -172,4 +172,9 @@ class TextAdventureChatStepDefinitions {
     fun theTextAdventureInputIsHidden() {
         chat.assertInputIsHidden()
     }
+
+    @Then("the text adventure input is disabled")
+    fun theTextAdventureInputIsDisabled() {
+        chat.assertInputIsDisabled()
+    }
 }

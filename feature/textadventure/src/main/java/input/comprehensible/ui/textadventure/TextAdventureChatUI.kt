@@ -37,7 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import input.comprehensible.data.textadventure.AdventureMessage
 import input.comprehensible.feature.textadventure.R
 import input.comprehensible.ui.components.TranslatableText
 import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
@@ -56,9 +55,7 @@ internal fun TextAdventureChatScreen(
         state = state,
         onSentenceSelected = viewModel::onSentenceSelected,
         onRetry = viewModel::onRetry,
-        // A lambda rather than a bound method reference: bound references get non-deterministic
-        // partial coverage here, which trips the coverage snapshot check.
-        onSendMessage = { viewModel.onSendMessage(it) },
+        onSendMessage = viewModel::onSendMessage,
         modifier = modifier,
     )
 }
@@ -79,7 +76,7 @@ internal fun TextAdventureChatScreen(
         },
         bottomBar = {
             if (!state.isInputHidden) {
-                ChatInput(onSendMessage = onSendMessage)
+                ChatInput(onSendMessage = onSendMessage, enabled = !state.isSending)
             }
         },
     ) { paddingValues ->
@@ -144,7 +141,7 @@ private fun Conversation(
 
 @Composable
 private fun MessageItem(
-    message: AdventureMessage,
+    message: ChatMessage,
     selectedSentence: SelectedSentence?,
     onSentenceSelected: (String, Int, Int) -> Unit,
 ) {
@@ -204,7 +201,7 @@ private fun ErrorWithRetry(message: String, testTag: String, onRetry: () -> Unit
 }
 
 @Composable
-private fun ChatInput(onSendMessage: (String) -> Unit) {
+private fun ChatInput(onSendMessage: (String) -> Unit, enabled: Boolean) {
     var text by remember { mutableStateOf("") }
     Surface(tonalElevation = 3.dp) {
         Row(
@@ -219,6 +216,7 @@ private fun ChatInput(onSendMessage: (String) -> Unit) {
             OutlinedTextField(
                 value = text,
                 onValueChange = { text = it },
+                enabled = enabled,
                 modifier = Modifier
                     .weight(1f)
                     .testTag("message_input"),
@@ -231,6 +229,7 @@ private fun ChatInput(onSendMessage: (String) -> Unit) {
                         text = ""
                     }
                 },
+                enabled = enabled,
                 modifier = Modifier.testTag("send_message_button"),
             ) {
                 Icon(
