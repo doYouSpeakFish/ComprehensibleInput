@@ -2,6 +2,7 @@ package input.comprehensible.features.account
 
 import input.comprehensible.data.account.InvalidCredentialsException
 import input.comprehensible.enqueueCreateAccountResult
+import input.comprehensible.enqueueRequestEmailVerificationCodeResult
 import input.comprehensible.enqueueSignInResult
 import input.comprehensible.enqueueVerifyEmailResult
 import io.cucumber.java.en.Given
@@ -31,6 +32,16 @@ class AuthRequestStepDefinitions {
     @Given("the verify email request will fail")
     fun verifyEmailWillFail() {
         scope.enqueueVerifyEmailResult(Result.failure(Exception(NETWORK_ERROR)))
+    }
+
+    @Given("the email verification code request will succeed")
+    fun requestEmailVerificationCodeWillSucceed() {
+        scope.enqueueRequestEmailVerificationCodeResult(Result.success(Unit))
+    }
+
+    @Given("the email verification code request will fail")
+    fun requestEmailVerificationCodeWillFail() {
+        scope.enqueueRequestEmailVerificationCodeResult(Result.failure(Exception(NETWORK_ERROR)))
     }
 
     @Given("the sign in request will succeed")

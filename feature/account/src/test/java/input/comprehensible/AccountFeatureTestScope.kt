@@ -223,6 +223,10 @@ fun AccountFeatureTestScope.enqueueVerifyEmailResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueVerifyEmailResult(result)
 }
 
+fun AccountFeatureTestScope.enqueueRequestEmailVerificationCodeResult(result: Result<Unit>) {
+    fakeAccountRemoteDataSource.enqueueRequestEmailVerificationCodeResult(result)
+}
+
 fun AccountFeatureTestScope.enqueueDeleteAccountResult(result: Result<Unit>) {
     fakeAccountRemoteDataSource.enqueueDeleteAccountResult(result)
 }

@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -62,12 +63,14 @@ internal fun PasswordResetScreen(
         onPasswordChanged = viewModel::onPasswordChanged,
         onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
         onSubmit = viewModel::onSubmit,
+        onResendCode = viewModel::onResendCode,
         onErrorDismissed = viewModel::onErrorDismissed,
         onInvalidCodeErrorDismissed = viewModel::onInvalidCodeErrorDismissed,
         modifier = modifier,
     )
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun PasswordResetScreen(
     uiState: PasswordResetUiState,
@@ -76,6 +79,7 @@ private fun PasswordResetScreen(
     onPasswordChanged: (String) -> Unit,
     onConfirmPasswordChanged: (String) -> Unit,
     onSubmit: () -> Unit,
+    onResendCode: () -> Unit,
     onErrorDismissed: () -> Unit,
     onInvalidCodeErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
@@ -134,7 +138,7 @@ private fun PasswordResetScreen(
             )
             Button(
                 onClick = onSubmit,
-                enabled = !uiState.isLoading && uiState.isSubmitEnabled(),
+                enabled = !uiState.isLoading && !uiState.isResendingCode && uiState.isSubmitEnabled(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("account_password_reset_submit_button"),
@@ -150,6 +154,33 @@ private fun PasswordResetScreen(
                 } else {
                     Text(stringResource(R.string.account_password_reset_submit_button))
                 }
+            }
+            OutlinedButton(
+                onClick = onResendCode,
+                enabled = !uiState.isLoading && !uiState.isResendingCode,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_password_reset_resend_button"),
+            ) {
+                if (uiState.isResendingCode) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .testTag("account_password_reset_resend_loading_indicator"),
+                        color = MaterialTheme.colorScheme.primary,
+                        strokeWidth = 2.dp,
+                    )
+                } else {
+                    Text(stringResource(R.string.account_password_reset_resend_button))
+                }
+            }
+            if (uiState.codeResent) {
+                Text(
+                    text = stringResource(R.string.account_password_reset_code_resent_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.testTag("account_password_reset_code_resent_message"),
+                )
             }
         }
     }
@@ -214,6 +245,7 @@ fun PreviewPasswordReset() {
             onPasswordChanged = {},
             onConfirmPasswordChanged = {},
             onSubmit = {},
+            onResendCode = {},
             onErrorDismissed = {},
             onInvalidCodeErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),
@@ -238,6 +270,29 @@ fun PreviewPasswordResetLoading() {
             onPasswordChanged = {},
             onConfirmPasswordChanged = {},
             onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordResetCodeResent() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(
+                email = "user@example.com",
+                codeResent = true,
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onResendCode = {},
             onErrorDismissed = {},
             onInvalidCodeErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),

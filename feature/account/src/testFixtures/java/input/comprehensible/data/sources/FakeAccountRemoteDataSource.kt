@@ -4,9 +4,11 @@ import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.account.sources.remote.RemoteSession
 import kotlinx.coroutines.delay
 
+@Suppress("TooManyFunctions")
 class FakeAccountRemoteDataSource : AccountRemoteDataSource {
     private val createAccountResults = ArrayDeque<Result<Unit>>()
     private val verifyEmailResults = ArrayDeque<Result<Unit>>()
+    private val requestEmailVerificationCodeResults = ArrayDeque<Result<Unit>>()
     private val signInResults = ArrayDeque<Result<String>>()
     private val deleteAccountResults = ArrayDeque<Result<Unit>>()
     private val requestPasswordResetCodeResults = ArrayDeque<Result<Unit>>()
@@ -27,6 +29,10 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
 
     fun enqueueVerifyEmailResult(result: Result<Unit>) {
         verifyEmailResults.add(result)
+    }
+
+    fun enqueueRequestEmailVerificationCodeResult(result: Result<Unit>) {
+        requestEmailVerificationCodeResults.add(result)
     }
 
     fun enqueueSignInResult(result: Result<String>) {
@@ -57,6 +63,13 @@ class FakeAccountRemoteDataSource : AccountRemoteDataSource {
         verifyEmailResults.removeFirstOrNull()
             ?.getOrThrow()
             ?: error("No scripted verify email result available")
+    }
+
+    override suspend fun requestEmailVerificationCode(email: String) {
+        if (requestDelayMillis > 0) delay(requestDelayMillis)
+        requestEmailVerificationCodeResults.removeFirstOrNull()
+            ?.getOrThrow()
+            ?: error("No scripted request email verification code result available")
     }
 
     override suspend fun signIn(email: String, password: String): RemoteSession {

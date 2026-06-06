@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import input.comprehensible.account.usecases.RequestPasswordResetCodeUseCase
 import input.comprehensible.account.usecases.ResetPasswordUseCase
 import input.comprehensible.data.account.InvalidResetCodeException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ class PasswordResetViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val resetPassword = ResetPasswordUseCase()
+    private val requestPasswordResetCode = RequestPasswordResetCodeUseCase()
     private val email: String = savedStateHandle.toRoute<PasswordResetRoute>().email
 
     private val _uiState = MutableStateFlow(PasswordResetUiState(email = email))
@@ -50,6 +52,20 @@ class PasswordResetViewModel(
                     } else {
                         _uiState.update { it.copy(isLoading = false, showError = true) }
                     }
+                }
+        }
+    }
+
+    fun onResendCode() {
+        val state = _uiState.value
+        _uiState.update { it.copy(isResendingCode = true, codeResent = false) }
+        viewModelScope.launch {
+            requestPasswordResetCode(state.email)
+                .onSuccess {
+                    _uiState.update { it.copy(isResendingCode = false, codeResent = true) }
+                }
+                .onFailure {
+                    _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
         }
     }

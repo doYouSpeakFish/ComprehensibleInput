@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ internal fun VerifyEmailScreen(
         onNavigateUp = onNavigateUp,
         onCodeChanged = viewModel::onCodeChanged,
         onSubmit = viewModel::onSubmit,
+        onResendCode = viewModel::onResendCode,
         onErrorDismissed = viewModel::onErrorDismissed,
         modifier = modifier,
     )
@@ -61,6 +63,7 @@ private fun VerifyEmailScreen(
     onNavigateUp: () -> Unit,
     onCodeChanged: (String) -> Unit,
     onSubmit: () -> Unit,
+    onResendCode: () -> Unit,
     onErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -96,7 +99,8 @@ private fun VerifyEmailScreen(
             )
             Button(
                 onClick = onSubmit,
-                enabled = !uiState.isLoading && uiState.code.length == VERIFICATION_CODE_LENGTH,
+                enabled = !uiState.isLoading && !uiState.isResendingCode &&
+                    uiState.code.length == VERIFICATION_CODE_LENGTH,
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("account_verify_email_submit_button"),
@@ -112,6 +116,33 @@ private fun VerifyEmailScreen(
                 } else {
                     Text(stringResource(R.string.account_verify_email_submit_button))
                 }
+            }
+            OutlinedButton(
+                onClick = onResendCode,
+                enabled = !uiState.isLoading && !uiState.isResendingCode,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_verify_email_resend_button"),
+            ) {
+                if (uiState.isResendingCode) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .testTag("account_verify_email_resend_loading_indicator"),
+                        color = MaterialTheme.colorScheme.primary,
+                        strokeWidth = 2.dp,
+                    )
+                } else {
+                    Text(stringResource(R.string.account_verify_email_resend_button))
+                }
+            }
+            if (uiState.codeResent) {
+                Text(
+                    text = stringResource(R.string.account_verify_email_code_resent_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.testTag("account_verify_email_code_resent_message"),
+                )
             }
         }
     }
@@ -130,6 +161,7 @@ fun PreviewVerifyEmail() {
             onNavigateUp = {},
             onCodeChanged = {},
             onSubmit = {},
+            onResendCode = {},
             onErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),
         )
@@ -149,6 +181,26 @@ fun PreviewVerifyEmailLoading() {
             onNavigateUp = {},
             onCodeChanged = {},
             onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewVerifyEmailCodeResent() {
+    ComprehensibleInputTheme {
+        VerifyEmailScreen(
+            uiState = VerifyEmailUiState(
+                email = "user@example.com",
+                codeResent = true,
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onSubmit = {},
+            onResendCode = {},
             onErrorDismissed = {},
             modifier = Modifier.fillMaxSize(),
         )

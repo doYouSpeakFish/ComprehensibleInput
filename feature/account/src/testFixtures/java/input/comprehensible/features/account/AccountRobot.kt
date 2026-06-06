@@ -286,6 +286,36 @@ class PasswordResetRobot(private val composeTestRule: ComposeTestRule) {
             .onNodeWithTag("account_password_reset_loading_indicator")
             .assertIsDisplayed()
     }
+
+    fun tapResendCode() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_resend_button")
+            .performClick()
+    }
+
+    fun assertResendCodeIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_resend_button")
+            .assertIsEnabled()
+    }
+
+    fun assertResendCodeIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_resend_button")
+            .assertIsNotEnabled()
+    }
+
+    fun assertResendLoadingIndicatorIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_resend_loading_indicator")
+            .assertIsDisplayed()
+    }
+
+    fun assertCodeResentConfirmationIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_code_resent_message")
+            .assertIsDisplayed()
+    }
 }
 
 class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
@@ -324,6 +354,36 @@ class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
     fun assertVerifyEmailLoadingIndicatorIsShown() {
         composeTestRule
             .onNodeWithTag("account_verify_email_loading_indicator")
+            .assertIsDisplayed()
+    }
+
+    fun tapResendCode() {
+        composeTestRule
+            .onNodeWithTag("account_verify_email_resend_button")
+            .performClick()
+    }
+
+    fun assertResendCodeIsEnabled() {
+        composeTestRule
+            .onNodeWithTag("account_verify_email_resend_button")
+            .assertIsEnabled()
+    }
+
+    fun assertResendCodeIsDisabled() {
+        composeTestRule
+            .onNodeWithTag("account_verify_email_resend_button")
+            .assertIsNotEnabled()
+    }
+
+    fun assertResendLoadingIndicatorIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_verify_email_resend_loading_indicator")
+            .assertIsDisplayed()
+    }
+
+    fun assertCodeResentConfirmationIsShown() {
+        composeTestRule
+            .onNodeWithTag("account_verify_email_code_resent_message")
             .assertIsDisplayed()
     }
 }

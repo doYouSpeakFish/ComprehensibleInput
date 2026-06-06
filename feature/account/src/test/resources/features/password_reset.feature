@@ -92,3 +92,35 @@ Feature: Password reset
     And the invalid reset code dialog is shown
     When I dismiss the invalid reset code dialog
     Then the password reset submit button is enabled
+
+  Scenario: A new reset code can be requested from the password reset screen
+    Given the password reset screen for "user@example.com" is open
+    Then the resend reset code button is enabled
+
+  Scenario: The loading state is shown while a new reset code is requested
+    Given the password reset screen for "user@example.com" is open
+    And account requests are delayed
+    And the password reset code request will succeed
+    When I request a new reset code
+    Then the resend reset code loading indicator is shown
+    And the resend reset code button is disabled
+
+  Scenario: A successful reset code request shows a confirmation message
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will succeed
+    When I request a new reset code
+    Then the reset code resent confirmation is shown
+
+  Scenario: A failed reset code request shows the error dialog
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will fail
+    When I request a new reset code
+    Then the error dialog is shown
+
+  Scenario: The reset code request error dialog can be dismissed
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will fail
+    When I request a new reset code
+    Then the error dialog is shown
+    When I dismiss the error dialog
+    Then the resend reset code button is enabled

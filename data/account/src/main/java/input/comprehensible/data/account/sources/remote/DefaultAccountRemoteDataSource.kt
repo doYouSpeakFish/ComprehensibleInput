@@ -58,6 +58,17 @@ class DefaultAccountRemoteDataSource(
         }
     }
 
+    override suspend fun requestEmailVerificationCode(email: String) {
+        val response = httpClient.post("$baseUrl/v1/email-verification-codes") {
+            header("X-Api-Key", apiKey)
+            contentType(ContentType.Application.Json)
+            setBody(EmailVerificationCodeRequest(email = email))
+        }
+        if (!response.status.isSuccess()) {
+            error("Request email verification code failed: ${response.status}")
+        }
+    }
+
     override suspend fun signIn(email: String, password: String): RemoteSession {
         val response = httpClient.post("$baseUrl/v1/auth/sessions") {
             header("X-Api-Key", apiKey)
@@ -129,6 +140,9 @@ private data class CreateAccountRequest(val email: String, val password: String)
 
 @Serializable
 private data class VerifyEmailRequest(val email: String, val code: String)
+
+@Serializable
+private data class EmailVerificationCodeRequest(val email: String)
 
 @Serializable
 private data class SignInRequest(val email: String, val password: String)

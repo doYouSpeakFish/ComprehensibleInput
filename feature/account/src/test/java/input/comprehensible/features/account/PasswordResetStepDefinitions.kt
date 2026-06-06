@@ -39,6 +39,12 @@ class PasswordResetStepDefinitions {
         scope.idle()
     }
 
+    @When("I request a new reset code")
+    fun iRequestANewResetCode() {
+        passwordReset.tapResendCode()
+        scope.idle()
+    }
+
     @Then("the password reset submit button is enabled")
     fun thePasswordResetSubmitButtonIsEnabled() {
         passwordReset.assertSubmitIsEnabled()
@@ -52,6 +58,26 @@ class PasswordResetStepDefinitions {
     @Then("the password reset loading indicator is shown")
     fun thePasswordResetLoadingIndicatorIsShown() {
         passwordReset.assertLoadingIndicatorIsShown()
+    }
+
+    @Then("the resend reset code button is enabled")
+    fun theResendResetCodeButtonIsEnabled() {
+        passwordReset.assertResendCodeIsEnabled()
+    }
+
+    @Then("the resend reset code button is disabled")
+    fun theResendResetCodeButtonIsDisabled() {
+        passwordReset.assertResendCodeIsDisabled()
+    }
+
+    @Then("the resend reset code loading indicator is shown")
+    fun theResendResetCodeLoadingIndicatorIsShown() {
+        passwordReset.assertResendLoadingIndicatorIsShown()
+    }
+
+    @Then("the reset code resent confirmation is shown")
+    fun theResetCodeResentConfirmationIsShown() {
+        passwordReset.assertCodeResentConfirmationIsShown()
     }
 
     @Then("the password reset screen shows the reset code message for {string}")

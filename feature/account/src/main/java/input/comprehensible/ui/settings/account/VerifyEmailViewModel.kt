@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import input.comprehensible.account.usecases.RequestEmailVerificationCodeUseCase
 import input.comprehensible.account.usecases.VerifyEmailUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ class VerifyEmailViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val verifyEmail = VerifyEmailUseCase()
+    private val requestEmailVerificationCode = RequestEmailVerificationCodeUseCase()
     private val email: String = savedStateHandle.toRoute<VerifyEmailRoute>().email
 
     private val _uiState = MutableStateFlow(VerifyEmailUiState(email = email))
@@ -36,6 +38,20 @@ class VerifyEmailViewModel(
                 }
                 .onFailure {
                     _uiState.update { it.copy(isLoading = false, showError = true) }
+                }
+        }
+    }
+
+    fun onResendCode() {
+        val state = _uiState.value
+        _uiState.update { it.copy(isResendingCode = true, codeResent = false) }
+        viewModelScope.launch {
+            requestEmailVerificationCode(state.email)
+                .onSuccess {
+                    _uiState.update { it.copy(isResendingCode = false, codeResent = true) }
+                }
+                .onFailure {
+                    _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
         }
     }

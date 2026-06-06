@@ -46,3 +46,35 @@ Feature: Verify email
     And the error dialog is shown
     When I dismiss the error dialog
     Then the verify email submit button is enabled
+
+  Scenario: A new verification code can be requested from the verify email screen
+    Given the email verification screen for "user@example.com" is open
+    Then the resend verification code button is enabled
+
+  Scenario: The loading state is shown while a new verification code is requested
+    Given the email verification screen for "user@example.com" is open
+    And account requests are delayed
+    And the email verification code request will succeed
+    When I request a new verification code
+    Then the resend verification code loading indicator is shown
+    And the resend verification code button is disabled
+
+  Scenario: A successful verification code request shows a confirmation message
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will succeed
+    When I request a new verification code
+    Then the verification code resent confirmation is shown
+
+  Scenario: A failed verification code request shows the error dialog
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will fail
+    When I request a new verification code
+    Then the error dialog is shown
+
+  Scenario: The verification code request error dialog can be dismissed
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will fail
+    When I request a new verification code
+    Then the error dialog is shown
+    When I dismiss the error dialog
+    Then the resend verification code button is enabled

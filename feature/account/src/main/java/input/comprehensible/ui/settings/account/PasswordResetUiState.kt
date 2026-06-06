@@ -6,6 +6,8 @@ data class PasswordResetUiState(
     val password: String = "",
     val confirmPassword: String = "",
     val isLoading: Boolean = false,
+    val isResendingCode: Boolean = false,
+    val codeResent: Boolean = false,
     val showError: Boolean = false,
     val showInvalidCodeError: Boolean = false,
     val passwordReset: Boolean = false,
