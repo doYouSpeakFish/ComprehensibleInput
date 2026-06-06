@@ -7,13 +7,18 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.testing.TestNavHostController
+import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import input.comprehensible.data.account.AccountRepository
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
+import input.comprehensible.test.account.AccountTestDatabase
 import input.comprehensible.ui.settings.account.AccountRoute
 import input.comprehensible.ui.settings.account.DeleteAccountRoute
 import input.comprehensible.ui.settings.account.ForgotPasswordRoute
@@ -25,6 +30,7 @@ import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -44,6 +50,14 @@ class AccountFeatureTestScope(
 ) {
     val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
+
+    // The real Room-backed user DAO, kept in an in-memory database, wrapped so a test can force a
+    // save to fail (see FailableUserLocalDataSource). All other reads and writes hit real Room.
+    private val db = Room
+        .inMemoryDatabaseBuilder<AccountTestDatabase>(context = appContext)
+        .setQueryCoroutineContext(context = dispatcher)
+        .build()
+    val userLocalDataSource = FailableUserLocalDataSource(delegate = db.getUserDao())
     val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
 
     private lateinit var _navController: TestNavHostController
@@ -62,6 +76,7 @@ class AccountFeatureTestScope(
         AppScope.inject { testScope }
         AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
+        UserLocalDataSource.inject { userLocalDataSource }
     }
 
     fun launch() {
@@ -82,8 +97,9 @@ class AccountFeatureTestScope(
         _isLaunched = true
     }
 
-    suspend fun signInAs(email: String) {
-        realAccountLocalDataSource.saveSession(token = "test-token", email = email)
+    suspend fun signInAs(email: String, userId: String = "test-user-id") {
+        realAccountLocalDataSource.saveSession(token = "test-token", email = email, userId = userId)
+        userLocalDataSource.upsertUser(UserEntity(id = userId, email = email))
     }
 
     /**
@@ -91,9 +107,25 @@ class AccountFeatureTestScope(
      * coroutine. The session is persisted on the injected (test) dispatcher, so draining the
      * scheduler completes the write before the UI under test reads it.
      */
-    fun signInAsBlocking(email: String) {
-        testScope.launch { signInAs(email) }
+    fun signInAsBlocking(email: String, userId: String = "test-user-id") {
+        testScope.launch { signInAs(email, userId) }
         testScope.advanceUntilIdle()
+    }
+
+    /** The current user exposed by the account repository, drained on the test scheduler. */
+    fun currentUser(): UserEntity? {
+        var user: UserEntity? = null
+        testScope.launch { user = AccountRepository().user.first() }
+        testScope.advanceUntilIdle()
+        return user
+    }
+
+    /** Whether a local user record with [id] exists in the database, drained on the test scheduler. */
+    fun userRecordExists(id: String): Boolean {
+        var exists = false
+        testScope.launch { exists = userLocalDataSource.getUser(id) != null }
+        testScope.advanceUntilIdle()
+        return exists
     }
 
     fun goToAccount() {
@@ -153,6 +185,10 @@ class AccountFeatureTestScope(
         _navController.navigate(TestDisposeRoute)
         awaitIdle()
     }
+
+    internal fun close() {
+        db.close()
+    }
 }
 
 fun ComprehensibleInputTestRule.runAccountFeatureTest(
@@ -167,6 +203,7 @@ fun ComprehensibleInputTestRule.runAccountFeatureTest(
         clearAccountSession()
         block()
         disposeUiUnderTest()
+        close()
     }
 }
 

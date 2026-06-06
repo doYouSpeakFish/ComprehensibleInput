@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Comprehensible Input</string>
+    <string name="home_stories">Stories</string>
+    <string name="home_text_adventures">Text adventures</string>
+    <string name="home_settings_content_description">Settings</string>
+</resources>

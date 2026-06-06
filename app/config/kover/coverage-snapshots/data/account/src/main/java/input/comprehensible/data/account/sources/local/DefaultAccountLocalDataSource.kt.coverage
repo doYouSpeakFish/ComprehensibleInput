@@ -15,6 +15,7 @@
 ⚪   
 🟢   private val SESSION_TOKEN = stringPreferencesKey("session_token")
 🟢   private val EMAIL = stringPreferencesKey("email")
+🟢   private val USER_ID = stringPreferencesKey("user_id")
 ⚪   
 ⚪   class DefaultAccountLocalDataSource(
 🟢       private val context: Context = ApplicationProvider(),
@@ -28,13 +29,15 @@
 🟢           Session(
 🟢               email = it[EMAIL] ?: return@map null,
 🟡               token = it[SESSION_TOKEN] ?: return@map null,
+🟡               userId = it[USER_ID] ?: return@map null,
 🟢           )
 ⚪       }
 ⚪   
-⚪       override suspend fun saveSession(token: String, email: String) {
+⚪       override suspend fun saveSession(token: String, email: String, userId: String) {
 🟢           context.dataStore.edit {
 🟢               it[SESSION_TOKEN] = token
 🟢               it[EMAIL] = email
+🟢               it[USER_ID] = userId
 ⚪           }
 ⚪       }
 ⚪   
@@ -42,6 +45,7 @@
 🟢           context.dataStore.edit {
 🟢               it.remove(SESSION_TOKEN)
 🟢               it.remove(EMAIL)
+🟢               it.remove(USER_ID)
 ⚪           }
 ⚪       }
 ⚪   }

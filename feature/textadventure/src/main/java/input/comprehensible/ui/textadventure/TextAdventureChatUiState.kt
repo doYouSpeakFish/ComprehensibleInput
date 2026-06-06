@@ -1,0 +1,47 @@
+package input.comprehensible.ui.textadventure
+
+/**
+ * The UI state for the text adventure chat screen.
+ */
+data class TextAdventureChatUiState(
+    val messages: List<ChatMessage>,
+    val isGenerating: Boolean,
+    val showError: Boolean,
+    val showMessageError: Boolean,
+    val optimisticUserMessage: ChatMessage?,
+    val selectedSentence: SelectedSentence?,
+) {
+    /** The persisted messages followed by the not-yet-submitted user message, if any. */
+    val displayedMessages: List<ChatMessage>
+        get() = optimisticUserMessage?.let { messages + it } ?: messages
+
+    /** The input is hidden once the conversation has reached an ending message. */
+    val isInputHidden: Boolean
+        get() = messages.lastOrNull()?.isEnding == true
+
+    /** Whether a send or generation request is in flight, used to disable the input. */
+    val isSending: Boolean
+        get() = isGenerating || optimisticUserMessage != null
+
+    /**
+     * The sentence the user has tapped to translate, identified within the conversation, and
+     * whether it is currently showing its translation.
+     */
+    data class SelectedSentence(
+        val messageId: String,
+        val paragraphIndex: Int,
+        val sentenceIndex: Int,
+        val isTranslated: Boolean,
+    )
+
+    companion object {
+        val INITIAL = TextAdventureChatUiState(
+            messages = emptyList(),
+            isGenerating = false,
+            showError = false,
+            showMessageError = false,
+            optimisticUserMessage = null,
+            selectedSentence = null,
+        )
+    }
+}

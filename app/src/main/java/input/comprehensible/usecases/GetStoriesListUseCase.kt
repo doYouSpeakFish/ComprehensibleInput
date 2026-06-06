@@ -1,6 +1,6 @@
 package input.comprehensible.usecases
 
-import input.comprehensible.data.languages.LanguageSettingsRepository
+import input.comprehensible.data.languagesettings.LanguageSettingsRepository
 import input.comprehensible.data.stories.StoriesListResult
 import input.comprehensible.data.stories.StoriesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi

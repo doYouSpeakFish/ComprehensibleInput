@@ -65,9 +65,4 @@ class StoryListStepDefinitions {
     fun theStoryImageIsShownInTheList(ordinal: String) {
         storyList.assertStoryImageIsVisible(StoryFixtures.story(ordinal).id)
     }
-
-    @Then("the start text adventure button is hidden")
-    fun theStartTextAdventureButtonIsHidden() {
-        storyList.assertStartTextAdventureIsHidden()
-    }
 }

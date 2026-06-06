@@ -91,23 +91,36 @@ object CucumberComposeScenarios {
             .filters(includeEngines("cucumber"))
             .configurationParameter(Constants.GLUE_PROPERTY_NAME, gluePackage)
             .configurationParameter(Constants.PLUGIN_PROPERTY_NAME, "pretty")
+            // Scenarios tagged @ignore (or @Ignore) are excluded from discovery so work in
+            // progress can be specified up front without failing the build. Mirrors the backend
+            // Cucumber runner's "not @ignore" filter.
+            .configurationParameter(Constants.FILTER_TAGS_PROPERTY_NAME, "not @ignore and not @Ignore")
             .build()
 
     private fun TestPlan.toScenarios(): List<CucumberScenario> {
         val scenarios = mutableListOf<CucumberScenario>()
         fun visit(identifier: TestIdentifier, parentLabel: String) {
             val children = getChildren(identifier)
-            if (children.isEmpty()) {
-                if (identifier.isTest) {
-                    val label = if (parentLabel.isEmpty()) identifier.displayName else "$parentLabel – ${identifier.displayName}"
-                    val tags = identifier.tags.map { it.name.removePrefix("@") }.toSet()
-                    scenarios += CucumberScenario(identifier.uniqueId, tags, label)
-                }
-            } else {
+            if (children.isNotEmpty()) {
                 children.forEach { visit(it, identifier.displayName) }
+                return
             }
+            identifier.toScenarioOrNull(parentLabel)?.let { scenarios += it }
         }
         roots.forEach { visit(it, "") }
         return scenarios
+    }
+
+    /**
+     * Maps a leaf [TestIdentifier] to a [CucumberScenario], or `null` when it is not a runnable
+     * test or is tagged `@ignore`/`@Ignore` — work specified up front but not yet implemented,
+     * skipped entirely so it never surfaces as a (vacuously passing) test case.
+     */
+    private fun TestIdentifier.toScenarioOrNull(parentLabel: String): CucumberScenario? {
+        if (!isTest) return null
+        val tagNames = tags.map { it.name.removePrefix("@") }.toSet()
+        if (tagNames.any { it.equals("ignore", ignoreCase = true) }) return null
+        val label = if (parentLabel.isEmpty()) displayName else "$parentLabel – $displayName"
+        return CucumberScenario(uniqueId, tagNames, label)
     }
 }

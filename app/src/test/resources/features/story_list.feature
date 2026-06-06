@@ -29,13 +29,6 @@ Feature: Story list
     Then the first story is not listed
     And the second story is listed
 
-  @aiTextAdventuresDisabled
-  Scenario: The story list opens with text adventures disabled
-    Given the story library is available
-    And the story list is open
-    Then the first story is listed
-    And the start text adventure button is hidden
-
   Scenario: Story content follows the learning language
     Given the story library is available
     And the story list is open

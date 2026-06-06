@@ -170,7 +170,6 @@ roborazzi {
             "input.comprehensible.ui.settings.softwarelicences",
             "input.comprehensible.ui.storylist",
             "input.comprehensible.ui.storyreader",
-            "input.comprehensible.ui.textadventure",
         )
         includePrivatePreviews = false
         testerQualifiedClassName = "input.comprehensible.PreviewScreenshotTester"
@@ -206,8 +205,10 @@ koverCoverageReport {
     sourceProjects(
         project(":common"),
         project(":data:account"),
+        project(":data:languagesettings"),
+        project(":data:textadventure"),
         project(":feature:account"),
-        project(":textadventuremodels"),
+        project(":feature:textadventure"),
     )
 }
 
@@ -215,16 +216,19 @@ kover {
     dependencies {
         kover(project(":common"))
         kover(project(":data:account"))
+        kover(project(":data:languagesettings"))
+        kover(project(":data:textadventure"))
         kover(project(":feature:account"))
-        kover(project(":textadventuremodels"))
+        kover(project(":feature:textadventure"))
     }
     reports {
         filters {
             excludes {
                 packages(
                     "input.comprehensible.data.stories.sources",
-                    "input.comprehensible.data.languages.sources",
-                    "input.comprehensible.data.textadventures.sources.remote",
+                    "input.comprehensible.data.languagesettings.sources",
+                    "input.comprehensible.data.account.sources.remote",
+                    "input.comprehensible.data.textadventure.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -238,6 +242,8 @@ kover {
                     "input.comprehensible.data.AppDb_Impl",
                     "input.comprehensible.data.languages.LanguagesDao_Impl",
                     "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.account.sources.local.UserLocalDataSource_Impl",
+                    "input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource_Impl",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
                 )
@@ -254,8 +260,11 @@ kover {
 dependencies {
     implementation(project(":common"))
     implementation(project(":feature:account"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:textadventure"))
     implementation(project(":data:account"))
-    implementation(project(":textadventuremodels"))
+    implementation(project(":data:languagesettings"))
+    implementation(project(":data:textadventure"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
@@ -286,7 +295,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(project(":commontest"))
+    testImplementation(testFixtures(project(":data:languagesettings")))
     testImplementation(testFixtures(project(":feature:account")))
+    testImplementation(testFixtures(project(":feature:home")))
+    testImplementation(testFixtures(project(":feature:textadventure")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

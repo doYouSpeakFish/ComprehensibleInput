@@ -76,7 +76,7 @@ class AccountService(
             tokenHash = hashToken(token),
             now = now(),
         )
-        return SignInResult(HttpStatusCode.OK, SignInPayload(token, bearerTokenType))
+        return SignInResult(HttpStatusCode.OK, SignInPayload(token, bearerTokenType, account[AccountsTable.id]))
     }
 
     fun getMe(accountId: String): AccountPayload? = accountsDao.findAccountById(accountId)?.let {
@@ -295,4 +295,4 @@ class AccountService(
 data class AccountResult(val status: HttpStatusCode, val payload: AccountPayload? = null)
 @Serializable data class AccountPayload(val id: String, val email: String)
 data class SignInResult(val status: HttpStatusCode, val payload: SignInPayload? = null)
-@Serializable data class SignInPayload(val accessToken: String, val tokenType: String)
+@Serializable data class SignInPayload(val accessToken: String, val tokenType: String, val userId: String)

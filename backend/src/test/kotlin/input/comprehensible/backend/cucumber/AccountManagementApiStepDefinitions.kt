@@ -38,6 +38,7 @@ class AccountManagementApiStepDefinitions {
     private var latestStatus: HttpStatusCode? = null
     private var latestBody: String = ""
     private var bearerToken: String = ""
+    private var signInUserId: String = ""
     private var currentEmail: String = ""
     private var currentPassword: String = ""
     private var nextVerificationCode: String = "123456"
@@ -68,7 +69,11 @@ class AccountManagementApiStepDefinitions {
         signIn(email, password)
         currentEmail = email
         currentPassword = password
-        if (latestStatus == HttpStatusCode.OK) bearerToken = json.decodeFromString<SignInResponse>(latestBody).accessToken
+        if (latestStatus == HttpStatusCode.OK) {
+            val response = json.decodeFromString<SignInResponse>(latestBody)
+            bearerToken = response.accessToken
+            signInUserId = response.userId
+        }
     }
 
     @When("I create user with email {string} and password {string}")
@@ -266,6 +271,17 @@ class AccountManagementApiStepDefinitions {
     @Then("account API status should be {int}")
     fun statusShouldBe(status: Int) { assertEquals(HttpStatusCode.fromValue(status), latestStatus) }
 
+    @Then("the sign in response includes the user id")
+    fun signInResponseIncludesUserId() {
+        org.junit.Assert.assertTrue(json.decodeFromString<SignInResponse>(latestBody).userId.isNotBlank())
+    }
+
+    @Then("the me profile id matches the sign in user id")
+    fun meProfileIdMatchesSignInUserId() {
+        org.junit.Assert.assertTrue(signInUserId.isNotBlank())
+        assertEquals(signInUserId, json.decodeFromString<AccountProfileResponse>(latestBody).id)
+    }
+
     @Then("an email should be sent to {string} containing {string}")
     fun emailShouldBeSent(to: String, containsText: String) {
         val sent = fakeEmailDataSource.sentEmails.lastOrNull { it.to == to }
@@ -331,9 +347,12 @@ private data class SentEmail(val to: String, val subject: String, val textBody: 
 private data class SignInResponse(
     @SerialName("access_token")
     val accessToken: String,
+    @SerialName("user_id")
+    val userId: String = "",
 )
 
 @Serializable
 private data class AccountProfileResponse(
+    val id: String = "",
     val email: String,
 )
