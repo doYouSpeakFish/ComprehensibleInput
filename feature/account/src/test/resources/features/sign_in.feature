@@ -100,3 +100,21 @@ Feature: Sign in
     Given the account screen is open
     When I tap the sign up button
     Then the sign up submit button is disabled
+
+  Scenario: The sign in password is hidden by default
+    Given the account screen is open
+    When I enter the sign in password "password12345"
+    Then the sign in password is hidden
+
+  Scenario: The sign in password can be revealed
+    Given the account screen is open
+    When I enter the sign in password "password12345"
+    And I reveal the sign in password
+    Then the sign in password is shown
+
+  Scenario: The revealed sign in password can be hidden again
+    Given the account screen is open
+    When I enter the sign in password "password12345"
+    And I reveal the sign in password
+    And I hide the sign in password
+    Then the sign in password is hidden

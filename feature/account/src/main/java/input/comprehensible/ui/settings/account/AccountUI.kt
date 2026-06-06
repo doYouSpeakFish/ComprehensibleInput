@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -195,16 +194,13 @@ private fun SignInStep(
                 .fillMaxWidth()
                 .testTag("account_sign_in_email_field"),
         )
-        OutlinedTextField(
+        PasswordTextField(
             value = step.password,
             onValueChange = onPasswordChanged,
-            label = { Text(stringResource(R.string.account_sign_in_password_label)) },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_sign_in_password_field"),
+            label = stringResource(R.string.account_sign_in_password_label),
+            fieldTestTag = "account_sign_in_password_field",
+            toggleTestTag = "account_sign_in_password_toggle",
+            modifier = Modifier.fillMaxWidth(),
         )
         Button(
             onClick = onSignInSubmit,

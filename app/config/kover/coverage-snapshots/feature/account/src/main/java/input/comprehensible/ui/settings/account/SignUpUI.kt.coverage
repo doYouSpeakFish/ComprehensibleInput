@@ -20,7 +20,6 @@
 ⚪   import androidx.compose.ui.platform.testTag
 ⚪   import androidx.compose.ui.res.stringResource
 ⚪   import androidx.compose.ui.text.input.KeyboardType
-⚪   import androidx.compose.ui.text.input.PasswordVisualTransformation
 ⚪   import androidx.compose.ui.unit.dp
 ⚪   import androidx.lifecycle.compose.collectAsStateWithLifecycle
 ⚪   import androidx.lifecycle.viewmodel.compose.viewModel
@@ -95,27 +94,21 @@
 🟢                       .fillMaxWidth()
 🟢                       .testTag("account_sign_up_email_field"),
 ⚪               )
-🟢               OutlinedTextField(
+🟢               PasswordTextField(
 🟢                   value = uiState.password,
 🟢                   onValueChange = onPasswordChanged,
-⚪                   label = { Text(stringResource(R.string.account_sign_up_password_label)) },
-🟢                   visualTransformation = PasswordVisualTransformation(),
-🟢                   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-🟢                   singleLine = true,
-🟢                   modifier = Modifier
-🟢                       .fillMaxWidth()
-🟢                       .testTag("account_sign_up_password_field"),
+🟢                   label = stringResource(R.string.account_sign_up_password_label),
+🟢                   fieldTestTag = "account_sign_up_password_field",
+🟢                   toggleTestTag = "account_sign_up_password_toggle",
+🟢                   modifier = Modifier.fillMaxWidth(),
 ⚪               )
-🟢               OutlinedTextField(
+🟢               PasswordTextField(
 🟢                   value = uiState.confirmPassword,
 🟢                   onValueChange = onConfirmPasswordChanged,
-⚪                   label = { Text(stringResource(R.string.account_sign_up_confirm_password_label)) },
-🟢                   visualTransformation = PasswordVisualTransformation(),
-🟢                   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-🟢                   singleLine = true,
-🟢                   modifier = Modifier
-🟢                       .fillMaxWidth()
-🟢                       .testTag("account_sign_up_confirm_password_field"),
+🟢                   label = stringResource(R.string.account_sign_up_confirm_password_label),
+🟢                   fieldTestTag = "account_sign_up_confirm_password_field",
+🟢                   toggleTestTag = "account_sign_up_confirm_password_toggle",
+🟢                   modifier = Modifier.fillMaxWidth(),
 ⚪               )
 🟢               Button(
 🟢                   onClick = onSubmit,
