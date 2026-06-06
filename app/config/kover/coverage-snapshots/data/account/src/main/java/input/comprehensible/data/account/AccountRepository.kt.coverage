@@ -67,7 +67,7 @@
 🟡           val current = localDataSource.session.first() ?: throw InvalidCredentialsException()
 🟢           remoteDataSource.deleteAccount(current.email, password)
 🟢           runCatching { userLocalDataSource.deleteUser(current.userId) }
-🟡               .onFailure { Timber.e(it, "Failed to remove local user record on account deletion") }
+🟢               .onFailure { Timber.e(it, "Failed to remove local user record on account deletion") }
 🟢           localDataSource.clearSession()
 🟢       }.onFailure { Timber.e(it, "Failed to delete account") }
 ⚪   

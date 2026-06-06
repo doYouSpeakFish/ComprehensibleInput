@@ -7,6 +7,7 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.testing.TestNavHostController
+import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.account.AccountRepository
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
@@ -14,10 +15,10 @@ import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSo
 import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
-import input.comprehensible.data.sources.FakeUserLocalDataSource
 import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
+import input.comprehensible.test.account.AccountTestDatabase
 import input.comprehensible.ui.settings.account.AccountRoute
 import input.comprehensible.ui.settings.account.DeleteAccountRoute
 import input.comprehensible.ui.settings.account.ForgotPasswordRoute
@@ -48,8 +49,15 @@ class AccountFeatureTestScope(
     private val darkTheme: Boolean,
 ) {
     val fakeAccountRemoteDataSource = FakeAccountRemoteDataSource()
-    val fakeUserLocalDataSource = FakeUserLocalDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
+
+    // The real Room-backed user DAO, kept in an in-memory database, wrapped so a test can force a
+    // save to fail (see FailableUserLocalDataSource). All other reads and writes hit real Room.
+    private val db = Room
+        .inMemoryDatabaseBuilder<AccountTestDatabase>(context = appContext)
+        .setQueryCoroutineContext(context = dispatcher)
+        .build()
+    val userLocalDataSource = FailableUserLocalDataSource(delegate = db.getUserDao())
     val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
 
     private lateinit var _navController: TestNavHostController
@@ -68,7 +76,7 @@ class AccountFeatureTestScope(
         AppScope.inject { testScope }
         AccountRemoteDataSource.inject { fakeAccountRemoteDataSource }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
-        UserLocalDataSource.inject { fakeUserLocalDataSource }
+        UserLocalDataSource.inject { userLocalDataSource }
     }
 
     fun launch() {
@@ -91,7 +99,7 @@ class AccountFeatureTestScope(
 
     suspend fun signInAs(email: String, userId: String = "test-user-id") {
         realAccountLocalDataSource.saveSession(token = "test-token", email = email, userId = userId)
-        fakeUserLocalDataSource.upsertUser(UserEntity(id = userId, email = email))
+        userLocalDataSource.upsertUser(UserEntity(id = userId, email = email))
     }
 
     /**
@@ -112,7 +120,13 @@ class AccountFeatureTestScope(
         return user
     }
 
-    fun userRecordExists(id: String): Boolean = fakeUserLocalDataSource.users.containsKey(id)
+    /** Whether a local user record with [id] exists in the database, drained on the test scheduler. */
+    fun userRecordExists(id: String): Boolean {
+        var exists = false
+        testScope.launch { exists = userLocalDataSource.getUser(id) != null }
+        testScope.advanceUntilIdle()
+        return exists
+    }
 
     fun goToAccount() {
         if (!_isLaunched) launch()
@@ -171,6 +185,10 @@ class AccountFeatureTestScope(
         _navController.navigate(TestDisposeRoute)
         awaitIdle()
     }
+
+    internal fun close() {
+        db.close()
+    }
 }
 
 fun ComprehensibleInputTestRule.runAccountFeatureTest(
@@ -185,6 +203,7 @@ fun ComprehensibleInputTestRule.runAccountFeatureTest(
         clearAccountSession()
         block()
         disposeUiUnderTest()
+        close()
     }
 }
 

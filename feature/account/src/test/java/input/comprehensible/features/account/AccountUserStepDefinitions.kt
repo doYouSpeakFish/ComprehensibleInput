@@ -27,7 +27,7 @@ class AccountUserStepDefinitions {
 
     @Given("saving the local user record will fail")
     fun savingTheLocalUserRecordWillFail() {
-        scope.fakeUserLocalDataSource.upsertError = RuntimeException("Unable to save local user record")
+        scope.userLocalDataSource.upsertError = RuntimeException("Unable to save local user record")
     }
 
     @Then("a local user record exists with id {string}")

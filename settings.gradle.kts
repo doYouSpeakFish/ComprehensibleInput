@@ -31,6 +31,7 @@ include(":data:textadventure")
 include(":feature:account")
 include(":feature:home")
 include(":feature:textadventure")
+include(":test:account")
 include(":test:textadventure")
 
 include(":backend")

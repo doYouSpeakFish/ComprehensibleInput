@@ -82,6 +82,7 @@ dependencies {
     testFixturesImplementation(libs.coroutines.test)
 
     testImplementation(project(":commontest"))
+    testImplementation(project(":test:account"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.ui.test.junit4)
