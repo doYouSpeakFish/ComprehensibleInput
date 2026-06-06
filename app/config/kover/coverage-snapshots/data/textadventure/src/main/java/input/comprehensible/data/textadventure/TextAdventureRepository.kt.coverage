@@ -125,7 +125,7 @@
 🟢               localDataSource.upsertMessage(message.toEntity(adventureId, position))
 🟢               localDataSource.insertSentences(message.toSentenceEntities())
 🟢           }
-🟡       }.onFailure { Timber.e(it, "Failed to refresh messages") }
+🟢       }.onFailure { Timber.e(it, "Failed to refresh messages") }
 ⚪   
 ⚪       companion object : Singleton<TextAdventureRepository>() {
 🟢           override fun create() = TextAdventureRepository(

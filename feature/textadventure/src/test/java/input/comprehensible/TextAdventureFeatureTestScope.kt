@@ -11,6 +11,7 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.testing.TestNavHostController
+import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.account.sources.local.AccountLocalDataSource
 import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
@@ -19,9 +20,7 @@ import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
 import input.comprehensible.data.languagesettings.fakes.FakeLanguageSettingsLocalDataSource
 import input.comprehensible.data.languagesettings.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sources.FakeAccountRemoteDataSource
-import input.comprehensible.data.sources.FakeUserLocalDataSource
 import input.comprehensible.data.textadventure.AdventureMessageSender
-import input.comprehensible.data.textadventure.fakes.FakeAdventureLocalDataSource
 import input.comprehensible.data.textadventure.fakes.FakeAdventureRemoteDataSource
 import input.comprehensible.data.textadventure.sources.local.AdventureEntity
 import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
@@ -30,8 +29,10 @@ import input.comprehensible.data.textadventure.sources.local.SentenceEntity
 import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
 import input.comprehensible.data.textadventure.sources.remote.RemoteAdventure
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
+import input.comprehensible.test.textadventure.TextAdventureTestDatabase
 import input.comprehensible.ui.textadventure.TextAdventuresListRoute
 import input.comprehensible.ui.textadventure.textAdventureNavGraph
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -55,8 +56,10 @@ internal data object TestDisposeRoute
 /**
  * Per-scenario environment for the text adventures feature tests. Injects the account dependencies
  * (a real DataStore session plus account fakes) needed to construct the account repository, and the
- * text adventure fakes the screens exercise. The list screen is hosted in a `NavHost` with a
- * placeholder standing in for the account screen.
+ * text adventure data sources the screens exercise. The local store is the real
+ * [AdventureLocalDataSource] backed by an in-memory [TextAdventureTestDatabase], so the tests run
+ * against Room rather than a hand-written fake; only the remote boundary is faked. The list screen
+ * is hosted in a `NavHost` with a placeholder standing in for the account screen.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class TextAdventureFeatureTestScope(
@@ -66,8 +69,11 @@ class TextAdventureFeatureTestScope(
     private val darkTheme: Boolean,
 ) {
     val fakeRemoteDataSource = FakeAdventureRemoteDataSource()
-    val fakeLocalDataSource = FakeAdventureLocalDataSource()
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
+    private val db = Room
+        .inMemoryDatabaseBuilder<TextAdventureTestDatabase>(context = appContext)
+        .setQueryCoroutineContext(context = dispatcher)
+        .build()
     private val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
     private var currentEmail = "user@example.com"
 
@@ -87,9 +93,9 @@ class TextAdventureFeatureTestScope(
         AppScope.inject { testScope }
         AccountRemoteDataSource.inject { FakeAccountRemoteDataSource() }
         AccountLocalDataSource.inject { realAccountLocalDataSource }
-        UserLocalDataSource.inject { FakeUserLocalDataSource() }
+        UserLocalDataSource.inject { db.getUserDao() }
         AdventureRemoteDataSource.inject { fakeRemoteDataSource }
-        AdventureLocalDataSource.inject { fakeLocalDataSource }
+        AdventureLocalDataSource.inject { db.getAdventureDao() }
         LanguageSettingsLocalDataSource.inject { FakeLanguageSettingsLocalDataSource() }
     }
 
@@ -127,6 +133,7 @@ class TextAdventureFeatureTestScope(
                 email = email,
                 userId = userIdFor(email),
             )
+            seedUser(email)
         }
         testScope.advanceUntilIdle()
     }
@@ -215,7 +222,11 @@ class TextAdventureFeatureTestScope(
     }
 
     fun cacheAdventure(title: String, email: String) {
-        fakeLocalDataSource.seed(adventureEntity(title, email))
+        testScope.launch {
+            seedUser(email)
+            db.getAdventureDao().upsertAdventure(adventureEntity(title, email))
+        }
+        testScope.advanceUntilIdle()
     }
 
     fun adventureRefreshesTo(title: String, text: String) {
@@ -233,27 +244,33 @@ class TextAdventureFeatureTestScope(
     }
 
     fun cacheAdventureWithMessage(title: String, message: String) {
-        fakeLocalDataSource.seed(adventureEntity(title, currentEmail))
         val messageId = "$title-message"
-        fakeLocalDataSource.seedMessage(
-            MessageEntity(
-                id = messageId,
-                adventureId = title,
-                parentId = null,
-                sender = AdventureMessageSender.AI.name,
-                isEnding = false,
-                position = 0,
-            ),
-            listOf(
-                SentenceEntity(
-                    messageId = messageId,
-                    paragraphIndex = 0,
-                    sentenceIndex = 0,
-                    text = message,
-                    translation = "$message (translated)",
+        testScope.launch {
+            seedUser(currentEmail)
+            db.getAdventureDao().upsertAdventure(adventureEntity(title, currentEmail))
+            db.getAdventureDao().upsertMessage(
+                MessageEntity(
+                    id = messageId,
+                    adventureId = title,
+                    parentId = null,
+                    sender = AdventureMessageSender.AI.name,
+                    isEnding = false,
+                    position = 0,
                 ),
-            ),
-        )
+            )
+            db.getAdventureDao().insertSentences(
+                listOf(
+                    SentenceEntity(
+                        messageId = messageId,
+                        paragraphIndex = 0,
+                        sentenceIndex = 0,
+                        text = message,
+                        translation = "$message (translated)",
+                    ),
+                ),
+            )
+        }
+        testScope.advanceUntilIdle()
     }
 
     fun idle() {
@@ -276,6 +293,19 @@ class TextAdventureFeatureTestScope(
         navController.navigate(TestDisposeRoute)
         testScope.runCurrent()
         composeContentRule.awaitIdle()
+    }
+
+    internal fun close() {
+        db.close()
+    }
+
+    /**
+     * Seeds the [UserEntity] for [email] so adventures owned by that user satisfy the
+     * `Adventure.userId` foreign key in the in-memory database. Idempotent (an upsert), so it is safe
+     * to call for each adventure seeded for a user.
+     */
+    private suspend fun seedUser(email: String) {
+        db.getUserDao().upsertUser(UserEntity(id = userIdFor(email), email = email))
     }
 
     private fun adventureEntity(title: String, email: String) = AdventureEntity(
@@ -315,5 +345,6 @@ fun ComprehensibleInputTestRule.runTextAdventureFeatureTest(
         clearAccountSession()
         block()
         disposeUiUnderTest()
+        close()
     }
 }

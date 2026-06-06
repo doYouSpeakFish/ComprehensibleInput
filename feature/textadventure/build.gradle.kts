@@ -88,6 +88,7 @@ dependencies {
 
     testImplementation(project(":commontest"))
     testImplementation(project(":textadventuremodels"))
+    testImplementation(project(":test:textadventure"))
     testImplementation(testFixtures(project(":data:languagesettings")))
     testImplementation(testFixtures(project(":feature:account")))
     testImplementation(libs.junit)
