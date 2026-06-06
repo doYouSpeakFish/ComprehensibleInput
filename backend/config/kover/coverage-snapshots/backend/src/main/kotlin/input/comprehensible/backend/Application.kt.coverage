@@ -128,13 +128,15 @@
 ⚪   }
 ⚪   
 ⚪   
-⚪   private fun Application.configureRateLimits() {
+⚪   private fun Application.configureRateLimits(globalRateLimit: Int) {
 🟢       install(RateLimit) {
 🟢           global {
-⚪               // A general flood / abuse baseline applied to every route. The text adventure feature now
+⚪               // A general flood / brute-force baseline applied to every route, keyed per client IP so a
+⚪               // single source cannot use up everyone else's allowance. The text adventure feature now
 ⚪               // carries its own (low, AI-cost-driven) limit, so this catch-all only needs to stop
-⚪               // egregious flooding and brute-forcing and can therefore be far more generous.
-🟢               rateLimiter(limit = GLOBAL_RATE_LIMIT, refillPeriod = 10.minutes)
+⚪               // egregious abuse and can therefore be far more generous.
+🟢               rateLimiter(limit = globalRateLimit, refillPeriod = 10.minutes)
+🟢               requestKey { call -> call.request.local.remoteHost }
 ⚪           }
 🟢           register(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
 🟢               rateLimiter(limit = TEXT_ADVENTURE_RATE_LIMIT, refillPeriod = 10.minutes)
@@ -190,10 +192,11 @@
 ⚪       textAdventureService: TextAdventureGenerationService,
 ⚪       appApiKey: String,
 ⚪       accountService: AccountService,
+🟢       globalRateLimit: Int = GLOBAL_RATE_LIMIT,
 ⚪   ) {
 🟢       install(ContentNegotiation) { json() }
 🟢       install(DoubleReceive)
-🟢       configureRateLimits()
+🟢       configureRateLimits(globalRateLimit)
 🟢       install(Authentication) {
 🟢           apiKey {
 🟢               validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
@@ -225,9 +228,10 @@
 ⚪   private const val TEXT_ADVENTURE_RATE_LIMIT_KEY = "text-adventure"
 ⚪   
 ⚪   /**
-⚪    * General baseline rate limit applied to every route (flood / brute-force protection). It is far
-⚪    * more generous than the text adventure limit: that one is kept low only to cap AI usage costs,
-⚪    * whereas this catch-all just needs to stop egregious abuse, so a high ceiling is appropriate.
+⚪    * General baseline rate limit applied to every route, per client IP, over 10 minutes (flood /
+⚪    * brute-force protection). It is far more generous than the text adventure limit: that one is kept
+⚪    * low only to cap AI usage costs, whereas this catch-all just needs to stop egregious abuse from a
+⚪    * single source, so a high ceiling is appropriate.
 ⚪    */
 ⚪   internal const val GLOBAL_RATE_LIMIT = 10_000
 ⚪   

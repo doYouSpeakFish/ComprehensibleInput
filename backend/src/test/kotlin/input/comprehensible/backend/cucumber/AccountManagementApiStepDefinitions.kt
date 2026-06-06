@@ -260,6 +260,37 @@ class AccountManagementApiStepDefinitions {
         },
         expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
     )
+    @When("I send more requests from one client than the global rate limit allows")
+    fun exceedGlobalRateLimit() {
+        val limit = 3
+        testApplication {
+            application {
+                configureRouting(
+                    textAdventureService = TextAdventureGenerationService(
+                        FakeTextAdventureStructuredPromptExecutor(),
+                        DatabaseAdventureRepository(database),
+                    ),
+                    appApiKey = "test",
+                    accountService = accountService,
+                    globalRateLimit = limit,
+                )
+            }
+            // The global limit applies to every route; exhaust it from one client, then send one more.
+            repeat(limit) {
+                client.post("/v1/auth/sessions") {
+                    contentType(ContentType.Application.Json)
+                    setBody(credentialsBody("nobody@example.com", "whatever"))
+                }
+            }
+            val response = client.post("/v1/auth/sessions") {
+                contentType(ContentType.Application.Json)
+                setBody(credentialsBody("nobody@example.com", "whatever"))
+            }
+            latestStatus = response.status
+            latestBody = response.bodyAsText()
+        }
+    }
+
     @When("I sign out current session")
     fun signOutCurrent() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }
 
