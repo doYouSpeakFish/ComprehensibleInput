@@ -188,10 +188,6 @@ Feature: Account management API
     When I attempt to verify email "alice@example.com" a second time using code "123456" rate-limited by email in query parameter
     Then account API status should be 429
 
-  Scenario: Rejecting sign-in attempts that exceed the auth rate limit
-    When I attempt to sign in more times than the auth rate limit allows from one client
-    Then account API status should be 429
-
   Scenario: Signing out current session
     Given existing user "alice@example.com" with password "SecurePass123!"
     And the next verification code will be "123456"

@@ -1,6 +1,5 @@
 ⚪   package input.comprehensible.backend.account
 ⚪   
-⚪   import input.comprehensible.backend.AUTH_RATE_LIMIT_NAME
 ⚪   import input.comprehensible.backend.AccountService
 ⚪   import input.comprehensible.backend.AccountSessionPrincipal
 ⚪   import input.comprehensible.backend.SignInPayload
@@ -21,16 +20,14 @@
 ⚪   import kotlinx.serialization.Serializable
 ⚪   
 ⚪   fun Route.accountRoutes(accountService: AccountService) {
-🟢       rateLimit(RateLimitName(AUTH_RATE_LIMIT_NAME)) {
-🟢           post("/v1/users") {
-🟢               val request = call.receive<CredentialsRequest>()
-🟢               call.respond(accountService.createAccount(request.email, request.password).status)
-⚪           }
-🟢           post("/v1/auth/sessions") {
-🟢               val request = call.receive<CredentialsRequest>()
-🟢               val result = accountService.signIn(request.email, request.password)
-🟢               if (result.payload == null) call.respond(result.status) else call.respond(result.status, result.payload.toRemote())
-⚪           }
+🟢       post("/v1/users") {
+🟢           val request = call.receive<CredentialsRequest>()
+🟢           call.respond(accountService.createAccount(request.email, request.password).status)
+⚪       }
+🟢       post("/v1/auth/sessions") {
+🟢           val request = call.receive<CredentialsRequest>()
+🟢           val result = accountService.signIn(request.email, request.password)
+🟢           if (result.payload == null) call.respond(result.status) else call.respond(result.status, result.payload.toRemote())
 ⚪       }
 🟢       rateLimit(RateLimitName("email-verification")) {
 🟢           post("/v1/email-verifications") {

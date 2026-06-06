@@ -130,19 +130,17 @@ private fun migrateDatabase(config: DatabaseConnectionConfig) {
 
 private fun Application.configureRateLimits() {
     install(RateLimit) {
+        global {
+            // A general flood / abuse baseline applied to every route. The text adventure feature now
+            // carries its own (low, AI-cost-driven) limit, so this catch-all only needs to stop
+            // egregious flooding and brute-forcing and can therefore be far more generous.
+            rateLimiter(limit = GLOBAL_RATE_LIMIT, refillPeriod = 10.minutes)
+        }
         register(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
             rateLimiter(limit = TEXT_ADVENTURE_RATE_LIMIT, refillPeriod = 10.minutes)
             // A constant key applies the limit to the text adventure feature as a whole, shared
             // across all users, rather than giving each user (or IP) their own separate allowance.
             requestKey { TEXT_ADVENTURE_RATE_LIMIT_KEY }
-        }
-        register(RateLimitName(AUTH_RATE_LIMIT_NAME)) {
-            // A baseline security throttle for sign-in and account creation. Unlike the text
-            // adventure limit (kept low to cap AI costs), this only needs to stop flooding and
-            // password guessing, so it is more generous - but keyed per client IP so one source
-            // cannot exhaust everyone's allowance or brute-force at scale.
-            rateLimiter(limit = AUTH_RATE_LIMIT, refillPeriod = 1.minutes)
-            requestKey { call -> call.request.local.remoteHost }
         }
         register(RateLimitName("email-verification")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
@@ -227,12 +225,11 @@ internal const val TEXT_ADVENTURE_RATE_LIMIT = 20
 private const val TEXT_ADVENTURE_RATE_LIMIT_KEY = "text-adventure"
 
 /**
- * Sign-in and account creation are throttled per client IP for security (flood / password-guessing
- * protection). This is deliberately more permissive than the text adventure limit, which is low only
- * to cap AI usage costs.
+ * General baseline rate limit applied to every route (flood / brute-force protection). It is far
+ * more generous than the text adventure limit: that one is kept low only to cap AI usage costs,
+ * whereas this catch-all just needs to stop egregious abuse, so a high ceiling is appropriate.
  */
-internal const val AUTH_RATE_LIMIT_NAME = "auth"
-internal const val AUTH_RATE_LIMIT = 20
+internal const val GLOBAL_RATE_LIMIT = 10_000
 
 private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"

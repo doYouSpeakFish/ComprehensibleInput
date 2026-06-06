@@ -1,6 +1,5 @@
 package input.comprehensible.backend.cucumber
 
-import input.comprehensible.backend.AUTH_RATE_LIMIT
 import input.comprehensible.backend.AccountService
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
@@ -261,35 +260,6 @@ class AccountManagementApiStepDefinitions {
         },
         expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
     )
-    @When("I attempt to sign in more times than the auth rate limit allows from one client")
-    fun signInBeyondAuthRateLimit() {
-        testApplication {
-            application {
-                configureRouting(
-                    textAdventureService = TextAdventureGenerationService(
-                        FakeTextAdventureStructuredPromptExecutor(),
-                        DatabaseAdventureRepository(database),
-                    ),
-                    appApiKey = "test",
-                    accountService = accountService,
-                )
-            }
-            // Use up the whole allowance, then make one more request from the same client.
-            repeat(AUTH_RATE_LIMIT) {
-                client.post("/v1/auth/sessions") {
-                    contentType(ContentType.Application.Json)
-                    setBody(credentialsBody("nobody@example.com", "whatever"))
-                }
-            }
-            val response = client.post("/v1/auth/sessions") {
-                contentType(ContentType.Application.Json)
-                setBody(credentialsBody("nobody@example.com", "whatever"))
-            }
-            latestStatus = response.status
-            latestBody = response.bodyAsText()
-        }
-    }
-
     @When("I sign out current session")
     fun signOutCurrent() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }
 
