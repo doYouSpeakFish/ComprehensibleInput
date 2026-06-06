@@ -193,6 +193,7 @@ class AccountsDao(private val database: Database) {
         }
         AccountsTable.update({ AccountsTable.id eq accountId }) {
             it[AccountsTable.passwordHash] = passwordHash
+            it[AccountsTable.emailVerified] = true
             it[updatedAt] = now
         }
         PasswordResetTable.deleteWhere { PasswordResetTable.accountId eq accountId }
