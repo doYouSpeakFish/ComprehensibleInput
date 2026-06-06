@@ -77,7 +77,7 @@ secrets:
     name: app_cloudflare_email_sending_account_id
   cloudflare_email_sending_token:
     external: true
-    name: app_cloudflare_email_sending_token
+    name: app_cloudflare_email_sending_token_v2
   cloudflared_tunnel_token:
     external: true
     name: app_cloudflared_tunnel_token
