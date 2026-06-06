@@ -45,6 +45,11 @@ class TextAdventureChatStepDefinitions {
         scope.cacheAdventureWithMessage(title, message)
     }
 
+    @Given("the {string} adventure refreshes to {string}")
+    fun theAdventureRefreshesTo(title: String, text: String) {
+        scope.adventureRefreshesTo(title, text)
+    }
+
     @Given("an adventure has started with {string}")
     fun anAdventureHasStartedWith(text: String) {
         scope.startReturns(text, "$text (translated)")

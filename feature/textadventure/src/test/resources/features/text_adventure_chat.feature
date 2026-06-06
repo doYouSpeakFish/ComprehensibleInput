@@ -84,6 +84,14 @@ Feature: Text adventure chat
     When I open the "Lantern Trail" adventure
     Then the text adventure shows "A lantern lights the way."
 
+  @increment4
+  Scenario: Opening a cached adventure shows the backend's refreshed conversation
+    Given I am signed in as "user@example.com"
+    And the "Lantern Trail" adventure is cached with message "A stale cached line."
+    And the "Lantern Trail" adventure refreshes to "A fresh line from the server."
+    When I open the "Lantern Trail" adventure
+    Then the text adventure shows "A fresh line from the server."
+
   # ---------------------------------------------------------------------------
   # Increment 5 - sending user messages and generating AI responses
   # ---------------------------------------------------------------------------

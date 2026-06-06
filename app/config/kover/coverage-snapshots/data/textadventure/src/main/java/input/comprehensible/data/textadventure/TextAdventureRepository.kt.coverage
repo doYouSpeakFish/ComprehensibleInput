@@ -109,7 +109,7 @@
 ⚪           adventureId: String,
 ⚪           response: TextAdventureMessageRemoteResponse,
 ⚪       ): AdventureMessage {
-🟢           val position = (localDataSource.maxMessagePosition(adventureId) ?: -1) + 1
+🟢           val position = localDataSource.maxMessagePosition(adventureId) + 1
 🟢           val entity = response.toEntity(adventureId, position)
 🟢           localDataSource.upsertMessage(entity)
 🟢           localDataSource.insertSentences(response.toSentenceEntities())

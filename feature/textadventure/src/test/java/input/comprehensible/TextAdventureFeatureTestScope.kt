@@ -218,6 +218,20 @@ class TextAdventureFeatureTestScope(
         fakeLocalDataSource.seed(adventureEntity(title, email))
     }
 
+    fun adventureRefreshesTo(title: String, text: String) {
+        fakeRemoteDataSource.messagesResponse = fakeRemoteDataSource.messagesResponse.copy(
+            adventureId = title,
+            messages = listOf(
+                FakeAdventureRemoteDataSource.messageResponse(
+                    id = "refreshed-message-1",
+                    type = "AI",
+                    text = text,
+                    translation = "$text (translated)",
+                ),
+            ),
+        )
+    }
+
     fun cacheAdventureWithMessage(title: String, message: String) {
         fakeLocalDataSource.seed(adventureEntity(title, currentEmail))
         val messageId = "$title-message"
