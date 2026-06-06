@@ -263,7 +263,7 @@ jobs:
           ensure_secret app_db_admin_password "$DB_ADMIN_PASSWORD"
           ensure_secret app_cloudflare_email_sending_from "$CLOUDFLARE_EMAIL_SENDING_FROM"
           ensure_secret app_cloudflare_email_sending_account_id "$CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"
-          ensure_secret app_cloudflare_email_sending_token "$CLOUDFLARE_EMAIL_SENDING_TOKEN"
+          ensure_secret app_cloudflare_email_sending_token_v2 "$CLOUDFLARE_EMAIL_SENDING_TOKEN"
           ensure_secret app_cloudflared_tunnel_token "$CLOUDFLARE_TUNNEL_TOKEN"
 
           docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth --resolve-image always
