@@ -261,35 +261,7 @@ class AccountManagementApiStepDefinitions {
         expectedFirstStatus = io.ktor.http.HttpStatusCode.NoContent,
     )
     @When("I send more requests from one client than the global rate limit allows")
-    fun exceedGlobalRateLimit() {
-        val limit = 3
-        testApplication {
-            application {
-                configureRouting(
-                    textAdventureService = TextAdventureGenerationService(
-                        FakeTextAdventureStructuredPromptExecutor(),
-                        DatabaseAdventureRepository(database),
-                    ),
-                    appApiKey = "test",
-                    accountService = accountService,
-                    globalRateLimit = limit,
-                )
-            }
-            // The global limit applies to every route; exhaust it from one client, then send one more.
-            repeat(limit) {
-                client.post("/v1/auth/sessions") {
-                    contentType(ContentType.Application.Json)
-                    setBody(credentialsBody("nobody@example.com", "whatever"))
-                }
-            }
-            val response = client.post("/v1/auth/sessions") {
-                contentType(ContentType.Application.Json)
-                setBody(credentialsBody("nobody@example.com", "whatever"))
-            }
-            latestStatus = response.status
-            latestBody = response.bodyAsText()
-        }
-    }
+    fun exceedGlobalRateLimit() = sendOneMoreRequestThanGlobalLimitAllows()
 
     @When("I sign out current session")
     fun signOutCurrent() = runCall { delete("/v1/auth/sessions/current") { header(HttpHeaders.Authorization, "Bearer $bearerToken") } }
@@ -318,6 +290,41 @@ class AccountManagementApiStepDefinitions {
         val sent = fakeEmailDataSource.sentEmails.lastOrNull { it.to == to }
         requireNotNull(sent) { "No email sent to $to" }
         org.junit.Assert.assertTrue(sent.subject.contains(containsText) || sent.textBody.contains(containsText))
+    }
+
+    /**
+     * Drives a single client just past the global rate limit and records the final response. The
+     * production [GLOBAL_RATE_LIMIT] is far too high to exhaust with real requests in a test, so a
+     * deliberately tiny limit is injected instead. No account is created first because the global
+     * limit counts every request from a client - including rejected sign-ins - regardless of auth.
+     */
+    private fun sendOneMoreRequestThanGlobalLimitAllows() {
+        // GIVEN a server whose global rate limit is a small, easily-exhausted number
+        val globalLimit = 3
+        testApplication {
+            application {
+                configureRouting(
+                    textAdventureService = TextAdventureGenerationService(
+                        FakeTextAdventureStructuredPromptExecutor(),
+                        DatabaseAdventureRepository(database),
+                    ),
+                    appApiKey = "test",
+                    accountService = accountService,
+                    globalRateLimit = globalLimit,
+                )
+            }
+            // WHEN the same client sends one more sign-in request than the limit allows
+            repeat(globalLimit + 1) {
+                val response = client.post("/v1/auth/sessions") {
+                    contentType(ContentType.Application.Json)
+                    setBody(credentialsBody("nobody@example.com", "whatever"))
+                }
+                // THEN the latest response is kept; after the over-limit request the scenario
+                // asserts it was rejected with 429
+                latestStatus = response.status
+                latestBody = response.bodyAsText()
+            }
+        }
     }
 
     private fun runCall(block: suspend io.ktor.client.HttpClient.() -> io.ktor.client.statement.HttpResponse) {
