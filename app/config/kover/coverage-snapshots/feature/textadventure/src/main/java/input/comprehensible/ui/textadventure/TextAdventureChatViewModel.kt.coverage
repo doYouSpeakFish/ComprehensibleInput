@@ -8,6 +8,7 @@
 ⚪   import input.comprehensible.data.textadventure.AdventureMessage
 ⚪   import input.comprehensible.data.textadventure.AdventureMessageSender
 ⚪   import input.comprehensible.data.textadventure.TextAdventureRepository
+⚪   import input.comprehensible.data.textadventure.sources.remote.isRateLimited
 ⚪   import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
 ⚪   import kotlinx.coroutines.ExperimentalCoroutinesApi
 ⚪   import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +45,7 @@
 🟢       private val currentAdventureId = MutableStateFlow(adventureId)
 🟢       private val isGenerating = MutableStateFlow(false)
 🟢       private val showError = MutableStateFlow(false)
+🟢       private val showBusyMessage = MutableStateFlow(false)
 🟢       private val showMessageError = MutableStateFlow(false)
 🟢       private val optimisticUserMessage = MutableStateFlow<ChatMessage?>(null)
 🟢       private val selectedSentence = MutableStateFlow<SelectedSentence?>(null)
@@ -58,12 +60,14 @@
 🟢           messages,
 🟢           isGenerating,
 🟢           showError,
+🟢           showBusyMessage,
 🟢           combine(showMessageError, optimisticUserMessage, selectedSentence, ::Triple),
-⚪       ) { messages, generating, error, (messageError, optimistic, selected) ->
+⚪       ) { messages, generating, error, busy, (messageError, optimistic, selected) ->
 🟢           TextAdventureChatUiState(
 🟢               messages = messages,
 🟢               isGenerating = generating,
 🟢               showError = error,
+🟢               showBusyMessage = busy,
 🟢               showMessageError = messageError,
 🟢               optimisticUserMessage = optimistic,
 🟢               selectedSentence = selected,
@@ -108,7 +112,7 @@
 ⚪       private fun startAdventure() {
 🟢           pendingRetry = ::startAdventure
 🟢           viewModelScope.launch {
-🟢               showError.value = false
+🟢               clearGenerationErrors()
 🟢               isGenerating.value = true
 🟢               val session = currentSession()
 🟢               val learningLanguage = languageSettingsRepository.learningLanguage.first()
@@ -119,10 +123,7 @@
 🟢                       currentAdventureId.value = newAdventureId
 🟢                       isGenerating.value = false
 🟢                   }
-🟢                   .onFailure {
-🟢                       isGenerating.value = false
-🟢                       showError.value = true
-🟢                   }
+🟢                   .onFailure { showGenerationFailure(it) }
 ⚪           }
 ⚪       }
 ⚪   
@@ -130,6 +131,7 @@
 🟢           pendingRetry = { submitUserMessage(text) }
 🟢           viewModelScope.launch {
 🟢               showMessageError.value = false
+🟢               showBusyMessage.value = false
 🟡               val adventureId = currentAdventureId.value ?: return@launch
 🟡               val parentId = messages.first().lastOrNull()?.id ?: return@launch
 🟢               textAdventureRepository
@@ -138,23 +140,36 @@
 🟢                       optimisticUserMessage.value = null
 🟢                       generateAiMessage(adventureId, userMessage.id)
 🟢                   }
-🟢                   .onFailure { showMessageError.value = true }
+🟢                   .onFailure {
+🟢                       if (it.isRateLimited()) showBusyMessage.value = true else showMessageError.value = true
+🟢                   }
 ⚪           }
 ⚪       }
 ⚪   
 ⚪       private fun generateAiMessage(adventureId: String, parentId: String) {
 🟢           pendingRetry = { generateAiMessage(adventureId, parentId) }
 🟢           viewModelScope.launch {
-🟢               showError.value = false
+🟢               clearGenerationErrors()
 🟢               isGenerating.value = true
 🟢               textAdventureRepository
 🟢                   .generateAiMessage(currentSession().token, adventureId, parentId)
 🟢                   .onSuccess { isGenerating.value = false }
-🟢                   .onFailure {
-🟢                       isGenerating.value = false
-🟢                       showError.value = true
-🟢                   }
+🟢                   .onFailure { showGenerationFailure(it) }
 ⚪           }
+⚪       }
+⚪   
+⚪       private fun clearGenerationErrors() {
+🟢           showError.value = false
+🟢           showBusyMessage.value = false
+⚪       }
+⚪   
+⚪       /**
+⚪        * A rate limit (HTTP 429) surfaces a "system busy" message; any other failure surfaces the
+⚪        * generic generation error. Both replace the generating placeholder and offer a retry.
+⚪        */
+⚪       private fun showGenerationFailure(throwable: Throwable) {
+🟢           isGenerating.value = false
+🟢           if (throwable.isRateLimited()) showBusyMessage.value = true else showError.value = true
 ⚪       }
 ⚪   
 ⚪       private fun refreshMessages(id: String) {

@@ -50,6 +50,14 @@ Feature: Text adventure chat
     Then the generation error message is hidden
     And a generating message placeholder is shown
 
+  Scenario: A system busy message and retry are shown when starting an adventure is rate limited
+    Given I am signed in as "user@example.com"
+    And the start adventure request will be rate limited
+    When I start a new adventure
+    Then the generating message placeholder is hidden
+    And the chat shows a system busy message
+    And the retry button is shown
+
   Scenario: An AI sentence can be translated by tapping it
     Given I am signed in as "user@example.com"
     And starting an adventure returns "You arrive at a quiet harbor." translated as "Llegas a un puerto tranquilo."
@@ -121,6 +129,14 @@ Feature: Text adventure chat
     Then the message error is shown
     And the retry button is shown
 
+  Scenario: A system busy message and retry are shown when submitting a user message is rate limited
+    Given I am signed in as "user@example.com"
+    And an adventure has started with "You arrive at a quiet harbor."
+    And the user message request will be rate limited
+    When I send the message "I walk toward the dock."
+    Then the chat shows a system busy message
+    And the retry button is shown
+
   Scenario: A generating placeholder is shown while the AI responds
     Given I am signed in as "user@example.com"
     And an adventure has started with "You arrive at a quiet harbor."
@@ -154,6 +170,15 @@ Feature: Text adventure chat
     When I tap the retry button
     Then the generation error message is hidden
     And a generating message placeholder is shown
+
+  Scenario: A system busy message and retry are shown when the AI response is rate limited
+    Given I am signed in as "user@example.com"
+    And an adventure has started with "You arrive at a quiet harbor."
+    And the AI response request will be rate limited
+    When I send the message "I walk toward the dock."
+    Then the generating message placeholder is hidden
+    And the chat shows a system busy message
+    And the retry button is shown
 
   Scenario: The chat scrolls to a newly added message
     Given I am signed in as "user@example.com"

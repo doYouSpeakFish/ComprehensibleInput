@@ -22,6 +22,7 @@
 ⚪   import androidx.compose.material3.IconButton
 ⚪   import androidx.compose.material3.MaterialTheme
 ⚪   import androidx.compose.material3.Scaffold
+⚪   import androidx.compose.material3.Surface
 ⚪   import androidx.compose.material3.Text
 ⚪   import androidx.compose.material3.TopAppBar
 ⚪   import androidx.compose.runtime.Composable
@@ -35,8 +36,6 @@
 ⚪   import androidx.lifecycle.viewmodel.compose.viewModel
 ⚪   import input.comprehensible.feature.textadventure.R
 ⚪   import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
-⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
-⚪   import input.comprehensible.util.DefaultPreview
 ⚪   
 ⚪   @Composable
 🟢   internal fun TextAdventuresListScreen(
@@ -54,14 +53,14 @@
 🟢           onSignInClick = onSignInClick,
 🟢           onStartAdventure = onStartAdventure,
 🟢           onAdventureClick = onAdventureClick,
-🟢           onDeleteAdventure = viewModel::onDeleteAdventure,
+🟡           onDeleteAdventure = viewModel::onDeleteAdventure,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
 ⚪   
 ⚪   @OptIn(ExperimentalMaterial3Api::class)
 ⚪   @Composable
-⚪   private fun TextAdventuresListScreen(
+⚪   internal fun TextAdventuresListScreen(
 ⚪       state: TextAdventuresListUiState,
 ⚪       onSignInClick: () -> Unit,
 ⚪       onStartAdventure: () -> Unit,
@@ -85,22 +84,48 @@
 🟢               }
 ⚪           },
 🟢       ) { paddingValues ->
-🟢           Box(
+🟢           Column(
 🟢               modifier = Modifier
 🟢                   .fillMaxSize()
 🟢                   .padding(paddingValues)
 🟢                   .padding(16.dp),
+🟢               verticalArrangement = Arrangement.spacedBy(12.dp),
 ⚪           ) {
-🟢               if (state.isSignedIn) {
-🟢                   SignedInContent(
-🟢                       state = state,
-🟢                       onAdventureClick = onAdventureClick,
-🟢                       onDeleteAdventure = onDeleteAdventure,
-⚪                   )
-🟢               } else {
-🟢                   SignInPrompt(onSignInClick = onSignInClick)
-⚪               }
+🟢               EarlyAccessNotice()
+🟢               Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+🟢                   if (state.isSignedIn) {
+🟢                       SignedInContent(
+🟢                           state = state,
+🟢                           onAdventureClick = onAdventureClick,
+🟢                           onDeleteAdventure = onDeleteAdventure,
+⚪                       )
+🟢                   } else {
+🟢                       SignInPrompt(onSignInClick = onSignInClick)
+⚪                   }
+🟢               }
 🟢           }
+⚪       }
+🟢   }
+⚪   
+⚪   /**
+⚪    * A banner explaining that the text adventures feature is free while in early access. Shown above
+⚪    * the list (and the sign-in prompt) so every visitor to the screen sees it.
+⚪    */
+⚪   @Composable
+🟢   private fun EarlyAccessNotice() {
+🟢       Surface(
+🟢           color = MaterialTheme.colorScheme.secondaryContainer,
+🟢           shape = MaterialTheme.shapes.medium,
+🟢           modifier = Modifier
+🟢               .fillMaxWidth()
+🟢               .testTag("text_adventures_early_access"),
+⚪       ) {
+⚪           Text(
+⚪               text = stringResource(R.string.text_adventures_early_access),
+⚪               style = MaterialTheme.typography.bodyMedium,
+⚪               color = MaterialTheme.colorScheme.onSecondaryContainer,
+⚪               modifier = Modifier.padding(12.dp),
+⚪           )
 ⚪       }
 🟢   }
 ⚪   
@@ -121,6 +146,13 @@
 🟢                   modifier = Modifier.testTag("text_adventures_error"),
 ⚪               )
 🟢           }
+🟢           if (state.showBusyMessage) {
+🟢               Text(
+🟢                   text = stringResource(R.string.text_adventure_busy),
+🟢                   color = MaterialTheme.colorScheme.error,
+🟢                   modifier = Modifier.testTag("text_adventures_busy"),
+⚪               )
+🟢           }
 🟢           when {
 🟢               state.isLoading -> CenteredBox {
 ⚪                   CircularProgressIndicator(modifier = Modifier.testTag("text_adventures_loading"))
@@ -132,7 +164,7 @@
 🟢                   onDeleteAdventure = onDeleteAdventure,
 ⚪               )
 ⚪   
-🟢               !state.showError -> CenteredBox {
+🟢               !state.showError && !state.showBusyMessage -> CenteredBox {
 ⚪                   Text(
 ⚪                       text = stringResource(R.string.text_adventures_empty),
 ⚪                       modifier = Modifier.testTag("text_adventures_empty"),
@@ -229,94 +261,4 @@
 🟢       Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 🟢           content()
 🟢       }
-🟢   }
-⚪   
-⚪   @DefaultPreview
-⚪   @Composable
-⚪   fun PreviewTextAdventuresSignedOut() {
-⚪       ComprehensibleInputTheme {
-⚪           PreviewScreen(
-⚪               TextAdventuresListUiState(
-⚪                   isSignedIn = false,
-⚪                   isLoading = false,
-⚪                   adventures = emptyList(),
-⚪                   showError = false,
-⚪               ),
-⚪           )
-⚪       }
-⚪   }
-⚪   
-⚪   @DefaultPreview
-⚪   @Composable
-⚪   fun PreviewTextAdventuresList() {
-⚪       ComprehensibleInputTheme {
-⚪           PreviewScreen(
-⚪               TextAdventuresListUiState(
-⚪                   isSignedIn = true,
-⚪                   isLoading = false,
-⚪                   adventures = listOf(
-⚪                       AdventureItem(id = "1", title = "Lantern Trail", subtitle = "German"),
-⚪                       AdventureItem(id = "2", title = "Forest Echoes", subtitle = "Spanish"),
-⚪                   ),
-⚪                   showError = false,
-⚪               ),
-⚪           )
-⚪       }
-⚪   }
-⚪   
-⚪   @DefaultPreview
-⚪   @Composable
-⚪   fun PreviewTextAdventuresEmpty() {
-⚪       ComprehensibleInputTheme {
-⚪           PreviewScreen(
-⚪               TextAdventuresListUiState(
-⚪                   isSignedIn = true,
-⚪                   isLoading = false,
-⚪                   adventures = emptyList(),
-⚪                   showError = false,
-⚪               ),
-⚪           )
-⚪       }
-⚪   }
-⚪   
-⚪   @DefaultPreview
-⚪   @Composable
-⚪   fun PreviewTextAdventuresLoading() {
-⚪       ComprehensibleInputTheme {
-⚪           PreviewScreen(
-⚪               TextAdventuresListUiState(
-⚪                   isSignedIn = true,
-⚪                   isLoading = true,
-⚪                   adventures = emptyList(),
-⚪                   showError = false,
-⚪               ),
-⚪           )
-⚪       }
-⚪   }
-⚪   
-⚪   @DefaultPreview
-⚪   @Composable
-⚪   fun PreviewTextAdventuresError() {
-⚪       ComprehensibleInputTheme {
-⚪           PreviewScreen(
-⚪               TextAdventuresListUiState(
-⚪                   isSignedIn = true,
-⚪                   isLoading = false,
-⚪                   adventures = emptyList(),
-⚪                   showError = true,
-⚪               ),
-⚪           )
-⚪       }
-⚪   }
-⚪   
-⚪   @Composable
-🟡   private fun PreviewScreen(state: TextAdventuresListUiState) {
-🟢       TextAdventuresListScreen(
-🟢           state = state,
-🟢           onSignInClick = {},
-🟢           onStartAdventure = {},
-🟢           onAdventureClick = {},
-🟢           onDeleteAdventure = {},
-🟢           modifier = Modifier.fillMaxSize(),
-⚪       )
 🟢   }

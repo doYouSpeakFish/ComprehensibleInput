@@ -53,6 +53,11 @@ class TextAdventuresListStepDefinitions {
         scope.failRefresh()
     }
 
+    @Given("the adventures request will be rate limited")
+    fun theAdventuresRequestWillBeRateLimited() {
+        scope.rateLimitRefresh()
+    }
+
     @Given("the delete adventure request will fail")
     fun theDeleteAdventureRequestWillFail() {
         scope.failDelete()
@@ -114,6 +119,16 @@ class TextAdventuresListStepDefinitions {
     @Then("the adventures error message is shown")
     fun theErrorMessageIsShown() {
         robot.assertErrorMessageIsShown()
+    }
+
+    @Then("the free early access notice is shown")
+    fun theFreeEarlyAccessNoticeIsShown() {
+        robot.assertEarlyAccessNoticeIsShown()
+    }
+
+    @Then("the system busy message is shown")
+    fun theSystemBusyMessageIsShown() {
+        robot.assertBusyMessageIsShown()
     }
 
     @Then("the text adventure chat is shown")

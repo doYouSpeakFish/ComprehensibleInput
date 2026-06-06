@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performClick
 /**
  * Drives and inspects the text adventures list screen in tests via stable test tags.
  */
+@Suppress("TooManyFunctions")
 class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
 
     fun assertScreenIsShown() {
@@ -38,6 +39,14 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
 
     fun assertErrorMessageIsShown() {
         composeTestRule.onNodeWithTag("text_adventures_error").assertIsDisplayed()
+    }
+
+    fun assertEarlyAccessNoticeIsShown() {
+        composeTestRule.onNodeWithTag("text_adventures_early_access").assertIsDisplayed()
+    }
+
+    fun assertBusyMessageIsShown() {
+        composeTestRule.onNodeWithTag("text_adventures_busy").assertIsDisplayed()
     }
 
     fun assertAdventureIsListed(title: String) {

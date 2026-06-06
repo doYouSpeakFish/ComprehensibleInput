@@ -21,6 +21,7 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.doublereceive.DoubleReceive
 import io.ktor.server.plugins.ratelimit.RateLimit
 import io.ktor.server.plugins.ratelimit.RateLimitName
+import io.ktor.server.plugins.ratelimit.rateLimit
 import io.ktor.server.request.receiveText
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -129,7 +130,12 @@ private fun migrateDatabase(config: DatabaseConnectionConfig) {
 
 private fun Application.configureRateLimits() {
     install(RateLimit) {
-        global { rateLimiter(limit = 20, refillPeriod = 10.minutes) }
+        register(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
+            rateLimiter(limit = TEXT_ADVENTURE_RATE_LIMIT, refillPeriod = 10.minutes)
+            // A constant key applies the limit to the text adventure feature as a whole, shared
+            // across all users, rather than giving each user (or IP) their own separate allowance.
+            requestKey { TEXT_ADVENTURE_RATE_LIMIT_KEY }
+        }
         register(RateLimitName("email-verification")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
             requestKey { call -> emailFromQueryParamOrIp(call) }
@@ -196,10 +202,21 @@ fun Application.configureRouting(
     routing {
         get("/health") { call.respondText("ok", ContentType.Text.Plain, HttpStatusCode.OK) }
         accountRoutes(accountService)
-        textAdventureRoutes(textAdventureService)
-        textAdventureV1Routes(textAdventureService)
+        rateLimit(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
+            textAdventureRoutes(textAdventureService)
+            textAdventureV1Routes(textAdventureService)
+        }
     }
 }
+
+/**
+ * The text adventure feature is rate limited during early access. The limit is named (rather than
+ * global) so it only applies to the text adventure routes, and it uses a constant request key so the
+ * allowance is shared across all users instead of being tracked per user.
+ */
+internal const val TEXT_ADVENTURE_RATE_LIMIT_NAME = "text-adventure"
+internal const val TEXT_ADVENTURE_RATE_LIMIT = 20
+private const val TEXT_ADVENTURE_RATE_LIMIT_KEY = "text-adventure"
 
 private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"

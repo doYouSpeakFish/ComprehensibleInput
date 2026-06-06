@@ -18,6 +18,7 @@ import androidx.compose.ui.test.performTouchInput
 /**
  * Drives and inspects the text adventure chat screen in tests.
  */
+@Suppress("TooManyFunctions")
 class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
 
     fun assertChatIsShown() {
@@ -42,6 +43,10 @@ class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
 
     fun assertMessageErrorIsShown() {
         composeTestRule.onNodeWithTag("message_error").assertIsDisplayed()
+    }
+
+    fun assertBusyMessageIsShown() {
+        composeTestRule.onNodeWithTag("busy_error").assertIsDisplayed()
     }
 
     fun assertInputIsHidden() {

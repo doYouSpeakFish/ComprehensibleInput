@@ -84,6 +84,19 @@ fun PreviewTextAdventureChatError() {
 
 @DefaultPreview
 @Composable
+fun PreviewTextAdventureChatBusy() {
+    ComprehensibleInputTheme {
+        PreviewChatScreen(
+            TextAdventureChatUiState.INITIAL.copy(
+                messages = listOf(previewAiMessage),
+                showBusyMessage = true,
+            ),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
 fun PreviewTextAdventureChatUserMessage() {
     ComprehensibleInputTheme {
         PreviewChatScreen(

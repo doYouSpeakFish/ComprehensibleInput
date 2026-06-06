@@ -40,6 +40,11 @@ class TextAdventureChatStepDefinitions {
         scope.failStart()
     }
 
+    @Given("the start adventure request will be rate limited")
+    fun theStartAdventureRequestWillBeRateLimited() {
+        scope.rateLimitStart()
+    }
+
     @Given("the {string} adventure is cached with message {string}")
     fun theAdventureIsCachedWithMessage(title: String, message: String) {
         scope.cacheAdventureWithMessage(title, message)
@@ -74,6 +79,11 @@ class TextAdventureChatStepDefinitions {
         scope.failUserMessage()
     }
 
+    @Given("the user message request will be rate limited")
+    fun theUserMessageRequestWillBeRateLimited() {
+        scope.rateLimitUserMessage()
+    }
+
     @Given("submitting {string} returns the translation {string}")
     fun submittingReturnsTheTranslation(text: String, translation: String) {
         scope.userMessageReturnsTranslation(text, translation)
@@ -87,6 +97,11 @@ class TextAdventureChatStepDefinitions {
     @Given("the AI response request will fail")
     fun theAiResponseRequestWillFail() {
         scope.failAiMessage()
+    }
+
+    @Given("the AI response request will be rate limited")
+    fun theAiResponseRequestWillBeRateLimited() {
+        scope.rateLimitAiMessage()
     }
 
     @Given("the AI responds with {string}")
@@ -166,6 +181,11 @@ class TextAdventureChatStepDefinitions {
     @Then("the message error is shown")
     fun theMessageErrorIsShown() {
         chat.assertMessageErrorIsShown()
+    }
+
+    @Then("the chat shows a system busy message")
+    fun theChatShowsASystemBusyMessage() {
+        chat.assertBusyMessageIsShown()
     }
 
     @Then("the text adventure input is hidden")

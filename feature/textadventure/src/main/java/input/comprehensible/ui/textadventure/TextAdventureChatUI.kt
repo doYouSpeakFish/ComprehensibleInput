@@ -127,6 +127,15 @@ private fun Conversation(
                 )
             }
         }
+        if (state.showBusyMessage) {
+            item(key = "busy") {
+                ErrorWithRetry(
+                    message = stringResource(R.string.text_adventure_busy),
+                    testTag = "busy_error",
+                    onRetry = onRetry,
+                )
+            }
+        }
         if (state.showMessageError) {
             item(key = "message_error") {
                 ErrorWithRetry(
