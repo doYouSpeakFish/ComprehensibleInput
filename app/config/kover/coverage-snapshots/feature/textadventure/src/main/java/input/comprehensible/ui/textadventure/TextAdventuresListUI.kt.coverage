@@ -53,7 +53,7 @@
 🟢           onSignInClick = onSignInClick,
 🟢           onStartAdventure = onStartAdventure,
 🟢           onAdventureClick = onAdventureClick,
-🟡           onDeleteAdventure = viewModel::onDeleteAdventure,
+🟢           onDeleteAdventure = viewModel::onDeleteAdventure,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }

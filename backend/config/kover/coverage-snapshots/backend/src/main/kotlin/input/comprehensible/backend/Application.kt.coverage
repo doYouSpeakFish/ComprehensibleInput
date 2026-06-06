@@ -136,6 +136,14 @@
 ⚪               // across all users, rather than giving each user (or IP) their own separate allowance.
 🟢               requestKey { TEXT_ADVENTURE_RATE_LIMIT_KEY }
 ⚪           }
+🟢           register(RateLimitName(AUTH_RATE_LIMIT_NAME)) {
+⚪               // A baseline security throttle for sign-in and account creation. Unlike the text
+⚪               // adventure limit (kept low to cap AI costs), this only needs to stop flooding and
+⚪               // password guessing, so it is more generous - but keyed per client IP so one source
+⚪               // cannot exhaust everyone's allowance or brute-force at scale.
+🟢               rateLimiter(limit = AUTH_RATE_LIMIT, refillPeriod = 1.minutes)
+🟢               requestKey { call -> call.request.local.remoteHost }
+⚪           }
 🟢           register(RateLimitName("email-verification")) {
 🟢               rateLimiter(limit = 1, refillPeriod = 30.seconds)
 🟢               requestKey { call -> emailFromQueryParamOrIp(call) }
@@ -217,6 +225,14 @@
 ⚪   internal const val TEXT_ADVENTURE_RATE_LIMIT_NAME = "text-adventure"
 ⚪   internal const val TEXT_ADVENTURE_RATE_LIMIT = 20
 ⚪   private const val TEXT_ADVENTURE_RATE_LIMIT_KEY = "text-adventure"
+⚪   
+⚪   /**
+⚪    * Sign-in and account creation are throttled per client IP for security (flood / password-guessing
+⚪    * protection). This is deliberately more permissive than the text adventure limit, which is low only
+⚪    * to cap AI usage costs.
+⚪    */
+⚪   internal const val AUTH_RATE_LIMIT_NAME = "auth"
+⚪   internal const val AUTH_RATE_LIMIT = 20
 ⚪   
 ⚪   private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 ⚪   private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"
