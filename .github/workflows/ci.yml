@@ -115,10 +115,11 @@ jobs:
           fi
           RELEASE_NOTES="$(printf '%s\n\n%s' "$PR_TITLE" "$RELEASE_NOTES_BODY")"
 
-          ./gradlew :app:assembleRelease :app:appDistributionUploadRelease \
+          # Distribute the debug build for PRs so logs are available to diagnose
+          # issues. The debug build type already enables all feature flags.
+          ./gradlew :app:assembleDebug :app:appDistributionUploadDebug \
             -PprNumber="$PR_NUMBER" \
             -PprBackendBaseUrl="http://${{ secrets.BACKEND_STAGING_IP_ADDRESS }}:${BACKEND_PORT}" \
-            -PenableAllFeatureFlags=true \
             -PfirebaseReleaseNotes="$RELEASE_NOTES"
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}

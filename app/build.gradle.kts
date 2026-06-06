@@ -82,6 +82,20 @@ android {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
             buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
             buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "true")
+            // PR builds are distributed as debug so logs are available for diagnosis.
+            // Sign with the stable upload key when it is available (i.e. on CI) so each
+            // PR distribution installs over the previous one and over release builds.
+            // Without this the auto-generated debug keystore differs per runner, so
+            // Android refuses to install a new build over an existing one.
+            if (hasKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            firebaseAppDistribution {
+                artifactType = "APK"
+                testersFile = "./testers.txt"
+                serviceCredentialsFile = "./firebase-app-distribution-key.json"
+                releaseNotes = (project.findProperty("firebaseReleaseNotes") as String?)?.trim()
+            }
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
