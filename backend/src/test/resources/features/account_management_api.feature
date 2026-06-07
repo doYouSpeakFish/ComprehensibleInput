@@ -188,6 +188,10 @@ Feature: Account management API
     When I attempt to verify email "alice@example.com" a second time using code "123456" rate-limited by email in query parameter
     Then account API status should be 429
 
+  Scenario: Rejecting requests from one client once the global rate limit is exceeded
+    When I send more requests from one client than the global rate limit allows
+    Then account API status should be 429
+
   Scenario: Signing out current session
     Given existing user "alice@example.com" with password "SecurePass123!"
     And the next verification code will be "123456"

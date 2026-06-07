@@ -23,6 +23,12 @@ Feature: Text adventures list
     And the text adventures screen is open
     Then the empty adventures message is shown
 
+  Scenario: The free early access notice is shown on the text adventures screen
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    Then the free early access notice is shown
+
   Scenario: A signed-in user sees their adventures
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
@@ -47,6 +53,12 @@ Feature: Text adventures list
     And the adventures request will fail
     And the text adventures screen is open
     Then the adventures error message is shown
+
+  Scenario: A system busy message is shown when the adventures request is rate limited
+    Given I am signed in as "user@example.com"
+    And the adventures request will be rate limited
+    And the text adventures screen is open
+    Then the system busy message is shown
 
   Scenario: Cached adventures stay visible when the refresh fails
     Given I am signed in as "user@example.com"

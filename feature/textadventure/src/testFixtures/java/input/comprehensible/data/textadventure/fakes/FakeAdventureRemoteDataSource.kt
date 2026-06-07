@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventure.fakes
 
 import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
+import input.comprehensible.data.textadventure.sources.remote.RateLimitedException
 import input.comprehensible.data.textadventure.sources.remote.RemoteAdventure
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
@@ -23,6 +24,13 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
     var failGetMessages: Boolean = false
     var failSendUserMessage: Boolean = false
     var failGenerateAiMessage: Boolean = false
+
+    // When set, the matching request fails with a 429-style [RateLimitedException], mirroring the
+    // backend rate limiting the text adventure feature during early access.
+    var rateLimitGetAdventures: Boolean = false
+    var rateLimitStartAdventure: Boolean = false
+    var rateLimitSendUserMessage: Boolean = false
+    var rateLimitGenerateAiMessage: Boolean = false
     var startResponse: TextAdventureRemoteResponse = TextAdventureRemoteResponse(
         messageId = "message-1",
         adventureId = "adventure-1",
@@ -53,6 +61,7 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
 
     override suspend fun getAdventures(token: String): List<RemoteAdventure> {
         delayIfConfigured()
+        if (rateLimitGetAdventures) throw RateLimitedException()
         if (failGetAdventures) error("Failed to get adventures")
         return adventures
     }
@@ -69,6 +78,7 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
         translationLanguage: String,
     ): TextAdventureRemoteResponse {
         delayIfConfigured()
+        if (rateLimitStartAdventure) throw RateLimitedException()
         if (failStartAdventure) error("Failed to start adventure")
         return startResponse
     }
@@ -89,6 +99,7 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
         text: String,
     ): TextAdventureMessageRemoteResponse {
         delayFor(userMessageDelayMillis)
+        if (rateLimitSendUserMessage) throw RateLimitedException()
         if (failSendUserMessage) error("Failed to send user message")
         return userMessageResponse
     }
@@ -100,6 +111,7 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
     ): TextAdventureMessageRemoteResponse {
         // Also honours the global delay so the reused retry step can observe the in-flight state.
         delayFor(maxOf(aiMessageDelayMillis, requestDelayMillis))
+        if (rateLimitGenerateAiMessage) throw RateLimitedException()
         if (failGenerateAiMessage) error("Failed to generate AI message")
         return aiMessageResponse
     }

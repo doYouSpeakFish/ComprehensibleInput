@@ -6,6 +6,7 @@ import input.comprehensible.data.account.AccountRepository
 import input.comprehensible.data.account.sources.local.Session
 import input.comprehensible.data.textadventure.AdventureSummary
 import input.comprehensible.data.textadventure.TextAdventureRepository
+import input.comprehensible.data.textadventure.sources.remote.isRateLimited
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,20 +30,29 @@ class TextAdventuresListViewModel(
 ) : ViewModel() {
 
     private val refreshStatus = MutableStateFlow(RefreshStatus.IDLE)
-    private val deleteFailed = MutableStateFlow(false)
+    private val deleteOutcome = MutableStateFlow(DeleteOutcome.NONE)
     private var session: Session? = null
 
     val state: StateFlow<TextAdventuresListUiState> = combine(
         accountRepository.user,
         getAdventures(),
         refreshStatus,
-        deleteFailed,
-    ) { user, adventures, status, deleteError ->
+        deleteOutcome,
+    ) { user, adventures, status, deleteResult ->
+        // A rate limit (HTTP 429) surfaces a "system busy" message; any other failure surfaces a
+        // generic error. A failed refresh only surfaces either when there is nothing cached to show
+        // instead, whereas a failed delete always surfaces (the adventure reappears).
+        val nothingCached = adventures.isEmpty()
+        val rateLimited = (status == RefreshStatus.RATE_LIMITED && nothingCached) ||
+            deleteResult == DeleteOutcome.RATE_LIMITED
+        val error = (status == RefreshStatus.ERROR && nothingCached) ||
+            deleteResult == DeleteOutcome.ERROR
         TextAdventuresListUiState(
             isSignedIn = user != null,
             isLoading = status == RefreshStatus.LOADING && adventures.isEmpty(),
             adventures = adventures.map { it.toItem() },
-            showError = (status == RefreshStatus.ERROR && adventures.isEmpty()) || deleteError,
+            showError = error && !rateLimited,
+            showBusyMessage = rateLimited,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -66,20 +76,29 @@ class TextAdventuresListViewModel(
     fun onDeleteAdventure(adventureId: String) {
         val current = session ?: return
         viewModelScope.launch {
-            deleteFailed.value = false
+            deleteOutcome.value = DeleteOutcome.NONE
             textAdventureRepository.deleteAdventure(current.token, adventureId)
-                .onFailure { deleteFailed.value = true }
+                .onFailure {
+                    deleteOutcome.value =
+                        if (it.isRateLimited()) DeleteOutcome.RATE_LIMITED else DeleteOutcome.ERROR
+                }
         }
     }
 
     private suspend fun refresh(current: Session) {
-        deleteFailed.value = false
+        deleteOutcome.value = DeleteOutcome.NONE
         refreshStatus.value = RefreshStatus.LOADING
         val result = textAdventureRepository.refreshAdventures(current.token, current.userId)
-        refreshStatus.value = if (result.isSuccess) RefreshStatus.SUCCESS else RefreshStatus.ERROR
+        refreshStatus.value = when {
+            result.isSuccess -> RefreshStatus.SUCCESS
+            result.exceptionOrNull().isRateLimited() -> RefreshStatus.RATE_LIMITED
+            else -> RefreshStatus.ERROR
+        }
     }
 
-    private enum class RefreshStatus { IDLE, LOADING, SUCCESS, ERROR }
+    private enum class RefreshStatus { IDLE, LOADING, SUCCESS, ERROR, RATE_LIMITED }
+
+    private enum class DeleteOutcome { NONE, ERROR, RATE_LIMITED }
 
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L

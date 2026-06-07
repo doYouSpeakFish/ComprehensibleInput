@@ -3,6 +3,7 @@ package input.comprehensible.backend.cucumber
 import input.comprehensible.backend.AccountService
 import input.comprehensible.backend.AccountsDao
 import input.comprehensible.backend.InsertAccountResult
+import input.comprehensible.backend.TEXT_ADVENTURE_RATE_LIMIT
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.email.EmailDataSource
@@ -465,6 +466,42 @@ class TextAdventureV1ApiStepDefinitions {
         runAgainstApplication {
             client.get("/v1/adventures") {
                 authorizedIfPresent()
+            }
+        }
+    }
+
+    @When("I exhaust the text adventure rate limit and make one more request")
+    fun exhaustTextAdventureRateLimit() {
+        requestListUntilRateLimited(finalToken = userAToken)
+    }
+
+    @When("user A exhausts the text adventure rate limit and user B makes a request")
+    fun userAExhaustsRateLimitThenUserBRequests() {
+        requestListUntilRateLimited(finalToken = userBToken)
+    }
+
+    /**
+     * Drives enough text adventure requests through a single running server to use up the shared
+     * rate limit, then makes one more request (as [finalToken]) whose response is captured. The
+     * warm-up requests are all made as user A; the shared limit means the final request is rejected
+     * regardless of which user makes it.
+     */
+    private fun requestListUntilRateLimited(finalToken: String) {
+        runBlocking {
+            testApplication {
+                application {
+                    configureRouting(
+                        textAdventureService = textAdventureService,
+                        appApiKey = "unused",
+                        accountService = accountService,
+                    )
+                }
+                repeat(TEXT_ADVENTURE_RATE_LIMIT) {
+                    client.get("/v1/adventures") { authorized(userAToken) }
+                }
+                val response = client.get("/v1/adventures") { authorized(finalToken) }
+                latestResponseStatus = response.status
+                latestResponseBody = response.bodyAsText()
             }
         }
     }

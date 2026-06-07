@@ -203,3 +203,15 @@ Feature: Text adventure v1 API
     Given I am authenticated as a user account
     When I create a text adventure with invalid language payload
     Then the response status is 400
+
+  @v1
+  Scenario: Text adventure requests are rejected once the shared rate limit is exceeded
+    Given I am authenticated as a user account
+    When I exhaust the text adventure rate limit and make one more request
+    Then the response status is 429
+
+  @v1
+  Scenario: The text adventure rate limit is shared across all users
+    Given I am authenticated as a user account
+    When user A exhausts the text adventure rate limit and user B makes a request
+    Then the response status is 429
