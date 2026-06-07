@@ -163,6 +163,22 @@ class TextAdventureFeatureTestScope(
         fakeRemoteDataSource.failStartAdventure = true
     }
 
+    fun rateLimitRefresh() {
+        fakeRemoteDataSource.rateLimitGetAdventures = true
+    }
+
+    fun rateLimitStart() {
+        fakeRemoteDataSource.rateLimitStartAdventure = true
+    }
+
+    fun rateLimitUserMessage() {
+        fakeRemoteDataSource.rateLimitSendUserMessage = true
+    }
+
+    fun rateLimitAiMessage() {
+        fakeRemoteDataSource.rateLimitGenerateAiMessage = true
+    }
+
     fun startReturns(text: String, translation: String) {
         fakeRemoteDataSource.startResponse = TextAdventureRemoteResponse(
             messageId = "message-1",

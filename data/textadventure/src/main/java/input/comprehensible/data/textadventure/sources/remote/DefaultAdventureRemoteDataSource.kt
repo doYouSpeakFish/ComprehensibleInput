@@ -14,7 +14,9 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
@@ -42,9 +44,7 @@ class DefaultAdventureRemoteDataSource(
             header("X-Api-Key", apiKey)
             header("Authorization", "Bearer $token")
         }
-        if (!response.status.isSuccess()) {
-            error("List adventures failed: ${response.status}")
-        }
+        response.ensureSuccessful("List adventures failed")
         return response.body<AdventureListResponse>().items.map { it.toRemoteAdventure() }
     }
 
@@ -53,9 +53,7 @@ class DefaultAdventureRemoteDataSource(
             header("X-Api-Key", apiKey)
             header("Authorization", "Bearer $token")
         }
-        if (!response.status.isSuccess()) {
-            error("Delete adventure failed: ${response.status}")
-        }
+        response.ensureSuccessful("Delete adventure failed")
     }
 
     override suspend fun startAdventure(
@@ -69,9 +67,7 @@ class DefaultAdventureRemoteDataSource(
             contentType(ContentType.Application.Json)
             setBody(StartAdventureRequest(learningLanguage, translationLanguage))
         }
-        if (!response.status.isSuccess()) {
-            error("Start adventure failed: ${response.status}")
-        }
+        response.ensureSuccessful("Start adventure failed")
         return response.body()
     }
 
@@ -83,9 +79,7 @@ class DefaultAdventureRemoteDataSource(
             header("X-Api-Key", apiKey)
             header("Authorization", "Bearer $token")
         }
-        if (!response.status.isSuccess()) {
-            error("Get messages failed: ${response.status}")
-        }
+        response.ensureSuccessful("Get messages failed")
         return response.body()
     }
 
@@ -126,10 +120,18 @@ class DefaultAdventureRemoteDataSource(
             contentType(ContentType.Application.Json)
             setBody(request)
         }
-        if (!response.status.isSuccess()) {
-            error("$failureMessage: ${response.status}")
-        }
+        response.ensureSuccessful(failureMessage)
         return response.body()
+    }
+
+    /**
+     * Maps a non-success response to an exception: HTTP 429 (rate limited during early access)
+     * becomes a [RateLimitedException] so callers can show a "system busy" message, and any other
+     * failure becomes a generic error.
+     */
+    private fun HttpResponse.ensureSuccessful(failureMessage: String) {
+        if (status == HttpStatusCode.TooManyRequests) throw RateLimitedException()
+        if (!status.isSuccess()) error("$failureMessage: $status")
     }
 }
 

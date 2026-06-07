@@ -21,6 +21,7 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.doublereceive.DoubleReceive
 import io.ktor.server.plugins.ratelimit.RateLimit
 import io.ktor.server.plugins.ratelimit.RateLimitName
+import io.ktor.server.plugins.ratelimit.rateLimit
 import io.ktor.server.request.receiveText
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -127,9 +128,22 @@ private fun migrateDatabase(config: DatabaseConnectionConfig) {
 }
 
 
-private fun Application.configureRateLimits() {
+private fun Application.configureRateLimits(globalRateLimit: Int) {
     install(RateLimit) {
-        global { rateLimiter(limit = 20, refillPeriod = 10.minutes) }
+        global {
+            // A general flood / brute-force baseline applied to every route, keyed per client IP so a
+            // single source cannot use up everyone else's allowance. The text adventure feature now
+            // carries its own (low, AI-cost-driven) limit, so this catch-all only needs to stop
+            // egregious abuse and can therefore be far more generous.
+            rateLimiter(limit = globalRateLimit, refillPeriod = 10.minutes)
+            requestKey { call -> call.request.local.remoteHost }
+        }
+        register(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
+            rateLimiter(limit = TEXT_ADVENTURE_RATE_LIMIT, refillPeriod = 10.minutes)
+            // A constant key applies the limit to the text adventure feature as a whole, shared
+            // across all users, rather than giving each user (or IP) their own separate allowance.
+            requestKey { TEXT_ADVENTURE_RATE_LIMIT_KEY }
+        }
         register(RateLimitName("email-verification")) {
             rateLimiter(limit = 1, refillPeriod = 30.seconds)
             requestKey { call -> emailFromQueryParamOrIp(call) }
@@ -178,10 +192,11 @@ fun Application.configureRouting(
     textAdventureService: TextAdventureGenerationService,
     appApiKey: String,
     accountService: AccountService,
+    globalRateLimit: Int = GLOBAL_RATE_LIMIT,
 ) {
     install(ContentNegotiation) { json() }
     install(DoubleReceive)
-    configureRateLimits()
+    configureRateLimits(globalRateLimit)
     install(Authentication) {
         apiKey {
             validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
@@ -196,10 +211,29 @@ fun Application.configureRouting(
     routing {
         get("/health") { call.respondText("ok", ContentType.Text.Plain, HttpStatusCode.OK) }
         accountRoutes(accountService)
-        textAdventureRoutes(textAdventureService)
-        textAdventureV1Routes(textAdventureService)
+        rateLimit(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
+            textAdventureRoutes(textAdventureService)
+            textAdventureV1Routes(textAdventureService)
+        }
     }
 }
+
+/**
+ * The text adventure feature is rate limited during early access. The limit is named (rather than
+ * global) so it only applies to the text adventure routes, and it uses a constant request key so the
+ * allowance is shared across all users instead of being tracked per user.
+ */
+internal const val TEXT_ADVENTURE_RATE_LIMIT_NAME = "text-adventure"
+internal const val TEXT_ADVENTURE_RATE_LIMIT = 20
+private const val TEXT_ADVENTURE_RATE_LIMIT_KEY = "text-adventure"
+
+/**
+ * General baseline rate limit applied to every route, per client IP, over 10 minutes (flood /
+ * brute-force protection). It is far more generous than the text adventure limit: that one is kept
+ * low only to cap AI usage costs, whereas this catch-all just needs to stop egregious abuse from a
+ * single source. 1000 requests per IP per 10 minutes is already well above normal use.
+ */
+internal const val GLOBAL_RATE_LIMIT = 1_000
 
 private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"

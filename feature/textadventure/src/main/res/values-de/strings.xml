@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_adventures_title">Textabenteuer</string>
+    <string name="text_adventures_early_access">Textabenteuer sind in der Early-Access-Phase kostenlos. Viel Spaß!</string>
+    <string name="text_adventures_sign_in_message">Melden Sie sich an, um Textabenteuer zu spielen.</string>
+    <string name="text_adventures_sign_in_button">Anmelden</string>
+    <string name="text_adventures_empty">Sie haben noch keine Abenteuer. Starten Sie eines!</string>
+    <string name="text_adventures_error">Ihre Abenteuer konnten nicht geladen werden. Bitte versuchen Sie es erneut.</string>
+    <string name="text_adventure_busy">Das System ist gerade ausgelastet. Bitte versuchen Sie es in Kürze erneut.</string>
+    <string name="text_adventures_new">Neues Abenteuer</string>
+    <string name="text_adventures_delete_content_description">Abenteuer löschen</string>
+    <string name="text_adventure_chat_title">Abenteuer</string>
+    <string name="text_adventure_generating_1">Ihr Abenteuer wird ausgearbeitet…</string>
+    <string name="text_adventure_generating_2">Es wird überlegt, wie es weitergeht…</string>
+    <string name="text_adventure_generating_3">Die Szene wird vorbereitet…</string>
+    <string name="text_adventure_generation_error">Beim Erzählen der Geschichte ist etwas schiefgelaufen. Bitte versuchen Sie es erneut.</string>
+    <string name="text_adventure_message_error">Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.</string>
+    <string name="text_adventure_retry">Wiederholen</string>
+    <string name="text_adventure_message_hint">Geben Sie Ihren nächsten Zug ein…</string>
+    <string name="text_adventure_send">Nachricht senden</string>
+</resources>

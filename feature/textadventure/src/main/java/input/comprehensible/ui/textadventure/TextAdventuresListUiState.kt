@@ -8,6 +8,7 @@ data class TextAdventuresListUiState(
     val isLoading: Boolean,
     val adventures: List<AdventureItem>,
     val showError: Boolean,
+    val showBusyMessage: Boolean,
 ) {
     /**
      * A single text adventure shown in the list.
@@ -24,6 +25,7 @@ data class TextAdventuresListUiState(
             isLoading = false,
             adventures = emptyList(),
             showError = false,
+            showBusyMessage = false,
         )
     }
 }
