@@ -32,10 +32,11 @@ import input.comprehensible.util.DefaultPreview
 
 @Composable
 internal fun VerifyEmailScreen(
+    email: String,
     onNavigateUp: () -> Unit,
     onVerified: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: VerifyEmailViewModel = viewModel(),
+    viewModel: VerifyEmailViewModel = viewModel { VerifyEmailViewModel(email) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

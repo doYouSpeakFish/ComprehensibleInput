@@ -1,9 +1,7 @@
 package input.comprehensible.ui.settings.account
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import input.comprehensible.account.usecases.RequestPasswordResetCodeUseCase
 import input.comprehensible.account.usecases.ResetPasswordUseCase
 import input.comprehensible.data.account.InvalidResetCodeException
@@ -17,12 +15,10 @@ internal const val PASSWORD_RESET_CODE_LENGTH = 6
 private const val MINIMUM_PASSWORD_LENGTH = 12
 
 class PasswordResetViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val email: String,
+    private val resetPassword: ResetPasswordUseCase = ResetPasswordUseCase(),
+    private val requestPasswordResetCode: RequestPasswordResetCodeUseCase = RequestPasswordResetCodeUseCase(),
 ) : ViewModel() {
-    private val resetPassword = ResetPasswordUseCase()
-    private val requestPasswordResetCode = RequestPasswordResetCodeUseCase()
-    private val email: String = savedStateHandle.toRoute<PasswordResetRoute>().email
-
     private val _uiState = MutableStateFlow(PasswordResetUiState(email = email))
     val uiState: StateFlow<PasswordResetUiState> = _uiState.asStateFlow()
 

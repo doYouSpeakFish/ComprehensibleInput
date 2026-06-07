@@ -1,9 +1,7 @@
 package input.comprehensible.ui.settings.account
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import input.comprehensible.account.usecases.RequestEmailVerificationCodeUseCase
 import input.comprehensible.account.usecases.VerifyEmailUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +13,10 @@ import kotlinx.coroutines.launch
 internal const val VERIFICATION_CODE_LENGTH = 6
 
 class VerifyEmailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val email: String,
+    private val verifyEmail: VerifyEmailUseCase = VerifyEmailUseCase(),
+    private val requestEmailVerificationCode: RequestEmailVerificationCodeUseCase = RequestEmailVerificationCodeUseCase(),
 ) : ViewModel() {
-    private val verifyEmail = VerifyEmailUseCase()
-    private val requestEmailVerificationCode = RequestEmailVerificationCodeUseCase()
-    private val email: String = savedStateHandle.toRoute<VerifyEmailRoute>().email
-
     private val _uiState = MutableStateFlow(VerifyEmailUiState(email = email))
     val uiState: StateFlow<VerifyEmailUiState> = _uiState.asStateFlow()
 
