@@ -251,6 +251,17 @@ Feature: Account management API
     When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
     Then account API status should be 400
 
+  Scenario: Resetting password verifies a previously unverified email
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "123456"
+    And I request a password reset code for "alice@example.com"
+    When I sign in with email "alice@example.com" and password "SecurePass123!"
+    Then account API status should be 401
+    When I reset password for "alice@example.com" to "NewSecurePass123!" using code "123456"
+    Then account API status should be 204
+    When I sign in with email "alice@example.com" and password "NewSecurePass123!"
+    Then account API status should be 200
+
 
   Scenario: Rejecting current email verification with wrong code
     Given existing user "alice@example.com" with password "SecurePass123!"
