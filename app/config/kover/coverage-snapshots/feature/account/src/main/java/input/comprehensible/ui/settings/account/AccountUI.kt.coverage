@@ -53,15 +53,15 @@
 🟢       AccountScreen(
 🟢           uiState = uiState,
 🟢           onNavigateUp = onNavigateUp,
-🟡           onSignInEmailChanged = viewModel::onSignInEmailChanged,
-🟡           onSignInPasswordChanged = viewModel::onSignInPasswordChanged,
-🟡           onSignInSubmit = viewModel::onSignInSubmit,
+🟢           onSignInEmailChanged = viewModel::onSignInEmailChanged,
+🟢           onSignInPasswordChanged = viewModel::onSignInPasswordChanged,
+🟢           onSignInSubmit = viewModel::onSignInSubmit,
 🟢           onSignUpButtonClicked = onGoToSignUp,
 🟢           onForgotPasswordClicked = onGoToForgotPassword,
-🟡           onSignOutClicked = viewModel::onSignOutClicked,
+🟢           onSignOutClicked = viewModel::onSignOutClicked,
 🟢           onDeleteAccountClicked = onGoToDeleteAccount,
-🟡           onErrorDismissed = viewModel::onErrorDismissed,
-🟡           onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
+🟢           onErrorDismissed = viewModel::onErrorDismissed,
+🟢           onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }

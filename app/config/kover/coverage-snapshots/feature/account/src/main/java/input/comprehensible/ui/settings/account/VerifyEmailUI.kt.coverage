@@ -38,7 +38,7 @@
 🟡   ) {
 🟢       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 ⚪   
-🟡       LaunchedEffect(uiState.verified) {
+🟢       LaunchedEffect(uiState.verified) {
 🟢           if (uiState.verified) {
 🟢               viewModel.onNavigationConsumed()
 🟢               onVerified()
@@ -48,10 +48,10 @@
 🟢       VerifyEmailScreen(
 🟢           uiState = uiState,
 🟢           onNavigateUp = onNavigateUp,
-🟡           onCodeChanged = viewModel::onCodeChanged,
-🟡           onSubmit = viewModel::onSubmit,
-🟡           onResendCode = viewModel::onResendCode,
-🟡           onErrorDismissed = viewModel::onErrorDismissed,
+🟢           onCodeChanged = viewModel::onCodeChanged,
+🟢           onSubmit = viewModel::onSubmit,
+🟢           onResendCode = viewModel::onResendCode,
+🟢           onErrorDismissed = viewModel::onErrorDismissed,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
