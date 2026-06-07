@@ -37,4 +37,6 @@
     <string name="account_invalid_reset_code_dialog_title">Code de réinitialisation invalide</string>
     <string name="account_invalid_reset_code_dialog_message">Le code de réinitialisation saisi est invalide ou expiré. Veuillez demander un nouveau code.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
+    <string name="account_show_password_content_description">Afficher le mot de passe</string>
+    <string name="account_hide_password_content_description">Masquer le mot de passe</string>
 </resources>

@@ -37,4 +37,6 @@
     <string name="account_invalid_reset_code_dialog_title">Invalid reset code</string>
     <string name="account_invalid_reset_code_dialog_message">The reset code you entered was invalid or has expired. Please request a new code.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
+    <string name="account_show_password_content_description">Show password</string>
+    <string name="account_hide_password_content_description">Hide password</string>
 </resources>

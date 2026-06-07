@@ -74,3 +74,16 @@ Feature: Delete account
     And I submit the delete account form
     And the account screen is open
     Then the signed in email "user@example.com" is shown
+
+  Scenario: The delete account password is hidden by default
+    Given I am signed in as "user@example.com"
+    And the delete account screen is open
+    When I enter the delete account password "password12345"
+    Then the delete account password is hidden
+
+  Scenario: The delete account password can be revealed
+    Given I am signed in as "user@example.com"
+    And the delete account screen is open
+    When I enter the delete account password "password12345"
+    And I reveal the delete account password
+    Then the delete account password is shown
