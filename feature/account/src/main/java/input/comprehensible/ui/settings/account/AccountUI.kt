@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -81,6 +80,7 @@ private fun AccountScreen(
     onErrorDismissed: () -> Unit,
     onInvalidCredentialsErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -115,6 +115,7 @@ private fun AccountScreen(
                     onSignInSubmit = onSignInSubmit,
                     onSignUpClicked = onSignUpButtonClicked,
                     onForgotPasswordClicked = onForgotPasswordClicked,
+                    passwordInitiallyVisible = passwordInitiallyVisible,
                 )
             }
         }
@@ -178,6 +179,7 @@ private fun SignInStep(
     onSignUpClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordInitiallyVisible: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -195,16 +197,14 @@ private fun SignInStep(
                 .fillMaxWidth()
                 .testTag("account_sign_in_email_field"),
         )
-        OutlinedTextField(
+        PasswordTextField(
             value = step.password,
             onValueChange = onPasswordChanged,
-            label = { Text(stringResource(R.string.account_sign_in_password_label)) },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_sign_in_password_field"),
+            label = stringResource(R.string.account_sign_in_password_label),
+            fieldTestTag = "account_sign_in_password_field",
+            toggleTestTag = "account_sign_in_password_toggle",
+            modifier = Modifier.fillMaxWidth(),
+            initiallyVisible = passwordInitiallyVisible,
         )
         Button(
             onClick = onSignInSubmit,
@@ -329,6 +329,33 @@ fun PreviewAccountSignInLoading() {
             onDeleteAccountClicked = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewAccountSignInPasswordVisible() {
+    ComprehensibleInputTheme {
+        AccountScreen(
+            uiState = AccountUiState(
+                step = AccountUiState.Step.SignIn(
+                    email = "user@example.com",
+                    password = "password12345",
+                ),
+            ),
+            onNavigateUp = {},
+            onSignInEmailChanged = {},
+            onSignInPasswordChanged = {},
+            onSignInSubmit = {},
+            onSignUpButtonClicked = {},
+            onForgotPasswordClicked = {},
+            onSignOutClicked = {},
+            onDeleteAccountClicked = {},
+            onErrorDismissed = {},
+            onInvalidCredentialsErrorDismissed = {},
+            passwordInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }
