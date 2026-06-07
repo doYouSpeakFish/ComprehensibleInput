@@ -33,6 +33,18 @@ class PasswordResetStepDefinitions {
         passwordReset.enterConfirmNewPassword(password)
     }
 
+    @When("I reveal the new password")
+    fun iRevealTheNewPassword() {
+        passwordReset.newPasswordField.toggleVisibility()
+        scope.idle()
+    }
+
+    @When("I reveal the new confirmation password")
+    fun iRevealTheNewConfirmationPassword() {
+        passwordReset.confirmNewPasswordField.toggleVisibility()
+        scope.idle()
+    }
+
     @When("I submit the password reset form")
     fun iSubmitThePasswordResetForm() {
         passwordReset.tapSubmit()
@@ -52,6 +64,26 @@ class PasswordResetStepDefinitions {
     @Then("the password reset loading indicator is shown")
     fun thePasswordResetLoadingIndicatorIsShown() {
         passwordReset.assertLoadingIndicatorIsShown()
+    }
+
+    @Then("the new password is shown")
+    fun theNewPasswordIsShown() {
+        passwordReset.newPasswordField.assertVisible()
+    }
+
+    @Then("the new password is hidden")
+    fun theNewPasswordIsHidden() {
+        passwordReset.newPasswordField.assertHidden()
+    }
+
+    @Then("the new confirmation password is shown")
+    fun theNewConfirmationPasswordIsShown() {
+        passwordReset.confirmNewPasswordField.assertVisible()
+    }
+
+    @Then("the new confirmation password is hidden")
+    fun theNewConfirmationPasswordIsHidden() {
+        passwordReset.confirmNewPasswordField.assertHidden()
     }
 
     @Then("the password reset screen shows the reset code message for {string}")

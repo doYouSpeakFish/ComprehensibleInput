@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,8 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -79,6 +75,7 @@ private fun DeleteAccountScreen(
     onErrorDismissed: () -> Unit,
     onInvalidCredentialsErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -109,16 +106,14 @@ private fun DeleteAccountScreen(
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.testTag("delete_account_warning"),
             )
-            OutlinedTextField(
+            PasswordTextField(
                 value = uiState.password,
                 onValueChange = onPasswordChanged,
-                label = { Text(stringResource(R.string.delete_account_password_label)) },
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("delete_account_password_field"),
+                label = stringResource(R.string.delete_account_password_label),
+                fieldTestTag = "delete_account_password_field",
+                toggleTestTag = "delete_account_password_toggle",
+                modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordInitiallyVisible,
             )
             Button(
                 onClick = onSubmit,
@@ -230,6 +225,23 @@ fun PreviewDeleteAccountLoading() {
             onSubmit = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewDeleteAccountPasswordVisible() {
+    ComprehensibleInputTheme {
+        DeleteAccountScreen(
+            uiState = DeleteAccountUiState(password = "password12345"),
+            onNavigateUp = {},
+            onPasswordChanged = {},
+            onSubmit = {},
+            onErrorDismissed = {},
+            onInvalidCredentialsErrorDismissed = {},
+            passwordInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }

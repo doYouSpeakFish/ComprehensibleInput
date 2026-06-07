@@ -28,6 +28,18 @@ class SignInStepDefinitions {
         account.enterSignInPassword(password)
     }
 
+    @When("I reveal the sign in password")
+    fun iRevealTheSignInPassword() {
+        account.signInPasswordField.toggleVisibility()
+        scope.idle()
+    }
+
+    @When("I hide the sign in password")
+    fun iHideTheSignInPassword() {
+        account.signInPasswordField.toggleVisibility()
+        scope.idle()
+    }
+
     @When("I submit the sign in form")
     fun iSubmitTheSignInForm() {
         account.tapSignIn()
@@ -74,6 +86,16 @@ class SignInStepDefinitions {
     @Then("the account sign in screen is shown")
     fun theAccountSignInScreenIsShown() {
         account.assertSignInScreenIsShown()
+    }
+
+    @Then("the sign in password is shown")
+    fun theSignInPasswordIsShown() {
+        account.signInPasswordField.assertVisible()
+    }
+
+    @Then("the sign in password is hidden")
+    fun theSignInPasswordIsHidden() {
+        account.signInPasswordField.assertHidden()
     }
 
     @Then("the sign in invalid credentials dialog is shown")
