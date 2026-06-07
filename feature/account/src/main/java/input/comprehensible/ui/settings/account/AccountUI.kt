@@ -80,6 +80,7 @@ private fun AccountScreen(
     onErrorDismissed: () -> Unit,
     onInvalidCredentialsErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -114,6 +115,7 @@ private fun AccountScreen(
                     onSignInSubmit = onSignInSubmit,
                     onSignUpClicked = onSignUpButtonClicked,
                     onForgotPasswordClicked = onForgotPasswordClicked,
+                    passwordInitiallyVisible = passwordInitiallyVisible,
                 )
             }
         }
@@ -177,6 +179,7 @@ private fun SignInStep(
     onSignUpClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordInitiallyVisible: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -201,6 +204,7 @@ private fun SignInStep(
             fieldTestTag = "account_sign_in_password_field",
             toggleTestTag = "account_sign_in_password_toggle",
             modifier = Modifier.fillMaxWidth(),
+            initiallyVisible = passwordInitiallyVisible,
         )
         Button(
             onClick = onSignInSubmit,
@@ -325,6 +329,33 @@ fun PreviewAccountSignInLoading() {
             onDeleteAccountClicked = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewAccountSignInPasswordVisible() {
+    ComprehensibleInputTheme {
+        AccountScreen(
+            uiState = AccountUiState(
+                step = AccountUiState.Step.SignIn(
+                    email = "user@example.com",
+                    password = "password12345",
+                ),
+            ),
+            onNavigateUp = {},
+            onSignInEmailChanged = {},
+            onSignInPasswordChanged = {},
+            onSignInSubmit = {},
+            onSignUpButtonClicked = {},
+            onForgotPasswordClicked = {},
+            onSignOutClicked = {},
+            onDeleteAccountClicked = {},
+            onErrorDismissed = {},
+            onInvalidCredentialsErrorDismissed = {},
+            passwordInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }

@@ -38,7 +38,7 @@
 🟡   ) {
 🟢       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 ⚪   
-🟢       LaunchedEffect(uiState.accountCreatedForEmail) {
+🟡       LaunchedEffect(uiState.accountCreatedForEmail) {
 🟢           uiState.accountCreatedForEmail?.let { email ->
 🟢               viewModel.onNavigationConsumed()
 🟢               onAccountCreated(email)
@@ -48,11 +48,11 @@
 🟢       SignUpScreen(
 🟢           uiState = uiState,
 🟢           onNavigateUp = onNavigateUp,
-🟢           onEmailChanged = viewModel::onEmailChanged,
-🟢           onPasswordChanged = viewModel::onPasswordChanged,
-🟢           onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-🟢           onSubmit = viewModel::onSubmit,
-🟢           onErrorDismissed = viewModel::onErrorDismissed,
+🟡           onEmailChanged = viewModel::onEmailChanged,
+🟡           onPasswordChanged = viewModel::onPasswordChanged,
+🟡           onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
+🟡           onSubmit = viewModel::onSubmit,
+🟡           onErrorDismissed = viewModel::onErrorDismissed,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
@@ -67,6 +67,7 @@
 ⚪       onSubmit: () -> Unit,
 ⚪       onErrorDismissed: () -> Unit,
 🟢       modifier: Modifier = Modifier,
+🟢       passwordsInitiallyVisible: Boolean = false,
 🟡   ) {
 🟢       Scaffold(
 🟢           modifier = modifier,
@@ -101,6 +102,7 @@
 🟢                   fieldTestTag = "account_sign_up_password_field",
 🟢                   toggleTestTag = "account_sign_up_password_toggle",
 🟢                   modifier = Modifier.fillMaxWidth(),
+🟢                   initiallyVisible = passwordsInitiallyVisible,
 ⚪               )
 🟢               PasswordTextField(
 🟢                   value = uiState.confirmPassword,
@@ -109,6 +111,7 @@
 🟢                   fieldTestTag = "account_sign_up_confirm_password_field",
 🟢                   toggleTestTag = "account_sign_up_confirm_password_toggle",
 🟢                   modifier = Modifier.fillMaxWidth(),
+🟢                   initiallyVisible = passwordsInitiallyVisible,
 ⚪               )
 🟢               Button(
 🟢                   onClick = onSubmit,
@@ -171,6 +174,28 @@
 ⚪               onConfirmPasswordChanged = {},
 ⚪               onSubmit = {},
 ⚪               onErrorDismissed = {},
+⚪               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+⚪   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+⚪   fun PreviewSignUpPasswordsVisible() {
+⚪       ComprehensibleInputTheme {
+⚪           SignUpScreen(
+⚪               uiState = SignUpUiState(
+⚪                   email = "user@example.com",
+⚪                   password = "password12345",
+⚪                   confirmPassword = "password12345",
+⚪               ),
+⚪               onNavigateUp = {},
+⚪               onEmailChanged = {},
+⚪               onPasswordChanged = {},
+⚪               onConfirmPasswordChanged = {},
+⚪               onSubmit = {},
+⚪               onErrorDismissed = {},
+⚪               passwordsInitiallyVisible = true,
 ⚪               modifier = Modifier.fillMaxSize(),
 ⚪           )
 ⚪       }

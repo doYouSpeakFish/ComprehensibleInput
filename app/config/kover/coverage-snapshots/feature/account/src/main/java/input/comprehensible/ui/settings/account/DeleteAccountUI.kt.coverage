@@ -48,7 +48,7 @@
 🟡   ) {
 🟢       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 ⚪   
-🟢       LaunchedEffect(uiState.accountDeleted) {
+🟡       LaunchedEffect(uiState.accountDeleted) {
 🟢           if (uiState.accountDeleted) {
 🟢               viewModel.onNavigationConsumed()
 🟢               onAccountDeleted()
@@ -58,10 +58,10 @@
 🟢       DeleteAccountScreen(
 🟢           uiState = uiState,
 🟢           onNavigateUp = onNavigateUp,
-🟢           onPasswordChanged = viewModel::onPasswordChanged,
-🟢           onSubmit = viewModel::onSubmit,
-🟢           onErrorDismissed = viewModel::onErrorDismissed,
-🟢           onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
+🟡           onPasswordChanged = viewModel::onPasswordChanged,
+🟡           onSubmit = viewModel::onSubmit,
+🟡           onErrorDismissed = viewModel::onErrorDismissed,
+🟡           onInvalidCredentialsErrorDismissed = viewModel::onInvalidCredentialsErrorDismissed,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
@@ -75,6 +75,7 @@
 ⚪       onErrorDismissed: () -> Unit,
 ⚪       onInvalidCredentialsErrorDismissed: () -> Unit,
 🟢       modifier: Modifier = Modifier,
+🟢       passwordInitiallyVisible: Boolean = false,
 🟡   ) {
 🟢       Scaffold(
 🟢           modifier = modifier,
@@ -112,6 +113,7 @@
 🟢                   fieldTestTag = "delete_account_password_field",
 🟢                   toggleTestTag = "delete_account_password_toggle",
 🟢                   modifier = Modifier.fillMaxWidth(),
+🟢                   initiallyVisible = passwordInitiallyVisible,
 ⚪               )
 🟢               Button(
 🟢                   onClick = onSubmit,
@@ -223,6 +225,23 @@
 ⚪               onSubmit = {},
 ⚪               onErrorDismissed = {},
 ⚪               onInvalidCredentialsErrorDismissed = {},
+⚪               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+⚪   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+⚪   fun PreviewDeleteAccountPasswordVisible() {
+⚪       ComprehensibleInputTheme {
+⚪           DeleteAccountScreen(
+⚪               uiState = DeleteAccountUiState(password = "password12345"),
+⚪               onNavigateUp = {},
+⚪               onPasswordChanged = {},
+⚪               onSubmit = {},
+⚪               onErrorDismissed = {},
+⚪               onInvalidCredentialsErrorDismissed = {},
+⚪               passwordInitiallyVisible = true,
 ⚪               modifier = Modifier.fillMaxSize(),
 ⚪           )
 ⚪       }

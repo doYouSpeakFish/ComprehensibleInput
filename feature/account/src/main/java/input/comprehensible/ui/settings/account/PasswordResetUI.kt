@@ -78,6 +78,7 @@ private fun PasswordResetScreen(
     onErrorDismissed: () -> Unit,
     onInvalidCodeErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordsInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -116,6 +117,7 @@ private fun PasswordResetScreen(
                 fieldTestTag = "account_password_reset_password_field",
                 toggleTestTag = "account_password_reset_password_toggle",
                 modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
             )
             PasswordTextField(
                 value = uiState.confirmPassword,
@@ -124,6 +126,7 @@ private fun PasswordResetScreen(
                 fieldTestTag = "account_password_reset_confirm_password_field",
                 toggleTestTag = "account_password_reset_confirm_password_toggle",
                 modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
             )
             Button(
                 onClick = onSubmit,
@@ -233,6 +236,30 @@ fun PreviewPasswordResetLoading() {
             onSubmit = {},
             onErrorDismissed = {},
             onInvalidCodeErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordResetPasswordsVisible() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(
+                email = "user@example.com",
+                code = "123456",
+                password = "newpassword12345",
+                confirmPassword = "newpassword12345",
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            passwordsInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }

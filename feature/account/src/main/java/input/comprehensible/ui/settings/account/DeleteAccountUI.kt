@@ -75,6 +75,7 @@ private fun DeleteAccountScreen(
     onErrorDismissed: () -> Unit,
     onInvalidCredentialsErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -112,6 +113,7 @@ private fun DeleteAccountScreen(
                 fieldTestTag = "delete_account_password_field",
                 toggleTestTag = "delete_account_password_toggle",
                 modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordInitiallyVisible,
             )
             Button(
                 onClick = onSubmit,
@@ -223,6 +225,23 @@ fun PreviewDeleteAccountLoading() {
             onSubmit = {},
             onErrorDismissed = {},
             onInvalidCredentialsErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewDeleteAccountPasswordVisible() {
+    ComprehensibleInputTheme {
+        DeleteAccountScreen(
+            uiState = DeleteAccountUiState(password = "password12345"),
+            onNavigateUp = {},
+            onPasswordChanged = {},
+            onSubmit = {},
+            onErrorDismissed = {},
+            onInvalidCredentialsErrorDismissed = {},
+            passwordInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }

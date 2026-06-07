@@ -67,6 +67,7 @@ private fun SignUpScreen(
     onSubmit: () -> Unit,
     onErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordsInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -101,6 +102,7 @@ private fun SignUpScreen(
                 fieldTestTag = "account_sign_up_password_field",
                 toggleTestTag = "account_sign_up_password_toggle",
                 modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
             )
             PasswordTextField(
                 value = uiState.confirmPassword,
@@ -109,6 +111,7 @@ private fun SignUpScreen(
                 fieldTestTag = "account_sign_up_confirm_password_field",
                 toggleTestTag = "account_sign_up_confirm_password_toggle",
                 modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
             )
             Button(
                 onClick = onSubmit,
@@ -171,6 +174,28 @@ fun PreviewSignUpLoading() {
             onConfirmPasswordChanged = {},
             onSubmit = {},
             onErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewSignUpPasswordsVisible() {
+    ComprehensibleInputTheme {
+        SignUpScreen(
+            uiState = SignUpUiState(
+                email = "user@example.com",
+                password = "password12345",
+                confirmPassword = "password12345",
+            ),
+            onNavigateUp = {},
+            onEmailChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onErrorDismissed = {},
+            passwordsInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }
