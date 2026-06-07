@@ -38,7 +38,7 @@
 🟡   ) {
 🟢       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 ⚪   
-🟡       LaunchedEffect(uiState.accountCreatedForEmail) {
+🟢       LaunchedEffect(uiState.accountCreatedForEmail) {
 🟢           uiState.accountCreatedForEmail?.let { email ->
 🟢               viewModel.onNavigationConsumed()
 🟢               onAccountCreated(email)
@@ -48,11 +48,11 @@
 🟢       SignUpScreen(
 🟢           uiState = uiState,
 🟢           onNavigateUp = onNavigateUp,
-🟡           onEmailChanged = viewModel::onEmailChanged,
-🟡           onPasswordChanged = viewModel::onPasswordChanged,
-🟡           onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-🟡           onSubmit = viewModel::onSubmit,
-🟡           onErrorDismissed = viewModel::onErrorDismissed,
+🟢           onEmailChanged = viewModel::onEmailChanged,
+🟢           onPasswordChanged = viewModel::onPasswordChanged,
+🟢           onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
+🟢           onSubmit = viewModel::onSubmit,
+🟢           onErrorDismissed = viewModel::onErrorDismissed,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
