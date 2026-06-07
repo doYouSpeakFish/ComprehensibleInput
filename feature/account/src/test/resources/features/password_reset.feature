@@ -111,6 +111,15 @@ Feature: Password reset
     When I request a new reset code
     Then the reset code resent confirmation is shown
 
+  Scenario: Requesting a new reset code clears the previously entered code
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will succeed
+    And I enter the reset code "123456"
+    And I enter the new password "newpassword12345"
+    And I enter the new confirmation password "newpassword12345"
+    When I request a new reset code
+    Then the password reset submit button is disabled
+
   Scenario: A failed reset code request shows the error dialog
     Given the password reset screen for "user@example.com" is open
     And the password reset code request will fail

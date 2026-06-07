@@ -65,6 +65,13 @@ Feature: Verify email
     When I request a new verification code
     Then the verification code resent confirmation is shown
 
+  Scenario: Requesting a new verification code clears the previously entered code
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will succeed
+    And I enter the verification code "123456"
+    When I request a new verification code
+    Then the verify email submit button is disabled
+
   Scenario: A failed verification code request shows the error dialog
     Given the email verification screen for "user@example.com" is open
     And the email verification code request will fail

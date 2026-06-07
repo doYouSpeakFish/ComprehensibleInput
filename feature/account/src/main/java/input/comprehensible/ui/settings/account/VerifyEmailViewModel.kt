@@ -48,7 +48,11 @@ class VerifyEmailViewModel(
         viewModelScope.launch {
             requestEmailVerificationCode(state.email)
                 .onSuccess {
-                    _uiState.update { it.copy(isResendingCode = false, codeResent = true) }
+                    // Requesting a new code invalidates any code the user already entered, so clear
+                    // it to require the freshly delivered one.
+                    _uiState.update {
+                        it.copy(isResendingCode = false, codeResent = true, code = "")
+                    }
                 }
                 .onFailure {
                     _uiState.update { it.copy(isResendingCode = false, showError = true) }
