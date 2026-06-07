@@ -231,9 +231,9 @@
 ⚪    * General baseline rate limit applied to every route, per client IP, over 10 minutes (flood /
 ⚪    * brute-force protection). It is far more generous than the text adventure limit: that one is kept
 ⚪    * low only to cap AI usage costs, whereas this catch-all just needs to stop egregious abuse from a
-⚪    * single source, so a high ceiling is appropriate.
+⚪    * single source. 1000 requests per IP per 10 minutes is already well above normal use.
 ⚪    */
-⚪   internal const val GLOBAL_RATE_LIMIT = 10_000
+⚪   internal const val GLOBAL_RATE_LIMIT = 1_000
 ⚪   
 ⚪   private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 ⚪   private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"
