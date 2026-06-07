@@ -1,9 +1,8 @@
 package input.comprehensible.ui.settings.account
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import input.comprehensible.account.usecases.RequestPasswordResetCodeUseCase
 import input.comprehensible.account.usecases.ResetPasswordUseCase
 import input.comprehensible.data.account.InvalidResetCodeException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,11 +15,10 @@ internal const val PASSWORD_RESET_CODE_LENGTH = 6
 private const val MINIMUM_PASSWORD_LENGTH = 12
 
 class PasswordResetViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val email: String,
+    private val resetPassword: ResetPasswordUseCase = ResetPasswordUseCase(),
+    private val requestPasswordResetCode: RequestPasswordResetCodeUseCase = RequestPasswordResetCodeUseCase(),
 ) : ViewModel() {
-    private val resetPassword = ResetPasswordUseCase()
-    private val email: String = savedStateHandle.toRoute<PasswordResetRoute>().email
-
     private val _uiState = MutableStateFlow(PasswordResetUiState(email = email))
     val uiState: StateFlow<PasswordResetUiState> = _uiState.asStateFlow()
 
@@ -50,6 +48,24 @@ class PasswordResetViewModel(
                     } else {
                         _uiState.update { it.copy(isLoading = false, showError = true) }
                     }
+                }
+        }
+    }
+
+    fun onResendCode() {
+        val state = _uiState.value
+        _uiState.update { it.copy(isResendingCode = true, codeResent = false) }
+        viewModelScope.launch {
+            requestPasswordResetCode(state.email)
+                .onSuccess {
+                    // Requesting a new code invalidates any code the user already entered, so clear
+                    // it to require the freshly delivered one.
+                    _uiState.update {
+                        it.copy(isResendingCode = false, codeResent = true, code = "")
+                    }
+                }
+                .onFailure {
+                    _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
         }
     }

@@ -29,6 +29,10 @@
 🟢           runCatching { remoteDataSource.verifyEmail(email, code) }
 🟢               .onFailure { Timber.e(it, "Failed to verify email") }
 ⚪   
+⚪       suspend fun requestEmailVerificationCode(email: String): Result<Unit> =
+🟢           runCatching { remoteDataSource.requestEmailVerificationCode(email) }
+🟢               .onFailure { Timber.e(it, "Failed to request email verification code") }
+⚪   
 ⚪       suspend fun signIn(email: String, password: String): Result<Unit> =
 🟢           runCatching {
 🟢               val remoteSession = remoteDataSource.signIn(email, password)

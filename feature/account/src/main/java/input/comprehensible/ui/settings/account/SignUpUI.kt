@@ -5,11 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.account.R
+import input.comprehensible.ui.components.button.LoadingButton
 import input.comprehensible.ui.components.error.GenericErrorDialog
 import input.comprehensible.ui.components.topbar.SettingsTopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -113,25 +110,16 @@ private fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 initiallyVisible = passwordsInitiallyVisible,
             )
-            Button(
+            LoadingButton(
+                text = stringResource(R.string.account_sign_up_submit_button),
+                loading = uiState.isLoading,
                 onClick = onSubmit,
                 enabled = !uiState.isLoading && uiState.isSubmitEnabled(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("account_sign_up_submit_button"),
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .testTag("account_sign_up_loading_indicator"),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 2.dp,
-                    )
-                } else {
-                    Text(stringResource(R.string.account_sign_up_submit_button))
-                }
-            }
+                loadingIndicatorTestTag = "account_sign_up_loading_indicator",
+            )
         }
     }
 

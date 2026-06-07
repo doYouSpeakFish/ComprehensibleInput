@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -14,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -34,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.account.R
+import input.comprehensible.ui.components.button.LoadingButton
 import input.comprehensible.ui.components.error.GenericErrorDialog
 import input.comprehensible.ui.components.topbar.SettingsTopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -115,29 +114,21 @@ private fun DeleteAccountScreen(
                 modifier = Modifier.fillMaxWidth(),
                 initiallyVisible = passwordInitiallyVisible,
             )
-            Button(
+            LoadingButton(
+                text = stringResource(R.string.delete_account_submit_button),
+                loading = uiState.isLoading,
                 onClick = onSubmit,
                 enabled = !uiState.isLoading && uiState.isSubmitEnabled(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error,
                     contentColor = MaterialTheme.colorScheme.onError,
                 ),
+                loadingIndicatorColor = MaterialTheme.colorScheme.onError,
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("delete_account_submit_button"),
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .testTag("delete_account_loading_indicator"),
-                        color = MaterialTheme.colorScheme.onError,
-                        strokeWidth = 2.dp,
-                    )
-                } else {
-                    Text(stringResource(R.string.delete_account_submit_button))
-                }
-            }
+                loadingIndicatorTestTag = "delete_account_loading_indicator",
+            )
         }
     }
 

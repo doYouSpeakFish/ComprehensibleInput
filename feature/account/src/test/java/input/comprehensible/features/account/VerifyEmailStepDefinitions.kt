@@ -28,6 +28,12 @@ class VerifyEmailStepDefinitions {
         scope.idle()
     }
 
+    @When("I request a new verification code")
+    fun iRequestANewVerificationCode() {
+        verifyEmail.tapResendCode()
+        scope.idle()
+    }
+
     @Then("the verify email submit button is enabled")
     fun theVerifyEmailSubmitButtonIsEnabled() {
         verifyEmail.assertVerifyEmailSubmitIsEnabled()
@@ -41,6 +47,26 @@ class VerifyEmailStepDefinitions {
     @Then("the verify email loading indicator is shown")
     fun theVerifyEmailLoadingIndicatorIsShown() {
         verifyEmail.assertVerifyEmailLoadingIndicatorIsShown()
+    }
+
+    @Then("the resend verification code button is enabled")
+    fun theResendVerificationCodeButtonIsEnabled() {
+        verifyEmail.assertResendCodeIsEnabled()
+    }
+
+    @Then("the resend verification code button is disabled")
+    fun theResendVerificationCodeButtonIsDisabled() {
+        verifyEmail.assertResendCodeIsDisabled()
+    }
+
+    @Then("the resend verification code loading indicator is shown")
+    fun theResendVerificationCodeLoadingIndicatorIsShown() {
+        verifyEmail.assertResendLoadingIndicatorIsShown()
+    }
+
+    @Then("the verification code resent confirmation is shown")
+    fun theVerificationCodeResentConfirmationIsShown() {
+        verifyEmail.assertCodeResentConfirmationIsShown()
     }
 
     @Then("the email verification screen shows the email {string}")

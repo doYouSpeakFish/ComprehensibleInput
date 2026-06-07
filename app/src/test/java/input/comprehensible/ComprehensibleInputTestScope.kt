@@ -98,6 +98,7 @@ class ComprehensibleInputTestScope(
         AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
             override suspend fun createAccount(email: String, password: String) = Unit
             override suspend fun verifyEmail(email: String, code: String) = Unit
+            override suspend fun requestEmailVerificationCode(email: String) = Unit
             override suspend fun signIn(email: String, password: String) = RemoteSession(token = "", userId = "")
             override suspend fun signOut(token: String) = Unit
             override suspend fun deleteAccount(email: String, password: String) = Unit

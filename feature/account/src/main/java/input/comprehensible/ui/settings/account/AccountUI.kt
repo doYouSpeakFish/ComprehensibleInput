@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.account.R
+import input.comprehensible.ui.components.button.LoadingButton
 import input.comprehensible.ui.components.error.GenericErrorDialog
 import input.comprehensible.ui.components.topbar.SettingsTopBar
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -206,25 +206,16 @@ private fun SignInStep(
             modifier = Modifier.fillMaxWidth(),
             initiallyVisible = passwordInitiallyVisible,
         )
-        Button(
+        LoadingButton(
+            text = stringResource(R.string.account_sign_in_submit_button),
+            loading = step.isLoading,
             onClick = onSignInSubmit,
             enabled = !step.isLoading && step.isSignInEnabled(),
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag("account_sign_in_submit_button"),
-        ) {
-            if (step.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .testTag("account_sign_in_loading_indicator"),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = 2.dp,
-                )
-            } else {
-                Text(stringResource(R.string.account_sign_in_submit_button))
-            }
-        }
+            loadingIndicatorTestTag = "account_sign_in_loading_indicator",
+        )
         OutlinedButton(
             onClick = onSignUpClicked,
             enabled = !step.isLoading,

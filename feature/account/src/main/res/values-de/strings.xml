@@ -17,6 +17,8 @@
     <string name="account_verify_email_message">Wir haben einen 6-stelligen Bestätigungscode an %1$s gesendet</string>
     <string name="account_verify_email_code_label">Bestätigungscode</string>
     <string name="account_verify_email_submit_button">Bestätigen</string>
+    <string name="account_verify_email_resend_button">Code erneut senden</string>
+    <string name="account_verify_email_code_resent_message">Ein neuer Code wurde gesendet</string>
     <string name="account_delete_account_button">Konto löschen</string>
     <string name="delete_account_screen_title">Konto löschen</string>
     <string name="delete_account_explainer">Das Löschen Ihres Kontos entfernt dauerhaft alle Ihre Daten, einschließlich Ihres Fortschritts und Ihrer Einstellungen.</string>
@@ -34,6 +36,8 @@
     <string name="account_password_reset_password_label">Neues Passwort</string>
     <string name="account_password_reset_confirm_password_label">Neues Passwort bestätigen</string>
     <string name="account_password_reset_submit_button">Passwort zurücksetzen</string>
+    <string name="account_password_reset_resend_button">Code erneut senden</string>
+    <string name="account_password_reset_code_resent_message">Ein neuer Code wurde gesendet</string>
     <string name="account_invalid_reset_code_dialog_title">Ungültiger Zurücksetzungscode</string>
     <string name="account_invalid_reset_code_dialog_message">Der eingegebene Zurücksetzungscode ist ungültig oder abgelaufen. Bitte fordere einen neuen Code an.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
