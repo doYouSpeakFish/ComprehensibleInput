@@ -23,6 +23,12 @@ class DeleteAccountStepDefinitions {
         deleteAccount.enterPassword(password)
     }
 
+    @When("I reveal the delete account password")
+    fun iRevealTheDeleteAccountPassword() {
+        deleteAccount.passwordField.toggleVisibility()
+        scope.idle()
+    }
+
     @When("I submit the delete account form")
     fun iSubmitTheDeleteAccountForm() {
         deleteAccount.tapSubmit()
@@ -42,6 +48,16 @@ class DeleteAccountStepDefinitions {
     @Then("the delete account loading indicator is shown")
     fun theDeleteAccountLoadingIndicatorIsShown() {
         deleteAccount.assertLoadingIndicatorIsShown()
+    }
+
+    @Then("the delete account password is shown")
+    fun theDeleteAccountPasswordIsShown() {
+        deleteAccount.passwordField.assertVisible()
+    }
+
+    @Then("the delete account password is hidden")
+    fun theDeleteAccountPasswordIsHidden() {
+        deleteAccount.passwordField.assertHidden()
     }
 
     @Then("the delete account explainer is shown")

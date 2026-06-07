@@ -40,6 +40,18 @@ class SignUpStepDefinitions {
         signUp.enterConfirmPassword(password)
     }
 
+    @When("I reveal the sign up password")
+    fun iRevealTheSignUpPassword() {
+        signUp.passwordField.toggleVisibility()
+        scope.idle()
+    }
+
+    @When("I reveal the sign up confirmation password")
+    fun iRevealTheSignUpConfirmationPassword() {
+        signUp.confirmPasswordField.toggleVisibility()
+        scope.idle()
+    }
+
     @When("I submit the sign up form")
     fun iSubmitTheSignUpForm() {
         signUp.tapSignUpSubmit()
@@ -59,6 +71,26 @@ class SignUpStepDefinitions {
     @Then("the sign up loading indicator is shown")
     fun theSignUpLoadingIndicatorIsShown() {
         signUp.assertSignUpLoadingIndicatorIsShown()
+    }
+
+    @Then("the sign up password is shown")
+    fun theSignUpPasswordIsShown() {
+        signUp.passwordField.assertVisible()
+    }
+
+    @Then("the sign up password is hidden")
+    fun theSignUpPasswordIsHidden() {
+        signUp.passwordField.assertHidden()
+    }
+
+    @Then("the sign up confirmation password is shown")
+    fun theSignUpConfirmationPasswordIsShown() {
+        signUp.confirmPasswordField.assertVisible()
+    }
+
+    @Then("the sign up confirmation password is hidden")
+    fun theSignUpConfirmationPasswordIsHidden() {
+        signUp.confirmPasswordField.assertHidden()
     }
 
     private companion object {
