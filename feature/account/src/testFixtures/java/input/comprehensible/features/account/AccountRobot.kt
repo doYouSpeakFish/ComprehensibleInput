@@ -1,5 +1,6 @@
 package input.comprehensible.features.account
 
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -9,6 +10,12 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import input.comprehensible.ui.components.error.GENERIC_ERROR_DIALOG_TEST_TAG
+
+/** The toggle's label while the password is masked; tapping it reveals the password. */
+private const val SHOW_PASSWORD_DESCRIPTION = "Show password"
+
+/** The toggle's label while the password is revealed; tapping it masks the password again. */
+private const val HIDE_PASSWORD_DESCRIPTION = "Hide password"
 
 class GenericErrorDialogRobot(private val composeTestRule: ComposeTestRule) {
     fun assertIsShown() {
@@ -41,9 +48,37 @@ class InvalidCredentialsDialogRobot(
     }
 }
 
+/**
+ * Drives a single password field's show/hide toggle, identified by its [toggleTestTag]. Reused by
+ * every screen robot so each can expose its password fields without duplicating the toggle logic.
+ */
+class PasswordFieldRobot(
+    private val composeTestRule: ComposeTestRule,
+    private val toggleTestTag: String,
+) {
+    fun toggleVisibility() {
+        composeTestRule
+            .onNodeWithTag(toggleTestTag)
+            .performClick()
+    }
+
+    fun assertVisible() {
+        composeTestRule
+            .onNodeWithTag(toggleTestTag)
+            .assertContentDescriptionEquals(HIDE_PASSWORD_DESCRIPTION)
+    }
+
+    fun assertHidden() {
+        composeTestRule
+            .onNodeWithTag(toggleTestTag)
+            .assertContentDescriptionEquals(SHOW_PASSWORD_DESCRIPTION)
+    }
+}
+
 class AccountRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
     val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule, "account_invalid_credentials_dialog")
+    val signInPasswordField = PasswordFieldRobot(composeTestRule, "account_sign_in_password_toggle")
 
     fun assertAccountTitleIsVisible() {
         composeTestRule
@@ -143,6 +178,8 @@ class AccountRobot(private val composeTestRule: ComposeTestRule) {
 
 class SignUpRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
+    val passwordField = PasswordFieldRobot(composeTestRule, "account_sign_up_password_toggle")
+    val confirmPasswordField = PasswordFieldRobot(composeTestRule, "account_sign_up_confirm_password_toggle")
 
     fun enterEmail(email: String) {
         composeTestRule
@@ -238,6 +275,8 @@ class InvalidResetCodeDialogRobot(private val composeTestRule: ComposeTestRule) 
 class PasswordResetRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
     val invalidCodeErrorDialog = InvalidResetCodeDialogRobot(composeTestRule)
+    val newPasswordField = PasswordFieldRobot(composeTestRule, "account_password_reset_password_toggle")
+    val confirmNewPasswordField = PasswordFieldRobot(composeTestRule, "account_password_reset_confirm_password_toggle")
 
     fun assertResetCodeMessageIsShown(email: String) {
         composeTestRule
@@ -391,6 +430,7 @@ class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
 class DeleteAccountRobot(private val composeTestRule: ComposeTestRule) {
     val errorDialog = GenericErrorDialogRobot(composeTestRule)
     val invalidCredentialsDialog = InvalidCredentialsDialogRobot(composeTestRule, "delete_account_invalid_credentials_dialog")
+    val passwordField = PasswordFieldRobot(composeTestRule, "delete_account_password_toggle")
 
     fun assertExplainerIsShown() {
         composeTestRule

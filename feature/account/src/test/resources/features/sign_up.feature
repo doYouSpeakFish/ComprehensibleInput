@@ -69,3 +69,26 @@ Feature: Sign up
     And the error dialog is shown
     When I dismiss the error dialog
     Then the sign up submit button is enabled
+
+  Scenario: The sign up password is hidden by default
+    Given the sign up screen is open
+    When I enter the sign up password "password12345"
+    Then the sign up password is hidden
+
+  Scenario: The sign up password can be revealed
+    Given the sign up screen is open
+    When I enter the sign up password "password12345"
+    And I reveal the sign up password
+    Then the sign up password is shown
+
+  Scenario: The sign up confirmation password can be revealed
+    Given the sign up screen is open
+    When I enter the sign up confirmation password "password12345"
+    And I reveal the sign up confirmation password
+    Then the sign up confirmation password is shown
+
+  Scenario: Revealing the sign up password leaves the confirmation password hidden
+    Given the sign up screen is open
+    When I reveal the sign up password
+    Then the sign up password is shown
+    And the sign up confirmation password is hidden

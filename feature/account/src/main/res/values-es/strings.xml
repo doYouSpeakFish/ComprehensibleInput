@@ -41,4 +41,6 @@
     <string name="account_invalid_reset_code_dialog_title">Código de restablecimiento inválido</string>
     <string name="account_invalid_reset_code_dialog_message">El código de restablecimiento ingresado es inválido o ha expirado. Por favor, solicita un nuevo código.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
+    <string name="account_show_password_content_description">Mostrar contraseña</string>
+    <string name="account_hide_password_content_description">Ocultar contraseña</string>
 </resources>

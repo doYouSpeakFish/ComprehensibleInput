@@ -41,4 +41,6 @@
     <string name="account_invalid_reset_code_dialog_title">Código de redefinição inválido</string>
     <string name="account_invalid_reset_code_dialog_message">O código de redefinição inserido é inválido ou expirou. Por favor, solicite um novo código.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
+    <string name="account_show_password_content_description">Mostrar senha</string>
+    <string name="account_hide_password_content_description">Ocultar senha</string>
 </resources>

@@ -41,4 +41,6 @@
     <string name="account_invalid_reset_code_dialog_title">Ungültiger Zurücksetzungscode</string>
     <string name="account_invalid_reset_code_dialog_message">Der eingegebene Zurücksetzungscode ist ungültig oder abgelaufen. Bitte fordere einen neuen Code an.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
+    <string name="account_show_password_content_description">Passwort anzeigen</string>
+    <string name="account_hide_password_content_description">Passwort verbergen</string>
 </resources>

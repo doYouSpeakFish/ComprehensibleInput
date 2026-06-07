@@ -41,4 +41,6 @@
     <string name="account_invalid_reset_code_dialog_title">Kode reset tidak valid</string>
     <string name="account_invalid_reset_code_dialog_message">Kode reset yang dimasukkan tidak valid atau sudah kedaluwarsa. Silakan minta kode baru.</string>
     <string name="account_invalid_reset_code_dialog_button">OK</string>
+    <string name="account_show_password_content_description">Tampilkan kata sandi</string>
+    <string name="account_hide_password_content_description">Sembunyikan kata sandi</string>
 </resources>

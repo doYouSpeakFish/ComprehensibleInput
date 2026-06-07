@@ -133,3 +133,26 @@ Feature: Password reset
     Then the error dialog is shown
     When I dismiss the error dialog
     Then the resend reset code button is enabled
+
+  Scenario: The new password is hidden by default
+    Given the password reset screen for "user@example.com" is open
+    When I enter the new password "newpassword12345"
+    Then the new password is hidden
+
+  Scenario: The new password can be revealed
+    Given the password reset screen for "user@example.com" is open
+    When I enter the new password "newpassword12345"
+    And I reveal the new password
+    Then the new password is shown
+
+  Scenario: The new confirmation password can be revealed
+    Given the password reset screen for "user@example.com" is open
+    When I enter the new confirmation password "newpassword12345"
+    And I reveal the new confirmation password
+    Then the new confirmation password is shown
+
+  Scenario: Revealing the new password leaves the new confirmation password hidden
+    Given the password reset screen for "user@example.com" is open
+    When I reveal the new password
+    Then the new password is shown
+    And the new confirmation password is hidden

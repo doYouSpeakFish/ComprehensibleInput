@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -86,6 +85,7 @@ private fun PasswordResetScreen(
     onErrorDismissed: () -> Unit,
     onInvalidCodeErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    passwordsInitiallyVisible: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier,
@@ -118,27 +118,23 @@ private fun PasswordResetScreen(
                     .fillMaxWidth()
                     .testTag("account_password_reset_code_field"),
             )
-            OutlinedTextField(
+            PasswordTextField(
                 value = uiState.password,
                 onValueChange = onPasswordChanged,
-                label = { Text(stringResource(R.string.account_password_reset_password_label)) },
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("account_password_reset_password_field"),
+                label = stringResource(R.string.account_password_reset_password_label),
+                fieldTestTag = "account_password_reset_password_field",
+                toggleTestTag = "account_password_reset_password_toggle",
+                modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
             )
-            OutlinedTextField(
+            PasswordTextField(
                 value = uiState.confirmPassword,
                 onValueChange = onConfirmPasswordChanged,
-                label = { Text(stringResource(R.string.account_password_reset_confirm_password_label)) },
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("account_password_reset_confirm_password_field"),
+                label = stringResource(R.string.account_password_reset_confirm_password_label),
+                fieldTestTag = "account_password_reset_confirm_password_field",
+                toggleTestTag = "account_password_reset_confirm_password_toggle",
+                modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
             )
             Button(
                 onClick = onSubmit,
@@ -299,6 +295,31 @@ fun PreviewPasswordResetCodeResent() {
             onResendCode = {},
             onErrorDismissed = {},
             onInvalidCodeErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordResetPasswordsVisible() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(
+                email = "user@example.com",
+                code = "123456",
+                password = "newpassword12345",
+                confirmPassword = "newpassword12345",
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            passwordsInitiallyVisible = true,
             modifier = Modifier.fillMaxSize(),
         )
     }
