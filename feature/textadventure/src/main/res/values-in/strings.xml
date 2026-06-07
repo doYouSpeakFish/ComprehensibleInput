@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_adventures_title">Petualangan teks</string>
+    <string name="text_adventures_early_access">Petualangan teks gratis selama masa akses awal. Selamat menikmati!</string>
+    <string name="text_adventures_sign_in_message">Masuk untuk mulai bermain petualangan teks.</string>
+    <string name="text_adventures_sign_in_button">Masuk</string>
+    <string name="text_adventures_empty">Anda belum memiliki petualangan. Mulai satu!</string>
+    <string name="text_adventures_error">Tidak dapat memuat petualangan Anda. Silakan coba lagi.</string>
+    <string name="text_adventure_busy">Sistem sedang sibuk saat ini. Silakan coba lagi beberapa saat lagi.</string>
+    <string name="text_adventures_new">Petualangan baru</string>
+    <string name="text_adventures_delete_content_description">Hapus petualangan</string>
+    <string name="text_adventure_chat_title">Petualangan</string>
+    <string name="text_adventure_generating_1">Merancang petualangan Anda…</string>
+    <string name="text_adventure_generating_2">Membayangkan apa yang terjadi selanjutnya…</string>
+    <string name="text_adventure_generating_3">Menyiapkan suasana…</string>
+    <string name="text_adventure_generation_error">Terjadi kesalahan saat menceritakan kisah. Silakan coba lagi.</string>
+    <string name="text_adventure_message_error">Pesan Anda tidak dapat dikirim. Silakan coba lagi.</string>
+    <string name="text_adventure_retry">Coba lagi</string>
+    <string name="text_adventure_message_hint">Ketik langkah Anda berikutnya…</string>
+    <string name="text_adventure_send">Kirim pesan</string>
+</resources>

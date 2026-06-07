@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_adventures_title">Aventures textuelles</string>
+    <string name="text_adventures_early_access">Les aventures textuelles sont gratuites pendant notre accès anticipé. Profitez-en !</string>
+    <string name="text_adventures_sign_in_message">Connectez-vous pour commencer à jouer aux aventures textuelles.</string>
+    <string name="text_adventures_sign_in_button">Se connecter</string>
+    <string name="text_adventures_empty">Vous n\'avez pas encore d\'aventures. Commencez-en une !</string>
+    <string name="text_adventures_error">Impossible de charger vos aventures. Veuillez réessayer.</string>
+    <string name="text_adventure_busy">Le système est occupé pour le moment. Veuillez réessayer dans un instant.</string>
+    <string name="text_adventures_new">Nouvelle aventure</string>
+    <string name="text_adventures_delete_content_description">Supprimer l\'aventure</string>
+    <string name="text_adventure_chat_title">Aventure</string>
+    <string name="text_adventure_generating_1">Élaboration de votre aventure…</string>
+    <string name="text_adventure_generating_2">Imagination de la suite…</string>
+    <string name="text_adventure_generating_3">Mise en place de la scène…</string>
+    <string name="text_adventure_generation_error">Une erreur s\'est produite lors du récit. Veuillez réessayer.</string>
+    <string name="text_adventure_message_error">Votre message n\'a pas pu être envoyé. Veuillez réessayer.</string>
+    <string name="text_adventure_retry">Réessayer</string>
+    <string name="text_adventure_message_hint">Saisissez votre prochaine action…</string>
+    <string name="text_adventure_send">Envoyer le message</string>
+</resources>
