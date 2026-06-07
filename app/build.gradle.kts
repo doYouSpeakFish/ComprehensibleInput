@@ -131,6 +131,18 @@ android {
         buildConfig = true
         resValues = true
     }
+    lint {
+        // CI runs `:app:lint`. Enabling checkDependencies makes it also analyse the
+        // library modules this app depends on (`:common`, `:feature:*`, `:data:*`),
+        // so a string that is missing a translation in any module fails the build
+        // rather than slipping through because only `:app` was linted.
+        checkDependencies = true
+        // A missing (or extra) translation must fail the build, not just warn. Marking
+        // MissingTranslation as fatal also makes it part of the lintVital check that
+        // runs during `:app:assembleRelease`, so release builds are guarded too.
+        fatal += "MissingTranslation"
+        abortOnError = true
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
