@@ -6,6 +6,7 @@ data class VerifyEmailUiState(
     val isLoading: Boolean = false,
     val isResendingCode: Boolean = false,
     val codeResent: Boolean = false,
+    val resendCooldownSeconds: Int = 0,
     val showError: Boolean = false,
     val verified: Boolean = false,
 )

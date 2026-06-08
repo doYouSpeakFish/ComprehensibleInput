@@ -22,7 +22,6 @@
 ⚪   import androidx.lifecycle.viewmodel.compose.viewModel
 ⚪   import input.comprehensible.feature.account.R
 ⚪   import input.comprehensible.ui.components.button.LoadingButton
-⚪   import input.comprehensible.ui.components.button.LoadingOutlinedButton
 ⚪   import input.comprehensible.ui.components.error.GenericErrorDialog
 ⚪   import input.comprehensible.ui.components.topbar.SettingsTopBar
 ⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -107,15 +106,17 @@
 🟢                       .testTag("account_verify_email_submit_button"),
 🟢                   loadingIndicatorTestTag = "account_verify_email_loading_indicator",
 ⚪               )
-🟢               LoadingOutlinedButton(
-🟢                   text = stringResource(R.string.account_verify_email_resend_button),
-🟢                   loading = uiState.isResendingCode,
+🟢               ResendCodeButton(
+🟢                   cooldownSeconds = uiState.resendCooldownSeconds,
+🟢                   isResending = uiState.isResendingCode,
+🟢                   enabled = !uiState.isLoading && !uiState.isResendingCode &&
+🟢                       uiState.resendCooldownSeconds == 0,
 🟢                   onClick = onResendCode,
-🟢                   enabled = !uiState.isLoading && !uiState.isResendingCode,
-🟢                   modifier = Modifier
-🟢                       .fillMaxWidth()
-🟢                       .testTag("account_verify_email_resend_button"),
+🟢                   resendTextRes = R.string.account_verify_email_resend_button,
+🟢                   countdownTextRes = R.string.account_verify_email_resend_button_countdown,
+🟢                   buttonTestTag = "account_verify_email_resend_button",
 🟢                   loadingIndicatorTestTag = "account_verify_email_resend_loading_indicator",
+🟢                   modifier = Modifier.fillMaxWidth(),
 ⚪               )
 🟢               if (uiState.codeResent) {
 🟢                   Text(
@@ -177,6 +178,7 @@
 ⚪               uiState = VerifyEmailUiState(
 ⚪                   email = "user@example.com",
 ⚪                   codeResent = true,
+⚪                   resendCooldownSeconds = 30,
 ⚪               ),
 ⚪               onNavigateUp = {},
 ⚪               onCodeChanged = {},

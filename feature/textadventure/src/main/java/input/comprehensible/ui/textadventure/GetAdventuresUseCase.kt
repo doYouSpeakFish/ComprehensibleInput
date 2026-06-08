@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.flowOf
 
 /**
  * Streams the signed-in user's adventures by flat-mapping the account's user flow onto the
- * offline-first adventures flow. Keeping the composition here means `:data:textadventure` never has
- * to depend on `:data:account`. Emits an empty list while signed out.
+ * offline-first adventures flow. Keeping the composition here means `:data-textadventure` never has
+ * to depend on `:data-account`. Emits an empty list while signed out.
  */
 class GetAdventuresUseCase(
     private val accountRepository: AccountRepository = AccountRepository(),

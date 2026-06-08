@@ -59,7 +59,7 @@ roborazzi {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":data:account"))
+    implementation(project(":data-account"))
     implementation(libs.ktin.core)
 
     implementation(platform(libs.androidx.compose.bom))
@@ -78,11 +78,11 @@ dependencies {
     testFixturesImplementation(platform(libs.androidx.compose.bom))
     testFixturesImplementation(libs.androidx.ui.test.junit4)
     testFixturesImplementation(project(":common"))
-    testFixturesImplementation(project(":data:account"))
+    testFixturesImplementation(project(":data-account"))
     testFixturesImplementation(libs.coroutines.test)
 
     testImplementation(project(":commontest"))
-    testImplementation(project(":test:account"))
+    testImplementation(project(":test-account"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.ui.test.junit4)

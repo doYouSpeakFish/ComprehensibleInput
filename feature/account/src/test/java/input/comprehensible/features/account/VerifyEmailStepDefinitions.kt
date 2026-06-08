@@ -64,6 +64,11 @@ class VerifyEmailStepDefinitions {
         verifyEmail.assertResendLoadingIndicatorIsShown()
     }
 
+    @Then("the resend verification code button shows a {int} second countdown")
+    fun theResendVerificationCodeButtonShowsCountdown(secondsRemaining: Int) {
+        verifyEmail.assertResendCountdownShows(secondsRemaining)
+    }
+
     @Then("the verification code resent confirmation is shown")
     fun theVerificationCodeResentConfirmationIsShown() {
         verifyEmail.assertCodeResentConfirmationIsShown()

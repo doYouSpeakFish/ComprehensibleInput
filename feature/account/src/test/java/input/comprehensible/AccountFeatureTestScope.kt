@@ -33,6 +33,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.setMain
@@ -173,6 +174,26 @@ class AccountFeatureTestScope(
      */
     fun idle() {
         testScope.runCurrent()
+        composeRule.waitForIdle()
+    }
+
+    /**
+     * Advances the virtual clock by [durationMillis], running any work scheduled in that window, and
+     * pumps the UI. Lets Cucumber steps drive time-based behaviour such as the resend-code cooldown
+     * countdown deterministically.
+     */
+    fun advanceTimeBy(durationMillis: Long) {
+        testScope.advanceTimeBy(durationMillis)
+        testScope.runCurrent()
+        composeRule.waitForIdle()
+    }
+
+    /**
+     * Runs all remaining scheduled work to completion (e.g. lets an in-progress cooldown countdown
+     * finish) and pumps the UI.
+     */
+    fun advanceUntilIdle() {
+        testScope.advanceUntilIdle()
         composeRule.waitForIdle()
     }
 

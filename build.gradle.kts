@@ -21,11 +21,11 @@ dependencies {
     detektPlugins(libs.detekt.compose.rules)
     kover(project(":app"))
     kover(project(":common"))
-    kover(project(":data:account"))
-    kover(project(":data:languagesettings"))
-    kover(project(":data:textadventure"))
-    kover(project(":feature:account"))
-    kover(project(":feature:textadventure"))
+    kover(project(":data-account"))
+    kover(project(":data-languagesettings"))
+    kover(project(":data-textadventure"))
+    kover(project(":feature-account"))
+    kover(project(":feature-textadventure"))
     kover(project(":backend"))
 }
 

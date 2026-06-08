@@ -87,6 +87,11 @@ class PasswordResetStepDefinitions {
         passwordReset.assertResendLoadingIndicatorIsShown()
     }
 
+    @Then("the resend reset code button shows a {int} second countdown")
+    fun theResendResetCodeButtonShowsCountdown(secondsRemaining: Int) {
+        passwordReset.assertResendCountdownShows(secondsRemaining)
+    }
+
     @Then("the reset code resent confirmation is shown")
     fun theResetCodeResentConfirmationIsShown() {
         passwordReset.assertCodeResentConfirmationIsShown()
