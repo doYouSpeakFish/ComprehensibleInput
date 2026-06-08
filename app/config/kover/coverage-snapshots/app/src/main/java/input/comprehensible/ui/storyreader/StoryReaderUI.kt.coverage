@@ -1,6 +1,5 @@
 ⚪   package input.comprehensible.ui.storyreader
 ⚪   
-⚪   import android.graphics.Bitmap
 ⚪   import androidx.compose.animation.AnimatedVisibility
 ⚪   import androidx.compose.animation.animateContentSize
 ⚪   import androidx.compose.foundation.BorderStroke
@@ -418,77 +417,6 @@
 ⚪       }
 🟢   }
 ⚪   
-⚪   /**
-⚪    * Builds the reader state for the real story "Geheimes Heilbad" (Secret Healing Bath) so the
-⚪    * preview shows genuine story content: an opening image, German paragraphs with their English
-⚪    * translations, and the story's two choices. The image is loaded from a preview drawable because
-⚪    * preview rendering cannot reliably load the story images from assets.
-⚪    */
-⚪   private fun secretHealingBathStory(
-⚪       image: Bitmap,
-⚪       selectedText: StoryReaderUiState.SelectedText?,
-🟢   ): StoryReaderUiState.Loaded = StoryReaderUiState.Loaded(
-🟢       title = "Geheimes Heilbad",
-🟢       parts = listOf(
-🟢           StoryReaderPartUiState(
-🟢               id = "start",
-🟢               content = listOf(
-🟢                   StoryContentPartUiState.Image(
-🟢                       contentDescription = "Eine natürliche Quelle mit einem Wasserfall, " +
-⚪                           "moosbewachsenen Felsen und Dampf in der Luft.",
-🟢                       bitmap = image,
-⚪                   ),
-🟢                   StoryContentPartUiState.Paragraph(
-🟢                       sentences = listOf(
-🟢                           "Maria lebt in einem kleinen Dorf.",
-🟢                           "Jeden Morgen geht sie spazieren im Wald neben ihrem Haus.",
-🟢                           "Sie liebt die Ruhe und die frische Luft.",
-⚪                       ),
-🟢                       translatedSentences = listOf(
-🟢                           "Maria lives in a small village.",
-🟢                           "Every morning she goes for a walk in the forest next to her house.",
-🟢                           "She loves the peace and the fresh air.",
-⚪                       ),
-⚪                   ),
-🟢                   StoryContentPartUiState.Paragraph(
-🟢                       sentences = listOf(
-🟢                           "Eines Tages hört sie das Geräusch von fließendem Wasser.",
-🟢                           "Sie folgt dem Geräusch und entdeckt eine Quelle.",
-🟢                           "Das Wasser ist warm.",
-⚪                       ),
-🟢                       translatedSentences = listOf(
-🟢                           "One day she hears the sound of flowing water.",
-🟢                           "She follows the sound and discovers a spring.",
-🟢                           "The water is warm.",
-⚪                       ),
-⚪                   ),
-🟢                   StoryContentPartUiState.Choices(
-🟢                       options = listOf(
-🟢                           StoryContentPartUiState.Choices.Option(
-🟢                               id = "keep_coin",
-🟢                               text = "Maria behält die Münze.",
-🟢                               translatedText = "Maria keeps the coin.",
-🔴                               onClick = {},
-🟢                               isChosen = false,
-⚪                           ),
-🟢                           StoryContentPartUiState.Choices.Option(
-🟢                               id = "return_coin",
-🟢                               text = "Maria gibt die Münze zurück.",
-🟢                               translatedText = "Maria gives the coin back.",
-🔴                               onClick = {},
-🟢                               isChosen = false,
-⚪                           ),
-⚪                       ),
-⚪                   ),
-⚪               ),
-⚪           ),
-⚪       ),
-🟢       currentPartId = "start",
-🟢       initialContentIndex = 0,
-🟢       selectedText = selectedText,
-🟢       scrollingToPage = null,
-⚪   )
-⚪   
 ⚪   @DefaultPreview
 ⚪   @Composable
 ⚪   fun StoryReaderPreview() {
@@ -502,7 +430,69 @@
 🟢               onChoiceTextSelected = { _, _ -> },
 🟢               onPartScrolledTo = {},
 🟢               onErrorDismissed = {},
-🟢               state = secretHealingBathStory(image = image, selectedText = null),
+⚪               // Real content from the story "Geheimes Heilbad" (Secret Healing Bath): an opening
+⚪               // image, German paragraphs with their English translations, and the story's choices.
+🟢               state = StoryReaderUiState.Loaded(
+🟢                   title = "Geheimes Heilbad",
+🟢                   parts = listOf(
+🟢                       StoryReaderPartUiState(
+🟢                           id = "start",
+🟢                           content = listOf(
+🟢                               StoryContentPartUiState.Image(
+🟢                                   contentDescription = "Eine natürliche Quelle mit einem " +
+⚪                                       "Wasserfall, moosbewachsenen Felsen und Dampf in der Luft.",
+🟢                                   bitmap = image,
+⚪                               ),
+🟢                               StoryContentPartUiState.Paragraph(
+🟢                                   sentences = listOf(
+🟢                                       "Maria lebt in einem kleinen Dorf.",
+🟢                                       "Jeden Morgen geht sie spazieren im Wald neben ihrem Haus.",
+🟢                                       "Sie liebt die Ruhe und die frische Luft.",
+⚪                                   ),
+🟢                                   translatedSentences = listOf(
+🟢                                       "Maria lives in a small village.",
+🟢                                       "Every morning she goes for a walk in the forest next to her house.",
+🟢                                       "She loves the peace and the fresh air.",
+⚪                                   ),
+⚪                               ),
+🟢                               StoryContentPartUiState.Paragraph(
+🟢                                   sentences = listOf(
+🟢                                       "Eines Tages hört sie das Geräusch von fließendem Wasser.",
+🟢                                       "Sie folgt dem Geräusch und entdeckt eine Quelle.",
+🟢                                       "Das Wasser ist warm.",
+⚪                                   ),
+🟢                                   translatedSentences = listOf(
+🟢                                       "One day she hears the sound of flowing water.",
+🟢                                       "She follows the sound and discovers a spring.",
+🟢                                       "The water is warm.",
+⚪                                   ),
+⚪                               ),
+🟢                               StoryContentPartUiState.Choices(
+🟢                                   options = listOf(
+🟢                                       StoryContentPartUiState.Choices.Option(
+🟢                                           id = "keep_coin",
+🟢                                           text = "Maria behält die Münze.",
+🟢                                           translatedText = "Maria keeps the coin.",
+🟢                                           onClick = {},
+🟢                                           isChosen = false,
+⚪                                       ),
+🟢                                       StoryContentPartUiState.Choices.Option(
+🟢                                           id = "return_coin",
+🟢                                           text = "Maria gibt die Münze zurück.",
+🟢                                           translatedText = "Maria gives the coin back.",
+🟢                                           onClick = {},
+🟢                                           isChosen = false,
+⚪                                       ),
+⚪                                   ),
+⚪                               ),
+⚪                           ),
+⚪                       ),
+⚪                   ),
+🟢                   currentPartId = "start",
+🟢                   initialContentIndex = 0,
+🟢                   selectedText = null,
+🟢                   scrollingToPage = null,
+⚪               ),
 ⚪           )
 ⚪       }
 ⚪   }
@@ -520,14 +510,73 @@
 🟢               onChoiceTextSelected = { _, _ -> },
 🟢               onPartScrolledTo = {},
 🟢               onErrorDismissed = {},
-🟢               state = secretHealingBathStory(
-🟢                   image = image,
+⚪               // The same story with its first sentence selected and shown translated, to preview the
+⚪               // tap-to-translate behaviour.
+🟢               state = StoryReaderUiState.Loaded(
+🟢                   title = "Geheimes Heilbad",
+🟢                   parts = listOf(
+🟢                       StoryReaderPartUiState(
+🟢                           id = "start",
+🟢                           content = listOf(
+🟢                               StoryContentPartUiState.Image(
+🟢                                   contentDescription = "Eine natürliche Quelle mit einem " +
+⚪                                       "Wasserfall, moosbewachsenen Felsen und Dampf in der Luft.",
+🟢                                   bitmap = image,
+⚪                               ),
+🟢                               StoryContentPartUiState.Paragraph(
+🟢                                   sentences = listOf(
+🟢                                       "Maria lebt in einem kleinen Dorf.",
+🟢                                       "Jeden Morgen geht sie spazieren im Wald neben ihrem Haus.",
+🟢                                       "Sie liebt die Ruhe und die frische Luft.",
+⚪                                   ),
+🟢                                   translatedSentences = listOf(
+🟢                                       "Maria lives in a small village.",
+🟢                                       "Every morning she goes for a walk in the forest next to her house.",
+🟢                                       "She loves the peace and the fresh air.",
+⚪                                   ),
+⚪                               ),
+🟢                               StoryContentPartUiState.Paragraph(
+🟢                                   sentences = listOf(
+🟢                                       "Eines Tages hört sie das Geräusch von fließendem Wasser.",
+🟢                                       "Sie folgt dem Geräusch und entdeckt eine Quelle.",
+🟢                                       "Das Wasser ist warm.",
+⚪                                   ),
+🟢                                   translatedSentences = listOf(
+🟢                                       "One day she hears the sound of flowing water.",
+🟢                                       "She follows the sound and discovers a spring.",
+🟢                                       "The water is warm.",
+⚪                                   ),
+⚪                               ),
+🟢                               StoryContentPartUiState.Choices(
+🟢                                   options = listOf(
+🟢                                       StoryContentPartUiState.Choices.Option(
+🟢                                           id = "keep_coin",
+🟢                                           text = "Maria behält die Münze.",
+🟢                                           translatedText = "Maria keeps the coin.",
+🟢                                           onClick = {},
+🟢                                           isChosen = false,
+⚪                                       ),
+🟢                                       StoryContentPartUiState.Choices.Option(
+🟢                                           id = "return_coin",
+🟢                                           text = "Maria gibt die Münze zurück.",
+🟢                                           translatedText = "Maria gives the coin back.",
+🟢                                           onClick = {},
+🟢                                           isChosen = false,
+⚪                                       ),
+⚪                                   ),
+⚪                               ),
+⚪                           ),
+⚪                       ),
+⚪                   ),
+🟢                   currentPartId = "start",
+🟢                   initialContentIndex = 0,
 🟢                   selectedText = StoryReaderUiState.SelectedText.SentenceInParagraph(
 🟢                       partIndex = 0,
 🟢                       paragraphIndex = 1,
 🟢                       selectedSentenceIndex = 0,
 🟢                       isTranslated = true,
 ⚪                   ),
+🟢                   scrollingToPage = null,
 ⚪               ),
 ⚪           )
 ⚪       }
