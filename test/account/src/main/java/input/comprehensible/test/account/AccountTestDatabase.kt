@@ -10,7 +10,7 @@ import input.comprehensible.data.user.UserEntity
  * account module persists, so the tests can run against the real [UserLocalDataSource] backed by an
  * in-memory database instead of a hand-written fake.
  *
- * It lives in this module's main source set (rather than `:data:account`'s test fixtures) so Room's
+ * It lives in this module's main source set (rather than `:data-account`'s test fixtures) so Room's
  * KSP processor resolves the [UserEntity] that lives in `:common`, mirroring how `:app`'s `AppDb`
  * is set up.
  */
