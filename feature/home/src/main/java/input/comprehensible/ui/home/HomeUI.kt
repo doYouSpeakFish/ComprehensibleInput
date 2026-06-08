@@ -3,14 +3,13 @@ package input.comprehensible.ui.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -26,16 +25,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import input.comprehensible.feature.home.R
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -150,45 +154,59 @@ private fun HomeOptionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
-    val cardHeight = 220.dp * LocalDensity.current.fontScale.coerceAtLeast(1f)
+    // Derive the theme from the active colour scheme rather than the system setting so the
+    // card stays consistent with the rest of the app even if dark mode is forced explicitly.
+    val isDarkTheme = MaterialTheme.colorScheme.surface.luminance() < 0.5f
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val cardColor = if (isDarkTheme) {
         Color(0xFF181A18)
     } else {
         Color(0xFFFFFBF2)
     }
+    // The scrim keeps the card colour opaque behind the text and fades out to reveal the
+    // artwork on the opposite edge. Mirror both the scrim and the artwork in RTL so the text
+    // always sits over the solid side and stays legible.
+    val scrim = if (isRtl) {
+        Brush.horizontalGradient(
+            0.24f to Color.Transparent,
+            0.5f to cardColor.copy(alpha = 0.97f),
+            1f to cardColor,
+        )
+    } else {
+        Brush.horizontalGradient(
+            0f to cardColor,
+            0.5f to cardColor.copy(alpha = 0.97f),
+            0.76f to Color.Transparent,
+        )
+    }
 
     Card(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(cardHeight),
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(containerColor = cardColor),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
         Box(
+            // A minimum height keeps the intended look, but letting the box grow means large
+            // font scales push the card taller instead of clipping the text.
             modifier = Modifier
                 .fillMaxWidth()
-                .height(cardHeight),
+                .heightIn(min = 220.dp),
         ) {
             Image(
                 painter = painterResource(if (isDarkTheme) darkImage else lightImage),
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .matchParentSize()
+                    .then(if (isRtl) Modifier.graphicsLayer { scaleX = -1f } else Modifier),
                 contentScale = ContentScale.Crop,
             )
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.horizontalGradient(
-                            0f to cardColor,
-                            0.5f to cardColor.copy(alpha = 0.97f),
-                            0.76f to Color.Transparent,
-                        ),
-                    ),
+                    .matchParentSize()
+                    .background(scrim),
             )
             Column(
                 modifier = Modifier
@@ -248,5 +266,24 @@ fun PreviewHomeTextAdventuresDisabled() {
             onSettingsClick = {},
             modifier = Modifier.fillMaxSize(),
         )
+    }
+}
+
+@Preview(
+    name = "phone rtl",
+    showBackground = true,
+)
+@Composable
+fun PreviewHomeRtl() {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        ComprehensibleInputTheme {
+            HomeScreen(
+                textAdventuresEnabled = true,
+                onStoriesClick = {},
+                onTextAdventuresClick = {},
+                onSettingsClick = {},
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
