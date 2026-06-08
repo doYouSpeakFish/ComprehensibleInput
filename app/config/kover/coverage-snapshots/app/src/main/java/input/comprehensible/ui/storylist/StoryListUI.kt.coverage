@@ -58,8 +58,8 @@
 🟢           modifier = modifier,
 🟢           onStorySelected = { onStorySelected(it.id) },
 🟢           onSettingsClick = onSettingsClick,
-🟡           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
-🟡           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+🟢           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+🟢           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
 🟢           state = state,
 ⚪       )
 🟢   }

@@ -82,13 +82,13 @@
 🟢       val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryReaderUiState.Loading)
 🟢       StoryReader(
 🟢           modifier = modifier,
-🟡           onTitleClicked = viewModel::onTitleSelected,
-🟡           onStoryPositionUpdated = viewModel::onStoryLocationUpdated,
-🟡           onCurrentPartChanged = viewModel::onCurrentPartChanged,
-🟡           onSentenceSelected = viewModel::onSentenceSelected,
-🟡           onChoiceTextSelected = viewModel::onChoiceTextSelected,
+🟢           onTitleClicked = viewModel::onTitleSelected,
+🟢           onStoryPositionUpdated = viewModel::onStoryLocationUpdated,
+🟢           onCurrentPartChanged = viewModel::onCurrentPartChanged,
+🟢           onSentenceSelected = viewModel::onSentenceSelected,
+🟢           onChoiceTextSelected = viewModel::onChoiceTextSelected,
 🟢           onErrorDismissed = onErrorDismissed,
-🟡           onPartScrolledTo = viewModel::onPartScrolledTo,
+🟢           onPartScrolledTo = viewModel::onPartScrolledTo,
 🟢           state = state,
 ⚪       )
 🟢   }
@@ -160,8 +160,8 @@
 🟢       val pagerState = rememberPagerState(
 🟢           initialPage = currentPartIndex,
 🟢           pageToScrollTo = state.scrollingToPage,
-🟡           pageCount = { state.parts.size },
-🟡           onNewPageSettled = { pageIndex ->
+🟢           pageCount = { state.parts.size },
+🟢           onNewPageSettled = { pageIndex ->
 🟡               if (pageIndex == state.scrollingToPage) onPartScrolledTo()
 🟡               currentParts.getOrNull(pageIndex)?.id?.let(onCurrentPartChanged)
 ⚪           },
