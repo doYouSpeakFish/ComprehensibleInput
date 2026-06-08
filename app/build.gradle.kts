@@ -220,6 +220,7 @@ koverCoverageReport {
         project(":data-languagesettings"),
         project(":data-textadventure"),
         project(":feature-account"),
+        project(":feature-home"),
         project(":feature-textadventure"),
     )
 }
@@ -231,6 +232,7 @@ kover {
         kover(project(":data-languagesettings"))
         kover(project(":data-textadventure"))
         kover(project(":feature-account"))
+        kover(project(":feature-home"))
         kover(project(":feature-textadventure"))
     }
     reports {
