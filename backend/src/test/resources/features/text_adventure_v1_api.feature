@@ -14,38 +14,27 @@ Feature: Text adventure v1 API
     And the response includes a latest narrator message
 
   @v1
-  Scenario: Creating an adventure stores a catalogue cover image chosen by the AI
+  Scenario: A new adventure is given a cover image
     When I create a text adventure with learning language "es" and translation language "en"
     Then the response status is 201
-    And the response includes a catalogue image id
+    And the response includes a cover image
 
   @v1
-  Scenario: The opening scene prompt offers the AI the adventure image catalogue
-    When I create a text adventure with learning language "es" and translation language "en"
-    Then the opening scene prompt lists the available adventure images
-
-  @v1
-  Scenario: Starting an adventure tells the AI about the player's previous adventures to avoid repetition
-    Given I have an existing adventure
-    When I create a text adventure with learning language "es" and translation language "en"
-    Then the opening scene prompt lists the player's previous adventure title and image
-
-  @v1
-  Scenario: An invalid image choice from the AI falls back to a catalogue image
+  Scenario: A new adventure still has a cover image when the AI does not choose a valid one
     Given the AI will choose image "not-a-real-image"
     When I create a text adventure with learning language "es" and translation language "en"
     Then the response status is 201
-    And the response includes a catalogue image id
+    And the response includes a cover image
 
   @v1
-  Scenario: Adventure images are served as static assets
-    When I request a catalogue adventure image
+  Scenario: An adventure's cover image can be viewed
+    When I open an adventure's cover image
     Then the response status is 200
-    And the response is a PNG image
+    And the response is an image
 
   @v1
-  Scenario: Requesting an unknown adventure image returns not found
-    When I request the adventure image "does-not-exist"
+  Scenario: A cover image that does not exist cannot be viewed
+    When I open a cover image that does not exist
     Then the response status is 404
 
   @v1

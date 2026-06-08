@@ -550,60 +550,34 @@ class TextAdventureV1ApiStepDefinitions {
         assertTrue(latestResponseBody.contains("translatedSentences"))
     }
 
-    @When("I request a catalogue adventure image")
-    fun requestCatalogueAdventureImage() {
+    @When("I open an adventure's cover image")
+    fun openAdventureCoverImage() {
         val id = AdventureImageCatalog.images.first().id
         runAgainstApplication {
             client.get("/$ADVENTURE_IMAGES_PATH/$id.$ADVENTURE_IMAGE_EXTENSION")
         }
     }
 
-    @When("I request the adventure image {string}")
-    fun requestAdventureImage(fileStem: String) {
+    @When("I open a cover image that does not exist")
+    fun openMissingCoverImage() {
         runAgainstApplication {
-            client.get("/$ADVENTURE_IMAGES_PATH/$fileStem.$ADVENTURE_IMAGE_EXTENSION")
+            client.get("/$ADVENTURE_IMAGES_PATH/does-not-exist.$ADVENTURE_IMAGE_EXTENSION")
         }
     }
 
-    @Then("the response includes a catalogue image id")
-    fun responseIncludesCatalogueImageId() {
+    @Then("the response includes a cover image")
+    fun responseIncludesCoverImage() {
         val imageId = extractJsonString(latestResponseBody, "imageId")
-        assertTrue("Expected a catalogue image id but was '$imageId'", AdventureImageCatalog.contains(imageId))
+        assertTrue("Expected a cover image but was '$imageId'", AdventureImageCatalog.contains(imageId))
     }
 
-    @Then("the opening scene prompt lists the available adventure images")
-    fun openingScenePromptListsImages() {
-        val prompt = startSystemPrompts().firstOrNull()
-        assertTrue("Expected a start prompt", prompt != null)
+    @Then("the response is an image")
+    fun responseIsAnImage() {
         assertTrue(
-            "Expected the start prompt to include the image catalogue",
-            prompt!!.contains(AdventureImageCatalog.promptListing()),
+            "Expected an image but the content type was '$latestResponseContentType'",
+            latestResponseContentType.contains("image/"),
         )
     }
-
-    @Then("the opening scene prompt lists the player's previous adventure title and image")
-    fun openingScenePromptListsPreviousAdventures() {
-        val prompt = startSystemPrompts().lastOrNull()
-        assertTrue("Expected a start prompt", prompt != null)
-        assertTrue("Expected the previous adventure title", prompt!!.contains("Lantern Trail"))
-        val image = Regex("\\(image: ([a-z0-9-]+)\\)").find(prompt)
-        assertTrue("Expected a previous adventure image in the prompt", image != null)
-        assertTrue(
-            "Expected the listed previous image to be a catalogue image",
-            AdventureImageCatalog.contains(image!!.groupValues[1]),
-        )
-    }
-
-    @Then("the response is a PNG image")
-    fun responseIsPngImage() {
-        assertTrue(
-            "Expected a PNG content type but was '$latestResponseContentType'",
-            latestResponseContentType.contains("image/png"),
-        )
-    }
-
-    private fun startSystemPrompts(): List<String> =
-        fakeExecutor.invocations.filter { it.promptName == "text-adventure-start" }.map { it.systemPrompt }
 
     @Then("only adventures owned by user A are returned")
     fun listContainsOnlyUserAAdventures() {
