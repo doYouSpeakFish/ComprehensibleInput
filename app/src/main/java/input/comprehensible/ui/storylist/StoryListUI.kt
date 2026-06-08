@@ -27,16 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.createBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
+import input.comprehensible.R
 import input.comprehensible.extensions.isCompact
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
@@ -239,6 +241,21 @@ private fun StoryTitle(
 @DefaultPreview
 @Composable
 fun StoryListScreenPreview() {
+    // Real story titles paired with their featured images (copied into res/drawable) so the
+    // preview resembles the actual story list. The images are copied rather than read from the
+    // assets/ story content because preview rendering cannot reliably load images from assets.
+    val previewStories = listOf(
+        Triple("Geheimes Heilbad", "Secret Healing Bath", R.drawable.preview_story_healing_bath),
+        Triple("Kein Halt am Mars", "No Stop at Mars", R.drawable.preview_story_mars),
+        Triple("Der leere Karneval", "The Empty Carnival", R.drawable.preview_story_carnival),
+        Triple("Die winzigen Wikinger von Berlin", "The Tiny Vikings of Berlin", R.drawable.preview_story_vikings),
+        Triple("Tag der Magie", "Day of Magic", R.drawable.preview_story_magic),
+        Triple("Alter Baum", "Old Tree", R.drawable.preview_story_old_tree),
+        Triple("Geisterflüstern und Herzschläge", "Ghost Whispers and Heartbeats", R.drawable.preview_story_ghosts),
+        Triple("Der Laptop", "The Laptop", R.drawable.preview_story_laptop),
+        Triple("Das Abenteuer des gesprenkelten Bandes", "The Adventure of the Speckled Band", R.drawable.preview_story_speckled_band),
+        Triple("Der Uhrwerk-Leuchtturm", "The Clockwork Lighthouse", R.drawable.preview_story_lighthouse),
+    )
     ComprehensibleInputTheme {
         StoryListScreen(
             onStorySelected = {},
@@ -246,12 +263,12 @@ fun StoryListScreenPreview() {
             onLearningLanguageSelected = {},
             onTranslationLanguageSelected = {},
             state = StoryListUiState(
-                items = List(100) {
+                items = previewStories.mapIndexed { index, (germanTitle, englishTitle, image) ->
                     StoryListUiState.StoryListItem.Story(
-                        id = "$it",
-                        title = "Title $it",
-                        subtitle = "Translated Title $it",
-                        featuredImage = createBitmap(100, 100),
+                        id = (index + 1).toString(),
+                        title = germanTitle,
+                        subtitle = englishTitle,
+                        featuredImage = ImageBitmap.imageResource(image).asAndroidBitmap(),
                     )
                 },
                 learningLanguage = LanguageSelection.GERMAN,
