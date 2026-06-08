@@ -1,6 +1,11 @@
 services:
   backend:
     image: edwardsills/comprehensible-input:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     depends_on:
       - postgres
     environment:
@@ -27,6 +32,11 @@ services:
 
   cloudflared:
     image: cloudflare/cloudflared:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     command:
       - tunnel
       - --no-autoupdate
@@ -39,6 +49,11 @@ services:
 
   postgres:
     image: postgres:17-alpine
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       POSTGRES_DB: comprehensible_input
       POSTGRES_USER: admin
