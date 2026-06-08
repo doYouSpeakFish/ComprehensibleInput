@@ -9,6 +9,7 @@ import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.email.EmailDataSource
 import input.comprehensible.backend.textadventure.ADVENTURE_IMAGE_EXTENSION
 import input.comprehensible.backend.textadventure.ADVENTURE_IMAGES_PATH
+import input.comprehensible.backend.textadventure.AdventureImage
 import input.comprehensible.backend.textadventure.AdventureImageCatalog
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
@@ -550,18 +551,34 @@ class TextAdventureV1ApiStepDefinitions {
         assertTrue(latestResponseBody.contains("translatedSentences"))
     }
 
-    @When("I open an adventure's cover image")
-    fun openAdventureCoverImage() {
-        val id = AdventureImageCatalog.images.first().id
-        runAgainstApplication {
-            client.get("/$ADVENTURE_IMAGES_PATH/$id.$ADVENTURE_IMAGE_EXTENSION")
-        }
+    @Given("a cover image named {string}")
+    fun aCoverImageNamed(name: String) {
+        // Precondition: the named image is part of the bundled catalogue.
+        requireCoverImage(name)
     }
+
+    @When("I view the {string} cover image")
+    fun viewCoverImage(name: String) {
+        openCoverImageAsset(requireCoverImage(name).id)
+    }
+
+    @When("I view the {string} cover image in dark theme")
+    fun viewCoverImageInDarkTheme(name: String) {
+        openCoverImageAsset("${requireCoverImage(name).id}-dark")
+    }
+
+    private fun requireCoverImage(name: String): AdventureImage =
+        AdventureImageCatalog.findByName(name) ?: error("No catalogue cover image is named '$name'")
 
     @When("I open a cover image that does not exist")
     fun openMissingCoverImage() {
+        openCoverImageAsset("does-not-exist")
+    }
+
+    /** Requests the served cover-image asset with the given file-name stem (e.g. an id or "<id>-dark"). */
+    private fun openCoverImageAsset(stem: String) {
         runAgainstApplication {
-            client.get("/$ADVENTURE_IMAGES_PATH/does-not-exist.$ADVENTURE_IMAGE_EXTENSION")
+            client.get("/$ADVENTURE_IMAGES_PATH/$stem.$ADVENTURE_IMAGE_EXTENSION")
         }
     }
 

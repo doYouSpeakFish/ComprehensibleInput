@@ -1,5 +1,6 @@
 package input.comprehensible.data.textadventure.sources.remote
 
+import input.comprehensible.data.textadventure.AdventureImageUrls
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
@@ -26,12 +27,6 @@ import kotlinx.serialization.json.Json
 
 private const val TIMEOUT_MILLIS = 30_000L
 
-// The static-content location of adventure cover images on the backend. Kept in sync with the
-// backend's `ADVENTURE_IMAGES_PATH` / `ADVENTURE_IMAGE_EXTENSION` so an image id resolves to the
-// asset served at `$baseUrl/adventure-images/<id>.png`.
-private const val ADVENTURE_IMAGES_PATH = "adventure-images"
-private const val ADVENTURE_IMAGE_EXTENSION = "png"
-
 class DefaultAdventureRemoteDataSource(
     private val baseUrl: String,
     private val apiKey: String,
@@ -54,9 +49,7 @@ class DefaultAdventureRemoteDataSource(
         return response.body<AdventureListResponse>().items.map { it.toRemoteAdventure(imageUrl(it.imageId)) }
     }
 
-    override fun imageUrl(imageId: String?): String? =
-        imageId?.takeIf { it.isNotBlank() }
-            ?.let { "$baseUrl/$ADVENTURE_IMAGES_PATH/$it.$ADVENTURE_IMAGE_EXTENSION" }
+    override fun imageUrl(imageId: String?): String? = AdventureImageUrls.forId(baseUrl, imageId)
 
     override suspend fun deleteAdventure(token: String, adventureId: String) {
         val response = httpClient.delete("$baseUrl/v1/adventures/$adventureId") {

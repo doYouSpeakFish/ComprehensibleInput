@@ -5,6 +5,9 @@ These are intentionally simple solid-colour PNGs that stand in for the real, AI-
 that will replace them later. Each image in the catalogue gets its own deterministic colour so the
 placeholders are visually distinct, but nothing should depend on the specific colour of any image.
 
+Each image is generated in two variants served side by side: the light-theme `"<id>.png"` and a
+darker dark-theme `"<id>-dark.png"`, so the app can show artwork suited to the current theme.
+
 The image ids are read from the Kotlin catalogue so this script can never drift out of sync with it.
 Run from the repository root (or anywhere):
 
@@ -47,6 +50,15 @@ def colour_for(image_id: str) -> tuple[int, int, int]:
     return r, g, b
 
 
+def dark_colour_for(image_id: str) -> tuple[int, int, int]:
+    digest = hashlib.sha256(image_id.encode("utf-8")).digest()
+    # Genuinely dark (and still distinct per id) so the dark-theme variant clearly reads as dark.
+    r = 20 + digest[0] % 50
+    g = 20 + digest[1] % 50
+    b = 20 + digest[2] % 50
+    return r, g, b
+
+
 def png_bytes(width: int, height: int, colour: tuple[int, int, int]) -> bytes:
     def chunk(tag: bytes, data: bytes) -> bytes:
         return (
@@ -74,9 +86,11 @@ def main() -> None:
     if not image_ids:
         raise SystemExit(f"No image ids found in {CATALOGUE}")
     for image_id in image_ids:
-        path = OUTPUT_DIR / f"{image_id}.png"
-        path.write_bytes(png_bytes(WIDTH, HEIGHT, colour_for(image_id)))
-    print(f"Wrote {len(image_ids)} placeholder images to {OUTPUT_DIR}")
+        light_path = OUTPUT_DIR / f"{image_id}.png"
+        light_path.write_bytes(png_bytes(WIDTH, HEIGHT, colour_for(image_id)))
+        dark_path = OUTPUT_DIR / f"{image_id}-dark.png"
+        dark_path.write_bytes(png_bytes(WIDTH, HEIGHT, dark_colour_for(image_id)))
+    print(f"Wrote {len(image_ids)} light and {len(image_ids)} dark placeholder images to {OUTPUT_DIR}")
 
 
 if __name__ == "__main__":

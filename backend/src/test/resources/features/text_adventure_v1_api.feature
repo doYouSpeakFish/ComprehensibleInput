@@ -28,7 +28,15 @@ Feature: Text adventure v1 API
 
   @v1
   Scenario: An adventure's cover image can be viewed
-    When I open an adventure's cover image
+    Given a cover image named "Forest Path"
+    When I view the "Forest Path" cover image
+    Then the response status is 200
+    And the response is an image
+
+  @v1
+  Scenario: An adventure's dark-theme cover image can be viewed
+    Given a cover image named "Forest Path"
+    When I view the "Forest Path" cover image in dark theme
     Then the response status is 200
     And the response is an image
 
