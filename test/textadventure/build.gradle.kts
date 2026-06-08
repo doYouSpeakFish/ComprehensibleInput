@@ -27,13 +27,13 @@ android {
 dependencies {
     // Depends on both data modules so Room's KSP processor can resolve the cross-module entities and
     // DAOs the test @Database wires together: AdventureEntity / MessageEntity / SentenceEntity and
-    // the AdventureLocalDataSource DAO from :data:textadventure, and the UserLocalDataSource DAO from
-    // :data:account. :common (which owns UserEntity, referenced by the Adventure foreign key) is
+    // the AdventureLocalDataSource DAO from :data-textadventure, and the UserLocalDataSource DAO from
+    // :data-account. :common (which owns UserEntity, referenced by the Adventure foreign key) is
     // depended on directly because the data modules expose it only as `implementation`, so it is not
     // transitive. This is the same set of project dependencies :app declares for its AppDb.
     implementation(project(":common"))
-    implementation(project(":data:textadventure"))
-    implementation(project(":data:account"))
+    implementation(project(":data-textadventure"))
+    implementation(project(":data-account"))
 
     // Compose is on the classpath even though this module defines no UI: :common's compiled classes
     // reference Compose types, and KSP2 has to resolve those references while indexing :common to

@@ -15,9 +15,9 @@ import input.comprehensible.data.user.UserEntity
  * tables, scoped to a [UserEntity] through a foreign key) so the tests can run against the real
  * [AdventureLocalDataSource] backed by an in-memory database instead of a hand-written fake.
  *
- * It lives in this module's main source set (rather than `:data:textadventure`'s test fixtures)
+ * It lives in this module's main source set (rather than `:data-textadventure`'s test fixtures)
  * because Room's KSP processor can only resolve the cross-module [UserEntity] foreign key from a
- * module that depends on both `:data:textadventure` and `:data:account`, exactly as `:app` does.
+ * module that depends on both `:data-textadventure` and `:data-account`, exactly as `:app` does.
  *
  * [getUserDao] is exposed so tests can seed the [UserEntity] that the adventures' foreign key
  * requires before inserting adventure rows.

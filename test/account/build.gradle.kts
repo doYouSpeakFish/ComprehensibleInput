@@ -25,11 +25,11 @@ android {
 }
 
 dependencies {
-    // Depends on :data:account for the UserLocalDataSource DAO, and on :common directly for
+    // Depends on :data-account for the UserLocalDataSource DAO, and on :common directly for
     // UserEntity (the data module exposes :common only as `implementation`, so it is not
     // transitive) so Room's KSP processor can resolve the entity. This mirrors :app's AppDb setup.
     implementation(project(":common"))
-    implementation(project(":data:account"))
+    implementation(project(":data-account"))
 
     // Compose is on the classpath even though this module defines no UI: :common's compiled classes
     // reference Compose types, and KSP2 has to resolve those references while indexing :common to

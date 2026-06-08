@@ -133,7 +133,7 @@ android {
     }
     lint {
         // CI runs `:app:lint`. Enabling checkDependencies makes it also analyse the
-        // library modules this app depends on (`:common`, `:feature:*`, `:data:*`),
+        // library modules this app depends on (`:common`, `:feature-*`, `:data-*`),
         // so a string that is missing a translation in any module fails the build
         // rather than slipping through because only `:app` was linted.
         checkDependencies = true
@@ -174,7 +174,7 @@ roborazzi {
     generateComposePreviewRobolectricTests {
         enable = true
         // Only scan packages owned by this module (plus shared previews from :common).
-        // The account previews live in :feature:account, which generates their screenshots
+        // The account previews live in :feature-account, which generates their screenshots
         // itself, so they are intentionally excluded here to avoid duplicate screenshots.
         packages = listOf(
             "input.comprehensible.ui.components",
@@ -216,22 +216,22 @@ afterEvaluate {
 koverCoverageReport {
     sourceProjects(
         project(":common"),
-        project(":data:account"),
-        project(":data:languagesettings"),
-        project(":data:textadventure"),
-        project(":feature:account"),
-        project(":feature:textadventure"),
+        project(":data-account"),
+        project(":data-languagesettings"),
+        project(":data-textadventure"),
+        project(":feature-account"),
+        project(":feature-textadventure"),
     )
 }
 
 kover {
     dependencies {
         kover(project(":common"))
-        kover(project(":data:account"))
-        kover(project(":data:languagesettings"))
-        kover(project(":data:textadventure"))
-        kover(project(":feature:account"))
-        kover(project(":feature:textadventure"))
+        kover(project(":data-account"))
+        kover(project(":data-languagesettings"))
+        kover(project(":data-textadventure"))
+        kover(project(":feature-account"))
+        kover(project(":feature-textadventure"))
     }
     reports {
         filters {
@@ -271,12 +271,12 @@ kover {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":feature:account"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:textadventure"))
-    implementation(project(":data:account"))
-    implementation(project(":data:languagesettings"))
-    implementation(project(":data:textadventure"))
+    implementation(project(":feature-account"))
+    implementation(project(":feature-home"))
+    implementation(project(":feature-textadventure"))
+    implementation(project(":data-account"))
+    implementation(project(":data-languagesettings"))
+    implementation(project(":data-textadventure"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
@@ -307,10 +307,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(project(":commontest"))
-    testImplementation(testFixtures(project(":data:languagesettings")))
-    testImplementation(testFixtures(project(":feature:account")))
-    testImplementation(testFixtures(project(":feature:home")))
-    testImplementation(testFixtures(project(":feature:textadventure")))
+    testImplementation(testFixtures(project(":data-languagesettings")))
+    testImplementation(testFixtures(project(":feature-account")))
+    testImplementation(testFixtures(project(":feature-home")))
+    testImplementation(testFixtures(project(":feature-textadventure")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

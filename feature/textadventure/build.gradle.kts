@@ -59,9 +59,9 @@ roborazzi {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":data:textadventure"))
-    implementation(project(":data:account"))
-    implementation(project(":data:languagesettings"))
+    implementation(project(":data-textadventure"))
+    implementation(project(":data-account"))
+    implementation(project(":data-languagesettings"))
     implementation(libs.ktin.core)
 
     implementation(platform(libs.androidx.compose.bom))
@@ -82,15 +82,15 @@ dependencies {
     testFixturesImplementation(platform(libs.androidx.compose.bom))
     testFixturesImplementation(libs.androidx.ui.test.junit4)
     testFixturesImplementation(project(":common"))
-    testFixturesImplementation(project(":data:textadventure"))
+    testFixturesImplementation(project(":data-textadventure"))
     testFixturesImplementation(project(":textadventuremodels"))
     testFixturesImplementation(libs.coroutines)
 
     testImplementation(project(":commontest"))
     testImplementation(project(":textadventuremodels"))
-    testImplementation(project(":test:textadventure"))
-    testImplementation(testFixtures(project(":data:languagesettings")))
-    testImplementation(testFixtures(project(":feature:account")))
+    testImplementation(project(":test-textadventure"))
+    testImplementation(testFixtures(project(":data-languagesettings")))
+    testImplementation(testFixtures(project(":feature-account")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.ui.test.junit4)
