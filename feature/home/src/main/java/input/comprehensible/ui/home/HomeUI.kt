@@ -152,7 +152,7 @@ private fun HomeOptionCard(
     modifier: Modifier = Modifier,
 ) {
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    val cardColor = MaterialTheme.colorScheme.homeOptionCardColor
+    val cardColor = MaterialTheme.colorScheme.homeOptionCardColor()
     // The scrim keeps the card colour opaque behind the text and fades out to reveal the
     // artwork on the opposite edge. Mirror both the scrim and the artwork in RTL so the text
     // always sits over the solid side and stays legible.
