@@ -25,6 +25,7 @@ dependencies {
     kover(project(":data-languagesettings"))
     kover(project(":data-textadventure"))
     kover(project(":feature-account"))
+    kover(project(":feature-home"))
     kover(project(":feature-textadventure"))
     kover(project(":backend"))
 }
