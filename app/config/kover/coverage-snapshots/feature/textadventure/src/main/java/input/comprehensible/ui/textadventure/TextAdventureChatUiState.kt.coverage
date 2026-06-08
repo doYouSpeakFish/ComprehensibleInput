@@ -3,7 +3,7 @@
 ⚪   /**
 ⚪    * The UI state for the text adventure chat screen.
 ⚪    */
-🟢   data class TextAdventureChatUiState(
+⚪   data class TextAdventureChatUiState(
 🟢       val messages: List<ChatMessage>,
 🟢       val isGenerating: Boolean,
 🟢       val showError: Boolean,
@@ -11,6 +11,7 @@
 🟢       val showMessageError: Boolean,
 🟢       val optimisticUserMessage: ChatMessage?,
 🟢       val selectedSentence: SelectedSentence?,
+🟢       val imageUrl: String? = null,
 ⚪   ) {
 ⚪       /** The persisted messages followed by the not-yet-submitted user message, if any. */
 ⚪       val displayedMessages: List<ChatMessage>
@@ -44,6 +45,7 @@
 🟢               showMessageError = false,
 🟢               optimisticUserMessage = null,
 🟢               selectedSentence = null,
+🟢               imageUrl = null,
 ⚪           )
 ⚪       }
 ⚪   }

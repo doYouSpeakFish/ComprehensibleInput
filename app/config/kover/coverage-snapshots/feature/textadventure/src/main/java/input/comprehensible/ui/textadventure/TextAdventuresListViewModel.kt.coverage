@@ -109,4 +109,5 @@
 🟢       id = id,
 🟢       title = title,
 🟢       subtitle = learningLanguage,
+🟢       imageUrl = imageUrl,
 ⚪   )

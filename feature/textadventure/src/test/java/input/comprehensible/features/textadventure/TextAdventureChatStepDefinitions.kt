@@ -35,6 +35,11 @@ class TextAdventureChatStepDefinitions {
         scope.startReturns(text, translation)
     }
 
+    @Given("starting an adventure returns {string} with a cover image")
+    fun startingAnAdventureReturnsWithACoverImage(text: String) {
+        scope.startReturnsWithImage(text)
+    }
+
     @Given("the start adventure request will fail")
     fun theStartAdventureRequestWillFail() {
         scope.failStart()
@@ -191,6 +196,11 @@ class TextAdventureChatStepDefinitions {
     @Then("the text adventure input is hidden")
     fun theTextAdventureInputIsHidden() {
         chat.assertInputIsHidden()
+    }
+
+    @Then("the adventure cover image is shown")
+    fun theAdventureCoverImageIsShown() {
+        chat.assertAdventureImageIsShown()
     }
 
     @Then("the text adventure input is disabled")

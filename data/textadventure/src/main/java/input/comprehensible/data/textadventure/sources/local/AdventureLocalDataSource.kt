@@ -13,12 +13,16 @@ import kotlinx.coroutines.flow.Flow
  * tests; the Room implementation is provided by the app's database.
  */
 @Dao
+@Suppress("TooManyFunctions")
 interface AdventureLocalDataSource {
     @Query("SELECT * FROM adventure WHERE userId = :userId ORDER BY updatedAt DESC")
     fun observeAdventures(userId: String): Flow<List<AdventureEntity>>
 
     @Query("SELECT * FROM adventure WHERE id = :id")
     suspend fun getAdventure(id: String): AdventureEntity?
+
+    @Query("SELECT * FROM adventure WHERE id = :id")
+    fun observeAdventure(id: String): Flow<AdventureEntity?>
 
     @Upsert
     suspend fun upsertAdventures(adventures: List<AdventureEntity>)

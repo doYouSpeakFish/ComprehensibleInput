@@ -7,6 +7,9 @@ import input.comprehensible.backend.TEXT_ADVENTURE_RATE_LIMIT
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.email.EmailDataSource
+import input.comprehensible.backend.textadventure.ADVENTURE_IMAGE_EXTENSION
+import input.comprehensible.backend.textadventure.ADVENTURE_IMAGES_PATH
+import input.comprehensible.backend.textadventure.AdventureImageCatalog
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
@@ -56,6 +59,7 @@ class TextAdventureV1ApiStepDefinitions {
     private var isAuthenticated: Boolean = true
     private var latestResponseStatus: HttpStatusCode? = null
     private var latestResponseBody: String = ""
+    private var latestResponseContentType: String = ""
     private var userAAdventureId: String = ""
     private val userAAdventureIds: MutableList<String> = mutableListOf()
     private var userBAdventureId: String = ""
@@ -91,6 +95,7 @@ class TextAdventureV1ApiStepDefinitions {
 
         latestResponseStatus = null
         latestResponseBody = ""
+        latestResponseContentType = ""
         userAAdventureId = ""
         userAAdventureIds.clear()
         userBAdventureId = ""
@@ -545,6 +550,61 @@ class TextAdventureV1ApiStepDefinitions {
         assertTrue(latestResponseBody.contains("translatedSentences"))
     }
 
+    @When("I request a catalogue adventure image")
+    fun requestCatalogueAdventureImage() {
+        val id = AdventureImageCatalog.images.first().id
+        runAgainstApplication {
+            client.get("/$ADVENTURE_IMAGES_PATH/$id.$ADVENTURE_IMAGE_EXTENSION")
+        }
+    }
+
+    @When("I request the adventure image {string}")
+    fun requestAdventureImage(fileStem: String) {
+        runAgainstApplication {
+            client.get("/$ADVENTURE_IMAGES_PATH/$fileStem.$ADVENTURE_IMAGE_EXTENSION")
+        }
+    }
+
+    @Then("the response includes a catalogue image id")
+    fun responseIncludesCatalogueImageId() {
+        val imageId = extractJsonString(latestResponseBody, "imageId")
+        assertTrue("Expected a catalogue image id but was '$imageId'", AdventureImageCatalog.contains(imageId))
+    }
+
+    @Then("the opening scene prompt lists the available adventure images")
+    fun openingScenePromptListsImages() {
+        val prompt = startSystemPrompts().firstOrNull()
+        assertTrue("Expected a start prompt", prompt != null)
+        assertTrue(
+            "Expected the start prompt to include the image catalogue",
+            prompt!!.contains(AdventureImageCatalog.promptListing()),
+        )
+    }
+
+    @Then("the opening scene prompt lists the player's previous adventure title and image")
+    fun openingScenePromptListsPreviousAdventures() {
+        val prompt = startSystemPrompts().lastOrNull()
+        assertTrue("Expected a start prompt", prompt != null)
+        assertTrue("Expected the previous adventure title", prompt!!.contains("Lantern Trail"))
+        val image = Regex("\\(image: ([a-z0-9-]+)\\)").find(prompt)
+        assertTrue("Expected a previous adventure image in the prompt", image != null)
+        assertTrue(
+            "Expected the listed previous image to be a catalogue image",
+            AdventureImageCatalog.contains(image!!.groupValues[1]),
+        )
+    }
+
+    @Then("the response is a PNG image")
+    fun responseIsPngImage() {
+        assertTrue(
+            "Expected a PNG content type but was '$latestResponseContentType'",
+            latestResponseContentType.contains("image/png"),
+        )
+    }
+
+    private fun startSystemPrompts(): List<String> =
+        fakeExecutor.invocations.filter { it.promptName == "text-adventure-start" }.map { it.systemPrompt }
+
     @Then("only adventures owned by user A are returned")
     fun listContainsOnlyUserAAdventures() {
         assertTrue(latestResponseBody.contains("Lantern Trail"))
@@ -737,6 +797,7 @@ class TextAdventureV1ApiStepDefinitions {
                 val response = block()
                 latestResponseStatus = response.status
                 latestResponseBody = response.bodyAsText()
+                latestResponseContentType = response.headers["Content-Type"].orEmpty()
             }
         }
     }
@@ -792,6 +853,7 @@ class TextAdventureV1ApiStepDefinitions {
         sentence: String,
         translation: String,
         isEnding: Boolean = false,
+        imageId: String = "",
     ) {
         fakeExecutor.enqueueResponse(
             TextAdventureStructuredResponse(
@@ -799,7 +861,18 @@ class TextAdventureV1ApiStepDefinitions {
                 paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
                 translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
                 isEnding = isEnding,
+                imageId = imageId,
             ),
+        )
+    }
+
+    @Given("the AI will choose image {string}")
+    fun theAiWillChooseImage(imageId: String) {
+        enqueueNarratorResponse(
+            title = "Lantern Trail",
+            sentence = "Hola",
+            translation = "Hello",
+            imageId = imageId,
         )
     }
 

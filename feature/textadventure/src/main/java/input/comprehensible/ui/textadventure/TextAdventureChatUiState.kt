@@ -11,6 +11,7 @@ data class TextAdventureChatUiState(
     val showMessageError: Boolean,
     val optimisticUserMessage: ChatMessage?,
     val selectedSentence: SelectedSentence?,
+    val imageUrl: String? = null,
 ) {
     /** The persisted messages followed by the not-yet-submitted user message, if any. */
     val displayedMessages: List<ChatMessage>
@@ -44,6 +45,7 @@ data class TextAdventureChatUiState(
             showMessageError = false,
             optimisticUserMessage = null,
             selectedSentence = null,
+            imageUrl = null,
         )
     }
 }

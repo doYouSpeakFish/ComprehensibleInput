@@ -32,7 +32,12 @@ fun PreviewTextAdventuresList() {
                 isSignedIn = true,
                 isLoading = false,
                 adventures = listOf(
-                    AdventureItem(id = "1", title = "Lantern Trail", subtitle = "German"),
+                    AdventureItem(
+                        id = "1",
+                        title = "Lantern Trail",
+                        subtitle = "German",
+                        imageUrl = "https://example.com/adventure-images/lantern.png",
+                    ),
                     AdventureItem(id = "2", title = "Forest Echoes", subtitle = "Spanish"),
                 ),
                 showError = false,

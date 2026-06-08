@@ -38,6 +38,11 @@ class TextAdventuresListStepDefinitions {
         scope.returnAdventures(title)
     }
 
+    @Given("the adventures request will return the {string} adventure with a cover image")
+    fun theAdventuresRequestWillReturnTheAdventureWithACoverImage(title: String) {
+        scope.returnAdventureWithImage(title)
+    }
+
     @Given("adventures requests are delayed")
     fun adventuresRequestsAreDelayed() {
         scope.delayRequests()
@@ -109,6 +114,16 @@ class TextAdventuresListStepDefinitions {
     @Then("the {string} adventure is not listed")
     fun theAdventureIsNotListed(title: String) {
         robot.assertAdventureIsNotListed(title)
+    }
+
+    @Then("the {string} adventure cover image is shown")
+    fun theAdventureCoverImageIsShown(title: String) {
+        robot.assertAdventureImageIsShown(title)
+    }
+
+    @Then("no cover image is shown for the {string} adventure")
+    fun noCoverImageIsShownForTheAdventure(title: String) {
+        robot.assertAdventureImageIsNotShown(title)
     }
 
     @Then("the adventures loading indicator is shown")

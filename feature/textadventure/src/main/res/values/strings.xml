@@ -18,4 +18,5 @@
     <string name="text_adventure_retry">Retry</string>
     <string name="text_adventure_message_hint">Type your next move…</string>
     <string name="text_adventure_send">Send message</string>
+    <string name="text_adventure_image_content_description">Adventure image</string>
 </resources>
