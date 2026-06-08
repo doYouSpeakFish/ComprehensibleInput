@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -350,6 +351,12 @@ class PasswordResetRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    fun assertResendCountdownShows(secondsRemaining: Int) {
+        composeTestRule
+            .onNodeWithTag("account_password_reset_resend_button")
+            .assertTextEquals("Resend in ${secondsRemaining}s")
+    }
+
     fun assertCodeResentConfirmationIsShown() {
         composeTestRule
             .onNodeWithTag("account_password_reset_code_resent_message")
@@ -418,6 +425,12 @@ class VerifyEmailRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule
             .onNodeWithTag("account_verify_email_resend_loading_indicator")
             .assertIsDisplayed()
+    }
+
+    fun assertResendCountdownShows(secondsRemaining: Int) {
+        composeTestRule
+            .onNodeWithTag("account_verify_email_resend_button")
+            .assertTextEquals("Resend in ${secondsRemaining}s")
     }
 
     fun assertCodeResentConfirmationIsShown() {

@@ -78,10 +78,42 @@ Feature: Verify email
     When I request a new verification code
     Then the error dialog is shown
 
-  Scenario: The verification code request error dialog can be dismissed
+  Scenario: A failed verification code request still starts the resend cooldown
     Given the email verification screen for "user@example.com" is open
     And the email verification code request will fail
     When I request a new verification code
     Then the error dialog is shown
     When I dismiss the error dialog
+    Then the resend verification code button is disabled
+    And the resend verification code button shows a 30 second countdown
+
+  Scenario: The resend button is disabled with a countdown after a new code is requested
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will succeed
+    When I request a new verification code
+    Then the resend verification code button is disabled
+    And the resend verification code button shows a 30 second countdown
+
+  Scenario: The resend countdown counts down the remaining seconds
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will succeed
+    When I request a new verification code
+    And 1 second passes
+    Then the resend verification code button shows a 29 second countdown
+
+  Scenario: The resend button is re-enabled once the cooldown elapses
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will succeed
+    When I request a new verification code
+    And the resend code cooldown elapses
     Then the resend verification code button is enabled
+
+  Scenario: A new code can be requested again once the cooldown has elapsed
+    Given the email verification screen for "user@example.com" is open
+    And the email verification code request will succeed
+    And the email verification code request will succeed
+    When I request a new verification code
+    And the resend code cooldown elapses
+    And I request a new verification code
+    Then the resend verification code button is disabled
+    And the resend verification code button shows a 30 second countdown

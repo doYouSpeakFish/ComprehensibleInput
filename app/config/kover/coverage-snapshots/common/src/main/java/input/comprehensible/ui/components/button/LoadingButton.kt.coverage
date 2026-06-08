@@ -48,7 +48,7 @@
 ⚪    * An [OutlinedButton] variant of [LoadingButton] for secondary actions, such as resending a code.
 ⚪    */
 ⚪   @Composable
-🟢   fun LoadingOutlinedButton(
+🔴   fun LoadingOutlinedButton(
 ⚪       text: String,
 ⚪       loading: Boolean,
 ⚪       onClick: () -> Unit,

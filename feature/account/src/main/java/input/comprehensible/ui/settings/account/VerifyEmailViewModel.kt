@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import input.comprehensible.account.usecases.RequestEmailVerificationCodeUseCase
 import input.comprehensible.account.usecases.VerifyEmailUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +20,8 @@ class VerifyEmailViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(VerifyEmailUiState(email = email))
     val uiState: StateFlow<VerifyEmailUiState> = _uiState.asStateFlow()
+
+    private var resendCooldownJob: Job? = null
 
     fun onCodeChanged(code: String) {
         _uiState.update { it.copy(code = code) }
@@ -53,6 +56,21 @@ class VerifyEmailViewModel(
                 .onFailure {
                     _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
+            // Start the cooldown once the request has completed, whether it succeeded or failed: the
+            // backend consumes its rate-limit allowance when it admits the request, so starting only
+            // after completion keeps the client cooldown from ending before the backend's window.
+            startResendCooldown()
+        }
+    }
+
+    /**
+     * Disables the resend button for [RESEND_CODE_COOLDOWN_SECONDS] (matching the backend rate
+     * limit) while counting the remaining seconds down for the "Resend in" label.
+     */
+    private fun startResendCooldown() {
+        resendCooldownJob?.cancel()
+        resendCooldownJob = viewModelScope.launchResendCodeCooldown { secondsRemaining ->
+            _uiState.update { it.copy(resendCooldownSeconds = secondsRemaining) }
         }
     }
 

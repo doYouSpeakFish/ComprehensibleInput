@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import input.comprehensible.account.usecases.RequestPasswordResetCodeUseCase
 import input.comprehensible.account.usecases.ResetPasswordUseCase
 import input.comprehensible.data.account.InvalidResetCodeException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,8 +20,20 @@ class PasswordResetViewModel(
     private val resetPassword: ResetPasswordUseCase = ResetPasswordUseCase(),
     private val requestPasswordResetCode: RequestPasswordResetCodeUseCase = RequestPasswordResetCodeUseCase(),
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PasswordResetUiState(email = email))
+    private val _uiState = MutableStateFlow(
+        PasswordResetUiState(email = email, resendCooldownSeconds = RESEND_CODE_COOLDOWN_SECONDS),
+    )
     val uiState: StateFlow<PasswordResetUiState> = _uiState.asStateFlow()
+
+    private var resendCooldownJob: Job? = null
+
+    init {
+        // Reaching this screen means a reset code was just requested on the forgot-password screen,
+        // which already consumed the backend's per-email rate-limit window. Begin the cooldown
+        // immediately so the resend button isn't offered until the backend will accept another
+        // request.
+        startResendCooldown()
+    }
 
     fun onCodeChanged(code: String) {
         _uiState.update { it.copy(code = code) }
@@ -67,6 +80,21 @@ class PasswordResetViewModel(
                 .onFailure {
                     _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
+            // Start the cooldown once the request has completed, whether it succeeded or failed: the
+            // backend consumes its rate-limit allowance when it admits the request, so starting only
+            // after completion keeps the client cooldown from ending before the backend's window.
+            startResendCooldown()
+        }
+    }
+
+    /**
+     * Disables the resend button for [RESEND_CODE_COOLDOWN_SECONDS] (matching the backend rate
+     * limit) while counting the remaining seconds down for the "Resend in" label.
+     */
+    private fun startResendCooldown() {
+        resendCooldownJob?.cancel()
+        resendCooldownJob = viewModelScope.launchResendCodeCooldown { secondsRemaining ->
+            _uiState.update { it.copy(resendCooldownSeconds = secondsRemaining) }
         }
     }
 

@@ -18,6 +18,16 @@ class AccountCommonStepDefinitions {
         scope.delayAccountRequests(IN_FLIGHT_DELAY_MILLIS)
     }
 
+    @When("{int} second(s) pass(es)")
+    fun secondsPass(seconds: Int) {
+        scope.advanceTimeBy(seconds * MILLIS_PER_SECOND)
+    }
+
+    @When("the resend code cooldown elapses")
+    fun theResendCodeCooldownElapses() {
+        scope.advanceUntilIdle()
+    }
+
     @Given("I am signed in as {string}")
     fun iAmSignedInAs(email: String) {
         scope.signInAsBlocking(email)
@@ -36,5 +46,6 @@ class AccountCommonStepDefinitions {
 
     private companion object {
         const val IN_FLIGHT_DELAY_MILLIS = 1_000L
+        const val MILLIS_PER_SECOND = 1_000L
     }
 }
