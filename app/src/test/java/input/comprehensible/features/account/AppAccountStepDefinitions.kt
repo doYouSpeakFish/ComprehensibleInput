@@ -5,7 +5,7 @@ import io.cucumber.java.en.Then
 
 /**
  * Assertions about the account screen as reached from within the app (via settings). The account
- * feature's own behaviour is covered by the Cucumber suite in :feature:account.
+ * feature's own behaviour is covered by the Cucumber suite in :feature-account.
  */
 class AppAccountStepDefinitions {
     private val scope get() = AppScenarioHolder.scope
