@@ -1,5 +1,6 @@
 package input.comprehensible.ui.storyreader
 
+import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
@@ -45,9 +46,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -414,9 +418,81 @@ private fun StoryReaderErrorDialog(onDismissRequest: () -> Unit) {
     }
 }
 
+/**
+ * Builds the reader state for the real story "Geheimes Heilbad" (Secret Healing Bath) so the
+ * preview shows genuine story content: an opening image, German paragraphs with their English
+ * translations, and the story's two choices. The image is loaded from a preview drawable because
+ * preview rendering cannot reliably load the story images from assets.
+ */
+private fun secretHealingBathStory(
+    image: Bitmap,
+    selectedText: StoryReaderUiState.SelectedText?,
+): StoryReaderUiState.Loaded = StoryReaderUiState.Loaded(
+    title = "Geheimes Heilbad",
+    parts = listOf(
+        StoryReaderPartUiState(
+            id = "start",
+            content = listOf(
+                StoryContentPartUiState.Image(
+                    contentDescription = "Eine natürliche Quelle mit einem Wasserfall, " +
+                        "moosbewachsenen Felsen und Dampf in der Luft.",
+                    bitmap = image,
+                ),
+                StoryContentPartUiState.Paragraph(
+                    sentences = listOf(
+                        "Maria lebt in einem kleinen Dorf.",
+                        "Jeden Morgen geht sie spazieren im Wald neben ihrem Haus.",
+                        "Sie liebt die Ruhe und die frische Luft.",
+                    ),
+                    translatedSentences = listOf(
+                        "Maria lives in a small village.",
+                        "Every morning she goes for a walk in the forest next to her house.",
+                        "She loves the peace and the fresh air.",
+                    ),
+                ),
+                StoryContentPartUiState.Paragraph(
+                    sentences = listOf(
+                        "Eines Tages hört sie das Geräusch von fließendem Wasser.",
+                        "Sie folgt dem Geräusch und entdeckt eine Quelle.",
+                        "Das Wasser ist warm.",
+                    ),
+                    translatedSentences = listOf(
+                        "One day she hears the sound of flowing water.",
+                        "She follows the sound and discovers a spring.",
+                        "The water is warm.",
+                    ),
+                ),
+                StoryContentPartUiState.Choices(
+                    options = listOf(
+                        StoryContentPartUiState.Choices.Option(
+                            id = "keep_coin",
+                            text = "Maria behält die Münze.",
+                            translatedText = "Maria keeps the coin.",
+                            onClick = {},
+                            isChosen = false,
+                        ),
+                        StoryContentPartUiState.Choices.Option(
+                            id = "return_coin",
+                            text = "Maria gibt die Münze zurück.",
+                            translatedText = "Maria gives the coin back.",
+                            onClick = {},
+                            isChosen = false,
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
+    currentPartId = "start",
+    initialContentIndex = 0,
+    selectedText = selectedText,
+    scrollingToPage = null,
+)
+
 @DefaultPreview
 @Composable
 fun StoryReaderPreview() {
+    val image = ImageBitmap.imageResource(R.drawable.preview_story_healing_bath).asAndroidBitmap()
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
@@ -426,35 +502,7 @@ fun StoryReaderPreview() {
             onChoiceTextSelected = { _, _ -> },
             onPartScrolledTo = {},
             onErrorDismissed = {},
-            state = StoryReaderUiState.Loaded(
-                title = "Title",
-                parts = listOf(
-                    StoryReaderPartUiState(
-                        id = "part",
-                        content = listOf(
-                            StoryContentPartUiState.Paragraph(
-                                sentences = listOf("Content"),
-                                translatedSentences = listOf("Contenido"),
-                            ),
-                            StoryContentPartUiState.Choices(
-                                options = listOf(
-                                    StoryContentPartUiState.Choices.Option(
-                                        id = "option-1",
-                                        text = "Sie behält den Schlüssel.",
-                                        translatedText = "She keeps the key.",
-                                        onClick = {},
-                                        isChosen = false
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                currentPartId = "part",
-                initialContentIndex = 0,
-                selectedText = null,
-                scrollingToPage = null,
-            ),
+            state = secretHealingBathStory(image = image, selectedText = null),
         )
     }
 }
@@ -462,6 +510,7 @@ fun StoryReaderPreview() {
 @DefaultPreview
 @Composable
 fun StoryReaderTranslationPreview() {
+    val image = ImageBitmap.imageResource(R.drawable.preview_story_healing_bath).asAndroidBitmap()
     ComprehensibleInputTheme {
         StoryReader(
             onTitleClicked = {},
@@ -471,34 +520,14 @@ fun StoryReaderTranslationPreview() {
             onChoiceTextSelected = { _, _ -> },
             onPartScrolledTo = {},
             onErrorDismissed = {},
-            state = StoryReaderUiState.Loaded(
-                title = "Title",
-                parts = listOf(
-                    StoryReaderPartUiState(
-                        id = "part",
-                        content = listOf(
-                            StoryContentPartUiState.Paragraph(
-                                sentences = listOf("Content"),
-                                translatedSentences = listOf("Contenido"),
-                            ),
-                            StoryContentPartUiState.Choices(
-                                options = listOf(
-                                    StoryContentPartUiState.Choices.Option(
-                                        id = "option-1",
-                                        text = "Sie behält den Schlüssel.",
-                                        translatedText = "She keeps the key.",
-                                        onClick = {},
-                                        isChosen = false,
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
+            state = secretHealingBathStory(
+                image = image,
+                selectedText = StoryReaderUiState.SelectedText.SentenceInParagraph(
+                    partIndex = 0,
+                    paragraphIndex = 1,
+                    selectedSentenceIndex = 0,
+                    isTranslated = true,
                 ),
-                currentPartId = "part",
-                initialContentIndex = 0,
-                selectedText = StoryReaderUiState.SelectedText.Title(isTranslated = true),
-                scrollingToPage = null,
             ),
         )
     }
