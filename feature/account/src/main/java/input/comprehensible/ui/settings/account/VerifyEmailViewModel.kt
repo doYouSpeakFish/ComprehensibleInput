@@ -52,11 +52,14 @@ class VerifyEmailViewModel(
                     _uiState.update {
                         it.copy(isResendingCode = false, codeResent = true, code = "")
                     }
-                    startResendCooldown()
                 }
                 .onFailure {
                     _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
+            // Start the cooldown once the request has completed, whether it succeeded or failed: the
+            // backend consumes its rate-limit allowance when it admits the request, so starting only
+            // after completion keeps the client cooldown from ending before the backend's window.
+            startResendCooldown()
         }
     }
 

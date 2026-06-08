@@ -78,13 +78,14 @@ Feature: Verify email
     When I request a new verification code
     Then the error dialog is shown
 
-  Scenario: The verification code request error dialog can be dismissed
+  Scenario: A failed verification code request still starts the resend cooldown
     Given the email verification screen for "user@example.com" is open
     And the email verification code request will fail
     When I request a new verification code
     Then the error dialog is shown
     When I dismiss the error dialog
-    Then the resend verification code button is enabled
+    Then the resend verification code button is disabled
+    And the resend verification code button shows a 30 second countdown
 
   Scenario: The resend button is disabled with a countdown after a new code is requested
     Given the email verification screen for "user@example.com" is open
