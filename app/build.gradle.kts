@@ -102,6 +102,7 @@ android {
             buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
             buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "$enableAllFeatureFlags")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
