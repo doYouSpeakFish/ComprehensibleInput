@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import input.comprehensible.account.usecases.RequestPasswordResetCodeUseCase
 import input.comprehensible.account.usecases.ResetPasswordUseCase
 import input.comprehensible.data.account.InvalidResetCodeException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +22,8 @@ class PasswordResetViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PasswordResetUiState(email = email))
     val uiState: StateFlow<PasswordResetUiState> = _uiState.asStateFlow()
+
+    private var resendCooldownJob: Job? = null
 
     fun onCodeChanged(code: String) {
         _uiState.update { it.copy(code = code) }
@@ -63,10 +66,22 @@ class PasswordResetViewModel(
                     _uiState.update {
                         it.copy(isResendingCode = false, codeResent = true, code = "")
                     }
+                    startResendCooldown()
                 }
                 .onFailure {
                     _uiState.update { it.copy(isResendingCode = false, showError = true) }
                 }
+        }
+    }
+
+    /**
+     * Disables the resend button for [RESEND_CODE_COOLDOWN_SECONDS] (matching the backend rate
+     * limit) while counting the remaining seconds down for the "Resend in" label.
+     */
+    private fun startResendCooldown() {
+        resendCooldownJob?.cancel()
+        resendCooldownJob = viewModelScope.launchResendCodeCooldown { secondsRemaining ->
+            _uiState.update { it.copy(resendCooldownSeconds = secondsRemaining) }
         }
     }
 

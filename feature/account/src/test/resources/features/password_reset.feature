@@ -134,6 +134,37 @@ Feature: Password reset
     When I dismiss the error dialog
     Then the resend reset code button is enabled
 
+  Scenario: The resend button is disabled with a countdown after a new code is requested
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will succeed
+    When I request a new reset code
+    Then the resend reset code button is disabled
+    And the resend reset code button shows a 30 second countdown
+
+  Scenario: The resend countdown counts down the remaining seconds
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will succeed
+    When I request a new reset code
+    And 1 second passes
+    Then the resend reset code button shows a 29 second countdown
+
+  Scenario: The resend button is re-enabled once the cooldown elapses
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will succeed
+    When I request a new reset code
+    And the resend code cooldown elapses
+    Then the resend reset code button is enabled
+
+  Scenario: A new code can be requested again once the cooldown has elapsed
+    Given the password reset screen for "user@example.com" is open
+    And the password reset code request will succeed
+    And the password reset code request will succeed
+    When I request a new reset code
+    And the resend code cooldown elapses
+    And I request a new reset code
+    Then the resend reset code button is disabled
+    And the resend reset code button shows a 30 second countdown
+
   Scenario: The new password is hidden by default
     Given the password reset screen for "user@example.com" is open
     When I enter the new password "newpassword12345"

@@ -18,6 +18,7 @@
     <string name="account_verify_email_code_label">Kode verifikasi</string>
     <string name="account_verify_email_submit_button">Verifikasi</string>
     <string name="account_verify_email_resend_button">Kirim ulang kode</string>
+    <string name="account_verify_email_resend_button_countdown">Kirim ulang dalam %1$ds</string>
     <string name="account_verify_email_code_resent_message">Kode baru telah dikirim</string>
     <string name="account_delete_account_button">Hapus akun</string>
     <string name="delete_account_screen_title">Hapus akun</string>
@@ -37,6 +38,7 @@
     <string name="account_password_reset_confirm_password_label">Konfirmasi kata sandi baru</string>
     <string name="account_password_reset_submit_button">Reset kata sandi</string>
     <string name="account_password_reset_resend_button">Kirim ulang kode</string>
+    <string name="account_password_reset_resend_button_countdown">Kirim ulang dalam %1$ds</string>
     <string name="account_password_reset_code_resent_message">Kode baru telah dikirim</string>
     <string name="account_invalid_reset_code_dialog_title">Kode reset tidak valid</string>
     <string name="account_invalid_reset_code_dialog_message">Kode reset yang dimasukkan tidak valid atau sudah kedaluwarsa. Silakan minta kode baru.</string>
