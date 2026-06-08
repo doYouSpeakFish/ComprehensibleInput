@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home_title">Comprehensible Input</string>
+    <string name="home_intro_eyebrow">YOUR LANGUAGE, IN CONTEXT</string>
+    <string name="home_intro_title">Choose what happens next.</string>
+    <string name="home_intro_description">Read and explore at your own pace.</string>
+    <string name="home_stories_eyebrow">READ</string>
     <string name="home_stories">Stories</string>
+    <string name="home_stories_description">Get comfortable with language through memorable tales.</string>
+    <string name="home_text_adventures_eyebrow">PLAY &amp; EXPLORE</string>
     <string name="home_text_adventures">Text adventures</string>
+    <string name="home_text_adventures_description">Make choices and discover where the language takes you.</string>
     <string name="home_settings_content_description">Settings</string>
 </resources>
