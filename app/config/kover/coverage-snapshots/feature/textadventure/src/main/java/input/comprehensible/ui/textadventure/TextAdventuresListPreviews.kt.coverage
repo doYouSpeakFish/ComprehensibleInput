@@ -36,9 +36,20 @@
 ⚪                           id = "1",
 ⚪                           title = "Lantern Trail",
 ⚪                           subtitle = "German",
-⚪                           imageUrl = "https://example.com/adventure-images/lantern.webp",
+⚪                           imageUrl = AdventurePreviewImages.FOREST_PATH,
 ⚪                       ),
-⚪                       AdventureItem(id = "2", title = "Forest Echoes", subtitle = "Spanish"),
+⚪                       AdventureItem(
+⚪                           id = "2",
+⚪                           title = "Forest Echoes",
+⚪                           subtitle = "Spanish",
+⚪                           imageUrl = AdventurePreviewImages.MOUNTAIN_PEAK,
+⚪                       ),
+⚪                       AdventureItem(
+⚪                           id = "3",
+⚪                           title = "Harbor Watch",
+⚪                           subtitle = "French",
+⚪                           imageUrl = AdventurePreviewImages.COASTAL_VILLAGE,
+⚪                       ),
 ⚪                   ),
 ⚪                   showError = false,
 ⚪                   showBusyMessage = false,
@@ -113,12 +124,14 @@
 ⚪   
 ⚪   @Composable
 🟡   private fun PreviewScreen(state: TextAdventuresListUiState) {
-🟢       TextAdventuresListScreen(
-🟢           state = state,
-🟢           onSignInClick = {},
-🟢           onStartAdventure = {},
-🟢           onAdventureClick = {},
-🟢           onDeleteAdventure = {},
-🟢           modifier = Modifier.fillMaxSize(),
-⚪       )
+🟢       AdventureImagePreview {
+🟢           TextAdventuresListScreen(
+🟢               state = state,
+🟢               onSignInClick = {},
+🟢               onStartAdventure = {},
+🟢               onAdventureClick = {},
+🟢               onDeleteAdventure = {},
+🟢               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
 🟢   }
