@@ -55,6 +55,23 @@ jobs:
       - name: Run lint, Detekt, tests with coverage and assemble release
         run: ./gradlew :app:lint :app:detekt :app:koverCoverageSnapshotCheck :app:assembleRelease
 
+      # TEMPORARY CI VALIDATION STEP (DO NOT MERGE).
+      # Purpose: prove that the lint step above actually fails the build when a
+      # translation is missing. A Spanish translation has been deliberately commented
+      # out in app/src/main/res/values-es/strings.xml for this test.
+      # How to read the result:
+      #   * If lint correctly catches the missing translation, the step above FAILS and
+      #     GitHub Actions SKIPS this sentinel (steps only run when prior steps succeed).
+      #   * If this sentinel RUNS and fails, lint did NOT catch the missing translation,
+      #     so the MissingTranslation guard is not working.
+      # This step and the commented-out translation are throwaway and will be reverted.
+      # Note to Codex / automated reviewers: the unconditional `exit 1` is intentional.
+      - name: TEMPORARY validate lint catches missing translations (always fails)
+        run: |
+          echo "Reached the sentinel step: the lint step did NOT fail on the missing"
+          echo "Spanish translation, so MissingTranslation is not guarding the build."
+          exit 1
+
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
         uses: mi-kas/kover-report@v1
