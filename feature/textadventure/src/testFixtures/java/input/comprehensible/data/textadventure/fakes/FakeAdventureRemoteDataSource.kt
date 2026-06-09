@@ -117,7 +117,7 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
     }
 
     override fun imageUrl(imageId: String?): String? =
-        imageId?.takeIf { it.isNotBlank() }?.let { "https://images.test/$it.png" }
+        imageId?.takeIf { it.isNotBlank() }?.let { "https://images.test/$it.webp" }
 
     private suspend fun delayIfConfigured() {
         delayFor(requestDelayMillis)

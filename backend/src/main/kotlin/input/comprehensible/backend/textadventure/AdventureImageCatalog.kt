@@ -3,7 +3,7 @@ package input.comprehensible.backend.textadventure
 /**
  * A single adventure cover image the AI can choose from when starting a new adventure.
  *
- * [id] doubles as the static asset's file name stem: the placeholder (and, later, the real) image
+ * [id] doubles as the static asset's file name stem: the image
  * is served at `/$ADVENTURE_IMAGES_PATH/$id.$ADVENTURE_IMAGE_EXTENSION`, with a dark-theme variant
  * served alongside it at `/$ADVENTURE_IMAGES_PATH/$id-dark.$ADVENTURE_IMAGE_EXTENSION` for the app to
  * use in dark theme.
@@ -187,4 +187,4 @@ object AdventureImageCatalog {
 const val ADVENTURE_IMAGES_PATH: String = "adventure-images"
 
 /** The file extension (and Coil-decodable format) of every bundled adventure image. */
-const val ADVENTURE_IMAGE_EXTENSION: String = "png"
+const val ADVENTURE_IMAGE_EXTENSION: String = "webp"

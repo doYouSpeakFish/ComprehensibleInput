@@ -16,7 +16,7 @@ class AdventureImageUrlsTest {
         val url = AdventureImageUrls.forId(baseUrl, imageId)
 
         // THEN it points at the served light asset for that id
-        assertEquals("https://api.test/adventure-images/forest-path.png", url)
+        assertEquals("https://api.test/adventure-images/forest-path.webp", url)
     }
 
     @Test
@@ -47,12 +47,12 @@ class AdventureImageUrlsTest {
     @Test
     fun `darkVariant inserts the dark suffix before the extension`() {
         // GIVEN the light url of a cover image
-        val lightUrl = "https://api.test/adventure-images/forest-path.png"
+        val lightUrl = "https://api.test/adventure-images/forest-path.webp"
 
         // WHEN its dark-theme variant is formed
         val darkUrl = AdventureImageUrls.darkVariant(lightUrl)
 
         // THEN the dark suffix is inserted before the file extension
-        assertEquals("https://api.test/adventure-images/forest-path-dark.png", darkUrl)
+        assertEquals("https://api.test/adventure-images/forest-path-dark.webp", darkUrl)
     }
 }

@@ -149,7 +149,7 @@ class TextAdventureFeatureTestScope(
 
     fun returnAdventureWithImage(title: String) {
         fakeRemoteDataSource.adventures = listOf(
-            remoteAdventure(title).copy(imageUrl = "https://images.test/$title.png"),
+            remoteAdventure(title).copy(imageUrl = "https://images.test/$title.webp"),
         )
     }
 
