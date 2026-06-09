@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Text adventures</string>
+    <string name="text_adventures_eyebrow">PLAY &amp; EXPLORE</string>
+    <string name="text_adventures_headline">Where the language takes you.</string>
     <string name="text_adventures_early_access">Text adventures are free while we\'re in early access. Enjoy!</string>
     <string name="text_adventures_sign_in_message">Sign in to start playing text adventures.</string>
     <string name="text_adventures_sign_in_button">Sign in</string>
+    <string name="text_adventures_empty_title">No adventures yet</string>
     <string name="text_adventures_empty">You don\'t have any adventures yet. Start one!</string>
     <string name="text_adventures_error">Couldn\'t load your adventures. Please try again.</string>
     <string name="text_adventure_busy">The system is busy right now. Please try again in a little while.</string>

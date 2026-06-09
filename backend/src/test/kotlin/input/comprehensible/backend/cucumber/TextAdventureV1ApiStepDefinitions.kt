@@ -849,6 +849,7 @@ class TextAdventureV1ApiStepDefinitions {
         fakeExecutor.enqueueResponse(
             TextAdventureStructuredResponse(
                 title = title,
+                translatedTitle = "$title (translated)",
                 paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
                 translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
                 isEnding = isEnding,

@@ -10,6 +10,8 @@ data class TextAdventureRemoteResponse(
     val messageId: String = "",
     val adventureId: String,
     val title: String,
+    /** The [title] translated into the player's translation language. */
+    val translatedTitle: String = "",
     val sentences: List<String>,
     val translatedSentences: List<String>,
     val isEnding: Boolean,

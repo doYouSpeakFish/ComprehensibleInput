@@ -32,6 +32,7 @@ class DatabaseAdventureRepository(
                 AdventureSummary(
                     adventureId = it[AdventuresTable.id],
                     title = it[AdventuresTable.title],
+                    translatedTitle = it[AdventuresTable.translatedTitle],
                     learningLanguage = it[AdventuresTable.learningLanguage],
                     translationLanguage = it[AdventuresTable.translationLanguage],
                     updatedAt = it[AdventuresTable.updatedAt],
@@ -93,6 +94,7 @@ class DatabaseAdventureRepository(
                     now = now,
                     accountId = message.accountId,
                     title = adventureRow[AdventuresTable.title],
+                    translatedTitle = adventureRow[AdventuresTable.translatedTitle],
                     learningLanguage = message.learningLanguage,
                     translationLanguage = message.translationLanguage,
                     createdAt = adventureRow[AdventuresTable.createdAt],
@@ -153,6 +155,7 @@ class DatabaseAdventureRepository(
             it[id] = adventurePart.adventureId
             it[this.accountId] = adventurePart.accountId
             it[this.title] = adventurePart.title
+            it[this.translatedTitle] = adventurePart.translatedTitle
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
             // The image is chosen once, when the adventure is created; continuing an adventure leaves
@@ -168,6 +171,7 @@ class DatabaseAdventureRepository(
             it[id] = update.adventureId
             it[this.accountId] = update.accountId
             it[this.title] = update.title
+            it[this.translatedTitle] = update.translatedTitle
             it[this.learningLanguage] = update.learningLanguage
             it[this.translationLanguage] = update.translationLanguage
             it[this.imageId] = update.imageId
@@ -254,6 +258,7 @@ private data class AdventureTimestampUpdate(
     val now: Long,
     val accountId: String?,
     val title: String,
+    val translatedTitle: String,
     val learningLanguage: String,
     val translationLanguage: String,
     val createdAt: Long,
@@ -339,6 +344,7 @@ object AdventuresTable : Table("text_adventure") {
         onDelete = ReferenceOption.CASCADE,
     )
     val title = text("title")
+    val translatedTitle = text("translated_title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
     val imageId = varchar("image_id", length = 255).nullable()

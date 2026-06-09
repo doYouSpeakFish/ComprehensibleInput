@@ -11,12 +11,15 @@ data class TextAdventuresListUiState(
     val showBusyMessage: Boolean,
 ) {
     /**
-     * A single text adventure shown in the list.
+     * A single text adventure shown in the list. The [title] is in the learning language and
+     * [translatedTitle] is the same title in the player's translation language; the list shows both.
+     * [language] is the learning language code (e.g. "de"), resolved to a display name in the UI.
      */
     data class AdventureItem(
         val id: String,
         val title: String,
-        val subtitle: String,
+        val translatedTitle: String,
+        val language: String,
         val imageUrl: String? = null,
     )
 

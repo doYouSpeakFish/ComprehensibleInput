@@ -74,6 +74,7 @@ class TextAdventureRepository(
                 id = response.adventureId,
                 userId = userId,
                 title = response.title,
+                translatedTitle = response.translatedTitle,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationLanguage,
                 updatedAt = System.currentTimeMillis(),
@@ -143,6 +144,7 @@ class TextAdventureRepository(
 private fun AdventureEntity.toSummary() = AdventureSummary(
     id = id,
     title = title,
+    translatedTitle = translatedTitle,
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
@@ -153,6 +155,7 @@ private fun RemoteAdventure.toEntity(userId: String) = AdventureEntity(
     id = id,
     userId = userId,
     title = title,
+    translatedTitle = translatedTitle,
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,

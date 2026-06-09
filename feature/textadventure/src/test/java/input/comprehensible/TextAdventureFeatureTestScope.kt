@@ -347,16 +347,18 @@ class TextAdventureFeatureTestScope(
         id = title,
         userId = userIdFor(email),
         title = title,
-        learningLanguage = "German",
-        translationLanguage = "English",
+        translatedTitle = "$title (translated)",
+        learningLanguage = "de",
+        translationLanguage = "en",
         updatedAt = 0L,
     )
 
     private fun remoteAdventure(title: String) = RemoteAdventure(
         id = title,
         title = title,
-        learningLanguage = "German",
-        translationLanguage = "English",
+        translatedTitle = "$title (translated)",
+        learningLanguage = "de",
+        translationLanguage = "en",
         updatedAt = 0L,
     )
 

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Aventuras de texto</string>
+    <string name="text_adventures_eyebrow">JOGAR E EXPLORAR</string>
+    <string name="text_adventures_headline">Aonde a língua o leva.</string>
     <string name="text_adventures_early_access">As aventuras de texto são gratuitas durante o acesso antecipado. Aproveite!</string>
     <string name="text_adventures_sign_in_message">Entre para começar a jogar aventuras de texto.</string>
     <string name="text_adventures_sign_in_button">Entrar</string>
+    <string name="text_adventures_empty_title">Ainda sem aventuras</string>
     <string name="text_adventures_empty">Você ainda não tem nenhuma aventura. Comece uma!</string>
     <string name="text_adventures_error">Não foi possível carregar suas aventuras. Por favor, tente novamente.</string>
     <string name="text_adventure_busy">O sistema está ocupado no momento. Por favor, tente novamente em instantes.</string>

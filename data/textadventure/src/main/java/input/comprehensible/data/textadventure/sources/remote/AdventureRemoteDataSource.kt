@@ -46,6 +46,8 @@ interface AdventureRemoteDataSource {
 data class RemoteAdventure(
     val id: String,
     val title: String,
+    /** The [title] translated into the player's translation language. */
+    val translatedTitle: String = "",
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,

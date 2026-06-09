@@ -160,6 +160,7 @@ private data class AdventureListResponse(
 private data class AdventureItemResponse(
     val id: String,
     val title: String,
+    val translatedTitle: String = "",
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
@@ -169,6 +170,7 @@ private data class AdventureItemResponse(
 private fun AdventureItemResponse.toRemoteAdventure(imageUrl: String?) = RemoteAdventure(
     id = id,
     title = title,
+    translatedTitle = translatedTitle,
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,

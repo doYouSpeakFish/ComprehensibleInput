@@ -6,6 +6,8 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
 
 /**
  * Drives and inspects the text adventures list screen in tests via stable test tags.
@@ -67,8 +69,10 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onAllNodesWithTag("adventure_image_$title", useUnmergedTree = true).assertCountEquals(0)
     }
 
+    // Adventures are deleted by swiping the row towards the start, so the gesture drives the
+    // swipe-to-dismiss container rather than tapping a button.
     fun deleteAdventure(title: String) {
-        composeTestRule.onNodeWithTag("delete_adventure_$title").performClick()
+        composeTestRule.onNodeWithTag("adventure_$title").performTouchInput { swipeLeft() }
     }
 
     fun openAdventure(title: String) {

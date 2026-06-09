@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Petualangan teks</string>
+    <string name="text_adventures_eyebrow">MAIN &amp; JELAJAHI</string>
+    <string name="text_adventures_headline">Ke mana bahasa membawa Anda.</string>
     <string name="text_adventures_early_access">Petualangan teks gratis selama masa akses awal. Selamat menikmati!</string>
     <string name="text_adventures_sign_in_message">Masuk untuk mulai bermain petualangan teks.</string>
     <string name="text_adventures_sign_in_button">Masuk</string>
+    <string name="text_adventures_empty_title">Belum ada petualangan</string>
     <string name="text_adventures_empty">Anda belum memiliki petualangan. Mulai satu!</string>
     <string name="text_adventures_error">Tidak dapat memuat petualangan Anda. Silakan coba lagi.</string>
     <string name="text_adventure_busy">Sistem sedang sibuk saat ini. Silakan coba lagi beberapa saat lagi.</string>
