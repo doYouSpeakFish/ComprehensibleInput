@@ -86,11 +86,11 @@
 🟢                               offsetX = (offsetX + dragAmount).coerceIn(-width, 0f)
 ⚪                           },
 ⚪                           onDragEnd = {
-🟡                               if (offsetX <= -deleteThreshold) {
+🟢                               if (offsetX <= -deleteThreshold) {
 🟢                                   onDelete()
 🟢                                   offsetX = 0f
 ⚪                               } else {
-🔴                                   scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } }
+🟢                                   scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } }
 ⚪                               }
 ⚪                           },
 🔴                           onDragCancel = { scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } } },

@@ -75,6 +75,12 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("adventure_$title").performTouchInput { swipeLeft() }
     }
 
+    // A short swipe that stays below the delete threshold, so the row springs back and remains.
+    fun swipeAdventureWithoutDeleting(title: String) {
+        composeTestRule.onNodeWithTag("adventure_$title")
+            .performTouchInput { swipeLeft(startX = right, endX = right - 60f) }
+    }
+
     fun openAdventure(title: String) {
         composeTestRule.onNodeWithTag("adventure_$title").performClick()
     }
