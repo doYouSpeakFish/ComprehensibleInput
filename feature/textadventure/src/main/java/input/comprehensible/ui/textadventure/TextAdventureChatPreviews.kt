@@ -34,12 +34,16 @@ private val previewUserMessage = ChatMessage(
     ),
 )
 
+private val previewChatState = TextAdventureChatUiState.INITIAL.copy(
+    imageUrl = AdventurePreviewImages.FOREST_PATH,
+)
+
 @DefaultPreview
 @Composable
 fun PreviewTextAdventureChatLoading() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(isGenerating = true),
+            previewChatState.copy(isGenerating = true),
         )
     }
 }
@@ -49,7 +53,7 @@ fun PreviewTextAdventureChatLoading() {
 fun PreviewTextAdventureChatLoaded() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(messages = listOf(previewAiMessage)),
+            previewChatState.copy(messages = listOf(previewAiMessage)),
         )
     }
 }
@@ -59,7 +63,7 @@ fun PreviewTextAdventureChatLoaded() {
 fun PreviewTextAdventureChatTranslated() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(
+            previewChatState.copy(
                 messages = listOf(previewAiMessage),
                 selectedSentence = SelectedSentence(
                     messageId = "1",
@@ -77,7 +81,7 @@ fun PreviewTextAdventureChatTranslated() {
 fun PreviewTextAdventureChatError() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(showError = true),
+            previewChatState.copy(showError = true),
         )
     }
 }
@@ -87,7 +91,7 @@ fun PreviewTextAdventureChatError() {
 fun PreviewTextAdventureChatBusy() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(
+            previewChatState.copy(
                 messages = listOf(previewAiMessage),
                 showBusyMessage = true,
             ),
@@ -100,7 +104,7 @@ fun PreviewTextAdventureChatBusy() {
 fun PreviewTextAdventureChatUserMessage() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(
+            previewChatState.copy(
                 messages = listOf(previewAiMessage, previewUserMessage),
             ),
         )
@@ -112,7 +116,7 @@ fun PreviewTextAdventureChatUserMessage() {
 fun PreviewTextAdventureChatSending() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(
+            previewChatState.copy(
                 messages = listOf(previewAiMessage),
                 optimisticUserMessage = previewUserMessage,
                 isGenerating = true,
@@ -126,7 +130,7 @@ fun PreviewTextAdventureChatSending() {
 fun PreviewTextAdventureChatMessageError() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(
+            previewChatState.copy(
                 messages = listOf(previewAiMessage),
                 optimisticUserMessage = previewUserMessage,
                 showMessageError = true,
@@ -140,7 +144,7 @@ fun PreviewTextAdventureChatMessageError() {
 fun PreviewTextAdventureChatEnded() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
-            TextAdventureChatUiState.INITIAL.copy(
+            previewChatState.copy(
                 messages = listOf(
                     previewAiMessage,
                     previewUserMessage,
@@ -162,11 +166,13 @@ fun PreviewTextAdventureChatEnded() {
 
 @Composable
 private fun PreviewChatScreen(state: TextAdventureChatUiState) {
-    TextAdventureChatScreen(
-        state = state,
-        onSentenceSelected = { _, _, _ -> },
-        onRetry = {},
-        onSendMessage = {},
-        modifier = Modifier.fillMaxSize(),
-    )
+    AdventureImagePreview {
+        TextAdventureChatScreen(
+            state = state,
+            onSentenceSelected = { _, _, _ -> },
+            onRetry = {},
+            onSendMessage = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
 }

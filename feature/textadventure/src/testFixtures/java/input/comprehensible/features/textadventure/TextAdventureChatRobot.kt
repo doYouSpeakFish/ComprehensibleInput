@@ -25,6 +25,10 @@ class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("text_adventure_chat").assertIsDisplayed()
     }
 
+    fun assertAdventureImageIsShown() {
+        composeTestRule.onNodeWithTag("chat_adventure_image").assertIsDisplayed()
+    }
+
     fun assertPlaceholderIsShown() {
         composeTestRule.onNodeWithTag("generating_placeholder").assertIsDisplayed()
     }

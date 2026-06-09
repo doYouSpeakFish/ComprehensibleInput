@@ -35,6 +35,20 @@ Feature: Text adventures list
     And the text adventures screen is open
     Then the "Lantern Trail" adventure is listed
 
+  Scenario: A cover image is shown for an adventure that has one
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure with a cover image
+    And the text adventures screen is open
+    Then the "Lantern Trail" adventure is listed
+    And the "Lantern Trail" adventure cover image is shown
+
+  Scenario: No cover image is shown for an adventure without one
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure
+    And the text adventures screen is open
+    Then the "Lantern Trail" adventure is listed
+    And no cover image is shown for the "Lantern Trail" adventure
+
   Scenario: A loading indicator is shown while adventures load
     Given I am signed in as "user@example.com"
     And adventures requests are delayed

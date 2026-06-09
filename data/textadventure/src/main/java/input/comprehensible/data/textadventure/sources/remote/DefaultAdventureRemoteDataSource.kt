@@ -1,5 +1,6 @@
 package input.comprehensible.data.textadventure.sources.remote
 
+import input.comprehensible.data.textadventure.AdventureImageUrls
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
@@ -45,8 +46,10 @@ class DefaultAdventureRemoteDataSource(
             header("Authorization", "Bearer $token")
         }
         response.ensureSuccessful("List adventures failed")
-        return response.body<AdventureListResponse>().items.map { it.toRemoteAdventure() }
+        return response.body<AdventureListResponse>().items.map { it.toRemoteAdventure(imageUrl(it.imageId)) }
     }
+
+    override fun imageUrl(imageId: String?): String? = AdventureImageUrls.forId(baseUrl, imageId)
 
     override suspend fun deleteAdventure(token: String, adventureId: String) {
         val response = httpClient.delete("$baseUrl/v1/adventures/$adventureId") {
@@ -160,12 +163,14 @@ private data class AdventureItemResponse(
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
+    val imageId: String? = null,
 )
 
-private fun AdventureItemResponse.toRemoteAdventure() = RemoteAdventure(
+private fun AdventureItemResponse.toRemoteAdventure(imageUrl: String?) = RemoteAdventure(
     id = id,
     title = title,
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
+    imageUrl = imageUrl,
 )

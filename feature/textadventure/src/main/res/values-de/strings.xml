@@ -18,4 +18,5 @@
     <string name="text_adventure_retry">Wiederholen</string>
     <string name="text_adventure_message_hint">Geben Sie Ihren nächsten Zug ein…</string>
     <string name="text_adventure_send">Nachricht senden</string>
+    <string name="text_adventure_image_content_description">Abenteuerbild</string>
 </resources>

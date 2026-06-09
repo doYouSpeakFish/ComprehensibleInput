@@ -28,6 +28,9 @@ class TextAdventureGenerationService(
         translationsLanguage: String,
         accountId: String? = null,
     ): TextAdventureRemoteResponse {
+        val previousAdventures = accountId
+            ?.let { adventureRepository.listAdventureSummariesForAccount(it) }
+            .orEmpty()
         val response = requestAdventureResponse(
             adventureId = UUID.randomUUID().toString(),
             promptName = "text-adventure-start",
@@ -39,8 +42,15 @@ class TextAdventureGenerationService(
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
                 The story should not end yet, so set isEnding to false.
-            """.trimIndent() + inspirationPromptSection(),
+            """.trimIndent() +
+                imageSelectionPromptSection() +
+                previousAdventuresPromptSection(previousAdventures) +
+                inspirationPromptSection(),
             userPrompt = "Start a new adventure.",
+        )
+        val chosenImageId = resolveChosenImage(
+            pickedId = response.imageId,
+            previousImageIds = previousAdventures.mapNotNull { it.imageId }.toSet(),
         )
         val messageId = messageIdProvider()
         adventureRepository.saveAdventurePart(
@@ -54,9 +64,10 @@ class TextAdventureGenerationService(
                 translationLanguage = translationsLanguage,
                 isEnding = response.isEnding,
                 paragraphs = response.toPersistedParagraphs(),
+                imageId = chosenImageId,
             )
         )
-        return response.toRemoteResponse(messageId)
+        return response.toRemoteResponse(messageId, imageId = chosenImageId)
     }
 
     fun listAdventuresForAccount(accountId: String): AdventureListRemoteResponse =
@@ -224,6 +235,46 @@ class TextAdventureGenerationService(
         }
     }
 
+    /**
+     * Offers the model the full catalogue of cover images (id and description) and asks it to set
+     * [TextAdventureStructuredResponse.imageId] to the best-fitting one for the opening scene.
+     */
+    private fun imageSelectionPromptSection(): String = "\n\n" + """
+        Choose a cover image for this adventure from the list below.
+        Set imageId to the exact id of the single image whose description best fits the opening scene.
+        Available images (id: description):
+    """.trimIndent() + "\n" + AdventureImageCatalog.promptListing()
+
+    /**
+     * Lists the player's previous adventures (title and chosen image) so the model can make this new
+     * one feel different and avoid reusing the same image, reducing repetition across adventures.
+     */
+    private fun previousAdventuresPromptSection(previousAdventures: List<AdventureSummary>): String {
+        if (previousAdventures.isEmpty()) return ""
+        val listing = previousAdventures
+            .take(MAX_PREVIOUS_ADVENTURES_IN_PROMPT)
+            .joinToString("\n") { summary ->
+                val image = summary.imageId?.let { " (image: $it)" }.orEmpty()
+                "- \"${summary.title}\"$image"
+            }
+        return "\n\n" + """
+            This player has already played the adventures listed below.
+            Make this new adventure clearly different in setting, theme and tone,
+            and prefer a cover image they have not used before:
+        """.trimIndent() + "\n" + listing
+    }
+
+    /**
+     * Returns the id of the image to store for the adventure. A valid catalogue pick from the AI is
+     * respected; otherwise a deterministic catalogue image is used, preferring one the player has not
+     * used so repeated adventures still look distinct.
+     */
+    private fun resolveChosenImage(pickedId: String, previousImageIds: Set<String>): String {
+        AdventureImageCatalog.findById(pickedId)?.let { return it.id }
+        val unused = AdventureImageCatalog.images.firstOrNull { it.id !in previousImageIds }
+        return (unused ?: AdventureImageCatalog.fallback).id
+    }
+
     private fun inspirationPromptSection(): String {
         val words = inspirationWordSampler.sample()
         if (words.isEmpty()) return ""
@@ -274,6 +325,7 @@ class TextAdventureGenerationService(
             paragraphs = response.paragraphs,
             translatedParagraphs = response.translatedParagraphs,
             isEnding = response.isEnding,
+            imageId = response.imageId.trim(),
         )
     }
 
@@ -296,6 +348,7 @@ class TextAdventureGenerationService(
 
     private companion object {
         const val MAX_SENTENCE_MATCH_ATTEMPTS = 3
+        const val MAX_PREVIOUS_ADVENTURES_IN_PROMPT = 20
     }
 }
 
@@ -305,6 +358,7 @@ private fun AdventureSummary.toRemoteResponse(): AdventureSummaryRemoteResponse 
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
+    imageId = imageId,
 )
 
 private fun TextAdventureMessagesRemoteResponse.toHistory(): List<TextAdventureHistoryMessage> = messages.mapNotNull { message ->
@@ -333,9 +387,13 @@ private data class GeneratedAdventureResponse(
     val paragraphs: List<TextAdventureStructuredParagraph>,
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     val isEnding: Boolean,
+    val imageId: String,
 )
 
-private fun GeneratedAdventureResponse.toRemoteResponse(messageId: String): TextAdventureRemoteResponse =
+private fun GeneratedAdventureResponse.toRemoteResponse(
+    messageId: String,
+    imageId: String? = null,
+): TextAdventureRemoteResponse =
     TextAdventureRemoteResponse(
         messageId = messageId,
         adventureId = adventureId,
@@ -343,6 +401,7 @@ private fun GeneratedAdventureResponse.toRemoteResponse(messageId: String): Text
         sentences = paragraphs.flatMap { paragraph -> paragraph.sentences.map(String::trim) },
         translatedSentences = translatedParagraphs.flatMap { paragraph -> paragraph.sentences.map(String::trim) },
         isEnding = isEnding,
+        imageId = imageId,
     )
 
 @Serializable
@@ -367,6 +426,11 @@ data class TextAdventureStructuredResponse(
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     @property:LLMDescription("Whether the story ends after this response.")
     val isEnding: Boolean,
+    @property:LLMDescription(
+        "When starting a new adventure, the exact id of the cover image chosen from the provided " +
+            "list whose description best fits the opening scene. Empty when continuing an adventure.",
+    )
+    val imageId: String = "",
 )
 
 @Serializable
@@ -386,5 +450,6 @@ data class AdventureSummaryRemoteResponse(
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
+    val imageId: String? = null,
 )
 

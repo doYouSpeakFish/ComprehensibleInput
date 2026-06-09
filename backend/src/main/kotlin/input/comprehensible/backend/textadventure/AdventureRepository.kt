@@ -37,6 +37,11 @@ data class PersistedAdventurePart(
     val translationLanguage: String,
     val isEnding: Boolean,
     val paragraphs: List<PersistedAdventureParagraph>,
+    /**
+     * The chosen catalogue image for the adventure. Set when the adventure is created; left null
+     * when continuing an adventure so the repository preserves the image already stored.
+     */
+    val imageId: String? = null,
 )
 
 data class PersistedAdventureParagraph(
@@ -51,4 +56,5 @@ data class AdventureSummary(
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
+    val imageId: String? = null,
 )

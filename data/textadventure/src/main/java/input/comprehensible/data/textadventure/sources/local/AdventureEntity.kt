@@ -30,4 +30,6 @@ data class AdventureEntity(
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
+    /** The fully-resolved URL of the adventure's cover image, or null if it has none. */
+    val imageUrl: String? = null,
 )

@@ -292,6 +292,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.icons)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     implementation(libs.coroutines)
     implementation(libs.timber)
     implementation(libs.serialization.json)

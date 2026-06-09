@@ -18,4 +18,5 @@
     <string name="text_adventure_retry">Reintentar</string>
     <string name="text_adventure_message_hint">Escribe tu próximo movimiento…</string>
     <string name="text_adventure_send">Enviar mensaje</string>
+    <string name="text_adventure_image_content_description">Imagen de la aventura</string>
 </resources>

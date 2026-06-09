@@ -57,6 +57,16 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onAllNodesWithTag("adventure_$title").assertCountEquals(0)
     }
 
+    // The image sits inside the row Card's `clickable` merge boundary, so it is queried on the
+    // unmerged tree to resolve it as a distinct node rather than being folded into the card.
+    fun assertAdventureImageIsShown(title: String) {
+        composeTestRule.onNodeWithTag("adventure_image_$title", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun assertAdventureImageIsNotShown(title: String) {
+        composeTestRule.onAllNodesWithTag("adventure_image_$title", useUnmergedTree = true).assertCountEquals(0)
+    }
+
     fun deleteAdventure(title: String) {
         composeTestRule.onNodeWithTag("delete_adventure_$title").performClick()
     }

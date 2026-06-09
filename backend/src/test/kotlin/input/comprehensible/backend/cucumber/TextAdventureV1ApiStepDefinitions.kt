@@ -7,6 +7,10 @@ import input.comprehensible.backend.TEXT_ADVENTURE_RATE_LIMIT
 import input.comprehensible.backend.configureRouting
 import input.comprehensible.backend.connectDatabase
 import input.comprehensible.backend.email.EmailDataSource
+import input.comprehensible.backend.textadventure.ADVENTURE_IMAGE_EXTENSION
+import input.comprehensible.backend.textadventure.ADVENTURE_IMAGES_PATH
+import input.comprehensible.backend.textadventure.AdventureImage
+import input.comprehensible.backend.textadventure.AdventureImageCatalog
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
@@ -56,6 +60,7 @@ class TextAdventureV1ApiStepDefinitions {
     private var isAuthenticated: Boolean = true
     private var latestResponseStatus: HttpStatusCode? = null
     private var latestResponseBody: String = ""
+    private var latestResponseContentType: String = ""
     private var userAAdventureId: String = ""
     private val userAAdventureIds: MutableList<String> = mutableListOf()
     private var userBAdventureId: String = ""
@@ -91,6 +96,7 @@ class TextAdventureV1ApiStepDefinitions {
 
         latestResponseStatus = null
         latestResponseBody = ""
+        latestResponseContentType = ""
         userAAdventureId = ""
         userAAdventureIds.clear()
         userBAdventureId = ""
@@ -545,6 +551,51 @@ class TextAdventureV1ApiStepDefinitions {
         assertTrue(latestResponseBody.contains("translatedSentences"))
     }
 
+    @Given("a cover image named {string}")
+    fun aCoverImageNamed(name: String) {
+        // Precondition: the named image is part of the bundled catalogue.
+        requireCoverImage(name)
+    }
+
+    @When("I view the {string} cover image")
+    fun viewCoverImage(name: String) {
+        openCoverImageAsset(requireCoverImage(name).id)
+    }
+
+    @When("I view the {string} cover image in dark theme")
+    fun viewCoverImageInDarkTheme(name: String) {
+        openCoverImageAsset("${requireCoverImage(name).id}-dark")
+    }
+
+    private fun requireCoverImage(name: String): AdventureImage =
+        AdventureImageCatalog.findByName(name) ?: error("No catalogue cover image is named '$name'")
+
+    @When("I open a cover image that does not exist")
+    fun openMissingCoverImage() {
+        openCoverImageAsset("does-not-exist")
+    }
+
+    /** Requests the served cover-image asset with the given file-name stem (e.g. an id or "<id>-dark"). */
+    private fun openCoverImageAsset(stem: String) {
+        runAgainstApplication {
+            client.get("/$ADVENTURE_IMAGES_PATH/$stem.$ADVENTURE_IMAGE_EXTENSION")
+        }
+    }
+
+    @Then("the response includes a cover image")
+    fun responseIncludesCoverImage() {
+        val imageId = extractJsonString(latestResponseBody, "imageId")
+        assertTrue("Expected a cover image but was '$imageId'", AdventureImageCatalog.contains(imageId))
+    }
+
+    @Then("the response is an image")
+    fun responseIsAnImage() {
+        assertTrue(
+            "Expected an image but the content type was '$latestResponseContentType'",
+            latestResponseContentType.contains("image/"),
+        )
+    }
+
     @Then("only adventures owned by user A are returned")
     fun listContainsOnlyUserAAdventures() {
         assertTrue(latestResponseBody.contains("Lantern Trail"))
@@ -737,6 +788,7 @@ class TextAdventureV1ApiStepDefinitions {
                 val response = block()
                 latestResponseStatus = response.status
                 latestResponseBody = response.bodyAsText()
+                latestResponseContentType = response.headers["Content-Type"].orEmpty()
             }
         }
     }
@@ -792,6 +844,7 @@ class TextAdventureV1ApiStepDefinitions {
         sentence: String,
         translation: String,
         isEnding: Boolean = false,
+        imageId: String = "",
     ) {
         fakeExecutor.enqueueResponse(
             TextAdventureStructuredResponse(
@@ -799,7 +852,18 @@ class TextAdventureV1ApiStepDefinitions {
                 paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(sentence))),
                 translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf(translation))),
                 isEnding = isEnding,
+                imageId = imageId,
             ),
+        )
+    }
+
+    @Given("the AI will choose image {string}")
+    fun theAiWillChooseImage(imageId: String) {
+        enqueueNarratorResponse(
+            title = "Lantern Trail",
+            sentence = "Hola",
+            translation = "Hello",
+            imageId = imageId,
         )
     }
 

@@ -30,6 +30,13 @@ interface AdventureRemoteDataSource {
         parentId: String,
     ): TextAdventureMessageRemoteResponse
 
+    /**
+     * Resolves the catalogue [imageId] chosen by the backend into a fully-qualified image URL the
+     * app can load, or null when there is no image. The URL points at the backend's static adventure
+     * image assets.
+     */
+    fun imageUrl(imageId: String?): String?
+
     companion object : InjectedSingleton<AdventureRemoteDataSource>()
 }
 
@@ -42,4 +49,6 @@ data class RemoteAdventure(
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
+    /** The fully-resolved URL of the adventure's cover image, or null if it has none. */
+    val imageUrl: String? = null,
 )

@@ -56,21 +56,27 @@
 🟢           if (id == null) flowOf(emptyList()) else textAdventureRepository.getMessages(id)
 🟢       }.map { messages -> messages.map { it.toChatMessage() } }
 ⚪   
+⚪       @OptIn(ExperimentalCoroutinesApi::class)
+🟢       private val imageUrl = currentAdventureId.flatMapLatest { id ->
+🟢           if (id == null) flowOf(null) else textAdventureRepository.getAdventure(id)
+🟢       }.map { it?.imageUrl }
+⚪   
 🟢       val state: StateFlow<TextAdventureChatUiState> = combine(
 🟢           messages,
 🟢           isGenerating,
 🟢           showError,
 🟢           showBusyMessage,
-🟢           combine(showMessageError, optimisticUserMessage, selectedSentence, ::Triple),
-⚪       ) { messages, generating, error, busy, (messageError, optimistic, selected) ->
+🟢           combine(showMessageError, optimisticUserMessage, selectedSentence, imageUrl, ::ChatExtras),
+⚪       ) { messages, generating, error, busy, extras ->
 🟢           TextAdventureChatUiState(
 🟢               messages = messages,
 🟢               isGenerating = generating,
 🟢               showError = error,
 🟢               showBusyMessage = busy,
-🟢               showMessageError = messageError,
-🟢               optimisticUserMessage = optimistic,
-🟢               selectedSentence = selected,
+🟢               showMessageError = extras.showMessageError,
+🟢               optimisticUserMessage = extras.optimisticUserMessage,
+🟢               selectedSentence = extras.selectedSentence,
+🟢               imageUrl = extras.imageUrl,
 ⚪           )
 🟢       }.stateIn(
 🟢           scope = viewModelScope,
@@ -196,6 +202,14 @@
 ⚪           const val OPTIMISTIC_USER_MESSAGE_ID = "optimistic-user-message"
 ⚪       }
 ⚪   }
+⚪   
+⚪   /** Bundles the secondary chat state so it fits a single [combine] alongside the primary flows. */
+🟢   private data class ChatExtras(
+🟢       val showMessageError: Boolean,
+🟢       val optimisticUserMessage: ChatMessage?,
+🟢       val selectedSentence: SelectedSentence?,
+🟢       val imageUrl: String?,
+⚪   )
 ⚪   
 🟢   private fun AdventureMessage.toChatMessage() = ChatMessage(
 🟢       id = id,

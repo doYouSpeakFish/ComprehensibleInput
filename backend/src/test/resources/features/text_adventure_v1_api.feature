@@ -14,6 +14,38 @@ Feature: Text adventure v1 API
     And the response includes a latest narrator message
 
   @v1
+  Scenario: A new adventure is given a cover image
+    When I create a text adventure with learning language "es" and translation language "en"
+    Then the response status is 201
+    And the response includes a cover image
+
+  @v1
+  Scenario: A new adventure still has a cover image when the AI does not choose a valid one
+    Given the AI will choose image "not-a-real-image"
+    When I create a text adventure with learning language "es" and translation language "en"
+    Then the response status is 201
+    And the response includes a cover image
+
+  @v1
+  Scenario: An adventure's cover image can be viewed
+    Given a cover image named "Forest Path"
+    When I view the "Forest Path" cover image
+    Then the response status is 200
+    And the response is an image
+
+  @v1
+  Scenario: An adventure's dark-theme cover image can be viewed
+    Given a cover image named "Forest Path"
+    When I view the "Forest Path" cover image in dark theme
+    Then the response status is 200
+    And the response is an image
+
+  @v1
+  Scenario: A cover image that does not exist cannot be viewed
+    When I open a cover image that does not exist
+    Then the response status is 404
+
+  @v1
   Scenario: Listing adventures returns only adventures owned by the current user
     Given user A has an adventure
     And user B has an adventure

@@ -54,6 +54,10 @@ class TextAdventureRepository(
             messages.map { it.toMessage() }
         }
 
+    /** A single adventure (for its metadata, including the cover image), observed from the cache. */
+    fun getAdventure(adventureId: String): Flow<AdventureSummary?> =
+        localDataSource.observeAdventure(adventureId).map { it?.toSummary() }
+
     /**
      * Starts a new adventure on the backend, persists the created adventure and its first AI message
      * locally, and returns the new adventure id.
@@ -73,6 +77,7 @@ class TextAdventureRepository(
                 learningLanguage = learningLanguage,
                 translationLanguage = translationLanguage,
                 updatedAt = System.currentTimeMillis(),
+                imageUrl = remoteDataSource.imageUrl(response.imageId),
             ),
         )
         localDataSource.deleteMessages(response.adventureId)
@@ -141,6 +146,7 @@ private fun AdventureEntity.toSummary() = AdventureSummary(
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
+    imageUrl = imageUrl,
 )
 
 private fun RemoteAdventure.toEntity(userId: String) = AdventureEntity(
@@ -150,6 +156,7 @@ private fun RemoteAdventure.toEntity(userId: String) = AdventureEntity(
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
+    imageUrl = imageUrl,
 )
 
 private fun MessageWithSentences.toMessage(): AdventureMessage {

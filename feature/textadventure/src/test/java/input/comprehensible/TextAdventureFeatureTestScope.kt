@@ -147,6 +147,12 @@ class TextAdventureFeatureTestScope(
         fakeRemoteDataSource.adventures = titles.map(::remoteAdventure)
     }
 
+    fun returnAdventureWithImage(title: String) {
+        fakeRemoteDataSource.adventures = listOf(
+            remoteAdventure(title).copy(imageUrl = "https://images.test/$title.webp"),
+        )
+    }
+
     fun delayRequests() {
         fakeRemoteDataSource.requestDelayMillis = IN_FLIGHT_DELAY_MILLIS
     }
@@ -187,6 +193,19 @@ class TextAdventureFeatureTestScope(
             sentences = listOf(text),
             translatedSentences = listOf(translation),
             isEnding = false,
+        )
+    }
+
+    fun startReturnsWithImage(text: String) {
+        fakeRemoteDataSource.startResponse = TextAdventureRemoteResponse(
+            messageId = "message-1",
+            adventureId = "adventure-1",
+            title = "Adventure",
+            sentences = listOf(text),
+            translatedSentences = listOf("$text (translated)"),
+            isEnding = false,
+            // An arbitrary catalogue-style id; tests assert only that an image is shown, not which.
+            imageId = "cover-1",
         )
     }
 

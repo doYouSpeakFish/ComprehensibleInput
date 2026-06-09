@@ -73,6 +73,13 @@ Feature: Text adventure chat
     And I tap "Llegas a un puerto tranquilo." to translate it
     Then the text adventure shows "You arrive at a quiet harbor."
 
+  Scenario: The adventure's cover image is shown at the start of the chat
+    Given I am signed in as "user@example.com"
+    And starting an adventure returns "You arrive at a quiet harbor." with a cover image
+    When I start a new adventure
+    Then the text adventure shows "You arrive at a quiet harbor."
+    And the adventure cover image is shown
+
   Scenario: A cached adventure shows its messages immediately
     Given I am signed in as "user@example.com"
     And the "Lantern Trail" adventure is cached with message "A lantern lights the way."

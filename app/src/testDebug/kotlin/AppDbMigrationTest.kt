@@ -56,7 +56,7 @@ class AppDbMigrationTest {
             close()
         }
 
-        // WHEN it upgrades, THEN it reaches version 8 with every prototype object dropped.
+        // WHEN it upgrades, THEN it reaches the current version with every prototype object dropped.
         helper.runMigrationsAndValidate(
             CURRENT_VERSION,
             listOf(TextAdventureMigration5To6(), TextAdventureMigration6To7()),
@@ -69,7 +69,7 @@ class AppDbMigrationTest {
         recreateDatabaseFile()
         helper.createDatabase(EARLIEST_VERSION).close()
 
-        // WHEN it upgrades, THEN every migration up to version 8 applies cleanly.
+        // WHEN it upgrades, THEN every migration up to the current version applies cleanly.
         helper.runMigrationsAndValidate(
             CURRENT_VERSION,
             listOf(TextAdventureMigration5To6(), TextAdventureMigration6To7()),
@@ -87,6 +87,6 @@ class AppDbMigrationTest {
         private const val TEST_DB = "migration-test"
         private const val EARLIEST_VERSION = 1
         private const val TEXT_ADVENTURE_VERSION = 7
-        private const val CURRENT_VERSION = 8
+        private const val CURRENT_VERSION = 9
     }
 }
