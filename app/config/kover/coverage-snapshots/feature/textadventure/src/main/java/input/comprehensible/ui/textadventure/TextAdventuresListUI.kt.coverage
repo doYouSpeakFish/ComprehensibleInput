@@ -74,7 +74,7 @@
 🟢           onStartAdventure = onStartAdventure,
 🟢           onAdventureClick = onAdventureClick,
 🟢           onSettingsClick = onSettingsClick,
-🟡           onDeleteAdventure = viewModel::onDeleteAdventure,
+🟢           onDeleteAdventure = viewModel::onDeleteAdventure,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
@@ -146,7 +146,7 @@
 🟢           modifier = modifier.testTag("text_adventures_list"),
 🟢           contentPadding = PaddingValues(20.dp),
 🟢           verticalArrangement = Arrangement.spacedBy(16.dp),
-🟡       ) {
+🟢       ) {
 🟢           item { Intro() }
 🟢           item { EarlyAccessCard() }
 🟢           item { StartAdventureButton(onStartAdventure) }
