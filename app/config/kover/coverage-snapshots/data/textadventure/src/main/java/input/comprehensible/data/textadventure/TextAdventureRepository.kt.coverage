@@ -79,6 +79,7 @@
 🟢                   translationLanguage = translationLanguage,
 🟢                   updatedAt = System.currentTimeMillis(),
 🟢                   imageUrl = remoteDataSource.imageUrl(response.imageId),
+🟢                   status = AdventureStatus.NOT_STARTED.wireValue,
 ⚪               ),
 ⚪           )
 🟢           localDataSource.deleteMessages(response.adventureId)
@@ -149,6 +150,7 @@
 🟢       translationLanguage = translationLanguage,
 🟢       updatedAt = updatedAt,
 🟢       imageUrl = imageUrl,
+🟢       status = AdventureStatus.fromWire(status),
 ⚪   )
 ⚪   
 🟢   private fun RemoteAdventure.toEntity(userId: String) = AdventureEntity(
@@ -160,6 +162,7 @@
 🟢       translationLanguage = translationLanguage,
 🟢       updatedAt = updatedAt,
 🟢       imageUrl = imageUrl,
+🟢       status = status.wireValue,
 ⚪   )
 ⚪   
 ⚪   private fun MessageWithSentences.toMessage(): AdventureMessage {

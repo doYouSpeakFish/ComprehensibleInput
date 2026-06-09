@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventure.sources.remote
 
 import com.ktin.InjectedSingleton
+import input.comprehensible.data.textadventure.AdventureStatus
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
@@ -53,4 +54,6 @@ data class RemoteAdventure(
     val updatedAt: Long,
     /** The fully-resolved URL of the adventure's cover image, or null if it has none. */
     val imageUrl: String? = null,
+    /** How far the player has progressed through the adventure. */
+    val status: AdventureStatus = AdventureStatus.IN_PROGRESS,
 )

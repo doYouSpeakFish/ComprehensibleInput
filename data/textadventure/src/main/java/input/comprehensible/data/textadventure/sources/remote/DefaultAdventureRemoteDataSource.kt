@@ -1,6 +1,7 @@
 package input.comprehensible.data.textadventure.sources.remote
 
 import input.comprehensible.data.textadventure.AdventureImageUrls
+import input.comprehensible.data.textadventure.AdventureStatus
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessageRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureMessagesRemoteResponse
 import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
@@ -165,6 +166,7 @@ private data class AdventureItemResponse(
     val translationLanguage: String,
     val updatedAt: Long,
     val imageId: String? = null,
+    val status: String = "in_progress",
 )
 
 private fun AdventureItemResponse.toRemoteAdventure(imageUrl: String?) = RemoteAdventure(
@@ -175,4 +177,5 @@ private fun AdventureItemResponse.toRemoteAdventure(imageUrl: String?) = RemoteA
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
     imageUrl = imageUrl,
+    status = AdventureStatus.fromWire(status),
 )

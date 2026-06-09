@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Aventures textuelles</string>
-    <string name="text_adventures_eyebrow">JOUER ET EXPLORER</string>
-    <string name="text_adventures_headline">Là où la langue vous emmène.</string>
-    <string name="text_adventures_early_access">Les aventures textuelles sont gratuites pendant notre accès anticipé. Profitez-en !</string>
-    <string name="text_adventures_sign_in_message">Connectez-vous pour commencer à jouer aux aventures textuelles.</string>
+    <string name="text_adventures_subtitle">Apprenez grâce à des histoires interactives.</string>
+    <string name="text_adventures_early_access_eyebrow">ACCÈS ANTICIPÉ</string>
+    <string name="text_adventures_early_access">Les aventures textuelles sont expérimentales et gratuites pendant l\'accès anticipé.</string>
+    <string name="text_adventures_sign_in_message">Connectez-vous pour jouer aux aventures</string>
+    <string name="text_adventures_sign_in_description">Créez un compte ou connectez-vous pour commencer et poursuivre vos aventures textuelles sur tous vos appareils.</string>
     <string name="text_adventures_sign_in_button">Se connecter</string>
-    <string name="text_adventures_empty_title">Pas encore d\'aventures</string>
+    <string name="text_adventures_create_account_button">Créer un compte</string>
     <string name="text_adventures_empty">Vous n\'avez pas encore d\'aventures. Commencez-en une !</string>
     <string name="text_adventures_error">Impossible de charger vos aventures. Veuillez réessayer.</string>
     <string name="text_adventure_busy">Le système est occupé pour le moment. Veuillez réessayer dans un instant.</string>
-    <string name="text_adventures_new">Nouvelle aventure</string>
+    <string name="text_adventures_new">Démarrer une nouvelle aventure</string>
     <string name="text_adventures_delete_content_description">Supprimer l\'aventure</string>
+    <string name="text_adventures_settings_content_description">Paramètres</string>
+    <string name="text_adventures_status_not_started">Pas commencé</string>
+    <string name="text_adventures_status_in_progress">En cours</string>
+    <string name="text_adventures_status_complete">Terminé</string>
+    <string name="text_adventures_early_access_image_content_description">Illustration d\'une porte ouvrant sur une aventure</string>
+    <string name="text_adventures_sign_in_image_content_description">Illustration d\'un cadenas</string>
     <string name="text_adventure_chat_title">Aventure</string>
     <string name="text_adventure_generating_1">Élaboration de votre aventure…</string>
     <string name="text_adventure_generating_2">Imagination de la suite…</string>

@@ -109,6 +109,8 @@ private fun AdventureSummary.toItem() = TextAdventuresListUiState.AdventureItem(
     id = id,
     title = title,
     translatedTitle = translatedTitle,
-    language = learningLanguage,
+    learningLanguage = learningLanguage,
+    translationLanguage = translationLanguage,
+    status = status,
     imageUrl = imageUrl,
 )

@@ -59,4 +59,6 @@ data class AdventureSummary(
     val translationLanguage: String,
     val updatedAt: Long,
     val imageId: String? = null,
+    /** Progress of the adventure: "not_started", "in_progress" or "complete". */
+    val status: String = "in_progress",
 )

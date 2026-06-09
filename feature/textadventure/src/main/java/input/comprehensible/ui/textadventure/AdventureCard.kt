@@ -1,0 +1,236 @@
+package input.comprehensible.ui.textadventure
+
+import androidx.compose.animation.core.animate
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import input.comprehensible.data.textadventure.AdventureStatus
+import input.comprehensible.feature.textadventure.R
+import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
+
+// Fraction of a row's width it must be dragged towards the start before releasing deletes it.
+private const val DELETE_SWIPE_FRACTION = 0.4f
+
+// The "in progress" status colour, matching the supplied design.
+private val InProgressColor = Color(0xFF159BC5)
+
+/**
+ * A single adventure, shown as an option card with swipe-to-delete: dragging the card towards the
+ * start reveals a delete background and, past a threshold, deletes it. The offset is driven directly
+ * so a delete snaps the card back to rest, keeping a restored row (failed delete) in place.
+ */
+@Composable
+internal fun AdventureRow(
+    adventure: AdventureItem,
+    onClick: () -> Unit,
+    onDelete: () -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    var offsetX by remember(adventure.id) { mutableFloatStateOf(0f) }
+    val deleteLabel = stringResource(R.string.text_adventures_delete_content_description)
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val width = constraints.maxWidth.toFloat()
+        val deleteThreshold = width * DELETE_SWIPE_FRACTION
+        DeleteBackground(modifier = Modifier.matchParentSize())
+        AdventureCard(
+            adventure = adventure,
+            onClick = onClick,
+            modifier = Modifier
+                .semantics {
+                    customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDelete(); true })
+                }
+                .offset { IntOffset(offsetX.roundToInt(), 0) }
+                .pointerInput(adventure.id) {
+                    detectHorizontalDragGestures(
+                        onHorizontalDrag = { change, dragAmount ->
+                            change.consume()
+                            offsetX = (offsetX + dragAmount).coerceIn(-width, 0f)
+                        },
+                        onDragEnd = {
+                            if (offsetX <= -deleteThreshold) {
+                                onDelete()
+                                offsetX = 0f
+                            } else {
+                                scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } }
+                            }
+                        },
+                        onDragCancel = { scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } } },
+                    )
+                },
+        )
+    }
+}
+
+@Composable
+private fun AdventureCard(
+    adventure: AdventureItem,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OptionCard(
+        onClick = onClick,
+        modifier = modifier.testTag("adventure_${adventure.title}"),
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(
+                        text = adventure.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (adventure.translatedTitle.isNotBlank()) {
+                        Text(
+                            text = adventure.translatedTitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                LanguagePill(adventure.learningLanguage, adventure.translationLanguage)
+                StatusPill(adventure.status)
+            }
+            AdventureImage(
+                imageUrl = adventure.imageUrl,
+                testTag = "adventure_image_${adventure.title}",
+                modifier = Modifier
+                    .size(104.dp)
+                    .clip(MaterialTheme.shapes.large),
+            )
+        }
+    }
+}
+
+/** The "Spanish → English" badge naming the learning and translation languages. */
+@Composable
+private fun LanguagePill(learningLanguage: String, translationLanguage: String) {
+    Text(
+        text = "${languageDisplayName(learningLanguage)} → ${languageDisplayName(translationLanguage)}",
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+            .padding(horizontal = 10.dp, vertical = 4.dp),
+    )
+}
+
+@Composable
+private fun StatusPill(status: AdventureStatus) {
+    val color = when (status) {
+        AdventureStatus.NOT_STARTED -> MaterialTheme.colorScheme.onSurfaceVariant
+        AdventureStatus.IN_PROGRESS -> InProgressColor
+        AdventureStatus.COMPLETE -> MaterialTheme.colorScheme.primary
+    }
+    val label = stringResource(
+        when (status) {
+            AdventureStatus.NOT_STARTED -> R.string.text_adventures_status_not_started
+            AdventureStatus.IN_PROGRESS -> R.string.text_adventures_status_in_progress
+            AdventureStatus.COMPLETE -> R.string.text_adventures_status_complete
+        }
+    )
+    Row(
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(color.copy(alpha = 0.14f))
+            .padding(horizontal = 10.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        when (status) {
+            AdventureStatus.NOT_STARTED -> Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(color),
+            )
+
+            AdventureStatus.IN_PROGRESS -> Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(16.dp),
+            )
+
+            AdventureStatus.COMPLETE -> Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(16.dp),
+            )
+        }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    }
+}
+
+/** The background revealed while swiping an adventure away, signalling the delete action. */
+@Composable
+private fun DeleteBackground(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.extraLarge)
+            .background(MaterialTheme.colorScheme.errorContainer)
+            .padding(horizontal = 24.dp),
+        contentAlignment = Alignment.CenterEnd,
+    ) {
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = stringResource(R.string.text_adventures_delete_content_description),
+            tint = MaterialTheme.colorScheme.onErrorContainer,
+        )
+    }
+}

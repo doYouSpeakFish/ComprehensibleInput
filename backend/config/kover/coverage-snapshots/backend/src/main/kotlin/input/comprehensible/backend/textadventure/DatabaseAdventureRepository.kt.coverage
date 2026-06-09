@@ -24,21 +24,45 @@
 ⚪   ) : AdventureRepository {
 ⚪   
 🟢       override fun listAdventureSummariesForAccount(accountId: String): List<AdventureSummary> = transaction(database) {
-🟢           AdventuresTable
+🟢           val adventureRows = AdventuresTable
 🟢               .selectAll()
 🟢               .where { AdventuresTable.accountId eq accountId }
 🟢               .orderBy(AdventuresTable.updatedAt, SortOrder.DESC)
-🟢               .map {
-🟢                   AdventureSummary(
-🟢                       adventureId = it[AdventuresTable.id],
-🟢                       title = it[AdventuresTable.title],
-🟢                       translatedTitle = it[AdventuresTable.translatedTitle],
-🟢                       learningLanguage = it[AdventuresTable.learningLanguage],
-🟢                       translationLanguage = it[AdventuresTable.translationLanguage],
-🟢                       updatedAt = it[AdventuresTable.updatedAt],
-🟢                       imageId = it[AdventuresTable.imageId],
-🟢                   )
-⚪               }
+🟢               .toList()
+🟢           val messagesById = loadMessagesByAdventure(adventureRows.map { it[AdventuresTable.id] })
+🟢           adventureRows.map { row ->
+🟢               AdventureSummary(
+🟢                   adventureId = row[AdventuresTable.id],
+🟢                   title = row[AdventuresTable.title],
+🟢                   translatedTitle = row[AdventuresTable.translatedTitle],
+🟢                   learningLanguage = row[AdventuresTable.learningLanguage],
+🟢                   translationLanguage = row[AdventuresTable.translationLanguage],
+🟢                   updatedAt = row[AdventuresTable.updatedAt],
+🟢                   imageId = row[AdventuresTable.imageId],
+🟡                   status = statusOf(messagesById[row[AdventuresTable.id]].orEmpty()),
+🟢               )
+⚪           }
+⚪       }
+⚪   
+⚪       private fun loadMessagesByAdventure(adventureIds: List<String>): Map<String, List<ResultRow>> {
+🟢           if (adventureIds.isEmpty()) return emptyMap()
+🟢           return AdventureMessagesTable
+🟢               .selectAll()
+🟢               .where { AdventureMessagesTable.adventureId inList adventureIds }
+🟢               .toList()
+🟢               .groupBy { it[AdventureMessagesTable.adventureId] }
+⚪       }
+⚪   
+⚪       /**
+⚪        * Derives an adventure's status from its messages: not started until the player sends a message,
+⚪        * complete once the most recent message ends the story, otherwise in progress.
+⚪        */
+🟢       private fun statusOf(messages: List<ResultRow>): String = when {
+🟢           messages.none { it[AdventureMessagesTable.type] == messageTypeUser } -> statusNotStarted
+🟡           messages.maxByOrNull { it[AdventureMessagesTable.createdAt] }
+🟡               ?.get(AdventureMessagesTable.isEnding) == true -> statusComplete
+⚪   
+🟢           else -> statusInProgress
 ⚪       }
 ⚪   
 ⚪       override fun saveAdventurePart(adventurePart: PersistedAdventurePart): String {
@@ -250,6 +274,9 @@
 ⚪       private companion object {
 ⚪           const val messageTypeAi = "AI"
 ⚪           const val messageTypeUser = "user"
+⚪           const val statusNotStarted = "not_started"
+⚪           const val statusInProgress = "in_progress"
+⚪           const val statusComplete = "complete"
 ⚪       }
 ⚪   }
 ⚪   

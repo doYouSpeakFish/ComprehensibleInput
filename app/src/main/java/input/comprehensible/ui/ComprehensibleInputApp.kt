@@ -50,6 +50,8 @@ fun ComprehensibleInputApp(
             textAdventureNavGraph(
                 navController = navController,
                 onSignInClick = { navController.navigate(AccountRoute) },
+                onCreateAccountClick = { navController.navigate(AccountRoute) },
+                onSettingsClick = { navController.navigate(SettingsRoute) },
             )
         }
     }

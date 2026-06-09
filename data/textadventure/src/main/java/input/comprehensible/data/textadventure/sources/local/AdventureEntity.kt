@@ -31,6 +31,8 @@ data class AdventureEntity(
     /** The [title] translated into the player's translation language. */
     @ColumnInfo(defaultValue = "") val translatedTitle: String = "",
     val learningLanguage: String,
+    /** Progress wire value ("not_started"/"in_progress"/"complete"); see AdventureStatus. */
+    @ColumnInfo(defaultValue = "in_progress") val status: String = "in_progress",
     val translationLanguage: String,
     val updatedAt: Long,
     /** The fully-resolved URL of the adventure's cover image, or null if it has none. */

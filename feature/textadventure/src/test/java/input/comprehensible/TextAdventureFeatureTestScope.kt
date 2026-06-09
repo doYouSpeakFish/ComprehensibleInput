@@ -108,6 +108,8 @@ class TextAdventureFeatureTestScope(
                     textAdventureNavGraph(
                         navController = navController,
                         onSignInClick = { navController.navigate(TestAccountRoute) },
+                        onCreateAccountClick = { navController.navigate(TestAccountRoute) },
+                        onSettingsClick = {},
                     )
                     composable<TestAccountRoute> {
                         Box(Modifier.fillMaxSize().testTag("account_screen"))

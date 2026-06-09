@@ -364,6 +364,7 @@ private fun AdventureSummary.toRemoteResponse(): AdventureSummaryRemoteResponse 
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
     imageId = imageId,
+    status = status,
 )
 
 private fun TextAdventureMessagesRemoteResponse.toHistory(): List<TextAdventureHistoryMessage> = messages.mapNotNull { message ->
@@ -461,5 +462,7 @@ data class AdventureSummaryRemoteResponse(
     val translationLanguage: String,
     val updatedAt: Long,
     val imageId: String? = null,
+    /** Progress of the adventure: "not_started", "in_progress" or "complete". */
+    val status: String = "in_progress",
 )
 

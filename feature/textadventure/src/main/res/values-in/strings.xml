@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Petualangan teks</string>
-    <string name="text_adventures_eyebrow">MAIN &amp; JELAJAHI</string>
-    <string name="text_adventures_headline">Ke mana bahasa membawa Anda.</string>
-    <string name="text_adventures_early_access">Petualangan teks gratis selama masa akses awal. Selamat menikmati!</string>
-    <string name="text_adventures_sign_in_message">Masuk untuk mulai bermain petualangan teks.</string>
+    <string name="text_adventures_subtitle">Belajar melalui cerita interaktif.</string>
+    <string name="text_adventures_early_access_eyebrow">AKSES AWAL</string>
+    <string name="text_adventures_early_access">Petualangan teks bersifat eksperimental dan gratis selama masa akses awal.</string>
+    <string name="text_adventures_sign_in_message">Masuk untuk bermain petualangan</string>
+    <string name="text_adventures_sign_in_description">Buat akun atau masuk untuk memulai dan melanjutkan petualangan teks Anda di semua perangkat Anda.</string>
     <string name="text_adventures_sign_in_button">Masuk</string>
-    <string name="text_adventures_empty_title">Belum ada petualangan</string>
+    <string name="text_adventures_create_account_button">Buat akun</string>
     <string name="text_adventures_empty">Anda belum memiliki petualangan. Mulai satu!</string>
     <string name="text_adventures_error">Tidak dapat memuat petualangan Anda. Silakan coba lagi.</string>
     <string name="text_adventure_busy">Sistem sedang sibuk saat ini. Silakan coba lagi beberapa saat lagi.</string>
-    <string name="text_adventures_new">Petualangan baru</string>
+    <string name="text_adventures_new">Mulai petualangan baru</string>
     <string name="text_adventures_delete_content_description">Hapus petualangan</string>
+    <string name="text_adventures_settings_content_description">Pengaturan</string>
+    <string name="text_adventures_status_not_started">Belum dimulai</string>
+    <string name="text_adventures_status_in_progress">Sedang berlangsung</string>
+    <string name="text_adventures_status_complete">Selesai</string>
+    <string name="text_adventures_early_access_image_content_description">Ilustrasi pintu yang terbuka menuju petualangan</string>
+    <string name="text_adventures_sign_in_image_content_description">Ilustrasi gembok</string>
     <string name="text_adventure_chat_title">Petualangan</string>
     <string name="text_adventure_generating_1">Merancang petualangan Anda…</string>
     <string name="text_adventure_generating_2">Membayangkan apa yang terjadi selanjutnya…</string>
