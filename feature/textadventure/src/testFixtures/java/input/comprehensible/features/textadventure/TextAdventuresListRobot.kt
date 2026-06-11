@@ -69,9 +69,9 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onAllNodesWithTag("adventure_image_$title", useUnmergedTree = true).assertCountEquals(0)
     }
 
-    // Adventures are deleted by swiping the row towards the start, so the gesture drives the
-    // swipe-to-dismiss container rather than tapping a button.
-    fun deleteAdventure(title: String) {
+    // Adventures are deleted by swiping the row towards the start; a swipe past the threshold
+    // asks for confirmation rather than deleting straight away.
+    fun swipeToDeleteAdventure(title: String) {
         composeTestRule.onNodeWithTag("adventure_$title").performTouchInput { swipeLeft() }
     }
 
@@ -79,6 +79,22 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
     fun swipeAdventureWithoutDeleting(title: String) {
         composeTestRule.onNodeWithTag("adventure_$title")
             .performTouchInput { swipeLeft(startX = right, endX = right - 60f) }
+    }
+
+    fun confirmAdventureDeletion() {
+        composeTestRule.onNodeWithTag("delete_adventure_confirm_button").performClick()
+    }
+
+    fun cancelAdventureDeletion() {
+        composeTestRule.onNodeWithTag("delete_adventure_cancel_button").performClick()
+    }
+
+    fun assertDeleteConfirmationIsShown() {
+        composeTestRule.onNodeWithTag("delete_adventure_dialog").assertIsDisplayed()
+    }
+
+    fun assertDeleteConfirmationIsNotShown() {
+        composeTestRule.onAllNodesWithTag("delete_adventure_dialog").assertCountEquals(0)
     }
 
     fun openAdventure(title: String) {

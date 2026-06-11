@@ -74,7 +74,9 @@ internal fun TextAdventuresListScreen(
         onStartAdventure = onStartAdventure,
         onAdventureClick = onAdventureClick,
         onSettingsClick = onSettingsClick,
-        onDeleteAdventure = viewModel::onDeleteAdventure,
+        onDeleteRequest = viewModel::onDeleteRequested,
+        onDeleteConfirm = viewModel::onDeleteConfirmed,
+        onDeleteDismiss = viewModel::onDeleteCancelled,
         modifier = modifier,
     )
 }
@@ -88,7 +90,9 @@ internal fun TextAdventuresListScreen(
     onStartAdventure: () -> Unit,
     onAdventureClick: (String) -> Unit,
     onSettingsClick: () -> Unit,
-    onDeleteAdventure: (String) -> Unit,
+    onDeleteRequest: (String) -> Unit,
+    onDeleteConfirm: () -> Unit,
+    onDeleteDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -122,7 +126,7 @@ internal fun TextAdventuresListScreen(
                 state = state,
                 onStartAdventure = onStartAdventure,
                 onAdventureClick = onAdventureClick,
-                onDeleteAdventure = onDeleteAdventure,
+                onDeleteRequest = onDeleteRequest,
             )
 
             else -> SignedInEmptyContent(
@@ -132,6 +136,14 @@ internal fun TextAdventuresListScreen(
             )
         }
     }
+
+    state.adventurePendingDeletion?.let { adventure ->
+        DeleteAdventureDialog(
+            adventure = adventure,
+            onConfirm = onDeleteConfirm,
+            onDismiss = onDeleteDismiss,
+        )
+    }
 }
 
 @Composable
@@ -140,7 +152,7 @@ private fun AdventureListContent(
     state: TextAdventuresListUiState,
     onStartAdventure: () -> Unit,
     onAdventureClick: (String) -> Unit,
-    onDeleteAdventure: (String) -> Unit,
+    onDeleteRequest: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.testTag("text_adventures_list"),
@@ -155,8 +167,12 @@ private fun AdventureListContent(
         items(items = state.adventures, key = { it.id }) { adventure ->
             AdventureRow(
                 adventure = adventure,
+                isPendingDeletion = adventure.id == state.adventurePendingDeletion?.id,
                 onClick = { onAdventureClick(adventure.id) },
-                onDelete = { onDeleteAdventure(adventure.id) },
+                onDeleteRequest = { onDeleteRequest(adventure.id) },
+                // Animates a deleted row fading out and the rows below sliding up to close the gap
+                // (and the reverse when a failed delete restores it).
+                modifier = Modifier.animateItem(),
             )
         }
     }

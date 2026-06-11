@@ -3,7 +3,8 @@ Feature: Text adventures list
   # The text adventures list is offline-first: adventures are read from the local
   # database (scoped to the signed-in user) and refreshed from the v1 backend
   # (GET /v1/adventures). It requires a signed-in account; signed-out users see a
-  # prompt to sign in. Adventures can be deleted (DELETE /v1/adventures/{id}).
+  # prompt to sign in. Adventures can be deleted (DELETE /v1/adventures/{id}) by
+  # swiping a row away and confirming in the dialog that follows.
 
   Scenario: Signed-out users are prompted to sign in
     Given I am signed out
@@ -89,26 +90,46 @@ Feature: Text adventures list
     Then the "Lantern Trail" adventure is listed
     And the "Forest Echoes" adventure is not listed
 
-  Scenario: An adventure can be deleted
+  Scenario: Swiping an adventure away asks for confirmation before deleting
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
     And the text adventures screen is open
-    When I delete the "Lantern Trail" adventure
+    When I swipe to delete the "Lantern Trail" adventure
+    Then the delete adventure confirmation is shown
+    And the "Lantern Trail" adventure is listed
+
+  Scenario: An adventure is deleted once the deletion is confirmed
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure
+    And the text adventures screen is open
+    When I swipe to delete the "Lantern Trail" adventure
+    And I confirm the deletion
     Then the "Lantern Trail" adventure is not listed
+
+  Scenario: Cancelling a deletion keeps the adventure
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure
+    And the text adventures screen is open
+    When I swipe to delete the "Lantern Trail" adventure
+    And I cancel the deletion
+    Then the delete adventure confirmation is not shown
+    And the "Lantern Trail" adventure is listed
 
   Scenario: A short swipe does not delete an adventure
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
     And the text adventures screen is open
     When I partially swipe the "Lantern Trail" adventure
-    Then the "Lantern Trail" adventure is listed
+    Then the delete adventure confirmation is not shown
+    And the "Lantern Trail" adventure is listed
 
   Scenario: A deleted adventure is restored when the delete request fails
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
     And the delete adventure request will fail
     And the text adventures screen is open
-    When I delete the "Lantern Trail" adventure
+    When I swipe to delete the "Lantern Trail" adventure
+    And I confirm the deletion
     Then the "Lantern Trail" adventure is listed
     And the adventures error message is shown
 

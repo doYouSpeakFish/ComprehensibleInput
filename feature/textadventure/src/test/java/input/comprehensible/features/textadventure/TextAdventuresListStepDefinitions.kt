@@ -74,9 +74,21 @@ class TextAdventuresListStepDefinitions {
         scope.idle()
     }
 
-    @When("I delete the {string} adventure")
-    fun iDeleteTheAdventure(title: String) {
-        robot.deleteAdventure(title)
+    @When("I swipe to delete the {string} adventure")
+    fun iSwipeToDeleteTheAdventure(title: String) {
+        robot.swipeToDeleteAdventure(title)
+        scope.idle()
+    }
+
+    @When("I confirm the deletion")
+    fun iConfirmTheDeletion() {
+        robot.confirmAdventureDeletion()
+        scope.idle()
+    }
+
+    @When("I cancel the deletion")
+    fun iCancelTheDeletion() {
+        robot.cancelAdventureDeletion()
         scope.idle()
     }
 
@@ -155,5 +167,15 @@ class TextAdventuresListStepDefinitions {
     @Then("the text adventure chat is shown")
     fun theTextAdventureChatIsShown() {
         robot.assertChatIsShown()
+    }
+
+    @Then("the delete adventure confirmation is shown")
+    fun theDeleteAdventureConfirmationIsShown() {
+        robot.assertDeleteConfirmationIsShown()
+    }
+
+    @Then("the delete adventure confirmation is not shown")
+    fun theDeleteAdventureConfirmationIsNotShown() {
+        robot.assertDeleteConfirmationIsNotShown()
     }
 }

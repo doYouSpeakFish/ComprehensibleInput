@@ -8,6 +8,36 @@ import input.comprehensible.ui.textadventure.TextAdventuresListUiState.Adventure
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
 
+private val previewAdventures = listOf(
+    AdventureItem(
+        id = "1",
+        title = "El bosque de cristal",
+        translatedTitle = "The Glass Forest",
+        learningLanguage = "es",
+        translationLanguage = "en",
+        status = AdventureStatus.NOT_STARTED,
+        imageUrl = AdventurePreviewImages.FOREST_PATH,
+    ),
+    AdventureItem(
+        id = "2",
+        title = "La porte sous la pluie",
+        translatedTitle = "The Door in the Rain",
+        learningLanguage = "fr",
+        translationLanguage = "en",
+        status = AdventureStatus.IN_PROGRESS,
+        imageUrl = AdventurePreviewImages.COASTAL_VILLAGE,
+    ),
+    AdventureItem(
+        id = "3",
+        title = "Der letzte Zug",
+        translatedTitle = "The Last Train",
+        learningLanguage = "de",
+        translationLanguage = "en",
+        status = AdventureStatus.COMPLETE,
+        imageUrl = AdventurePreviewImages.MOUNTAIN_PEAK,
+    ),
+)
+
 @DefaultPreview
 @Composable
 fun PreviewTextAdventuresSignedOut() {
@@ -32,37 +62,42 @@ fun PreviewTextAdventuresList() {
             TextAdventuresListUiState(
                 isSignedIn = true,
                 isLoading = false,
-                adventures = listOf(
-                    AdventureItem(
-                        id = "1",
-                        title = "El bosque de cristal",
-                        translatedTitle = "The Glass Forest",
-                        learningLanguage = "es",
-                        translationLanguage = "en",
-                        status = AdventureStatus.NOT_STARTED,
-                        imageUrl = AdventurePreviewImages.FOREST_PATH,
-                    ),
-                    AdventureItem(
-                        id = "2",
-                        title = "La porte sous la pluie",
-                        translatedTitle = "The Door in the Rain",
-                        learningLanguage = "fr",
-                        translationLanguage = "en",
-                        status = AdventureStatus.IN_PROGRESS,
-                        imageUrl = AdventurePreviewImages.COASTAL_VILLAGE,
-                    ),
-                    AdventureItem(
-                        id = "3",
-                        title = "Der letzte Zug",
-                        translatedTitle = "The Last Train",
-                        learningLanguage = "de",
-                        translationLanguage = "en",
-                        status = AdventureStatus.COMPLETE,
-                        imageUrl = AdventurePreviewImages.MOUNTAIN_PEAK,
-                    ),
-                ),
+                adventures = previewAdventures,
                 showError = false,
                 showBusyMessage = false,
+            ),
+        )
+    }
+}
+
+/** The row mid swipe-to-delete: held open at the threshold with the armed delete background. */
+@DefaultPreview
+@Composable
+fun PreviewTextAdventuresRowSwipedToDelete() {
+    ComprehensibleInputTheme {
+        AdventureImagePreview {
+            AdventureRow(
+                adventure = previewAdventures.first(),
+                isPendingDeletion = true,
+                onClick = {},
+                onDeleteRequest = {},
+            )
+        }
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewTextAdventuresDeleteConfirmation() {
+    ComprehensibleInputTheme {
+        PreviewScreen(
+            TextAdventuresListUiState(
+                isSignedIn = true,
+                isLoading = false,
+                adventures = previewAdventures,
+                showError = false,
+                showBusyMessage = false,
+                adventurePendingDeletion = previewAdventures.first(),
             ),
         )
     }
@@ -142,7 +177,9 @@ private fun PreviewScreen(state: TextAdventuresListUiState) {
             onStartAdventure = {},
             onAdventureClick = {},
             onSettingsClick = {},
-            onDeleteAdventure = {},
+            onDeleteRequest = {},
+            onDeleteConfirm = {},
+            onDeleteDismiss = {},
             modifier = Modifier.fillMaxSize(),
         )
     }

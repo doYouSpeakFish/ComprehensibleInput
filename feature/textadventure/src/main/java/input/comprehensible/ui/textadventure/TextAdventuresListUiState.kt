@@ -4,6 +4,9 @@ import input.comprehensible.data.textadventure.AdventureStatus
 
 /**
  * The UI state for the text adventures list screen.
+ *
+ * [adventurePendingDeletion] is the adventure the user has swiped to delete but not yet confirmed:
+ * while set, the screen shows a confirmation dialog for it and holds its row open.
  */
 data class TextAdventuresListUiState(
     val isSignedIn: Boolean,
@@ -11,6 +14,7 @@ data class TextAdventuresListUiState(
     val adventures: List<AdventureItem>,
     val showError: Boolean,
     val showBusyMessage: Boolean,
+    val adventurePendingDeletion: AdventureItem? = null,
 ) {
     /**
      * A single text adventure shown in the list. The [title] is in the learning language and

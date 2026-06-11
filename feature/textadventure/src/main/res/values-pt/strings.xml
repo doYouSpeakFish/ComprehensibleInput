@@ -13,6 +13,10 @@
     <string name="text_adventure_busy">O sistema está ocupado no momento. Por favor, tente novamente em instantes.</string>
     <string name="text_adventures_new">Iniciar nova aventura</string>
     <string name="text_adventures_delete_content_description">Excluir aventura</string>
+    <string name="text_adventures_delete_dialog_title">Excluir aventura?</string>
+    <string name="text_adventures_delete_dialog_message">“%1$s” será excluída permanentemente.</string>
+    <string name="text_adventures_delete_dialog_confirm">Excluir</string>
+    <string name="text_adventures_delete_dialog_cancel">Cancelar</string>
     <string name="text_adventures_settings_content_description">Configurações</string>
     <string name="text_adventures_status_not_started">Não iniciado</string>
     <string name="text_adventures_status_in_progress">Em andamento</string>
