@@ -55,7 +55,7 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.testTag("home_screen"),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.home_title)) },

@@ -1,26 +1,9 @@
 <resources>
     <string name="app_name">3 Million Words</string>
-    <string name="settings_button_description">Settings</string>
     <string name="settings_screen_title">Settings</string>
     <string name="settings_item_account">Account</string>
     <string name="settings_item_software_licences">Software licences</string>
     <string name="software_licences_screen_title">Software licences</string>
-    <string name="language_selector_en_content_description">Select English</string>
-    <string name="language_selector_de_content_description">Select German</string>
-    <string name="language_selector_es_content_description">Select Spanish</string>
-    <string name="language_selector_fr_content_description">Select French</string>
-    <string name="language_selector_pt_content_description">Select Portuguese</string>
-    <string name="language_selector_id_content_description">Select Indonesian</string>
-    <string name="language_selector_en_language_name">English</string>
-    <string name="language_selector_de_language_name">German</string>
-    <string name="language_selector_es_language_name">Spanish</string>
-    <string name="language_selector_fr_language_name">French</string>
-    <string name="language_selector_pt_language_name">Portuguese</string>
-    <string name="language_selector_id_language_name">Indonesian</string>
-    <string name="language_selector_select_learning_language_content_description">Select a language to learn. Currently learning %1$s</string>
-    <string name="language_selector_select_translation_language_content_description">Select a language for translations. Currently translating into %1$s</string>
-    <string name="top_bar_language_picker_translations_label">Translations</string>
-    <string name="top_bar_language_picker_learning_label">Learning</string>
     <string name="text_adventure_title">Text adventure</string>
     <string name="text_adventure_start_button">Start text adventure</string>
     <string name="text_adventure_input_placeholder">Respond to the story</string>

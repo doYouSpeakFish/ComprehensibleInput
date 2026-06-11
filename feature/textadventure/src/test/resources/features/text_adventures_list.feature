@@ -4,6 +4,11 @@ Feature: Text adventures list
   # database (scoped to the signed-in user) and refreshed from the v1 backend
   # (GET /v1/adventures). It requires a signed-in account; signed-out users see a
   # prompt to sign in. Adventures can be deleted (DELETE /v1/adventures/{id}).
+  # The top bar matches the story list's: an up button, the language picker, and
+  # a settings action. The picker reads and writes the global language settings,
+  # which decide the languages a new adventure is started in
+  # (POST /v1/adventures). The screen title is shown in the content, above the
+  # list.
 
   Scenario: Signed-out users are prompted to sign in
     Given I am signed out
@@ -28,6 +33,13 @@ Feature: Text adventures list
     And the adventures request will return no adventures
     And the text adventures screen is open
     Then the free early access notice is shown
+
+  Scenario: The screen title is shown with an up button in the top bar
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    Then the text adventures title is shown
+    And the up button is shown
 
   Scenario: A signed-in user sees their adventures
     Given I am signed in as "user@example.com"
@@ -118,3 +130,60 @@ Feature: Text adventures list
     And the text adventures screen is open
     When I start a new adventure
     Then the text adventure chat is shown
+
+  # ---------------------------------------------------------------------------
+  # The language picker in the top bar
+  # ---------------------------------------------------------------------------
+
+  Scenario: The language picker shows the current languages
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    Then the language picker shows German as the learning language
+    And the language picker shows English as the translation language
+
+  Scenario: The language picker is shown to signed-out users
+    Given I am signed out
+    And the text adventures screen is open
+    Then the language picker shows German as the learning language
+    And the language picker shows English as the translation language
+
+  Scenario: Changing the learning language updates the picker
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the learning language to Spanish
+    Then the language picker shows Spanish as the learning language
+    And the language picker shows English as the translation language
+
+  Scenario: Changing the translation language updates the picker
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the translation language to Spanish
+    Then the language picker shows Spanish as the translation language
+    And the language picker shows German as the learning language
+
+  Scenario: Choosing the translation language as the learning language swaps them
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the learning language to English
+    Then the language picker shows English as the learning language
+    And the language picker shows German as the translation language
+
+  Scenario: Choosing the learning language as the translation language swaps them
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the translation language to German
+    Then the language picker shows German as the translation language
+    And the language picker shows English as the learning language
+
+  Scenario: A new adventure is started in the selected languages
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the learning language to Spanish
+    And I start a new adventure
+    Then the adventure is started learning Spanish with translations in English

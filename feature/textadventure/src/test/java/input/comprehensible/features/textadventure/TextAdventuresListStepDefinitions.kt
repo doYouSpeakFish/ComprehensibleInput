@@ -92,6 +92,18 @@ class TextAdventuresListStepDefinitions {
         scope.idle()
     }
 
+    @When("I set the learning language to {word}")
+    fun iSetTheLearningLanguageTo(language: String) {
+        robot.setLearningLanguage(language)
+        scope.idle()
+    }
+
+    @When("I set the translation language to {word}")
+    fun iSetTheTranslationLanguageTo(language: String) {
+        robot.setTranslationLanguage(language)
+        scope.idle()
+    }
+
     @Then("the text adventures sign in prompt is shown")
     fun theSignInPromptIsShown() {
         robot.assertSignInPromptIsShown()
@@ -155,5 +167,43 @@ class TextAdventuresListStepDefinitions {
     @Then("the text adventure chat is shown")
     fun theTextAdventureChatIsShown() {
         robot.assertChatIsShown()
+    }
+
+    @Then("the text adventures title is shown")
+    fun theTextAdventuresTitleIsShown() {
+        robot.assertTitleIsShown()
+    }
+
+    @Then("the up button is shown")
+    fun theUpButtonIsShown() {
+        robot.assertUpButtonIsShown()
+    }
+
+    @Then("the language picker shows {word} as the learning language")
+    fun theLanguagePickerShowsAsTheLearningLanguage(language: String) {
+        robot.assertLearningLanguageIs(language)
+    }
+
+    @Then("the language picker shows {word} as the translation language")
+    fun theLanguagePickerShowsAsTheTranslationLanguage(language: String) {
+        robot.assertTranslationLanguageIs(language)
+    }
+
+    @Then("the adventure is started learning {word} with translations in {word}")
+    fun theAdventureIsStartedLearningWithTranslationsIn(learning: String, translation: String) {
+        scope.assertAdventureStartedWith(
+            learningLanguage = languageCodeFor(learning),
+            translationLanguage = languageCodeFor(translation),
+        )
+    }
+
+    private fun languageCodeFor(languageName: String) = when (languageName) {
+        "English" -> "en"
+        "German" -> "de"
+        "Spanish" -> "es"
+        "French" -> "fr"
+        "Portuguese" -> "pt"
+        "Indonesian" -> "id"
+        else -> error("Unknown language name: $languageName")
     }
 }

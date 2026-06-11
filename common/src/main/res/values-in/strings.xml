@@ -5,4 +5,21 @@
     <string name="generic_error_dialog_message">Silakan coba lagi nanti.</string>
     <string name="generic_error_dialog_button">Oke</string>
     <string name="generic_error_dialog_content_description">Ilustrasi robot sedih</string>
+    <string name="language_selector_en_content_description">Pilih bahasa Inggris</string>
+    <string name="language_selector_de_content_description">Pilih bahasa Jerman</string>
+    <string name="language_selector_es_content_description">Pilih bahasa Spanyol</string>
+    <string name="language_selector_fr_content_description">Pilih bahasa Prancis</string>
+    <string name="language_selector_pt_content_description">Pilih bahasa Portugis</string>
+    <string name="language_selector_id_content_description">Pilih bahasa Indonesia</string>
+    <string name="language_selector_en_language_name">Inggris</string>
+    <string name="language_selector_de_language_name">Jerman</string>
+    <string name="language_selector_es_language_name">Spanyol</string>
+    <string name="language_selector_fr_language_name">Prancis</string>
+    <string name="language_selector_pt_language_name">Portugis</string>
+    <string name="language_selector_id_language_name">Indonesia</string>
+    <string name="language_selector_select_learning_language_content_description">Pilih bahasa untuk dipelajari. Saat ini belajar %1$s</string>
+    <string name="language_selector_select_translation_language_content_description">Pilih bahasa untuk terjemahan. Saat ini menerjemahkan ke %1$s</string>
+    <string name="top_bar_language_picker_translations_label">Terjemahan</string>
+    <string name="top_bar_language_picker_learning_label">Pembelajaran</string>
+    <string name="settings_button_description">Pengaturan</string>
 </resources>

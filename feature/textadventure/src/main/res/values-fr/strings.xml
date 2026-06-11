@@ -13,7 +13,6 @@
     <string name="text_adventure_busy">Le système est occupé pour le moment. Veuillez réessayer dans un instant.</string>
     <string name="text_adventures_new">Démarrer une nouvelle aventure</string>
     <string name="text_adventures_delete_content_description">Supprimer l\'aventure</string>
-    <string name="text_adventures_settings_content_description">Paramètres</string>
     <string name="text_adventures_status_not_started">Pas commencé</string>
     <string name="text_adventures_status_in_progress">En cours</string>
     <string name="text_adventures_status_complete">Terminé</string>

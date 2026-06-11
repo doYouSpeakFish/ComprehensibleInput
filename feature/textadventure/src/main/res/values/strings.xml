@@ -13,7 +13,6 @@
     <string name="text_adventure_busy">The system is busy right now. Please try again in a little while.</string>
     <string name="text_adventures_new">Start new adventure</string>
     <string name="text_adventures_delete_content_description">Delete adventure</string>
-    <string name="text_adventures_settings_content_description">Settings</string>
     <string name="text_adventures_status_not_started">Not started</string>
     <string name="text_adventures_status_in_progress">In progress</string>
     <string name="text_adventures_status_complete">Complete</string>
