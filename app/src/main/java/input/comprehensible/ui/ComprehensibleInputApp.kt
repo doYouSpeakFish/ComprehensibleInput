@@ -45,6 +45,7 @@ fun ComprehensibleInputApp(
             )
             storyList(
                 onStorySelected = { navController.navigate(StoryReaderRoute(storyId = it)) },
+                onNavigateUp = { navController.navigateUp() },
                 onSettingsClick = { navController.navigate(SettingsRoute) },
             )
             textAdventureNavGraph(

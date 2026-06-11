@@ -9,6 +9,10 @@ import androidx.compose.ui.test.performClick
 
 class HomeRobot(private val composeTestRule: ComposeTestRule) {
 
+    fun assertHomeScreenIsShown() {
+        composeTestRule.onNodeWithTag("home_screen").assertIsDisplayed()
+    }
+
     fun assertStoriesOptionIsShown() {
         composeTestRule.onNodeWithTag("home_stories_card").assertIsDisplayed()
     }

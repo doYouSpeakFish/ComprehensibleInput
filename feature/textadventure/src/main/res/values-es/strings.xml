@@ -15,7 +15,6 @@
     <string name="text_adventures_delete_content_description">Eliminar aventura</string>
     <string name="text_adventures_deleted">Aventura eliminada</string>
     <string name="text_adventures_undo">Deshacer</string>
-    <string name="text_adventures_settings_content_description">Ajustes</string>
     <string name="text_adventures_status_not_started">Sin empezar</string>
     <string name="text_adventures_status_in_progress">En progreso</string>
     <string name="text_adventures_status_complete">Completado</string>

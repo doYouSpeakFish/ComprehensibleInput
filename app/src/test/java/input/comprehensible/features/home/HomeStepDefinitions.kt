@@ -18,6 +18,11 @@ class HomeStepDefinitions {
         scope.idle()
     }
 
+    @Then("the home screen is shown")
+    fun theHomeScreenIsShown() {
+        home.assertHomeScreenIsShown()
+    }
+
     @Then("the stories option is shown")
     fun theStoriesOptionIsShown() {
         home.assertStoriesOptionIsShown()

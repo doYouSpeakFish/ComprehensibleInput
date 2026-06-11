@@ -50,6 +50,7 @@ import input.comprehensible.util.DefaultPreview
 internal fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (id: String) -> Unit,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     viewModel: StoryListViewModel = viewModel(),
 ) {
@@ -57,6 +58,7 @@ internal fun StoryListScreen(
     StoryListScreen(
         modifier = modifier,
         onStorySelected = { onStorySelected(it.id) },
+        onNavigateUp = onNavigateUp,
         onSettingsClick = onSettingsClick,
         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
         onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
@@ -68,6 +70,7 @@ internal fun StoryListScreen(
 private fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (StoryListUiState.StoryListItem.Story) -> Unit,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
@@ -76,6 +79,7 @@ private fun StoryListScreen(
     val itemsWithIndex = remember(state.items) { state.items.withIndex().toList() }
     StoryListScaffold(
         modifier = modifier,
+        onNavigateUp = onNavigateUp,
         onSettingsClick = onSettingsClick,
         learningLanguage = state.learningLanguage,
         translationLanguage = state.translationLanguage,
@@ -121,6 +125,7 @@ private fun StoryListScreen(
 @Composable
 private fun StoryListScaffold(
     modifier: Modifier = Modifier,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
     learningLanguage: LanguageSelection?,
@@ -141,6 +146,7 @@ private fun StoryListScaffold(
                 languageOptions = languagesAvailable,
                 onLanguageSelected = onLearningLanguageSelected,
                 onTranslationLanguageSelected = onTranslationLanguageSelected,
+                onNavigateUp = onNavigateUp,
                 onSettingsClick = onSettingsClick,
             )
         },
@@ -259,6 +265,7 @@ fun StoryListScreenPreview() {
     ComprehensibleInputTheme {
         StoryListScreen(
             onStorySelected = {},
+            onNavigateUp = {},
             onSettingsClick = {},
             onLearningLanguageSelected = {},
             onTranslationLanguageSelected = {},

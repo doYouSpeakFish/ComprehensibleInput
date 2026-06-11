@@ -191,6 +191,22 @@ class TextAdventureFeatureTestScope(
         fakeRemoteDataSource.rateLimitGenerateAiMessage = true
     }
 
+    /**
+     * Asserts the languages (as codes, e.g. "es") that the most recent start-adventure request was
+     * made with, keeping the fake's recording an implementation detail of this scope.
+     */
+    fun assertAdventureStartedWith(learningLanguage: String, translationLanguage: String) {
+        val actualLearning = fakeRemoteDataSource.lastStartLearningLanguage
+        val actualTranslation = fakeRemoteDataSource.lastStartTranslationLanguage
+        check(actualLearning == learningLanguage) {
+            "Expected the adventure to be started learning '$learningLanguage' but was '$actualLearning'"
+        }
+        check(actualTranslation == translationLanguage) {
+            "Expected the adventure to be started with translations in '$translationLanguage' " +
+                "but was '$actualTranslation'"
+        }
+    }
+
     fun startReturns(text: String, translation: String) {
         fakeRemoteDataSource.startResponse = TextAdventureRemoteResponse(
             messageId = "message-1",

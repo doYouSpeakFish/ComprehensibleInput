@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import input.comprehensible.data.textadventure.AdventureStatus
+import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
 import input.comprehensible.util.DefaultPreview
@@ -53,6 +54,9 @@ fun PreviewTextAdventuresSignedOut() {
                 adventures = emptyList(),
                 showError = false,
                 showBusyMessage = false,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }
@@ -69,6 +73,9 @@ fun PreviewTextAdventuresList() {
                 adventures = previewAdventures,
                 showError = false,
                 showBusyMessage = false,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }
@@ -110,6 +117,9 @@ fun PreviewTextAdventuresDeletedSnackbar() {
                 adventures = previewAdventures.drop(1),
                 showError = false,
                 showBusyMessage = false,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
                 undoableDeletedAdventureId = previewAdventures.first().id,
             ),
         )
@@ -127,6 +137,9 @@ fun PreviewTextAdventuresEmpty() {
                 adventures = emptyList(),
                 showError = false,
                 showBusyMessage = false,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }
@@ -143,6 +156,9 @@ fun PreviewTextAdventuresLoading() {
                 adventures = emptyList(),
                 showError = false,
                 showBusyMessage = false,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }
@@ -159,6 +175,9 @@ fun PreviewTextAdventuresError() {
                 adventures = emptyList(),
                 showError = true,
                 showBusyMessage = false,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }
@@ -175,6 +194,9 @@ fun PreviewTextAdventuresBusy() {
                 adventures = emptyList(),
                 showError = false,
                 showBusyMessage = true,
+                learningLanguage = LanguageSelection.GERMAN,
+                translationLanguage = LanguageSelection.ENGLISH,
+                languagesAvailable = LanguageSelection.entries,
             ),
         )
     }
@@ -189,10 +211,13 @@ private fun PreviewScreen(state: TextAdventuresListUiState) {
             onCreateAccountClick = {},
             onStartAdventure = {},
             onAdventureClick = {},
+            onNavigateUp = {},
             onSettingsClick = {},
             onDeleteAdventure = {},
             onUndoDelete = {},
             onUndoDismissed = {},
+            onLearningLanguageSelected = {},
+            onTranslationLanguageSelected = {},
             modifier = Modifier.fillMaxSize(),
         )
     }

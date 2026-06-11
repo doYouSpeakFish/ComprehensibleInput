@@ -15,7 +15,6 @@
     <string name="text_adventures_delete_content_description">Excluir aventura</string>
     <string name="text_adventures_deleted">Aventura excluída</string>
     <string name="text_adventures_undo">Desfazer</string>
-    <string name="text_adventures_settings_content_description">Configurações</string>
     <string name="text_adventures_status_not_started">Não iniciado</string>
     <string name="text_adventures_status_in_progress">Em andamento</string>
     <string name="text_adventures_status_complete">Concluído</string>

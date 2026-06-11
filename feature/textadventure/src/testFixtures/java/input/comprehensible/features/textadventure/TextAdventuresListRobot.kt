@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -21,6 +22,18 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
 
     fun assertScreenIsShown() {
         composeTestRule.onNodeWithTag("text_adventures_screen").assertIsDisplayed()
+    }
+
+    fun assertTitleIsShown() {
+        composeTestRule.onNodeWithTag("text_adventures_title").assertIsDisplayed()
+    }
+
+    fun assertUpButtonIsShown() {
+        composeTestRule.onNodeWithContentDescription("Navigate up").assertIsDisplayed()
+    }
+
+    fun tapUpButton() {
+        composeTestRule.onNodeWithContentDescription("Navigate up").performClick()
     }
 
     fun assertSignInPromptIsShown() {
@@ -110,6 +123,41 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
 
     fun startNewAdventure() {
         composeTestRule.onNodeWithTag("text_adventures_new_button").performClick()
+    }
+
+    // The language picker is driven through its content descriptions (it is the same component as
+    // the story list's, which carries no test tags): the toggle buttons describe the current
+    // selection and each menu entry is described as "Select <language>".
+    fun setLearningLanguage(languageName: String) {
+        composeTestRule.apply {
+            onNodeWithContentDescription("Select a language to learn", substring = true)
+                .performClick()
+            waitForIdle()
+            onNodeWithContentDescription("Select $languageName").performClick()
+        }
+    }
+
+    fun setTranslationLanguage(languageName: String) {
+        composeTestRule.apply {
+            onNodeWithContentDescription("Select a language for translations", substring = true)
+                .performClick()
+            waitForIdle()
+            onNodeWithContentDescription("Select $languageName").performClick()
+        }
+    }
+
+    fun assertLearningLanguageIs(languageName: String) {
+        composeTestRule
+            .onNodeWithContentDescription("Select a language to learn. Currently learning $languageName")
+            .assertIsDisplayed()
+    }
+
+    fun assertTranslationLanguageIs(languageName: String) {
+        composeTestRule
+            .onNodeWithContentDescription(
+                "Select a language for translations. Currently translating into $languageName",
+            )
+            .assertIsDisplayed()
     }
 
     fun assertAccountScreenIsShown() {

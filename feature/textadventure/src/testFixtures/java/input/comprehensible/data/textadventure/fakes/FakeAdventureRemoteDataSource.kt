@@ -36,6 +36,13 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
     var rateLimitStartAdventure: Boolean = false
     var rateLimitSendUserMessage: Boolean = false
     var rateLimitGenerateAiMessage: Boolean = false
+
+    // The languages of the most recent startAdventure request, so tests can assert which
+    // languages a new adventure was requested in.
+    var lastStartLearningLanguage: String? = null
+        private set
+    var lastStartTranslationLanguage: String? = null
+        private set
     var startResponse: TextAdventureRemoteResponse = TextAdventureRemoteResponse(
         messageId = "message-1",
         adventureId = "adventure-1",
@@ -93,6 +100,8 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
         learningLanguage: String,
         translationLanguage: String,
     ): TextAdventureRemoteResponse {
+        lastStartLearningLanguage = learningLanguage
+        lastStartTranslationLanguage = translationLanguage
         delayIfConfigured()
         if (rateLimitStartAdventure) throw RateLimitedException()
         if (failStartAdventure) error("Failed to start adventure")

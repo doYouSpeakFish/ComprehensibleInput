@@ -19,15 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -36,7 +33,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.textadventure.R
+import input.comprehensible.ui.components.LanguageSelection
+import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.homeOptionCardColor
 
 // The warm orange that runs through this screen: the early-access eyebrow and the primary actions
@@ -66,6 +64,7 @@ internal fun TextAdventuresListScreen(
     onCreateAccountClick: () -> Unit,
     onStartAdventure: () -> Unit,
     onAdventureClick: (String) -> Unit,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TextAdventuresListViewModel = viewModel(),
@@ -79,15 +78,17 @@ internal fun TextAdventuresListScreen(
         onCreateAccountClick = onCreateAccountClick,
         onStartAdventure = onStartAdventure,
         onAdventureClick = onAdventureClick,
+        onNavigateUp = onNavigateUp,
         onSettingsClick = onSettingsClick,
         onDeleteAdventure = viewModel::onDeleteAdventure,
         onUndoDelete = viewModel::onUndoDelete,
         onUndoDismissed = viewModel::onUndoDismissed,
+        onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+        onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
         modifier = modifier,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TextAdventuresListScreen(
     state: TextAdventuresListUiState,
@@ -95,10 +96,13 @@ internal fun TextAdventuresListScreen(
     onCreateAccountClick: () -> Unit,
     onStartAdventure: () -> Unit,
     onAdventureClick: (String) -> Unit,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     onDeleteAdventure: (String) -> Unit,
     onUndoDelete: () -> Unit,
     onUndoDismissed: () -> Unit,
+    onLearningLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -111,16 +115,14 @@ internal fun TextAdventuresListScreen(
     Scaffold(
         modifier = modifier.testTag("text_adventures_screen"),
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.text_adventures_title)) },
-                actions = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(R.string.text_adventures_settings_content_description),
-                        )
-                    }
-                },
+            TopBar(
+                leaningLanguage = state.learningLanguage,
+                translationLanguage = state.translationLanguage,
+                languageOptions = state.languagesAvailable,
+                onLanguageSelected = onLearningLanguageSelected,
+                onTranslationLanguageSelected = onTranslationLanguageSelected,
+                onNavigateUp = onNavigateUp,
+                onSettingsClick = onSettingsClick,
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -258,14 +260,25 @@ private fun SignedOutContent(
     }
 }
 
-/** The short lead-in shown under the top bar in every state. */
+/**
+ * The screen title and its short lead-in, shown under the top bar in every state. The title lives
+ * here rather than in the top bar, which holds the language picker.
+ */
 @Composable
 private fun Intro() {
-    Text(
-        text = stringResource(R.string.text_adventures_subtitle),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = stringResource(R.string.text_adventures_title),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Black,
+            modifier = Modifier.testTag("text_adventures_title"),
+        )
+        Text(
+            text = stringResource(R.string.text_adventures_subtitle),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
 }
 
 /**
