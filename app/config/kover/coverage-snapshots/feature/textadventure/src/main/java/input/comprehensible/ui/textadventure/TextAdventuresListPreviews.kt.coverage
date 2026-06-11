@@ -160,6 +160,7 @@
 🟢               onCreateAccountClick = {},
 🟢               onStartAdventure = {},
 🟢               onAdventureClick = {},
+🟢               onNavigateUp = {},
 🟢               onSettingsClick = {},
 🟢               onDeleteAdventure = {},
 🟢               onLearningLanguageSelected = {},

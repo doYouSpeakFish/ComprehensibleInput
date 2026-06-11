@@ -20,6 +20,18 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("text_adventures_screen").assertIsDisplayed()
     }
 
+    fun assertTitleIsShown() {
+        composeTestRule.onNodeWithTag("text_adventures_title").assertIsDisplayed()
+    }
+
+    fun assertUpButtonIsShown() {
+        composeTestRule.onNodeWithContentDescription("Navigate up").assertIsDisplayed()
+    }
+
+    fun tapUpButton() {
+        composeTestRule.onNodeWithContentDescription("Navigate up").performClick()
+    }
+
     fun assertSignInPromptIsShown() {
         composeTestRule.onNodeWithTag("text_adventures_sign_in_prompt").assertIsDisplayed()
     }

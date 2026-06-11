@@ -32,3 +32,10 @@ Feature: Home
     And the home screen is open
     When I select the text adventures option
     Then the text adventures screen is shown
+
+  Scenario: Navigating up from the text adventures screen returns home
+    Given I am signed in as "user@example.com"
+    And the home screen is open
+    When I select the text adventures option
+    And I navigate up from the text adventures screen
+    Then the stories option is shown

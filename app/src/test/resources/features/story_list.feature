@@ -5,6 +5,13 @@ Feature: Story list
     And the story list is open
     Then the first story is listed
 
+  Scenario: Navigating up from the story list returns home
+    Given the story library is available
+    And the home screen is open
+    When I select the stories option
+    And the reader navigates up from the story list
+    Then the stories option is shown
+
   Scenario: Opening the first story shows its content
     Given the story library is available
     And the story list is open

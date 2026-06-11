@@ -13,7 +13,6 @@
     <string name="text_adventure_busy">Sistem sedang sibuk saat ini. Silakan coba lagi beberapa saat lagi.</string>
     <string name="text_adventures_new">Mulai petualangan baru</string>
     <string name="text_adventures_delete_content_description">Hapus petualangan</string>
-    <string name="text_adventures_settings_content_description">Pengaturan</string>
     <string name="text_adventures_status_not_started">Belum dimulai</string>
     <string name="text_adventures_status_in_progress">Sedang berlangsung</string>
     <string name="text_adventures_status_complete">Selesai</string>

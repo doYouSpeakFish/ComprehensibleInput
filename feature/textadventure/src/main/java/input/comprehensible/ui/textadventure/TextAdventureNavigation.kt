@@ -31,6 +31,7 @@ fun NavGraphBuilder.textAdventureNavGraph(
             onAdventureClick = { adventureId ->
                 navController.navigate(TextAdventureChatRoute(adventureId))
             },
+            onNavigateUp = { navController.navigateUp() },
             onSettingsClick = onSettingsClick,
         )
     }

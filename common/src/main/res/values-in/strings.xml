@@ -21,4 +21,5 @@
     <string name="language_selector_select_translation_language_content_description">Pilih bahasa untuk terjemahan. Saat ini menerjemahkan ke %1$s</string>
     <string name="top_bar_language_picker_translations_label">Terjemahan</string>
     <string name="top_bar_language_picker_learning_label">Pembelajaran</string>
+    <string name="settings_button_description">Pengaturan</string>
 </resources>

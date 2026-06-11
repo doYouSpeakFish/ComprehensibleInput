@@ -21,4 +21,5 @@
     <string name="language_selector_select_translation_language_content_description">Sélectionnez une langue pour les traductions. Actuellement en train de traduire en %1$s</string>
     <string name="top_bar_language_picker_translations_label">Traductions</string>
     <string name="top_bar_language_picker_learning_label">Apprentissage</string>
+    <string name="settings_button_description">Paramètres</string>
 </resources>

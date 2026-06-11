@@ -4,9 +4,11 @@ Feature: Text adventures list
   # database (scoped to the signed-in user) and refreshed from the v1 backend
   # (GET /v1/adventures). It requires a signed-in account; signed-out users see a
   # prompt to sign in. Adventures can be deleted (DELETE /v1/adventures/{id}).
-  # The top bar holds the same language picker as the story list: it reads and
-  # writes the global language settings, which decide the languages a new
-  # adventure is started in (POST /v1/adventures).
+  # The top bar matches the story list's: an up button, the language picker, and
+  # a settings action. The picker reads and writes the global language settings,
+  # which decide the languages a new adventure is started in
+  # (POST /v1/adventures). The screen title is shown in the content, above the
+  # list.
 
   Scenario: Signed-out users are prompted to sign in
     Given I am signed out
@@ -31,6 +33,13 @@ Feature: Text adventures list
     And the adventures request will return no adventures
     And the text adventures screen is open
     Then the free early access notice is shown
+
+  Scenario: The screen title is shown with an up button in the top bar
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    Then the text adventures title is shown
+    And the up button is shown
 
   Scenario: A signed-in user sees their adventures
     Given I am signed in as "user@example.com"

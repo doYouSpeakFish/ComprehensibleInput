@@ -25,6 +25,12 @@ class StoryListStepDefinitions {
         scope.idle()
     }
 
+    @When("the reader navigates up from the story list")
+    fun theReaderNavigatesUpFromTheStoryList() {
+        storyList.navigateUp()
+        scope.idle()
+    }
+
     @When("the reader selects the {word} story")
     fun theReaderSelectsTheStory(ordinal: String) {
         storyList.selectStory(StoryFixtures.story(ordinal))

@@ -50,6 +50,7 @@
 🟢   internal fun StoryListScreen(
 🟢       modifier: Modifier = Modifier,
 ⚪       onStorySelected: (id: String) -> Unit,
+⚪       onNavigateUp: () -> Unit,
 ⚪       onSettingsClick: () -> Unit,
 🟢       viewModel: StoryListViewModel = viewModel(),
 🟡   ) {
@@ -57,9 +58,10 @@
 🟢       StoryListScreen(
 🟢           modifier = modifier,
 🟢           onStorySelected = { onStorySelected(it.id) },
+🟢           onNavigateUp = onNavigateUp,
 🟢           onSettingsClick = onSettingsClick,
-🟢           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
-🟢           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+🟡           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+🟡           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
 🟢           state = state,
 ⚪       )
 🟢   }
@@ -68,6 +70,7 @@
 ⚪   private fun StoryListScreen(
 🟢       modifier: Modifier = Modifier,
 ⚪       onStorySelected: (StoryListUiState.StoryListItem.Story) -> Unit,
+⚪       onNavigateUp: () -> Unit,
 ⚪       onSettingsClick: () -> Unit,
 ⚪       onLearningLanguageSelected: (LanguageSelection) -> Unit,
 ⚪       onTranslationLanguageSelected: (LanguageSelection) -> Unit,
@@ -76,6 +79,7 @@
 🟢       val itemsWithIndex = remember(state.items) { state.items.withIndex().toList() }
 🟢       StoryListScaffold(
 🟢           modifier = modifier,
+🟢           onNavigateUp = onNavigateUp,
 🟢           onSettingsClick = onSettingsClick,
 🟢           learningLanguage = state.learningLanguage,
 🟢           translationLanguage = state.translationLanguage,
@@ -121,6 +125,7 @@
 ⚪   @Composable
 🟢   private fun StoryListScaffold(
 🟢       modifier: Modifier = Modifier,
+⚪       onNavigateUp: () -> Unit,
 ⚪       onSettingsClick: () -> Unit,
 🟢       windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ⚪       learningLanguage: LanguageSelection?,
@@ -141,6 +146,7 @@
 🟢                   languageOptions = languagesAvailable,
 🟢                   onLanguageSelected = onLearningLanguageSelected,
 🟢                   onTranslationLanguageSelected = onTranslationLanguageSelected,
+🟢                   onNavigateUp = onNavigateUp,
 🟢                   onSettingsClick = onSettingsClick,
 ⚪               )
 ⚪           },
@@ -259,6 +265,7 @@
 ⚪       ComprehensibleInputTheme {
 🟢           StoryListScreen(
 🟢               onStorySelected = {},
+🟢               onNavigateUp = {},
 🟢               onSettingsClick = {},
 🟢               onLearningLanguageSelected = {},
 🟢               onTranslationLanguageSelected = {},

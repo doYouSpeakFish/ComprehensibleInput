@@ -169,6 +169,16 @@ class TextAdventuresListStepDefinitions {
         robot.assertChatIsShown()
     }
 
+    @Then("the text adventures title is shown")
+    fun theTextAdventuresTitleIsShown() {
+        robot.assertTitleIsShown()
+    }
+
+    @Then("the up button is shown")
+    fun theUpButtonIsShown() {
+        robot.assertUpButtonIsShown()
+    }
+
     @Then("the learning language is {word}")
     fun theLearningLanguageIs(language: String) {
         robot.assertLearningLanguageIs(language)

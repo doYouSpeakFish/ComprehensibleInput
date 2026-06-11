@@ -69,6 +69,12 @@ class StoryListRobot(
             .performClick()
     }
 
+    fun navigateUp() {
+        composeTestRule
+            .onNodeWithContentDescription("Navigate up")
+            .performClick()
+    }
+
     fun assertLearningLanguageIs(languageCode: String) {
         composeTestRule
             .onNodeWithContentDescription(learningLanguageContentDescription(languageCode))

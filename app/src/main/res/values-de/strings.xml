@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">ComprehensibleInput</string>
-    <string name="settings_button_description">Einstellungen</string>
     <string name="settings_screen_title">Einstellungen</string>
     <string name="settings_item_account">Konto</string>
     <string name="settings_item_software_licences">Softwarelizenzen</string>

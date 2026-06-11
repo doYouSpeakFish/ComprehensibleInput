@@ -160,6 +160,7 @@ private fun PreviewScreen(state: TextAdventuresListUiState) {
             onCreateAccountClick = {},
             onStartAdventure = {},
             onAdventureClick = {},
+            onNavigateUp = {},
             onSettingsClick = {},
             onDeleteAdventure = {},
             onLearningLanguageSelected = {},
