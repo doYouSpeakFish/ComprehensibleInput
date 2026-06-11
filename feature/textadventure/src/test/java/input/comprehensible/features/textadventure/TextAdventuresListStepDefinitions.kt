@@ -179,29 +179,22 @@ class TextAdventuresListStepDefinitions {
         robot.assertUpButtonIsShown()
     }
 
-    @Then("the learning language is {word}")
-    fun theLearningLanguageIs(language: String) {
+    @Then("the language picker shows {word} as the learning language")
+    fun theLanguagePickerShowsAsTheLearningLanguage(language: String) {
         robot.assertLearningLanguageIs(language)
     }
 
-    @Then("the translation language is {word}")
-    fun theTranslationLanguageIs(language: String) {
+    @Then("the language picker shows {word} as the translation language")
+    fun theLanguagePickerShowsAsTheTranslationLanguage(language: String) {
         robot.assertTranslationLanguageIs(language)
     }
 
     @Then("the adventure is started learning {word} with translations in {word}")
     fun theAdventureIsStartedLearningWithTranslationsIn(learning: String, translation: String) {
-        val expectedLearning = languageCodeFor(learning)
-        val expectedTranslation = languageCodeFor(translation)
-        val actualLearning = scope.fakeRemoteDataSource.lastStartLearningLanguage
-        val actualTranslation = scope.fakeRemoteDataSource.lastStartTranslationLanguage
-        check(actualLearning == expectedLearning) {
-            "Expected the adventure to be started learning '$expectedLearning' but was '$actualLearning'"
-        }
-        check(actualTranslation == expectedTranslation) {
-            "Expected the adventure to be started with translations in '$expectedTranslation' " +
-                "but was '$actualTranslation'"
-        }
+        scope.assertAdventureStartedWith(
+            learningLanguage = languageCodeFor(learning),
+            translationLanguage = languageCodeFor(translation),
+        )
     }
 
     private fun languageCodeFor(languageName: String) = when (languageName) {

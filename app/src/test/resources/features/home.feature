@@ -38,4 +38,4 @@ Feature: Home
     And the home screen is open
     When I select the text adventures option
     And I navigate up from the text adventures screen
-    Then the stories option is shown
+    Then the home screen is shown

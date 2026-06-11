@@ -139,46 +139,46 @@ Feature: Text adventures list
     Given I am signed in as "user@example.com"
     And the adventures request will return no adventures
     And the text adventures screen is open
-    Then the learning language is German
-    And the translation language is English
+    Then the language picker shows German as the learning language
+    And the language picker shows English as the translation language
 
   Scenario: The language picker is shown to signed-out users
     Given I am signed out
     And the text adventures screen is open
-    Then the learning language is German
-    And the translation language is English
+    Then the language picker shows German as the learning language
+    And the language picker shows English as the translation language
 
   Scenario: Changing the learning language updates the picker
     Given I am signed in as "user@example.com"
     And the adventures request will return no adventures
     And the text adventures screen is open
     When I set the learning language to Spanish
-    Then the learning language is Spanish
-    And the translation language is English
+    Then the language picker shows Spanish as the learning language
+    And the language picker shows English as the translation language
 
   Scenario: Changing the translation language updates the picker
     Given I am signed in as "user@example.com"
     And the adventures request will return no adventures
     And the text adventures screen is open
     When I set the translation language to Spanish
-    Then the translation language is Spanish
-    And the learning language is German
+    Then the language picker shows Spanish as the translation language
+    And the language picker shows German as the learning language
 
   Scenario: Choosing the translation language as the learning language swaps them
     Given I am signed in as "user@example.com"
     And the adventures request will return no adventures
     And the text adventures screen is open
     When I set the learning language to English
-    Then the learning language is English
-    And the translation language is German
+    Then the language picker shows English as the learning language
+    And the language picker shows German as the translation language
 
   Scenario: Choosing the learning language as the translation language swaps them
     Given I am signed in as "user@example.com"
     And the adventures request will return no adventures
     And the text adventures screen is open
     When I set the translation language to German
-    Then the translation language is German
-    And the learning language is English
+    Then the language picker shows German as the translation language
+    And the language picker shows English as the learning language
 
   Scenario: A new adventure is started in the selected languages
     Given I am signed in as "user@example.com"

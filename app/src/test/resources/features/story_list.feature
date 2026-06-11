@@ -10,7 +10,7 @@ Feature: Story list
     And the home screen is open
     When I select the stories option
     And the reader navigates up from the story list
-    Then the stories option is shown
+    Then the home screen is shown
 
   Scenario: Opening the first story shows its content
     Given the story library is available
