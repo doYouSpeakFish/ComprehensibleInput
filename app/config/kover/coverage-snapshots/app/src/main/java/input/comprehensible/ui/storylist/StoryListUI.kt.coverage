@@ -60,8 +60,8 @@
 🟢           onStorySelected = { onStorySelected(it.id) },
 🟢           onNavigateUp = onNavigateUp,
 🟢           onSettingsClick = onSettingsClick,
-🟡           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
-🟡           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+🟢           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+🟢           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
 🟢           state = state,
 ⚪       )
 🟢   }

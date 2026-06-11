@@ -74,9 +74,9 @@
 🟢           onAdventureClick = onAdventureClick,
 🟢           onNavigateUp = onNavigateUp,
 🟢           onSettingsClick = onSettingsClick,
-🟡           onDeleteAdventure = viewModel::onDeleteAdventure,
-🟡           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
-🟡           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+🟢           onDeleteAdventure = viewModel::onDeleteAdventure,
+🟢           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+🟢           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
@@ -148,7 +148,7 @@
 🟢           modifier = modifier.testTag("text_adventures_list"),
 🟢           contentPadding = PaddingValues(20.dp),
 🟢           verticalArrangement = Arrangement.spacedBy(16.dp),
-🟡       ) {
+🟢       ) {
 🟢           item { Intro() }
 🟢           item { EarlyAccessCard() }
 🟢           item { StartAdventureButton(onStartAdventure) }
