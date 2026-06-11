@@ -75,7 +75,7 @@
 ⚪   }
 ⚪   
 ⚪   /**
-⚪    * The row mid swipe-to-delete, dragged past the threshold with the armed delete background showing.
+⚪    * The row mid swipe-to-delete, dragged past the threshold with the delete background revealed.
 ⚪    * [SwipeToDismissBox][androidx.compose.material3.SwipeToDismissBox] offers no way to start a state
 ⚪    * at a partial offset, so the preview lays the row's own pieces out at the reveal position itself.
 ⚪    */
@@ -85,7 +85,7 @@
 ⚪       ComprehensibleInputTheme {
 ⚪           AdventureImagePreview {
 ⚪               BoxWithConstraints {
-⚪                   DeleteBackground(armed = true, modifier = Modifier.matchParentSize())
+⚪                   DeleteBackground(modifier = Modifier.matchParentSize())
 ⚪                   AdventureCard(
 ⚪                       adventure = previewAdventures.first(),
 ⚪                       onClick = {},

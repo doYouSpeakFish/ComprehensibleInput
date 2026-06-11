@@ -1,9 +1,5 @@
 package input.comprehensible.ui.textadventure
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,15 +17,12 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -47,16 +40,13 @@ import input.comprehensible.ui.textadventure.TextAdventuresListUiState.Adventure
 // Internal so the mid-swipe preview can lay the card out at the same reveal position.
 internal const val DELETE_SWIPE_FRACTION = 0.4f
 
-// How much the delete icon grows once a swipe passes the delete threshold.
-private const val ARMED_DELETE_ICON_SCALE = 1.3f
-
 // The "in progress" status colour, matching the supplied design.
 private val InProgressColor = Color(0xFF159BC5)
 
 /**
  * A single adventure, shown as an option card with swipe-to-delete: dragging the card towards the
- * start reveals a delete background that arms once the drag passes the threshold, and releasing an
- * armed swipe dismisses the card and deletes the adventure ([onDelete] — the caller offers an undo).
+ * start reveals a delete background, and a swipe past the threshold dismisses the card and deletes
+ * the adventure ([onDelete] — the caller offers an undo).
  */
 @Composable
 internal fun AdventureRow(
@@ -71,12 +61,7 @@ internal fun AdventureRow(
     val deleteLabel = stringResource(R.string.text_adventures_delete_content_description)
     SwipeToDismissBox(
         state = dismissState,
-        backgroundContent = {
-            DeleteBackground(
-                armed = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart,
-                modifier = Modifier.fillMaxSize(),
-            )
-        },
+        backgroundContent = { DeleteBackground(modifier = Modifier.fillMaxSize()) },
         modifier = modifier,
         // Only the towards-the-start swipe deletes; the other direction stays put.
         enableDismissFromStartToEnd = false,
@@ -209,41 +194,20 @@ private fun StatusPill(status: AdventureStatus) {
     }
 }
 
-/**
- * The background revealed while swiping an adventure away, signalling the delete action. Once the
- * swipe is [armed] it deepens to the full error colour and grows the bin icon, telling the user
- * that letting go will delete the adventure.
- */
+/** The background revealed while swiping an adventure away, signalling the delete action. */
 @Composable
-internal fun DeleteBackground(armed: Boolean, modifier: Modifier = Modifier) {
-    val background by animateColorAsState(
-        targetValue = with(MaterialTheme.colorScheme) { if (armed) error else errorContainer },
-        label = "delete background colour",
-    )
-    val iconTint by animateColorAsState(
-        targetValue = with(MaterialTheme.colorScheme) { if (armed) onError else onErrorContainer },
-        label = "delete icon colour",
-    )
-    val iconScale by animateFloatAsState(
-        targetValue = if (armed) ARMED_DELETE_ICON_SCALE else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMediumLow,
-        ),
-        label = "delete icon scale",
-    )
+internal fun DeleteBackground(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .clip(MaterialTheme.shapes.extraLarge)
-            .background(background)
+            .background(MaterialTheme.colorScheme.errorContainer)
             .padding(horizontal = 24.dp),
         contentAlignment = Alignment.CenterEnd,
     ) {
         Icon(
             imageVector = Icons.Default.Delete,
             contentDescription = stringResource(R.string.text_adventures_delete_content_description),
-            tint = iconTint,
-            modifier = Modifier.scale(iconScale),
+            tint = MaterialTheme.colorScheme.onErrorContainer,
         )
     }
 }
