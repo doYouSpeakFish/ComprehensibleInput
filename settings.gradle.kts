@@ -21,7 +21,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ComprehensibleInput"
+rootProject.name = "3 Million Words"
 include(":app")
 include(":common")
 include(":commontest")

@@ -5,7 +5,7 @@
 </picture>
 </a>
 
-# Comprehensible Input
+# 3 Million Words
 
 Children learn language by listening to comprehensible input.  They don't learn by memorizing
 vocabulary lists or grammar rules.  They don't learn by doing grammar drills or by taking
