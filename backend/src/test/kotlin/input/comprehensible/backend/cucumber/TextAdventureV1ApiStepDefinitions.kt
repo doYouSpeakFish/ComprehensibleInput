@@ -63,6 +63,7 @@ class TextAdventureV1ApiStepDefinitions {
     private var latestResponseContentType: String = ""
     private var userAAdventureId: String = ""
     private val userAAdventureIds: MutableList<String> = mutableListOf()
+    private val adventureIdsByTitle: MutableMap<String, String> = mutableMapOf()
     private var userBAdventureId: String = ""
     private var rootMessageId: String = ""
     private var lastSubmittedPlayerMessage: String = ""
@@ -99,6 +100,7 @@ class TextAdventureV1ApiStepDefinitions {
         latestResponseContentType = ""
         userAAdventureId = ""
         userAAdventureIds.clear()
+        adventureIdsByTitle.clear()
         userBAdventureId = ""
         rootMessageId = ""
         lastSubmittedPlayerMessage = ""
@@ -131,7 +133,17 @@ class TextAdventureV1ApiStepDefinitions {
     @Given("user A has an adventure")
     @Given("I have an existing adventure")
     fun userAHasAdventure() {
-        enqueueNarratorResponse(title = "Lantern Trail", sentence = "Hola", translation = "Hello")
+        createAdventureForUserA(title = "Lantern Trail")
+    }
+
+    @Given("user A has a {string} adventure")
+    @Given("I have an existing {string} adventure")
+    fun userAHasTitledAdventure(title: String) {
+        createAdventureForUserA(title)
+    }
+
+    private fun createAdventureForUserA(title: String) {
+        enqueueNarratorResponse(title = title, sentence = "Hola", translation = "Hello")
         runAgainstApplication {
             client.post("/v1/adventures") {
                 authorized(userAToken)
@@ -142,6 +154,7 @@ class TextAdventureV1ApiStepDefinitions {
         userAAdventureId = extractJsonString(latestResponseBody, "adventureId")
         rootMessageId = extractJsonString(latestResponseBody, "messageId")
         userAAdventureIds.add(userAAdventureId)
+        adventureIdsByTitle[title] = userAAdventureId
     }
 
     @Given("user B has an adventure")
@@ -156,11 +169,17 @@ class TextAdventureV1ApiStepDefinitions {
         }
         userBAdventureId = extractJsonString(latestResponseBody, "adventureId")
         rootMessageId = extractJsonString(latestResponseBody, "messageId")
+        adventureIdsByTitle["Forest Run"] = userBAdventureId
     }
 
     @Given("I have an existing adventure with messages")
     fun haveExistingAdventureWithMessages() {
-        userAHasAdventure()
+        haveExistingTitledAdventureWithMessages(title = "Lantern Trail")
+    }
+
+    @Given("I have an existing {string} adventure with messages")
+    fun haveExistingTitledAdventureWithMessages(title: String) {
+        createAdventureForUserA(title)
         runAgainstApplication {
             client.post("/v1/adventures/$userAAdventureId/messages") {
                 authorized(userAToken)
@@ -390,57 +409,93 @@ class TextAdventureV1ApiStepDefinitions {
         }
     }
 
-    @When("I delete that adventure")
-    fun deleteThatAdventure() {
+    @Given("I have deleted the {string} adventure")
+    fun iHaveDeletedTheAdventure(title: String) {
         runAgainstApplication {
-            client.delete("/v1/adventures/$userAAdventureId") {
+            client.delete("/v1/adventures/${adventureIdFor(title)}") {
                 authorizedIfPresent()
             }
         }
-    }
-
-    @Given("I have deleted that adventure")
-    fun iHaveDeletedThatAdventure() {
-        deleteThatAdventure()
         assertEquals(HttpStatusCode.NoContent, latestResponseStatus)
     }
 
-    @Given("user A has deleted their adventure")
-    fun userAHasDeletedTheirAdventure() {
+    @Given("user A has deleted their {string} adventure")
+    fun userAHasDeletedTheirAdventure(title: String) {
         runAgainstApplication {
-            client.delete("/v1/adventures/$userAAdventureId") {
+            client.delete("/v1/adventures/${adventureIdFor(title)}") {
                 authorized(userAToken)
             }
         }
         assertEquals(HttpStatusCode.NoContent, latestResponseStatus)
     }
 
-    @When("I undo that adventure deletion")
-    @When("I undo user A adventure deletion")
-    fun iUndoThatAdventureDeletion() {
+    @When("I delete the {string} adventure")
+    fun iDeleteTheAdventure(title: String) {
         runAgainstApplication {
-            client.delete("/v1/adventures/$userAAdventureId/deletion") {
+            client.delete("/v1/adventures/${adventureIdFor(title)}") {
                 authorizedIfPresent()
             }
         }
     }
 
-    @Then("that adventure is listed")
-    fun thatAdventureIsListed() {
+    @When("I undo the {string} adventure deletion")
+    fun iUndoTheAdventureDeletion(title: String) {
+        runAgainstApplication {
+            client.delete("/v1/adventures/${adventureIdFor(title)}/deletion") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    @When("I fetch the {string} adventure by id")
+    fun iFetchTheAdventureById(title: String) {
+        runAgainstApplication {
+            client.get("/v1/adventures/${adventureIdFor(title)}") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    @Then("the {string} adventure is listed")
+    fun theAdventureIsListed(title: String) {
+        val adventureId = adventureIdFor(title)
         runAgainstApplication {
             client.get("/v1/adventures") {
                 authorizedIfPresent()
             }
         }
-        assertTrue(latestResponseBody.contains(userAAdventureId))
+        assertTrue(latestResponseBody.contains(adventureId))
     }
 
-    @Then("reading its messages returns {int} messages")
-    fun readingItsMessagesReturnsNMessages(expectedCount: Int) {
-        fetchAdventureMessages()
+    @Then("reading the {string} adventure returns 404")
+    fun readingTheAdventureReturnsNotFound(title: String) {
+        iFetchTheAdventureById(title)
+        assertEquals(HttpStatusCode.NotFound, latestResponseStatus)
+    }
+
+    @Then("reading the {string} adventure messages returns 404")
+    fun readingTheAdventureMessagesReturnsNotFound(title: String) {
+        fetchTheAdventureMessages(title)
+        assertEquals(HttpStatusCode.NotFound, latestResponseStatus)
+    }
+
+    @Then("reading the {string} adventure messages returns {int} messages")
+    fun readingTheAdventureMessagesReturnsNMessages(title: String, expectedCount: Int) {
+        fetchTheAdventureMessages(title)
         assertEquals(HttpStatusCode.OK, latestResponseStatus)
         assertEquals(expectedCount, "\"sender\"".toRegex().findAll(latestResponseBody).count())
     }
+
+    private fun fetchTheAdventureMessages(title: String) {
+        runAgainstApplication {
+            client.get("/v1/adventures/${adventureIdFor(title)}/messages") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    private fun adventureIdFor(title: String): String =
+        checkNotNull(adventureIdsByTitle[title]) { "No adventure titled '$title' has been created in this scenario" }
 
     @When("I delete all my adventures")
     fun deleteAllMyAdventures() {
@@ -463,15 +518,6 @@ class TextAdventureV1ApiStepDefinitions {
                 authorizedIfPresent()
                 contentType(ContentType.Application.Json)
                 setBody("""{"type":"user","parentId":"$rootMessageId","text":"$message"}""")
-            }
-        }
-    }
-
-    @When("I fetch that adventure by id")
-    fun fetchAdventureById() {
-        runAgainstApplication {
-            client.get("/v1/adventures/$userAAdventureId") {
-                authorizedIfPresent()
             }
         }
     }
@@ -658,26 +704,6 @@ class TextAdventureV1ApiStepDefinitions {
     @Then("the response includes updated timestamp")
     fun responseIncludesUpdatedTimestamp() {
         assertTrue(latestResponseBody.contains("updatedAt"))
-    }
-
-    @Then("reading that adventure returns 404")
-    fun readingThatAdventureReturnsNotFound() {
-        runAgainstApplication {
-            client.get("/v1/adventures/$userAAdventureId") {
-                authorizedIfPresent()
-            }
-        }
-        assertEquals(HttpStatusCode.NotFound, latestResponseStatus)
-    }
-
-    @Then("reading its messages returns 404")
-    fun readingItsMessagesReturnsNotFound() {
-        runAgainstApplication {
-            client.get("/v1/adventures/$userAAdventureId/messages") {
-                authorizedIfPresent()
-            }
-        }
-        assertEquals(HttpStatusCode.NotFound, latestResponseStatus)
     }
 
     @Then("user A has no adventures")

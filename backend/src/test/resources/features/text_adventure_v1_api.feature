@@ -62,8 +62,8 @@ Feature: Text adventure v1 API
 
   @v1
   Scenario: Reading one adventure returns metadata for the owner
-    Given I have an existing adventure
-    When I fetch that adventure by id
+    Given I have an existing "Lantern Trail" adventure
+    When I fetch the "Lantern Trail" adventure by id
     Then the response status is 200
     And the response includes learning language
     And the response includes translation language
@@ -197,11 +197,11 @@ Feature: Text adventure v1 API
 
   @v1
   Scenario: Deleting one adventure makes it and its messages unreadable
-    Given I have an existing adventure with messages
-    When I delete that adventure
+    Given I have an existing "Lantern Trail" adventure with messages
+    When I delete the "Lantern Trail" adventure
     Then the response status is 204
-    And reading that adventure returns 404
-    And reading its messages returns 404
+    And reading the "Lantern Trail" adventure returns 404
+    And reading the "Lantern Trail" adventure messages returns 404
 
   @v1
   Scenario: Deleting one adventure owned by another user returns not found
@@ -212,26 +212,26 @@ Feature: Text adventure v1 API
 
   @v1
   Scenario: Undoing a deletion restores the adventure with its messages
-    Given I have an existing adventure with messages
-    And I have deleted that adventure
-    When I undo that adventure deletion
+    Given I have an existing "Lantern Trail" adventure with messages
+    And I have deleted the "Lantern Trail" adventure
+    When I undo the "Lantern Trail" adventure deletion
     Then the response status is 200
     And the response includes a title
-    And that adventure is listed
-    And reading its messages returns 2 messages
+    And the "Lantern Trail" adventure is listed
+    And reading the "Lantern Trail" adventure messages returns 2 messages
 
   @v1
   Scenario: Undoing the deletion of an adventure that is not deleted returns not found
-    Given I have an existing adventure
-    When I undo that adventure deletion
+    Given I have an existing "Lantern Trail" adventure
+    When I undo the "Lantern Trail" adventure deletion
     Then the response status is 404
 
   @v1
   Scenario: Undoing the deletion of another user's adventure returns not found
-    Given user A has an adventure
-    And user A has deleted their adventure
+    Given user A has a "Lantern Trail" adventure
+    And user A has deleted their "Lantern Trail" adventure
     And I am authenticated as user B
-    When I undo user A adventure deletion
+    When I undo the "Lantern Trail" adventure deletion
     Then the response status is 404
 
   @v1
