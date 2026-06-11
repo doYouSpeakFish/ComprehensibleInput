@@ -1,6 +1,7 @@
 package input.comprehensible.ui.textadventure
 
 import input.comprehensible.data.textadventure.AdventureStatus
+import input.comprehensible.ui.components.LanguageSelection
 
 /**
  * The UI state for the text adventures list screen.
@@ -11,6 +12,9 @@ data class TextAdventuresListUiState(
     val adventures: List<AdventureItem>,
     val showError: Boolean,
     val showBusyMessage: Boolean,
+    val learningLanguage: LanguageSelection?,
+    val translationLanguage: LanguageSelection?,
+    val languagesAvailable: List<LanguageSelection>,
 ) {
     /**
      * A single text adventure shown in the list. The [title] is in the learning language and
@@ -35,6 +39,9 @@ data class TextAdventuresListUiState(
             adventures = emptyList(),
             showError = false,
             showBusyMessage = false,
+            learningLanguage = null,
+            translationLanguage = null,
+            languagesAvailable = emptyList(),
         )
     }
 }

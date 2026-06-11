@@ -48,6 +48,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.textadventure.R
+import input.comprehensible.ui.components.LanguageSelection
+import input.comprehensible.ui.components.LanguageSelector
 import input.comprehensible.ui.theme.homeOptionCardColor
 
 // The warm orange that runs through this screen: the early-access eyebrow and the primary actions
@@ -75,6 +77,8 @@ internal fun TextAdventuresListScreen(
         onAdventureClick = onAdventureClick,
         onSettingsClick = onSettingsClick,
         onDeleteAdventure = viewModel::onDeleteAdventure,
+        onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+        onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
         modifier = modifier,
     )
 }
@@ -89,6 +93,8 @@ internal fun TextAdventuresListScreen(
     onAdventureClick: (String) -> Unit,
     onSettingsClick: () -> Unit,
     onDeleteAdventure: (String) -> Unit,
+    onLearningLanguageSelected: (LanguageSelection) -> Unit,
+    onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -97,6 +103,13 @@ internal fun TextAdventuresListScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.text_adventures_title)) },
                 actions = {
+                    LanguageSelector(
+                        leaningLanguage = state.learningLanguage,
+                        translationLanguage = state.translationLanguage,
+                        languageOptions = state.languagesAvailable,
+                        onLanguageSelected = onLearningLanguageSelected,
+                        onTranslationLanguageSelected = onTranslationLanguageSelected,
+                    )
                     IconButton(onClick = onSettingsClick) {
                         Icon(
                             imageVector = Icons.Default.Settings,

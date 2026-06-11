@@ -4,6 +4,9 @@ Feature: Text adventures list
   # database (scoped to the signed-in user) and refreshed from the v1 backend
   # (GET /v1/adventures). It requires a signed-in account; signed-out users see a
   # prompt to sign in. Adventures can be deleted (DELETE /v1/adventures/{id}).
+  # The top bar holds the same language picker as the story list: it reads and
+  # writes the global language settings, which decide the languages a new
+  # adventure is started in (POST /v1/adventures).
 
   Scenario: Signed-out users are prompted to sign in
     Given I am signed out
@@ -118,3 +121,60 @@ Feature: Text adventures list
     And the text adventures screen is open
     When I start a new adventure
     Then the text adventure chat is shown
+
+  # ---------------------------------------------------------------------------
+  # The language picker in the top bar
+  # ---------------------------------------------------------------------------
+
+  Scenario: The language picker shows the current languages
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    Then the learning language is German
+    And the translation language is English
+
+  Scenario: The language picker is shown to signed-out users
+    Given I am signed out
+    And the text adventures screen is open
+    Then the learning language is German
+    And the translation language is English
+
+  Scenario: Changing the learning language updates the picker
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the learning language to Spanish
+    Then the learning language is Spanish
+    And the translation language is English
+
+  Scenario: Changing the translation language updates the picker
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the translation language to Spanish
+    Then the translation language is Spanish
+    And the learning language is German
+
+  Scenario: Choosing the translation language as the learning language swaps them
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the learning language to English
+    Then the learning language is English
+    And the translation language is German
+
+  Scenario: Choosing the learning language as the translation language swaps them
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the translation language to German
+    Then the translation language is German
+    And the learning language is English
+
+  Scenario: A new adventure is started in the selected languages
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the learning language to Spanish
+    And I start a new adventure
+    Then the adventure is started learning Spanish with translations in English
