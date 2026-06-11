@@ -17,13 +17,16 @@
 ⚪   import androidx.compose.material3.Icon
 ⚪   import androidx.compose.material3.MaterialTheme
 ⚪   import androidx.compose.material3.SwipeToDismissBox
+⚪   import androidx.compose.material3.SwipeToDismissBoxState
+⚪   import androidx.compose.material3.SwipeToDismissBoxValue
 ⚪   import androidx.compose.material3.Text
-⚪   import androidx.compose.material3.rememberSwipeToDismissBoxState
 ⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.remember
 ⚪   import androidx.compose.ui.Alignment
 ⚪   import androidx.compose.ui.Modifier
 ⚪   import androidx.compose.ui.draw.clip
 ⚪   import androidx.compose.ui.graphics.Color
+⚪   import androidx.compose.ui.platform.LocalDensity
 ⚪   import androidx.compose.ui.platform.testTag
 ⚪   import androidx.compose.ui.res.stringResource
 ⚪   import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -55,9 +58,19 @@
 ⚪       onDelete: () -> Unit,
 🟢       modifier: Modifier = Modifier,
 🟢   ) {
-🟢       val dismissState = rememberSwipeToDismissBoxState(
-🟢           positionalThreshold = { totalDistance -> totalDistance * DELETE_SWIPE_FRACTION },
-⚪       )
+🟢       val density = LocalDensity.current
+⚪       // Deliberately a plain remember rather than rememberSwipeToDismissBoxState: that helper is
+⚪       // backed by rememberSaveable, and a lazy list keeps saved state for removed keys. An undone
+⚪       // deletion re-adds the row under its old key, which would restore the saved dismissed state
+⚪       // and immediately dismiss — delete — the adventure again.
+🟢       val dismissState = remember(adventure.id, density) {
+🟢           SwipeToDismissBoxState(
+🟢               initialValue = SwipeToDismissBoxValue.Settled,
+🟢               density = density,
+🟢               confirmValueChange = { true },
+🟢               positionalThreshold = { totalDistance -> totalDistance * DELETE_SWIPE_FRACTION },
+🟢           )
+⚪       }
 🟢       val deleteLabel = stringResource(R.string.text_adventures_delete_content_description)
 🟢       SwipeToDismissBox(
 🟢           state = dismissState,

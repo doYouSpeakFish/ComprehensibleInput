@@ -88,7 +88,9 @@ class TextAdventuresListStepDefinitions {
     @When("I undo the deletion")
     fun iUndoTheDeletion() {
         robot.undoAdventureDeletion()
-        scope.idle()
+        // Two rounds so work scheduled by the restored row itself (not just the undo tap) also
+        // completes before the next assertion.
+        repeat(2) { scope.idle() }
     }
 
     @When("the undo message times out")
