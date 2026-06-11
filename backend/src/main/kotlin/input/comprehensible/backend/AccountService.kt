@@ -38,8 +38,8 @@ class AccountService(
                     runBlocking {
                         emailDataSource.sendEmail(
                             to = normalizedEmail,
-                            subject = "Comprehensible Input account already exists",
-                            textBody = "A Comprehensible Input account already exists for this email address. " +
+                            subject = "3 Million Words account already exists",
+                            textBody = "A 3 Million Words account already exists for this email address. " +
                                 "If this was not you, you can safely ignore this message.",
                         )
                     }
@@ -57,8 +57,8 @@ class AccountService(
         runBlocking {
             emailDataSource.sendEmail(
                 to = normalizedEmail,
-                subject = "Verify your Comprehensible Input email address",
-                textBody = "Use this verification code to verify your Comprehensible Input email address: $verificationCode",
+                subject = "Verify your 3 Million Words email address",
+                textBody = "Use this verification code to verify your 3 Million Words email address: $verificationCode",
             )
         }
         return AccountResult(HttpStatusCode.OK)
@@ -101,16 +101,16 @@ class AccountService(
             if (updateResult == EmailChangeRequestResult.AlreadyInUse) {
                 emailDataSource.sendEmail(
                     to = normalizedEmail,
-                    subject = "Comprehensible Input email update attempted",
+                    subject = "3 Million Words email update attempted",
                     textBody = "An account update attempted to use this email address, but an account already has this email.",
                 )
             } else {
                 emailDataSource.sendEmail(
                     to = account[AccountsTable.email],
-                    subject = "Confirm your Comprehensible Input email change",
-                    textBody = "Use this verification code to confirm your Comprehensible Input " +
+                    subject = "Confirm your 3 Million Words email change",
+                    textBody = "Use this verification code to confirm your 3 Million Words " +
                         "email change: $currentEmailCode. If this change is unexpected, login to your " +
-                        "Comprehensible Input account and change your password immediately.",
+                        "3 Million Words account and change your password immediately.",
                 )
             }
         }
@@ -129,8 +129,8 @@ class AccountService(
         runBlocking {
             emailDataSource.sendEmail(
                 to = verificationResult.email,
-                subject = "Verify your Comprehensible Input email change",
-                textBody = "Use this verification code to verify your Comprehensible Input email change: ${verificationResult.code}",
+                subject = "Verify your 3 Million Words email change",
+                textBody = "Use this verification code to verify your 3 Million Words email change: ${verificationResult.code}",
             )
         }
         return HttpStatusCode.NoContent
@@ -184,8 +184,8 @@ class AccountService(
             runBlocking {
                 emailDataSource.sendEmail(
                     to = normalizedEmail,
-                    subject = "Comprehensible Input password reset request",
-                    textBody = "A password reset was requested for this email, but you do not have a Comprehensible Input account.",
+                    subject = "3 Million Words password reset request",
+                    textBody = "A password reset was requested for this email, but you do not have a 3 Million Words account.",
                 )
             }
             return HttpStatusCode.Accepted
@@ -199,8 +199,8 @@ class AccountService(
         runBlocking {
             emailDataSource.sendEmail(
                 to = normalizedEmail,
-                subject = "Your Comprehensible Input password reset code",
-                textBody = "Use this password reset code to reset your Comprehensible Input password: $code",
+                subject = "Your 3 Million Words password reset code",
+                textBody = "Use this password reset code to reset your 3 Million Words password: $code",
             )
         }
         return HttpStatusCode.Accepted
@@ -220,8 +220,8 @@ class AccountService(
         runBlocking {
             emailDataSource.sendEmail(
                 to = normalizedEmail,
-                subject = "Verify your Comprehensible Input email address",
-                textBody = "Use this verification code to verify your Comprehensible Input email address: $code",
+                subject = "Verify your 3 Million Words email address",
+                textBody = "Use this verification code to verify your 3 Million Words email address: $code",
             )
         }
         return HttpStatusCode.Accepted
@@ -239,10 +239,10 @@ class AccountService(
         runBlocking {
             emailDataSource.sendEmail(
                 to = account[AccountsTable.email],
-                subject = "Confirm your Comprehensible Input email change",
-                textBody = "Use this verification code to confirm your Comprehensible Input " +
+                subject = "Confirm your 3 Million Words email change",
+                textBody = "Use this verification code to confirm your 3 Million Words " +
                     "email change: $code. If this change is unexpected, login to your " +
-                    "Comprehensible Input account and change your password immediately.",
+                    "3 Million Words account and change your password immediately.",
             )
         }
         return HttpStatusCode.Accepted
@@ -258,8 +258,8 @@ class AccountService(
         runBlocking {
             emailDataSource.sendEmail(
                 to = pendingEmail,
-                subject = "Verify your Comprehensible Input email change",
-                textBody = "Use this verification code to verify your Comprehensible Input email change: $code",
+                subject = "Verify your 3 Million Words email change",
+                textBody = "Use this verification code to verify your 3 Million Words email change: $code",
             )
         }
         return HttpStatusCode.Accepted

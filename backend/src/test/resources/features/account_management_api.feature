@@ -3,7 +3,7 @@ Feature: Account management API
   Scenario: Creating a user
     When I create user with email "alice@example.com" and password "SecurePass123!"
     Then account API status should be 200
-    And an email should be sent to "alice@example.com" containing "Comprehensible Input"
+    And an email should be sent to "alice@example.com" containing "3 Million Words"
 
   Scenario: Rejecting duplicate user creation when email is verified
     Given existing user "alice@example.com" with password "SecurePass123!"
