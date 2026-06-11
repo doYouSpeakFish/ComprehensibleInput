@@ -15,6 +15,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
 
 @Suppress("TooManyFunctions")
@@ -26,23 +27,23 @@ class DatabaseAdventureRepository(
     override fun listAdventureSummariesForAccount(accountId: String): List<AdventureSummary> = transaction(database) {
         val adventureRows = AdventuresTable
             .selectAll()
-            .where { AdventuresTable.accountId eq accountId }
+            .where { (AdventuresTable.accountId eq accountId) and AdventuresTable.deletedAt.isNull() }
             .orderBy(AdventuresTable.updatedAt, SortOrder.DESC)
             .toList()
         val messagesById = loadMessagesByAdventure(adventureRows.map { it[AdventuresTable.id] })
-        adventureRows.map { row ->
-            AdventureSummary(
-                adventureId = row[AdventuresTable.id],
-                title = row[AdventuresTable.title],
-                translatedTitle = row[AdventuresTable.translatedTitle],
-                learningLanguage = row[AdventuresTable.learningLanguage],
-                translationLanguage = row[AdventuresTable.translationLanguage],
-                updatedAt = row[AdventuresTable.updatedAt],
-                imageId = row[AdventuresTable.imageId],
-                status = statusOf(messagesById[row[AdventuresTable.id]].orEmpty()),
-            )
-        }
+        adventureRows.map { row -> row.toSummary(statusOf(messagesById[row[AdventuresTable.id]].orEmpty())) }
     }
+
+    private fun ResultRow.toSummary(status: String): AdventureSummary = AdventureSummary(
+        adventureId = this[AdventuresTable.id],
+        title = this[AdventuresTable.title],
+        translatedTitle = this[AdventuresTable.translatedTitle],
+        learningLanguage = this[AdventuresTable.learningLanguage],
+        translationLanguage = this[AdventuresTable.translationLanguage],
+        updatedAt = this[AdventuresTable.updatedAt],
+        imageId = this[AdventuresTable.imageId],
+        status = status,
+    )
 
     private fun loadMessagesByAdventure(adventureIds: List<String>): Map<String, List<ResultRow>> {
         if (adventureIds.isEmpty()) return emptyMap()
@@ -156,12 +157,33 @@ class DatabaseAdventureRepository(
             )
         }
 
+    /**
+     * Deletes by marking the row deleted rather than removing it, so the deletion can be undone via
+     * [restoreAdventureForAccount] (the snackbar undo in the app). Reads treat marked rows as gone.
+     */
     override fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean = transaction(database) {
-        AdventuresTable.deleteWhere {
+        AdventuresTable.update({
             (AdventuresTable.id eq adventureId) and
-                (AdventuresTable.accountId eq accountId)
+                (AdventuresTable.accountId eq accountId) and
+                AdventuresTable.deletedAt.isNull()
+        }) {
+            it[deletedAt] = nowProvider()
         } > 0
     }
+
+    override fun restoreAdventureForAccount(accountId: String, adventureId: String): AdventureSummary? =
+        transaction(database) {
+            val restored = AdventuresTable.update({
+                (AdventuresTable.id eq adventureId) and
+                    (AdventuresTable.accountId eq accountId) and
+                    AdventuresTable.deletedAt.isNotNull()
+            }) {
+                it[deletedAt] = null
+            } > 0
+            if (!restored) return@transaction null
+            findAdventureRow(adventureId)
+                ?.toSummary(statusOf(loadMessagesByAdventure(listOf(adventureId))[adventureId].orEmpty()))
+        }
 
     override fun deleteAllAdventuresForAccount(accountId: String) {
         transaction(database) {
@@ -377,6 +399,10 @@ object AdventuresTable : Table("text_adventure") {
     val imageId = varchar("image_id", length = 255).nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
+
+    // Set when the adventure is deleted; reads treat rows with a deletion time as gone, and undoing
+    // the deletion clears it.
+    val deletedAt = registerColumn<Long>("deleted_at", LongColumnType()).nullable()
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
 }

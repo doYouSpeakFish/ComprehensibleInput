@@ -98,6 +98,10 @@ class TextAdventureGenerationService(
     fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean =
         adventureRepository.deleteAdventureForAccount(accountId, adventureId)
 
+    /** Undoes an adventure deletion, returning the restored summary, or null when nothing to restore. */
+    fun restoreAdventureForAccount(accountId: String, adventureId: String): AdventureSummaryRemoteResponse? =
+        adventureRepository.restoreAdventureForAccount(accountId, adventureId)?.toRemoteResponse()
+
     fun deleteAllAdventuresForAccount(accountId: String) {
         adventureRepository.deleteAllAdventuresForAccount(accountId)
     }

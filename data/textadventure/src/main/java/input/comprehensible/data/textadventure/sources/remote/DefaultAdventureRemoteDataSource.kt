@@ -60,6 +60,16 @@ class DefaultAdventureRemoteDataSource(
         response.ensureSuccessful("Delete adventure failed")
     }
 
+    override suspend fun restoreAdventure(token: String, adventureId: String): RemoteAdventure {
+        val response = httpClient.delete("$baseUrl/v1/adventures/$adventureId/deletion") {
+            header("X-Api-Key", apiKey)
+            header("Authorization", "Bearer $token")
+        }
+        response.ensureSuccessful("Restore adventure failed")
+        val item = response.body<AdventureItemResponse>()
+        return item.toRemoteAdventure(imageUrl(item.imageId))
+    }
+
     override suspend fun startAdventure(
         token: String,
         learningLanguage: String,

@@ -399,6 +399,49 @@ class TextAdventureV1ApiStepDefinitions {
         }
     }
 
+    @Given("I have deleted that adventure")
+    fun iHaveDeletedThatAdventure() {
+        deleteThatAdventure()
+        assertEquals(HttpStatusCode.NoContent, latestResponseStatus)
+    }
+
+    @Given("user A has deleted their adventure")
+    fun userAHasDeletedTheirAdventure() {
+        runAgainstApplication {
+            client.delete("/v1/adventures/$userAAdventureId") {
+                authorized(userAToken)
+            }
+        }
+        assertEquals(HttpStatusCode.NoContent, latestResponseStatus)
+    }
+
+    @When("I undo that adventure deletion")
+    @When("I undo user A adventure deletion")
+    fun iUndoThatAdventureDeletion() {
+        runAgainstApplication {
+            client.delete("/v1/adventures/$userAAdventureId/deletion") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    @Then("that adventure is listed")
+    fun thatAdventureIsListed() {
+        runAgainstApplication {
+            client.get("/v1/adventures") {
+                authorizedIfPresent()
+            }
+        }
+        assertTrue(latestResponseBody.contains(userAAdventureId))
+    }
+
+    @Then("reading its messages returns {int} messages")
+    fun readingItsMessagesReturnsNMessages(expectedCount: Int) {
+        fetchAdventureMessages()
+        assertEquals(HttpStatusCode.OK, latestResponseStatus)
+        assertEquals(expectedCount, "\"sender\"".toRegex().findAll(latestResponseBody).count())
+    }
+
     @When("I delete all my adventures")
     fun deleteAllMyAdventures() {
         runAgainstApplication {

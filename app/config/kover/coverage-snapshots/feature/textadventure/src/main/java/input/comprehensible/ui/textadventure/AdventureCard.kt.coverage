@@ -1,20 +1,16 @@
 ⚪   package input.comprehensible.ui.textadventure
 ⚪   
 ⚪   import androidx.compose.animation.animateColorAsState
-⚪   import androidx.compose.animation.core.Animatable
 ⚪   import androidx.compose.animation.core.Spring
 ⚪   import androidx.compose.animation.core.animateFloatAsState
 ⚪   import androidx.compose.animation.core.spring
 ⚪   import androidx.compose.foundation.background
 ⚪   import androidx.compose.foundation.border
-⚪   import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 ⚪   import androidx.compose.foundation.layout.Arrangement
 ⚪   import androidx.compose.foundation.layout.Box
-⚪   import androidx.compose.foundation.layout.BoxWithConstraints
 ⚪   import androidx.compose.foundation.layout.Column
 ⚪   import androidx.compose.foundation.layout.Row
-⚪   import androidx.compose.foundation.layout.fillMaxWidth
-⚪   import androidx.compose.foundation.layout.offset
+⚪   import androidx.compose.foundation.layout.fillMaxSize
 ⚪   import androidx.compose.foundation.layout.padding
 ⚪   import androidx.compose.foundation.layout.size
 ⚪   import androidx.compose.foundation.shape.CircleShape
@@ -24,19 +20,17 @@
 ⚪   import androidx.compose.material.icons.filled.PlayArrow
 ⚪   import androidx.compose.material3.Icon
 ⚪   import androidx.compose.material3.MaterialTheme
+⚪   import androidx.compose.material3.SwipeToDismissBox
+⚪   import androidx.compose.material3.SwipeToDismissBoxValue
 ⚪   import androidx.compose.material3.Text
+⚪   import androidx.compose.material3.rememberSwipeToDismissBoxState
 ⚪   import androidx.compose.runtime.Composable
-⚪   import androidx.compose.runtime.LaunchedEffect
-⚪   import androidx.compose.runtime.derivedStateOf
 ⚪   import androidx.compose.runtime.getValue
-⚪   import androidx.compose.runtime.remember
-⚪   import androidx.compose.runtime.rememberCoroutineScope
 ⚪   import androidx.compose.ui.Alignment
 ⚪   import androidx.compose.ui.Modifier
 ⚪   import androidx.compose.ui.draw.clip
 ⚪   import androidx.compose.ui.draw.scale
 ⚪   import androidx.compose.ui.graphics.Color
-⚪   import androidx.compose.ui.input.pointer.pointerInput
 ⚪   import androidx.compose.ui.platform.testTag
 ⚪   import androidx.compose.ui.res.stringResource
 ⚪   import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -44,106 +38,66 @@
 ⚪   import androidx.compose.ui.semantics.semantics
 ⚪   import androidx.compose.ui.text.font.FontWeight
 ⚪   import androidx.compose.ui.text.style.TextOverflow
-⚪   import androidx.compose.ui.unit.IntOffset
 ⚪   import androidx.compose.ui.unit.dp
 ⚪   import input.comprehensible.data.textadventure.AdventureStatus
 ⚪   import input.comprehensible.feature.textadventure.R
 ⚪   import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
-⚪   import kotlinx.coroutines.launch
-⚪   import kotlin.math.roundToInt
 ⚪   
-⚪   // Fraction of a row's width it must be dragged towards the start before releasing asks to delete it.
-⚪   private const val DELETE_SWIPE_FRACTION = 0.4f
+⚪   // Fraction of a row's width it must be dragged towards the start before releasing deletes it.
+⚪   // Internal so the mid-swipe preview can lay the card out at the same reveal position.
+⚪   internal const val DELETE_SWIPE_FRACTION = 0.4f
 ⚪   
 ⚪   // How much the delete icon grows once a swipe passes the delete threshold.
 ⚪   private const val ARMED_DELETE_ICON_SCALE = 1.3f
-⚪   
-⚪   // The gentle spring every swipe settle shares, so the card moves with one consistent, soft feel.
-🟢   private val SettleSpring = spring<Float>(
-🟢       dampingRatio = Spring.DampingRatioLowBouncy,
-🟢       stiffness = Spring.StiffnessMediumLow,
-⚪   )
 ⚪   
 ⚪   // The "in progress" status colour, matching the supplied design.
 🟢   private val InProgressColor = Color(0xFF159BC5)
 ⚪   
 ⚪   /**
 ⚪    * A single adventure, shown as an option card with swipe-to-delete: dragging the card towards the
-⚪    * start reveals a delete background that arms once the drag passes a threshold. Releasing an armed
-⚪    * swipe asks for confirmation via [onDeleteRequest] and the card is held open beside the dialog
-⚪    * while [isPendingDeletion] is true; once it turns false again (the deletion was cancelled, or the
-⚪    * adventure is about to leave the list) the card springs back to rest.
+⚪    * start reveals a delete background that arms once the drag passes the threshold, and releasing an
+⚪    * armed swipe dismisses the card and deletes the adventure ([onDelete] — the caller offers an undo).
 ⚪    */
 ⚪   @Composable
 ⚪   internal fun AdventureRow(
 ⚪       adventure: AdventureItem,
-⚪       isPendingDeletion: Boolean,
 ⚪       onClick: () -> Unit,
-⚪       onDeleteRequest: () -> Unit,
+⚪       onDelete: () -> Unit,
 🟢       modifier: Modifier = Modifier,
-🟡   ) {
-🟢       val scope = rememberCoroutineScope()
+🟢   ) {
+🟢       val dismissState = rememberSwipeToDismissBoxState(
+🟢           positionalThreshold = { totalDistance -> totalDistance * DELETE_SWIPE_FRACTION },
+⚪       )
 🟢       val deleteLabel = stringResource(R.string.text_adventures_delete_content_description)
-🟢       BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-🟢           val width = constraints.maxWidth.toFloat()
-🟢           val deleteThreshold = width * DELETE_SWIPE_FRACTION
-⚪           // A row composed while its confirmation is already pending (a configuration change, or a
-⚪           // preview of that state) starts held open rather than animating there.
-🟢           val offsetX = remember(adventure.id, width) {
-🟢               Animatable(if (isPendingDeletion) -deleteThreshold else 0f)
-⚪           }
-⚪           // Holds the card open at the reveal position while the confirmation dialog is up, and
-⚪           // springs it back home when the deletion is cancelled.
-🟢           LaunchedEffect(isPendingDeletion) {
-🟢               val restingOffset = if (isPendingDeletion) -deleteThreshold else 0f
-🟢               if (offsetX.value != restingOffset) offsetX.animateTo(restingOffset, SettleSpring)
-⚪           }
-🟢           val armed by remember(deleteThreshold) {
-🟢               derivedStateOf { offsetX.value <= -deleteThreshold }
-⚪           }
-🟢           DeleteBackground(armed = armed, modifier = Modifier.matchParentSize())
+🟢       SwipeToDismissBox(
+🟢           state = dismissState,
+🟢           backgroundContent = {
+🟢               DeleteBackground(
+🟢                   armed = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart,
+🟢                   modifier = Modifier.fillMaxSize(),
+⚪               )
+⚪           },
+🟢           modifier = modifier,
+⚪           // Only the towards-the-start swipe deletes; the other direction stays put.
+🟢           enableDismissFromStartToEnd = false,
+🟢           onDismiss = { onDelete() },
+🟢       ) {
 🟢           AdventureCard(
 🟢               adventure = adventure,
 🟢               onClick = onClick,
-🟢               modifier = Modifier
-🟢                   .semantics {
-🟢                       customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDeleteRequest(); true })
-⚪                   }
-🟢                   .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-⚪                   // Keyed on width as well as the id: a resize creates a new Animatable above, and
-⚪                   // the gesture coroutine must restart to capture it (and the matching threshold)
-⚪                   // rather than keep driving the stale one.
-🟢                   .pointerInput(adventure.id, width) {
-⚪                       // Updates go through the Animatable's coroutine queue so each drag interrupts
-⚪                       // any in-flight settle animation and the end-of-drag read sees every move.
-🟢                       detectHorizontalDragGestures(
-⚪                           onHorizontalDrag = { change, dragAmount ->
-🟢                               change.consume()
-🟢                               scope.launch { offsetX.snapTo((offsetX.value + dragAmount).coerceIn(-width, 0f)) }
-⚪                           },
-⚪                           onDragEnd = {
-🟢                               scope.launch {
-🟢                                   if (offsetX.value <= -deleteThreshold) {
-🟢                                       onDeleteRequest()
-🟢                                       offsetX.animateTo(-deleteThreshold, SettleSpring)
-⚪                                   } else {
-🟢                                       offsetX.animateTo(0f, SettleSpring)
-⚪                                   }
-⚪                               }
-⚪                           },
-🔴                           onDragCancel = { scope.launch { offsetX.animateTo(0f, SettleSpring) } },
-⚪                       )
-⚪                   },
+🟢               modifier = Modifier.semantics {
+🟢                   customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDelete(); true })
+⚪               },
 ⚪           )
 ⚪       }
 🟢   }
 ⚪   
 ⚪   @Composable
-⚪   private fun AdventureCard(
+⚪   internal fun AdventureCard(
 ⚪       adventure: AdventureItem,
 ⚪       onClick: () -> Unit,
 🟢       modifier: Modifier = Modifier,
-🟢   ) {
+🟡   ) {
 🟢       OptionCard(
 🟢           onClick = onClick,
 🟢           modifier = modifier.testTag("adventure_${adventure.title}"),
@@ -258,10 +212,10 @@
 ⚪   /**
 ⚪    * The background revealed while swiping an adventure away, signalling the delete action. Once the
 ⚪    * swipe is [armed] it deepens to the full error colour and grows the bin icon, telling the user
-⚪    * that letting go will ask to delete the adventure.
+⚪    * that letting go will delete the adventure.
 ⚪    */
 ⚪   @Composable
-🟢   private fun DeleteBackground(armed: Boolean, modifier: Modifier = Modifier) {
+🟡   internal fun DeleteBackground(armed: Boolean, modifier: Modifier = Modifier) {
 🟢       val background by animateColorAsState(
 🟢           targetValue = with(MaterialTheme.colorScheme) { if (armed) error else errorContainer },
 🟢           label = "delete background colour",
@@ -272,7 +226,10 @@
 ⚪       )
 🟢       val iconScale by animateFloatAsState(
 🟢           targetValue = if (armed) ARMED_DELETE_ICON_SCALE else 1f,
-🟢           animationSpec = SettleSpring,
+🟢           animationSpec = spring(
+🟢               dampingRatio = Spring.DampingRatioLowBouncy,
+🟢               stiffness = Spring.StiffnessMediumLow,
+⚪           ),
 🟢           label = "delete icon scale",
 ⚪       )
 🟢       Box(

@@ -78,25 +78,44 @@
 ⚪               }
 ⚪           }
 ⚪   
-🟢           delete("/v1/adventures/{adventureId}") {
-🟡               val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
-🟡               val adventureId = requireNotNull(call.parameters["adventureId"])
-🟢               val deleted = textAdventureService.deleteAdventureForAccount(
-🟢                   accountId = principal.accountId,
-🟢                   adventureId = adventureId,
-⚪               )
-🟢               if (deleted) {
-🟢                   call.respond(HttpStatusCode.NoContent)
-⚪               } else {
-🟢                   call.respond(HttpStatusCode.NotFound)
-⚪               }
-⚪           }
+🟢           adventureDeletionV1Routes(textAdventureService)
+⚪       }
+⚪   }
 ⚪   
-🟢           delete("/v1/adventures") {
-🟡               val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
-🟢               textAdventureService.deleteAllAdventuresForAccount(principal.accountId)
+⚪   /**
+⚪    * Deleting adventures and undoing those deletions. A deletion is modelled as a sub-resource of the
+⚪    * adventure: DELETE on the adventure creates it, and DELETE on the deletion removes it again,
+⚪    * restoring the adventure (returned in the response so clients can re-cache it).
+⚪    */
+⚪   private fun Route.adventureDeletionV1Routes(textAdventureService: TextAdventureGenerationService) {
+🟢       delete("/v1/adventures/{adventureId}") {
+🟡           val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+🟡           val adventureId = requireNotNull(call.parameters["adventureId"])
+🟢           val deleted = textAdventureService.deleteAdventureForAccount(
+🟢               accountId = principal.accountId,
+🟢               adventureId = adventureId,
+⚪           )
+🟢           if (deleted) {
 🟢               call.respond(HttpStatusCode.NoContent)
+⚪           } else {
+🟢               call.respond(HttpStatusCode.NotFound)
 ⚪           }
+⚪       }
+⚪   
+🟢       delete("/v1/adventures/{adventureId}/deletion") {
+🟡           val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+🟡           val adventureId = requireNotNull(call.parameters["adventureId"])
+🟢           val response = textAdventureService.restoreAdventureForAccount(
+🟢               accountId = principal.accountId,
+🟢               adventureId = adventureId,
+⚪           )
+🟢           if (response == null) call.respond(HttpStatusCode.NotFound) else call.respond(response)
+⚪       }
+⚪   
+🟢       delete("/v1/adventures") {
+🟡           val principal = call.principal<AccountSessionPrincipal>() ?: return@delete call.respond(HttpStatusCode.Unauthorized)
+🟢           textAdventureService.deleteAllAdventuresForAccount(principal.accountId)
+🟢           call.respond(HttpStatusCode.NoContent)
 ⚪       }
 ⚪   }
 ⚪   

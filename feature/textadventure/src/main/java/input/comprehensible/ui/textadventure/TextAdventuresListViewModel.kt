@@ -31,7 +31,7 @@ class TextAdventuresListViewModel(
 
     private val refreshStatus = MutableStateFlow(RefreshStatus.IDLE)
     private val deleteOutcome = MutableStateFlow(DeleteOutcome.NONE)
-    private val pendingDeleteId = MutableStateFlow<String?>(null)
+    private val undoableDeleteId = MutableStateFlow<String?>(null)
     private var session: Session? = null
 
     val state: StateFlow<TextAdventuresListUiState> = combine(
@@ -39,8 +39,8 @@ class TextAdventuresListViewModel(
         getAdventures(),
         refreshStatus,
         deleteOutcome,
-        pendingDeleteId,
-    ) { user, adventures, status, deleteResult, pendingDelete ->
+        undoableDeleteId,
+    ) { user, adventures, status, deleteResult, undoableDelete ->
         // A rate limit (HTTP 429) surfaces a "system busy" message; any other failure surfaces a
         // generic error. A failed refresh only surfaces either when there is nothing cached to show
         // instead, whereas a failed delete always surfaces (the adventure reappears).
@@ -49,16 +49,13 @@ class TextAdventuresListViewModel(
             deleteResult == DeleteOutcome.RATE_LIMITED
         val error = (status == RefreshStatus.ERROR && nothingCached) ||
             deleteResult == DeleteOutcome.ERROR
-        val items = adventures.map { it.toItem() }
         TextAdventuresListUiState(
             isSignedIn = user != null,
             isLoading = status == RefreshStatus.LOADING && adventures.isEmpty(),
-            adventures = items,
+            adventures = adventures.map { it.toItem() },
             showError = error && !rateLimited,
             showBusyMessage = rateLimited,
-            // Looked up in the current list so the confirmation disappears with the adventure if a
-            // refresh removes it while the dialog is up.
-            adventurePendingDeletion = items.firstOrNull { it.id == pendingDelete },
+            undoableDeletedAdventureId = undoableDelete,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -76,30 +73,35 @@ class TextAdventuresListViewModel(
     }
 
     /**
-     * Asks the user to confirm deleting an adventure. The confirmation dialog is driven by
-     * [TextAdventuresListUiState.adventurePendingDeletion] and resolves via [onDeleteConfirmed] or
-     * [onDeleteCancelled].
+     * Deletes an adventure and offers an undo. The repository removes it locally at once and
+     * restores it if the backend rejects the delete, in which case the error is surfaced to the
+     * user. While the deletion is undoable the UI shows an undo snackbar, resolved by [onUndoDelete]
+     * or [onUndoDismissed].
      */
-    fun onDeleteRequested(adventureId: String) {
-        pendingDeleteId.value = adventureId
-    }
-
-    /** Dismisses the delete confirmation without deleting anything. */
-    fun onDeleteCancelled() {
-        pendingDeleteId.value = null
-    }
-
-    /**
-     * Deletes the adventure pending confirmation. The repository removes it locally at once and
-     * restores it if the backend rejects the delete, in which case the error is surfaced to the user.
-     */
-    fun onDeleteConfirmed() {
-        val adventureId = pendingDeleteId.value ?: return
-        pendingDeleteId.value = null
+    fun onDeleteAdventure(adventureId: String) {
         val current = session ?: return
         viewModelScope.launch {
             deleteOutcome.value = DeleteOutcome.NONE
+            undoableDeleteId.value = adventureId
             textAdventureRepository.deleteAdventure(current.token, adventureId)
+                .onFailure {
+                    // The adventure is back (the repository restored it), so there is nothing left
+                    // to undo.
+                    if (undoableDeleteId.value == adventureId) undoableDeleteId.value = null
+                    deleteOutcome.value =
+                        if (it.isRateLimited()) DeleteOutcome.RATE_LIMITED else DeleteOutcome.ERROR
+                }
+        }
+    }
+
+    /** Undoes the latest deletion, asking the backend to restore the adventure. */
+    fun onUndoDelete() {
+        val adventureId = undoableDeleteId.value ?: return
+        undoableDeleteId.value = null
+        val current = session ?: return
+        viewModelScope.launch {
+            deleteOutcome.value = DeleteOutcome.NONE
+            textAdventureRepository.restoreAdventure(current.token, current.userId, adventureId)
                 .onFailure {
                     deleteOutcome.value =
                         if (it.isRateLimited()) DeleteOutcome.RATE_LIMITED else DeleteOutcome.ERROR
@@ -107,8 +109,14 @@ class TextAdventuresListViewModel(
         }
     }
 
+    /** Lets the deletion stand once the undo snackbar has gone away. */
+    fun onUndoDismissed() {
+        undoableDeleteId.value = null
+    }
+
     private suspend fun refresh(current: Session) {
         deleteOutcome.value = DeleteOutcome.NONE
+        undoableDeleteId.value = null
         refreshStatus.value = RefreshStatus.LOADING
         val result = textAdventureRepository.refreshAdventures(current.token, current.userId)
         refreshStatus.value = when {

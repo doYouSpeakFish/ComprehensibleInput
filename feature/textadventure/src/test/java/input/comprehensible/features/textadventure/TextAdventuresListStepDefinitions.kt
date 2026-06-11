@@ -68,6 +68,11 @@ class TextAdventuresListStepDefinitions {
         scope.failDelete()
     }
 
+    @Given("the restore adventure request will fail")
+    fun theRestoreAdventureRequestWillFail() {
+        scope.failRestore()
+    }
+
     @When("I tap the text adventures sign in button")
     fun iTapTheSignInButton() {
         robot.tapSignIn()
@@ -80,16 +85,15 @@ class TextAdventuresListStepDefinitions {
         scope.idle()
     }
 
-    @When("I confirm the deletion")
-    fun iConfirmTheDeletion() {
-        robot.confirmAdventureDeletion()
+    @When("I undo the deletion")
+    fun iUndoTheDeletion() {
+        robot.undoAdventureDeletion()
         scope.idle()
     }
 
-    @When("I cancel the deletion")
-    fun iCancelTheDeletion() {
-        robot.cancelAdventureDeletion()
-        scope.idle()
+    @When("the undo message times out")
+    fun theUndoMessageTimesOut() {
+        scope.advanceTime(UNDO_SNACKBAR_TIMEOUT_MILLIS)
     }
 
     @When("I partially swipe the {string} adventure")
@@ -169,13 +173,18 @@ class TextAdventuresListStepDefinitions {
         robot.assertChatIsShown()
     }
 
-    @Then("the delete adventure confirmation is shown")
-    fun theDeleteAdventureConfirmationIsShown() {
-        robot.assertDeleteConfirmationIsShown()
+    @Then("the adventure deleted message is shown")
+    fun theAdventureDeletedMessageIsShown() {
+        robot.assertAdventureDeletedMessageIsShown()
     }
 
-    @Then("the delete adventure confirmation is not shown")
-    fun theDeleteAdventureConfirmationIsNotShown() {
-        robot.assertDeleteConfirmationIsNotShown()
+    @Then("the adventure deleted message is not shown")
+    fun theAdventureDeletedMessageIsNotShown() {
+        robot.assertAdventureDeletedMessageIsNotShown()
+    }
+
+    private companion object {
+        // Comfortably beyond the undo snackbar's 10-second duration.
+        const val UNDO_SNACKBAR_TIMEOUT_MILLIS = 11_000L
     }
 }

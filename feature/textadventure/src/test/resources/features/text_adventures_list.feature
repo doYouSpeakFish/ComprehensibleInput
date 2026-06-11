@@ -3,8 +3,9 @@ Feature: Text adventures list
   # The text adventures list is offline-first: adventures are read from the local
   # database (scoped to the signed-in user) and refreshed from the v1 backend
   # (GET /v1/adventures). It requires a signed-in account; signed-out users see a
-  # prompt to sign in. Adventures can be deleted (DELETE /v1/adventures/{id}) by
-  # swiping a row away and confirming in the dialog that follows.
+  # prompt to sign in. Swiping a row away deletes the adventure at once
+  # (DELETE /v1/adventures/{id}) and offers an undo, which restores it
+  # (DELETE /v1/adventures/{id}/deletion).
 
   Scenario: Signed-out users are prompted to sign in
     Given I am signed out
@@ -90,38 +91,38 @@ Feature: Text adventures list
     Then the "Lantern Trail" adventure is listed
     And the "Forest Echoes" adventure is not listed
 
-  Scenario: Swiping an adventure away asks for confirmation before deleting
+  Scenario: Swiping an adventure away deletes it
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
     And the text adventures screen is open
     When I swipe to delete the "Lantern Trail" adventure
-    Then the delete adventure confirmation is shown
-    And the "Lantern Trail" adventure is listed
-
-  Scenario: An adventure is deleted once the deletion is confirmed
-    Given I am signed in as "user@example.com"
-    And the adventures request will return the "Lantern Trail" adventure
-    And the text adventures screen is open
-    When I swipe to delete the "Lantern Trail" adventure
-    And I confirm the deletion
     Then the "Lantern Trail" adventure is not listed
+    And the adventure deleted message is shown
 
-  Scenario: Cancelling a deletion keeps the adventure
+  Scenario: Undoing a deletion restores the adventure
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
     And the text adventures screen is open
     When I swipe to delete the "Lantern Trail" adventure
-    And I cancel the deletion
-    Then the delete adventure confirmation is not shown
-    And the "Lantern Trail" adventure is listed
+    And I undo the deletion
+    Then the "Lantern Trail" adventure is listed
+
+  Scenario: The undo message goes away on its own and the deletion stands
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure
+    And the text adventures screen is open
+    When I swipe to delete the "Lantern Trail" adventure
+    And the undo message times out
+    Then the adventure deleted message is not shown
+    And the "Lantern Trail" adventure is not listed
 
   Scenario: A short swipe does not delete an adventure
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure
     And the text adventures screen is open
     When I partially swipe the "Lantern Trail" adventure
-    Then the delete adventure confirmation is not shown
-    And the "Lantern Trail" adventure is listed
+    Then the "Lantern Trail" adventure is listed
+    And the adventure deleted message is not shown
 
   Scenario: A deleted adventure is restored when the delete request fails
     Given I am signed in as "user@example.com"
@@ -129,8 +130,17 @@ Feature: Text adventures list
     And the delete adventure request will fail
     And the text adventures screen is open
     When I swipe to delete the "Lantern Trail" adventure
-    And I confirm the deletion
     Then the "Lantern Trail" adventure is listed
+    And the adventures error message is shown
+
+  Scenario: An error is shown when undoing a deletion fails
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure
+    And the restore adventure request will fail
+    And the text adventures screen is open
+    When I swipe to delete the "Lantern Trail" adventure
+    And I undo the deletion
+    Then the "Lantern Trail" adventure is not listed
     And the adventures error message is shown
 
   Scenario: Starting a new adventure opens the chat screen

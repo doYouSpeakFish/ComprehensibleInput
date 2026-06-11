@@ -196,7 +196,7 @@ Feature: Text adventure v1 API
     Then the response status is 404
 
   @v1
-  Scenario: Deleting one adventure removes all nested messages and sentences
+  Scenario: Deleting one adventure makes it and its messages unreadable
     Given I have an existing adventure with messages
     When I delete that adventure
     Then the response status is 204
@@ -208,6 +208,30 @@ Feature: Text adventure v1 API
     Given user A has an adventure
     And I am authenticated as user B
     When I delete user A adventure
+    Then the response status is 404
+
+  @v1
+  Scenario: Undoing a deletion restores the adventure with its messages
+    Given I have an existing adventure with messages
+    And I have deleted that adventure
+    When I undo that adventure deletion
+    Then the response status is 200
+    And the response includes a title
+    And that adventure is listed
+    And reading its messages returns 2 messages
+
+  @v1
+  Scenario: Undoing the deletion of an adventure that is not deleted returns not found
+    Given I have an existing adventure
+    When I undo that adventure deletion
+    Then the response status is 404
+
+  @v1
+  Scenario: Undoing the deletion of another user's adventure returns not found
+    Given user A has an adventure
+    And user A has deleted their adventure
+    And I am authenticated as user B
+    When I undo user A adventure deletion
     Then the response status is 404
 
   @v1

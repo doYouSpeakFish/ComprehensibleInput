@@ -31,10 +31,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -74,9 +80,9 @@ internal fun TextAdventuresListScreen(
         onStartAdventure = onStartAdventure,
         onAdventureClick = onAdventureClick,
         onSettingsClick = onSettingsClick,
-        onDeleteRequest = viewModel::onDeleteRequested,
-        onDeleteConfirm = viewModel::onDeleteConfirmed,
-        onDeleteDismiss = viewModel::onDeleteCancelled,
+        onDeleteAdventure = viewModel::onDeleteAdventure,
+        onUndoDelete = viewModel::onUndoDelete,
+        onUndoDismissed = viewModel::onUndoDismissed,
         modifier = modifier,
     )
 }
@@ -90,11 +96,18 @@ internal fun TextAdventuresListScreen(
     onStartAdventure: () -> Unit,
     onAdventureClick: (String) -> Unit,
     onSettingsClick: () -> Unit,
-    onDeleteRequest: (String) -> Unit,
-    onDeleteConfirm: () -> Unit,
-    onDeleteDismiss: () -> Unit,
+    onDeleteAdventure: (String) -> Unit,
+    onUndoDelete: () -> Unit,
+    onUndoDismissed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    UndoDeleteSnackbar(
+        undoableDeletedAdventureId = state.undoableDeletedAdventureId,
+        snackbarHostState = snackbarHostState,
+        onUndoDelete = onUndoDelete,
+        onUndoDismissed = onUndoDismissed,
+    )
     Scaffold(
         modifier = modifier.testTag("text_adventures_screen"),
         topBar = {
@@ -110,6 +123,7 @@ internal fun TextAdventuresListScreen(
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         val contentModifier = Modifier
             .fillMaxSize()
@@ -126,7 +140,7 @@ internal fun TextAdventuresListScreen(
                 state = state,
                 onStartAdventure = onStartAdventure,
                 onAdventureClick = onAdventureClick,
-                onDeleteRequest = onDeleteRequest,
+                onDeleteAdventure = onDeleteAdventure,
             )
 
             else -> SignedInEmptyContent(
@@ -136,13 +150,33 @@ internal fun TextAdventuresListScreen(
             )
         }
     }
+}
 
-    state.adventurePendingDeletion?.let { adventure ->
-        DeleteAdventureDialog(
-            adventure = adventure,
-            onConfirm = onDeleteConfirm,
-            onDismiss = onDeleteDismiss,
+/**
+ * Shows the "adventure deleted" snackbar with its undo action while a deletion is undoable. Leaving
+ * the undoable state (an undo, a failed delete restoring the row, or a sign-out) dismisses the
+ * snackbar by cancelling the effect.
+ */
+@Composable
+private fun UndoDeleteSnackbar(
+    undoableDeletedAdventureId: String?,
+    snackbarHostState: SnackbarHostState,
+    onUndoDelete: () -> Unit,
+    onUndoDismissed: () -> Unit,
+) {
+    if (undoableDeletedAdventureId == null) return
+    val message = stringResource(R.string.text_adventures_deleted)
+    val undoLabel = stringResource(R.string.text_adventures_undo)
+    LaunchedEffect(undoableDeletedAdventureId) {
+        val result = snackbarHostState.showSnackbar(
+            message = message,
+            actionLabel = undoLabel,
+            duration = SnackbarDuration.Long,
         )
+        when (result) {
+            SnackbarResult.ActionPerformed -> onUndoDelete()
+            SnackbarResult.Dismissed -> onUndoDismissed()
+        }
     }
 }
 
@@ -152,7 +186,7 @@ private fun AdventureListContent(
     state: TextAdventuresListUiState,
     onStartAdventure: () -> Unit,
     onAdventureClick: (String) -> Unit,
-    onDeleteRequest: (String) -> Unit,
+    onDeleteAdventure: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.testTag("text_adventures_list"),
@@ -167,11 +201,10 @@ private fun AdventureListContent(
         items(items = state.adventures, key = { it.id }) { adventure ->
             AdventureRow(
                 adventure = adventure,
-                isPendingDeletion = adventure.id == state.adventurePendingDeletion?.id,
                 onClick = { onAdventureClick(adventure.id) },
-                onDeleteRequest = { onDeleteRequest(adventure.id) },
+                onDelete = { onDeleteAdventure(adventure.id) },
                 // Animates a deleted row fading out and the rows below sliding up to close the gap
-                // (and the reverse when a failed delete restores it).
+                // (and the reverse when an undo or a failed delete restores it).
                 modifier = Modifier.animateItem(),
             )
         }

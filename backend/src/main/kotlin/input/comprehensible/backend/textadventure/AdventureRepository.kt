@@ -14,6 +14,12 @@ interface AdventureRepository {
 
     fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean
 
+    /**
+     * Undoes the deletion of an adventure, returning the restored summary, or null when the account
+     * has no deleted adventure with that id.
+     */
+    fun restoreAdventureForAccount(accountId: String, adventureId: String): AdventureSummary?
+
     fun deleteAllAdventuresForAccount(accountId: String)
 }
 

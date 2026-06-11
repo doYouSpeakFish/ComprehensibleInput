@@ -1,12 +1,16 @@
 package input.comprehensible.features.textadventure
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.swipeLeft
 
 /**
@@ -69,32 +73,35 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onAllNodesWithTag("adventure_image_$title", useUnmergedTree = true).assertCountEquals(0)
     }
 
-    // Adventures are deleted by swiping the row towards the start; a swipe past the threshold
-    // asks for confirmation rather than deleting straight away.
+    // Adventures are deleted by swiping the row away towards the start.
     fun swipeToDeleteAdventure(title: String) {
         composeTestRule.onNodeWithTag("adventure_$title").performTouchInput { swipeLeft() }
     }
 
-    // A short swipe that stays below the delete threshold, so the row springs back and remains.
+    // A slow, short swipe that stays below the delete distance threshold (and, being slow, below
+    // the fling velocity threshold), so the row springs back and remains.
     fun swipeAdventureWithoutDeleting(title: String) {
-        composeTestRule.onNodeWithTag("adventure_$title")
-            .performTouchInput { swipeLeft(startX = right, endX = right - 60f) }
+        composeTestRule.onNodeWithTag("adventure_$title").performTouchInput {
+            swipe(
+                start = Offset(right, centerY),
+                end = Offset(right - 60f, centerY),
+                durationMillis = 1_000,
+            )
+        }
     }
 
-    fun confirmAdventureDeletion() {
-        composeTestRule.onNodeWithTag("delete_adventure_confirm_button").performClick()
+    // The undo action and the deleted message live in the snackbar, which has no stable tag of its
+    // own, so they are reached through their user-visible text.
+    fun undoAdventureDeletion() {
+        composeTestRule.onNodeWithText("Undo").performClick()
     }
 
-    fun cancelAdventureDeletion() {
-        composeTestRule.onNodeWithTag("delete_adventure_cancel_button").performClick()
+    fun assertAdventureDeletedMessageIsShown() {
+        composeTestRule.onNodeWithText("Adventure deleted").assertIsDisplayed()
     }
 
-    fun assertDeleteConfirmationIsShown() {
-        composeTestRule.onNodeWithTag("delete_adventure_dialog").assertIsDisplayed()
-    }
-
-    fun assertDeleteConfirmationIsNotShown() {
-        composeTestRule.onAllNodesWithTag("delete_adventure_dialog").assertCountEquals(0)
+    fun assertAdventureDeletedMessageIsNotShown() {
+        composeTestRule.onAllNodesWithText("Adventure deleted").assertCountEquals(0)
     }
 
     fun openAdventure(title: String) {
