@@ -108,6 +108,9 @@ class TextAdventuresListViewModel(
 private fun AdventureSummary.toItem() = TextAdventuresListUiState.AdventureItem(
     id = id,
     title = title,
-    subtitle = learningLanguage,
+    translatedTitle = translatedTitle,
+    learningLanguage = learningLanguage,
+    translationLanguage = translationLanguage,
+    status = status,
     imageUrl = imageUrl,
 )

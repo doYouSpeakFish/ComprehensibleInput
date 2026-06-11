@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Aventuras de texto</string>
-    <string name="text_adventures_early_access">Las aventuras de texto son gratis durante nuestro acceso anticipado. ¡Disfruta!</string>
-    <string name="text_adventures_sign_in_message">Inicia sesión para empezar a jugar a las aventuras de texto.</string>
+    <string name="text_adventures_subtitle">Aprende a través de historias interactivas.</string>
+    <string name="text_adventures_early_access_eyebrow">ACCESO ANTICIPADO</string>
+    <string name="text_adventures_early_access">Las aventuras de texto son experimentales y gratuitas durante el acceso anticipado.</string>
+    <string name="text_adventures_sign_in_message">Inicia sesión para jugar a las aventuras</string>
+    <string name="text_adventures_sign_in_description">Crea una cuenta o inicia sesión para empezar y continuar tus aventuras de texto en todos tus dispositivos.</string>
     <string name="text_adventures_sign_in_button">Iniciar sesión</string>
+    <string name="text_adventures_create_account_button">Crear cuenta</string>
     <string name="text_adventures_empty">Todavía no tienes ninguna aventura. ¡Empieza una!</string>
     <string name="text_adventures_error">No se pudieron cargar tus aventuras. Por favor, inténtalo de nuevo.</string>
     <string name="text_adventure_busy">El sistema está ocupado en este momento. Por favor, inténtalo de nuevo en un rato.</string>
-    <string name="text_adventures_new">Nueva aventura</string>
+    <string name="text_adventures_new">Iniciar nueva aventura</string>
     <string name="text_adventures_delete_content_description">Eliminar aventura</string>
+    <string name="text_adventures_settings_content_description">Ajustes</string>
+    <string name="text_adventures_status_not_started">Sin empezar</string>
+    <string name="text_adventures_status_in_progress">En progreso</string>
+    <string name="text_adventures_status_complete">Completado</string>
+    <string name="text_adventures_early_access_image_content_description">Ilustración de una puerta que se abre a una aventura</string>
+    <string name="text_adventures_sign_in_image_content_description">Ilustración de un candado</string>
     <string name="text_adventure_chat_title">Aventura</string>
     <string name="text_adventure_generating_1">Tramando tu aventura…</string>
     <string name="text_adventure_generating_2">Imaginando lo que pasa después…</string>

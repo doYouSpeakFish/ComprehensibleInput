@@ -41,7 +41,7 @@
 🟢       val dark = imageUrl.contains("-dark")
 🟢       return when {
 🟢           imageUrl.contains("mountain-peak") ->
-🟢               if (dark) R.drawable.preview_mountain_peak_dark else R.drawable.preview_mountain_peak
+🟡               if (dark) R.drawable.preview_mountain_peak_dark else R.drawable.preview_mountain_peak
 🟢           imageUrl.contains("coastal-village") ->
 🟢               if (dark) R.drawable.preview_coastal_village_dark else R.drawable.preview_coastal_village
 ⚪           else ->

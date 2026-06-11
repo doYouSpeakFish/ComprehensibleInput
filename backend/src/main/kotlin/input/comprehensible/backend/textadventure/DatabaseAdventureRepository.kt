@@ -24,20 +24,45 @@ class DatabaseAdventureRepository(
 ) : AdventureRepository {
 
     override fun listAdventureSummariesForAccount(accountId: String): List<AdventureSummary> = transaction(database) {
-        AdventuresTable
+        val adventureRows = AdventuresTable
             .selectAll()
             .where { AdventuresTable.accountId eq accountId }
             .orderBy(AdventuresTable.updatedAt, SortOrder.DESC)
-            .map {
-                AdventureSummary(
-                    adventureId = it[AdventuresTable.id],
-                    title = it[AdventuresTable.title],
-                    learningLanguage = it[AdventuresTable.learningLanguage],
-                    translationLanguage = it[AdventuresTable.translationLanguage],
-                    updatedAt = it[AdventuresTable.updatedAt],
-                    imageId = it[AdventuresTable.imageId],
-                )
-            }
+            .toList()
+        val messagesById = loadMessagesByAdventure(adventureRows.map { it[AdventuresTable.id] })
+        adventureRows.map { row ->
+            AdventureSummary(
+                adventureId = row[AdventuresTable.id],
+                title = row[AdventuresTable.title],
+                translatedTitle = row[AdventuresTable.translatedTitle],
+                learningLanguage = row[AdventuresTable.learningLanguage],
+                translationLanguage = row[AdventuresTable.translationLanguage],
+                updatedAt = row[AdventuresTable.updatedAt],
+                imageId = row[AdventuresTable.imageId],
+                status = statusOf(messagesById[row[AdventuresTable.id]].orEmpty()),
+            )
+        }
+    }
+
+    private fun loadMessagesByAdventure(adventureIds: List<String>): Map<String, List<ResultRow>> {
+        if (adventureIds.isEmpty()) return emptyMap()
+        return AdventureMessagesTable
+            .selectAll()
+            .where { AdventureMessagesTable.adventureId inList adventureIds }
+            .toList()
+            .groupBy { it[AdventureMessagesTable.adventureId] }
+    }
+
+    /**
+     * Derives an adventure's status from its messages: not started until the player sends a message,
+     * complete once the most recent message ends the story, otherwise in progress.
+     */
+    private fun statusOf(messages: List<ResultRow>): String = when {
+        messages.none { it[AdventureMessagesTable.type] == messageTypeUser } -> statusNotStarted
+        messages.maxByOrNull { it[AdventureMessagesTable.createdAt] }
+            ?.get(AdventureMessagesTable.isEnding) == true -> statusComplete
+
+        else -> statusInProgress
     }
 
     override fun saveAdventurePart(adventurePart: PersistedAdventurePart): String {
@@ -93,6 +118,7 @@ class DatabaseAdventureRepository(
                     now = now,
                     accountId = message.accountId,
                     title = adventureRow[AdventuresTable.title],
+                    translatedTitle = adventureRow[AdventuresTable.translatedTitle],
                     learningLanguage = message.learningLanguage,
                     translationLanguage = message.translationLanguage,
                     createdAt = adventureRow[AdventuresTable.createdAt],
@@ -153,6 +179,7 @@ class DatabaseAdventureRepository(
             it[id] = adventurePart.adventureId
             it[this.accountId] = adventurePart.accountId
             it[this.title] = adventurePart.title
+            it[this.translatedTitle] = adventurePart.translatedTitle
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
             // The image is chosen once, when the adventure is created; continuing an adventure leaves
@@ -168,6 +195,7 @@ class DatabaseAdventureRepository(
             it[id] = update.adventureId
             it[this.accountId] = update.accountId
             it[this.title] = update.title
+            it[this.translatedTitle] = update.translatedTitle
             it[this.learningLanguage] = update.learningLanguage
             it[this.translationLanguage] = update.translationLanguage
             it[this.imageId] = update.imageId
@@ -246,6 +274,9 @@ class DatabaseAdventureRepository(
     private companion object {
         const val messageTypeAi = "AI"
         const val messageTypeUser = "user"
+        const val statusNotStarted = "not_started"
+        const val statusInProgress = "in_progress"
+        const val statusComplete = "complete"
     }
 }
 
@@ -254,6 +285,7 @@ private data class AdventureTimestampUpdate(
     val now: Long,
     val accountId: String?,
     val title: String,
+    val translatedTitle: String,
     val learningLanguage: String,
     val translationLanguage: String,
     val createdAt: Long,
@@ -339,6 +371,7 @@ object AdventuresTable : Table("text_adventure") {
         onDelete = ReferenceOption.CASCADE,
     )
     val title = text("title")
+    val translatedTitle = text("translated_title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
     val imageId = varchar("image_id", length = 255).nullable()

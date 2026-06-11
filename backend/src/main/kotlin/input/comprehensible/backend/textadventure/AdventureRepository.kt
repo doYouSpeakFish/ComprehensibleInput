@@ -33,6 +33,7 @@ data class PersistedAdventurePart(
     val messageId: String,
     val parentMessageId: String? = null,
     val title: String,
+    val translatedTitle: String,
     val learningLanguage: String,
     val translationLanguage: String,
     val isEnding: Boolean,
@@ -53,8 +54,11 @@ data class AdventureSummary(
     val adventureId: String,
     val accountId: String? = null,
     val title: String,
+    val translatedTitle: String = "",
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
     val imageId: String? = null,
+    /** Progress of the adventure: "not_started", "in_progress" or "complete". */
+    val status: String = "in_progress",
 )

@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_adventures_title">Text adventures</string>
-    <string name="text_adventures_early_access">Text adventures are free while we\'re in early access. Enjoy!</string>
-    <string name="text_adventures_sign_in_message">Sign in to start playing text adventures.</string>
+    <string name="text_adventures_subtitle">Learn through interactive stories.</string>
+    <string name="text_adventures_early_access_eyebrow">EARLY ACCESS</string>
+    <string name="text_adventures_early_access">Text adventures are experimental and free while in early access.</string>
+    <string name="text_adventures_sign_in_message">Sign in to play adventures</string>
+    <string name="text_adventures_sign_in_description">Create an account or sign in to start and continue your text adventures across your devices.</string>
     <string name="text_adventures_sign_in_button">Sign in</string>
+    <string name="text_adventures_create_account_button">Create account</string>
     <string name="text_adventures_empty">You don\'t have any adventures yet. Start one!</string>
     <string name="text_adventures_error">Couldn\'t load your adventures. Please try again.</string>
     <string name="text_adventure_busy">The system is busy right now. Please try again in a little while.</string>
-    <string name="text_adventures_new">New adventure</string>
+    <string name="text_adventures_new">Start new adventure</string>
     <string name="text_adventures_delete_content_description">Delete adventure</string>
+    <string name="text_adventures_settings_content_description">Settings</string>
+    <string name="text_adventures_status_not_started">Not started</string>
+    <string name="text_adventures_status_in_progress">In progress</string>
+    <string name="text_adventures_status_complete">Complete</string>
+    <string name="text_adventures_early_access_image_content_description">Illustration of a doorway opening onto an adventure</string>
+    <string name="text_adventures_sign_in_image_content_description">Illustration of a padlock</string>
     <string name="text_adventure_chat_title">Adventure</string>
     <string name="text_adventure_generating_1">Plotting your adventure…</string>
     <string name="text_adventure_generating_2">Imagining what happens next…</string>

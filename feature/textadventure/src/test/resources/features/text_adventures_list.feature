@@ -96,6 +96,13 @@ Feature: Text adventures list
     When I delete the "Lantern Trail" adventure
     Then the "Lantern Trail" adventure is not listed
 
+  Scenario: A short swipe does not delete an adventure
+    Given I am signed in as "user@example.com"
+    And the adventures request will return the "Lantern Trail" adventure
+    And the text adventures screen is open
+    When I partially swipe the "Lantern Trail" adventure
+    Then the "Lantern Trail" adventure is listed
+
   Scenario: A deleted adventure is restored when the delete request fails
     Given I am signed in as "user@example.com"
     And the adventures request will return the "Lantern Trail" adventure

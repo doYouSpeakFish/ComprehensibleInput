@@ -14,20 +14,24 @@ data class TextAdventureChatRoute(val adventureId: String? = null)
 
 /**
  * Registers the text adventure destinations. The list opens the chat for a new adventure (no id) or
- * an existing one; [onSignInClick] is supplied by the host so the signed-out prompt can open the
- * account screen.
+ * an existing one; [onSignInClick], [onCreateAccountClick] and [onSettingsClick] are supplied by the
+ * host so the screen can open the account and settings destinations.
  */
 fun NavGraphBuilder.textAdventureNavGraph(
     navController: NavController,
     onSignInClick: () -> Unit,
+    onCreateAccountClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     composable<TextAdventuresListRoute> {
         TextAdventuresListScreen(
             onSignInClick = onSignInClick,
+            onCreateAccountClick = onCreateAccountClick,
             onStartAdventure = { navController.navigate(TextAdventureChatRoute()) },
             onAdventureClick = { adventureId ->
                 navController.navigate(TextAdventureChatRoute(adventureId))
             },
+            onSettingsClick = onSettingsClick,
         )
     }
     composable<TextAdventureChatRoute> { entry ->

@@ -3,6 +3,7 @@
 ⚪   import androidx.compose.foundation.layout.fillMaxSize
 ⚪   import androidx.compose.runtime.Composable
 ⚪   import androidx.compose.ui.Modifier
+⚪   import input.comprehensible.data.textadventure.AdventureStatus
 ⚪   import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
 ⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
 ⚪   import input.comprehensible.util.DefaultPreview
@@ -34,21 +35,30 @@
 ⚪                   adventures = listOf(
 ⚪                       AdventureItem(
 ⚪                           id = "1",
-⚪                           title = "Lantern Trail",
-⚪                           subtitle = "German",
+⚪                           title = "El bosque de cristal",
+⚪                           translatedTitle = "The Glass Forest",
+⚪                           learningLanguage = "es",
+⚪                           translationLanguage = "en",
+⚪                           status = AdventureStatus.NOT_STARTED,
 ⚪                           imageUrl = AdventurePreviewImages.FOREST_PATH,
 ⚪                       ),
 ⚪                       AdventureItem(
 ⚪                           id = "2",
-⚪                           title = "Forest Echoes",
-⚪                           subtitle = "Spanish",
-⚪                           imageUrl = AdventurePreviewImages.MOUNTAIN_PEAK,
+⚪                           title = "La porte sous la pluie",
+⚪                           translatedTitle = "The Door in the Rain",
+⚪                           learningLanguage = "fr",
+⚪                           translationLanguage = "en",
+⚪                           status = AdventureStatus.IN_PROGRESS,
+⚪                           imageUrl = AdventurePreviewImages.COASTAL_VILLAGE,
 ⚪                       ),
 ⚪                       AdventureItem(
 ⚪                           id = "3",
-⚪                           title = "Harbor Watch",
-⚪                           subtitle = "French",
-⚪                           imageUrl = AdventurePreviewImages.COASTAL_VILLAGE,
+⚪                           title = "Der letzte Zug",
+⚪                           translatedTitle = "The Last Train",
+⚪                           learningLanguage = "de",
+⚪                           translationLanguage = "en",
+⚪                           status = AdventureStatus.COMPLETE,
+⚪                           imageUrl = AdventurePreviewImages.MOUNTAIN_PEAK,
 ⚪                       ),
 ⚪                   ),
 ⚪                   showError = false,
@@ -128,8 +138,10 @@
 🟢           TextAdventuresListScreen(
 🟢               state = state,
 🟢               onSignInClick = {},
+🟢               onCreateAccountClick = {},
 🟢               onStartAdventure = {},
 🟢               onAdventureClick = {},
+🟢               onSettingsClick = {},
 🟢               onDeleteAdventure = {},
 🟢               modifier = Modifier.fillMaxSize(),
 ⚪           )

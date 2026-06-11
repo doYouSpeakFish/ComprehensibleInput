@@ -37,7 +37,8 @@ class TextAdventureGenerationService(
             systemPrompt = """
                 You are a text adventure narrator.
                 Generate the opening scene in $learningLanguage.
-                Provide a short, evocative title for the adventure.
+                Provide a short, evocative title for the adventure in $learningLanguage.
+                Provide that same title translated into $translationsLanguage as translatedTitle.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
@@ -60,6 +61,7 @@ class TextAdventureGenerationService(
                 messageId = messageId,
                 parentMessageId = null,
                 title = response.title,
+                translatedTitle = response.translatedTitle,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
                 isEnding = response.isEnding,
@@ -166,7 +168,7 @@ class TextAdventureGenerationService(
                 You will receive a JSON request containing the adventure context and chat history.
                 Respond to the player in $learningLanguage.
                 Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
-                Keep the title consistent with the story so far.
+                Keep the title (and its $translationsLanguage translatedTitle) consistent with the story so far.
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
             """.trimIndent() + inspirationPromptSection(),
@@ -187,6 +189,7 @@ class TextAdventureGenerationService(
                 messageId = messageId,
                 parentMessageId = parentMessageId,
                 title = response.title,
+                translatedTitle = response.translatedTitle,
                 learningLanguage = learningLanguage,
                 translationLanguage = translationsLanguage,
                 isEnding = response.isEnding,
@@ -322,6 +325,7 @@ class TextAdventureGenerationService(
         GeneratedAdventureResponse(
             adventureId = adventureId,
             title = response.title.trim(),
+            translatedTitle = response.translatedTitle.trim(),
             paragraphs = response.paragraphs,
             translatedParagraphs = response.translatedParagraphs,
             isEnding = response.isEnding,
@@ -355,10 +359,12 @@ class TextAdventureGenerationService(
 private fun AdventureSummary.toRemoteResponse(): AdventureSummaryRemoteResponse = AdventureSummaryRemoteResponse(
     id = adventureId,
     title = title,
+    translatedTitle = translatedTitle,
     learningLanguage = learningLanguage,
     translationLanguage = translationLanguage,
     updatedAt = updatedAt,
     imageId = imageId,
+    status = status,
 )
 
 private fun TextAdventureMessagesRemoteResponse.toHistory(): List<TextAdventureHistoryMessage> = messages.mapNotNull { message ->
@@ -384,6 +390,7 @@ private fun GeneratedAdventureResponse.toPersistedParagraphs(): List<PersistedAd
 private data class GeneratedAdventureResponse(
     val adventureId: String,
     val title: String,
+    val translatedTitle: String,
     val paragraphs: List<TextAdventureStructuredParagraph>,
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     val isEnding: Boolean,
@@ -398,6 +405,7 @@ private fun GeneratedAdventureResponse.toRemoteResponse(
         messageId = messageId,
         adventureId = adventureId,
         title = title,
+        translatedTitle = translatedTitle,
         sentences = paragraphs.flatMap { paragraph -> paragraph.sentences.map(String::trim) },
         translatedSentences = translatedParagraphs.flatMap { paragraph -> paragraph.sentences.map(String::trim) },
         isEnding = isEnding,
@@ -418,8 +426,10 @@ data class UserMessageStructuredResponse(
 @SerialName("TextAdventureResponse")
 @LLMDescription("A single response from the text adventure narrator.")
 data class TextAdventureStructuredResponse(
-    @property:LLMDescription("Short, evocative title for the adventure.")
+    @property:LLMDescription("Short, evocative title for the adventure, in the learning language.")
     val title: String,
+    @property:LLMDescription("The title translated into the translation language.")
+    val translatedTitle: String,
     @property:LLMDescription("Narration paragraphs in the learning language.")
     val paragraphs: List<TextAdventureStructuredParagraph>,
     @property:LLMDescription("Translated paragraphs matching the narration paragraph order.")
@@ -447,9 +457,12 @@ data class AdventureListRemoteResponse(val items: List<AdventureSummaryRemoteRes
 data class AdventureSummaryRemoteResponse(
     val id: String,
     val title: String,
+    val translatedTitle: String = "",
     val learningLanguage: String,
     val translationLanguage: String,
     val updatedAt: Long,
     val imageId: String? = null,
+    /** Progress of the adventure: "not_started", "in_progress" or "complete". */
+    val status: String = "in_progress",
 )
 

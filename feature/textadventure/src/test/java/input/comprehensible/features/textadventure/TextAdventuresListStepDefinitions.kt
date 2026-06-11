@@ -80,6 +80,12 @@ class TextAdventuresListStepDefinitions {
         scope.idle()
     }
 
+    @When("I partially swipe the {string} adventure")
+    fun iPartiallySwipeTheAdventure(title: String) {
+        robot.swipeAdventureWithoutDeleting(title)
+        scope.idle()
+    }
+
     @When("I start a new adventure")
     fun iStartANewAdventure() {
         robot.startNewAdventure()

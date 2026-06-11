@@ -46,6 +46,7 @@ class FakeTextAdventureStructuredPromptExecutor : TextAdventureStructuredPromptE
         return queuedResponses.removeFirstOrNull()
             ?: TextAdventureStructuredResponse(
                 title = "Fallback Adventure",
+                translatedTitle = "Fallback Adventure (translated)",
                 paragraphs = listOf(
                     TextAdventureStructuredParagraph(sentences = listOf("You wait."))
                 ),

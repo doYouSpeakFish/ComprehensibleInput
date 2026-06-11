@@ -23,7 +23,7 @@ import input.comprehensible.di.ApplicationProvider
         MessageEntity::class,
         SentenceEntity::class,
     ],
-    version = 9,
+    version = 11,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -31,6 +31,8 @@ import input.comprehensible.di.ApplicationProvider
         AutoMigration(from = 4, to = 5, spec = TextAdventureMigration4To5::class),
         AutoMigration(from = 7, to = 8, spec = RemoveTextAdventurePrototypeSpec::class),
         AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10),
+        AutoMigration(from = 10, to = 11),
     ]
 )
 abstract class AppDb : RoomDatabase() {
