@@ -110,7 +110,10 @@
 🟢                       customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDeleteRequest(); true })
 ⚪                   }
 🟢                   .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-🟢                   .pointerInput(adventure.id) {
+⚪                   // Keyed on width as well as the id: a resize creates a new Animatable above, and
+⚪                   // the gesture coroutine must restart to capture it (and the matching threshold)
+⚪                   // rather than keep driving the stale one.
+🟢                   .pointerInput(adventure.id, width) {
 ⚪                       // Updates go through the Animatable's coroutine queue so each drag interrupts
 ⚪                       // any in-flight settle animation and the end-of-drag read sees every move.
 🟢                       detectHorizontalDragGestures(
