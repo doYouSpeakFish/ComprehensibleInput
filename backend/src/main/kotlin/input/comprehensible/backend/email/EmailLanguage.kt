@@ -53,10 +53,13 @@ enum class EmailLanguage(val tag: String) {
                 .firstOrNull { it.trim().startsWith("q=") }
                 ?.let { it.substringAfter('=').trim().toDoubleOrNull() }
                 ?: DEFAULT_QUALITY
+            // q=0 means the client explicitly rejects this language (RFC 7231), so drop it.
+            if (quality <= NOT_ACCEPTABLE_QUALITY) return null
             return LanguageRange(subtag, quality)
         }
 
         private const val DEFAULT_QUALITY = 1.0
+        private const val NOT_ACCEPTABLE_QUALITY = 0.0
     }
 }
 
