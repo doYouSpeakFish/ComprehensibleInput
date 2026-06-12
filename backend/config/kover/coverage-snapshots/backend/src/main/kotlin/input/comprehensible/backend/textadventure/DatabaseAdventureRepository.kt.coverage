@@ -92,7 +92,7 @@
 ⚪       }
 ⚪   
 🟢       override fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse? = transaction(database) {
-🟢           val adventureRow = findAdventureRow(adventureId) ?: return@transaction null
+🟡           val adventureRow = findAdventureRow(adventureId) ?: return@transaction null
 🟢           val sentenceRowsByMessage = findSentenceRowsByMessage(adventureId)
 🟢           val messages = findMessageRows(adventureId).map { messageRow ->
 🟢               messageRow.toRemoteMessage(

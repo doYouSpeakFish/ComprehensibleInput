@@ -22,7 +22,7 @@
 ⚪   /**
 ⚪    * Stored messages for a previously generated text adventure.
 ⚪    */
-🟡   @Serializable
+🔴   @Serializable
 ⚪   data class TextAdventureMessagesRemoteResponse(
 🟢       val adventureId: String,
 🟢       val title: String,
@@ -31,7 +31,7 @@
 🟢       val messages: List<TextAdventureMessageRemoteResponse>,
 ⚪   )
 ⚪   
-🟡   @Serializable
+🔴   @Serializable
 ⚪   data class TextAdventureMessageRemoteResponse(
 🟢       val id: String,
 🟢       val parentId: String?,
@@ -41,7 +41,7 @@
 🟢       val paragraphs: List<TextAdventureParagraphRemoteResponse>,
 ⚪   )
 ⚪   
-🟡   @Serializable
+🔴   @Serializable
 ⚪   data class TextAdventureParagraphRemoteResponse(
 🟢       val sentences: List<String>,
 🟢       val translatedSentences: List<String>,
@@ -50,19 +50,13 @@
 ⚪   /**
 ⚪    * A conversation history entry to provide context for the LLM.
 ⚪    */
-🟡   @Serializable
+🔴   @Serializable
 ⚪   data class TextAdventureHistoryMessage(
 🟢       val role: String,
 🟢       val text: String,
 ⚪   )
 ⚪   
-🟡   @Serializable
-⚪   data class StartTextAdventureRequest(
-🟢       val learningLanguage: String,
-🟢       val translationsLanguage: String,
-⚪   )
-⚪   
-🟡   @Serializable
+🔴   @Serializable
 ⚪   data class ContinueTextAdventureRequest(
 🟢       val adventureId: String,
 🟢       val learningLanguage: String,

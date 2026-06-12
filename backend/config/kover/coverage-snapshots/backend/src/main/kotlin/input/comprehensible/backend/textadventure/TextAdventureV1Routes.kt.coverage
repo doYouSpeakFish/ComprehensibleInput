@@ -59,7 +59,7 @@
 🟡               val adventureId = requireNotNull(call.parameters["adventureId"])
 🟢               val request = call.receive<PostTextAdventureMessageV1Request>()
 🟡               if (request.parentId.isBlank()) {
-🔴                   return@post call.respond(HttpStatusCode.BadRequest)
+🟡                   return@post call.respond(HttpStatusCode.BadRequest)
 ⚪               }
 🟢               when (request.type) {
 🟢                   MESSAGE_TYPE_USER -> call.createUserMessage(
