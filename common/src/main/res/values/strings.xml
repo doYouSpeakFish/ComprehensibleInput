@@ -22,4 +22,12 @@
     <string name="top_bar_language_picker_translations_label">Translations</string>
     <string name="top_bar_language_picker_learning_label">Learning</string>
     <string name="settings_button_description">Settings</string>
+    <!--
+      The BCP-47 language tag of this locale. Android resolves it to whichever values-* folder it
+      picks for the app's strings, so it always matches the language the UI is displayed in. The app
+      reports it to the backend (via the Accept-Language header) so account emails are localised to
+      the same language. It is not user-facing; provide one value per values-* folder so every
+      supported locale reports its own tag.
+    -->
+    <string name="app_language_tag">en</string>
 </resources>

@@ -1,8 +1,11 @@
 ⚪   package input.comprehensible.backend
 ⚪   
 ⚪   import io.ktor.http.HttpStatusCode
+⚪   import input.comprehensible.backend.email.AccountEmails
 ⚪   import input.comprehensible.backend.email.CloudflareEmailDataSource
+⚪   import input.comprehensible.backend.email.EmailContent
 ⚪   import input.comprehensible.backend.email.EmailDataSource
+⚪   import input.comprehensible.backend.email.EmailLanguage
 ⚪   import kotlinx.coroutines.runBlocking
 ⚪   import kotlinx.serialization.Serializable
 ⚪   import org.jetbrains.exposed.v1.jdbc.Database
@@ -20,7 +23,7 @@
 🟢       private val verificationCodeProvider: () -> String = { random.nextInt(1_000_000).toString().padStart(6, '0') },
 🟢       private val currentTimeMillisProvider: () -> Long = System::currentTimeMillis,
 ⚪   ) {
-⚪       fun createAccount(email: String, password: String): AccountResult {
+🔴       fun createAccount(email: String, password: String, language: EmailLanguage = EmailLanguage.ENGLISH): AccountResult {
 🟢           val normalizedEmail = normalizeEmail(email)
 🟡           if (!isValidEmail(normalizedEmail) || password.length < minimumPasswordLength) {
 🟢               return AccountResult(HttpStatusCode.BadRequest)
@@ -35,14 +38,7 @@
 🟢           val accountId = when (insertAccountResult) {
 🟢               is InsertAccountResult.AlreadyExists -> {
 🟢                   if (insertAccountResult.emailVerified) {
-🟢                       runBlocking {
-🟢                           emailDataSource.sendEmail(
-🟢                               to = normalizedEmail,
-🟢                               subject = "3 Million Words account already exists",
-🟢                               textBody = "A 3 Million Words account already exists for this email address. " +
-⚪                                   "If this was not you, you can safely ignore this message.",
-⚪                           )
-⚪                       }
+🟢                       sendEmail(normalizedEmail, AccountEmails.accountAlreadyExists(language))
 🟢                       return AccountResult(HttpStatusCode.OK)
 ⚪                   }
 🟢                   insertAccountResult.accountId
@@ -54,13 +50,7 @@
 🟢               code = verificationCode,
 🟢               expiresAt = now() + verificationCodeTtlMs,
 ⚪           )
-🟢           runBlocking {
-🟢               emailDataSource.sendEmail(
-🟢                   to = normalizedEmail,
-🟢                   subject = "Verify your 3 Million Words email address",
-🟢                   textBody = "Use this verification code to verify your 3 Million Words email address: $verificationCode",
-⚪               )
-⚪           }
+🟢           sendEmail(normalizedEmail, AccountEmails.verifyEmailAddress(language, verificationCode))
 🟢           return AccountResult(HttpStatusCode.OK)
 ⚪       }
 ⚪   
@@ -83,7 +73,12 @@
 🟢           AccountPayload(it[AccountsTable.id], it[AccountsTable.email])
 ⚪       }
 ⚪   
-⚪       fun updateMe(accountId: String, newEmail: String?, password: String?): HttpStatusCode {
+⚪       fun updateMe(
+⚪           accountId: String,
+⚪           newEmail: String?,
+⚪           password: String?,
+🔴           language: EmailLanguage = EmailLanguage.ENGLISH,
+⚪       ): HttpStatusCode {
 🟡           if (password.isNullOrBlank()) return HttpStatusCode.BadRequest
 🟡           val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.Unauthorized
 🟡           if (!BCrypt.checkpw(password, account[AccountsTable.passwordHash])) return HttpStatusCode.Unauthorized
@@ -97,27 +92,19 @@
 🟢               currentEmailCodeExpiresAt = now() + verificationCodeTtlMs,
 🟢               now = now(),
 ⚪           )
-🟢           runBlocking {
-🟢               if (updateResult == EmailChangeRequestResult.AlreadyInUse) {
-🟢                   emailDataSource.sendEmail(
-🟢                       to = normalizedEmail,
-🟢                       subject = "3 Million Words email update attempted",
-🟢                       textBody = "An account update attempted to use this email address, but an account already has this email.",
-⚪                   )
-⚪               } else {
-🟢                   emailDataSource.sendEmail(
-🟢                       to = account[AccountsTable.email],
-🟢                       subject = "Confirm your 3 Million Words email change",
-⚪                       textBody = "Use this verification code to confirm your 3 Million Words " +
-🟢                           "email change: $currentEmailCode. If this change is unexpected, login to your " +
-⚪                           "3 Million Words account and change your password immediately.",
-⚪                   )
-⚪               }
+🟢           if (updateResult == EmailChangeRequestResult.AlreadyInUse) {
+🟢               sendEmail(normalizedEmail, AccountEmails.emailUpdateAlreadyInUse(language))
+⚪           } else {
+🟢               sendEmail(account[AccountsTable.email], AccountEmails.confirmEmailChange(language, currentEmailCode))
 ⚪           }
 🟢           return HttpStatusCode.OK
 ⚪       }
 ⚪   
-⚪       fun verifyCurrentEmailChange(accountId: String, code: String): HttpStatusCode {
+⚪       fun verifyCurrentEmailChange(
+⚪           accountId: String,
+⚪           code: String,
+🔴           language: EmailLanguage = EmailLanguage.ENGLISH,
+⚪       ): HttpStatusCode {
 🟢           val verificationResult = accountsDao.verifyCurrentEmailChange(
 🟢               accountId = accountId,
 🟢               code = code,
@@ -126,13 +113,7 @@
 🟢               newEmailCodeExpiresAt = now() + verificationCodeTtlMs,
 ⚪           )
 🟢           if (verificationResult == null) return HttpStatusCode.BadRequest
-🟢           runBlocking {
-🟢               emailDataSource.sendEmail(
-🟢                   to = verificationResult.email,
-🟢                   subject = "Verify your 3 Million Words email change",
-🟢                   textBody = "Use this verification code to verify your 3 Million Words email change: ${verificationResult.code}",
-⚪               )
-⚪           }
+🟢           sendEmail(verificationResult.email, AccountEmails.verifyEmailChange(language, verificationResult.code))
 🟢           return HttpStatusCode.NoContent
 ⚪       }
 ⚪   
@@ -176,18 +157,12 @@
 🟢           return if (verified) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
 ⚪       }
 ⚪   
-⚪       fun requestPasswordReset(email: String): HttpStatusCode {
+🔴       fun requestPasswordReset(email: String, language: EmailLanguage = EmailLanguage.ENGLISH): HttpStatusCode {
 🟢           val normalizedEmail = normalizeEmail(email)
 🟡           if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
 🟢           val account = accountsDao.findAccountByEmail(normalizedEmail)
 🟢           if (account == null) {
-🟢               runBlocking {
-🟢                   emailDataSource.sendEmail(
-🟢                       to = normalizedEmail,
-🟢                       subject = "3 Million Words password reset request",
-🟢                       textBody = "A password reset was requested for this email, but you do not have a 3 Million Words account.",
-⚪                   )
-⚪               }
+🟢               sendEmail(normalizedEmail, AccountEmails.passwordResetNoAccount(language))
 🟢               return HttpStatusCode.Accepted
 ⚪           }
 🟢           val code = verificationCodeProvider()
@@ -196,17 +171,11 @@
 🟢               code = code,
 🟢               expiresAt = now() + verificationCodeTtlMs,
 ⚪           )
-🟢           runBlocking {
-🟢               emailDataSource.sendEmail(
-🟢                   to = normalizedEmail,
-🟢                   subject = "Your 3 Million Words password reset code",
-🟢                   textBody = "Use this password reset code to reset your 3 Million Words password: $code",
-⚪               )
-⚪           }
+🟢           sendEmail(normalizedEmail, AccountEmails.passwordResetCode(language, code))
 🟢           return HttpStatusCode.Accepted
 ⚪       }
 ⚪   
-⚪       fun requestNewEmailVerificationCode(email: String): HttpStatusCode {
+🔴       fun requestNewEmailVerificationCode(email: String, language: EmailLanguage = EmailLanguage.ENGLISH): HttpStatusCode {
 🟢           val normalizedEmail = normalizeEmail(email)
 🟡           if (!isValidEmail(normalizedEmail)) return HttpStatusCode.Accepted
 🟢           val account = accountsDao.findAccountByEmail(normalizedEmail) ?: return HttpStatusCode.Accepted
@@ -217,17 +186,11 @@
 🟢               code = code,
 🟢               expiresAt = now() + verificationCodeTtlMs,
 ⚪           )
-🟢           runBlocking {
-🟢               emailDataSource.sendEmail(
-🟢                   to = normalizedEmail,
-🟢                   subject = "Verify your 3 Million Words email address",
-🟢                   textBody = "Use this verification code to verify your 3 Million Words email address: $code",
-⚪               )
-⚪           }
+🟢           sendEmail(normalizedEmail, AccountEmails.verifyEmailAddress(language, code))
 🟢           return HttpStatusCode.Accepted
 ⚪       }
 ⚪   
-⚪       fun requestNewEmailChangeCurrentCode(accountId: String): HttpStatusCode {
+🔴       fun requestNewEmailChangeCurrentCode(accountId: String, language: EmailLanguage = EmailLanguage.ENGLISH): HttpStatusCode {
 🟡           val account = accountsDao.findAccountById(accountId) ?: return HttpStatusCode.BadRequest
 🟢           val code = verificationCodeProvider()
 🟢           val updated = accountsDao.updateCurrentEmailChangeCode(
@@ -236,32 +199,18 @@
 🟢               expiresAt = now() + verificationCodeTtlMs,
 ⚪           )
 🟢           if (!updated) return HttpStatusCode.BadRequest
-🟢           runBlocking {
-🟢               emailDataSource.sendEmail(
-🟢                   to = account[AccountsTable.email],
-🟢                   subject = "Confirm your 3 Million Words email change",
-⚪                   textBody = "Use this verification code to confirm your 3 Million Words " +
-🟢                       "email change: $code. If this change is unexpected, login to your " +
-⚪                       "3 Million Words account and change your password immediately.",
-⚪               )
-⚪           }
+🟢           sendEmail(account[AccountsTable.email], AccountEmails.confirmEmailChange(language, code))
 🟢           return HttpStatusCode.Accepted
 ⚪       }
 ⚪   
-⚪       fun requestNewEmailChangeNewEmailCode(accountId: String): HttpStatusCode {
+🔴       fun requestNewEmailChangeNewEmailCode(accountId: String, language: EmailLanguage = EmailLanguage.ENGLISH): HttpStatusCode {
 🟢           val code = verificationCodeProvider()
 🟢           val pendingEmail = accountsDao.updateNewEmailChangeCode(
 🟢               accountId = accountId,
 🟢               code = code,
 🟢               expiresAt = now() + verificationCodeTtlMs,
 🟢           ) ?: return HttpStatusCode.BadRequest
-🟢           runBlocking {
-🟢               emailDataSource.sendEmail(
-🟢                   to = pendingEmail,
-🟢                   subject = "Verify your 3 Million Words email change",
-🟢                   textBody = "Use this verification code to verify your 3 Million Words email change: $code",
-⚪               )
-⚪           }
+🟢           sendEmail(pendingEmail, AccountEmails.verifyEmailChange(language, code))
 🟢           return HttpStatusCode.Accepted
 ⚪       }
 ⚪   
@@ -275,6 +224,10 @@
 🟢               now = now(),
 ⚪           )
 🟢           return if (updated) HttpStatusCode.NoContent else HttpStatusCode.BadRequest
+⚪       }
+⚪   
+🟢       private fun sendEmail(to: String, content: EmailContent) = runBlocking {
+🟢           emailDataSource.sendEmail(to = to, subject = content.subject, textBody = content.body)
 ⚪       }
 ⚪   
 🟢       private fun normalizeEmail(email: String): String = email.trim().lowercase()

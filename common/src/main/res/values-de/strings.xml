@@ -22,4 +22,6 @@
     <string name="top_bar_language_picker_translations_label">Übersetzungen</string>
     <string name="top_bar_language_picker_learning_label">Lernen</string>
     <string name="settings_button_description">Einstellungen</string>
+    <!-- BCP-47 language tag for this locale, reported to the backend. See values/strings.xml. -->
+    <string name="app_language_tag">de</string>
 </resources>

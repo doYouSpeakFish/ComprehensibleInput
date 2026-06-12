@@ -3,7 +3,10 @@
 ⚪   import input.comprehensible.backend.AccountService
 ⚪   import input.comprehensible.backend.AccountSessionPrincipal
 ⚪   import input.comprehensible.backend.SignInPayload
+⚪   import input.comprehensible.backend.email.EmailLanguage
+⚪   import io.ktor.http.HttpHeaders
 ⚪   import io.ktor.http.HttpStatusCode
+⚪   import io.ktor.server.application.ApplicationCall
 ⚪   import io.ktor.server.application.call
 ⚪   import io.ktor.server.auth.authenticate
 ⚪   import io.ktor.server.auth.principal
@@ -22,7 +25,7 @@
 ⚪   fun Route.accountRoutes(accountService: AccountService) {
 🟢       post("/v1/users") {
 🟢           val request = call.receive<CredentialsRequest>()
-🟢           call.respond(accountService.createAccount(request.email, request.password).status)
+🟢           call.respond(accountService.createAccount(request.email, request.password, call.emailLanguage()).status)
 ⚪       }
 🟢       post("/v1/auth/sessions") {
 🟢           val request = call.receive<CredentialsRequest>()
@@ -38,13 +41,13 @@
 🟢       rateLimit(RateLimitName("email-verification-code")) {
 🟢           post("/v1/email-verification-codes") {
 🟢               val request = call.receive<EmailVerificationCodeRequest>()
-🟢               call.respond(accountService.requestNewEmailVerificationCode(request.email))
+🟢               call.respond(accountService.requestNewEmailVerificationCode(request.email, call.emailLanguage()))
 ⚪           }
 ⚪       }
 🟢       rateLimit(RateLimitName("password-reset-request")) {
 🟢           post("/v1/password-reset-codes") {
 🟢               val request = call.receive<PasswordResetCodeRequest>()
-🟢               call.respond(accountService.requestPasswordReset(request.email))
+🟢               call.respond(accountService.requestPasswordReset(request.email, call.emailLanguage()))
 ⚪           }
 ⚪       }
 🟢       rateLimit(RateLimitName("password-reset-attempt")) {
@@ -68,19 +71,32 @@
 🟢           patch("/v1/me") {
 🟡               val principal = call.principal<AccountSessionPrincipal>() ?: return@patch call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<UpdateMeRequest>()
-🟢               call.respond(accountService.updateMe(accountId = principal.accountId, newEmail = request.email, password = request.password))
+🟢               call.respond(
+🟢                   accountService.updateMe(
+🟢                       accountId = principal.accountId,
+🟢                       newEmail = request.email,
+🟢                       password = request.password,
+🟢                       language = call.emailLanguage(),
+⚪                   ),
+⚪               )
 ⚪           }
 🟢           post("/v1/email-change-current-verifications") {
 🟡               val principal = call.principal<AccountSessionPrincipal>()
 🟡                   ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<EmailChangeCurrentVerificationRequest>()
-🟢               call.respond(accountService.verifyCurrentEmailChange(accountId = principal.accountId, code = request.code))
+🟢               call.respond(
+🟢                   accountService.verifyCurrentEmailChange(
+🟢                       accountId = principal.accountId,
+🟢                       code = request.code,
+🟢                       language = call.emailLanguage(),
+⚪                   ),
+⚪               )
 ⚪           }
 🟢           rateLimit(RateLimitName("email-change-current-verification-code")) {
 🟢               post("/v1/email-change-current-verification-codes") {
 🟡                   val principal = call.principal<AccountSessionPrincipal>()
 🟡                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
-🟢                   call.respond(accountService.requestNewEmailChangeCurrentCode(principal.accountId))
+🟢                   call.respond(accountService.requestNewEmailChangeCurrentCode(principal.accountId, call.emailLanguage()))
 ⚪               }
 ⚪           }
 🟢           post("/v1/email-change-verifications") {
@@ -93,7 +109,7 @@
 🟢               post("/v1/email-change-new-verification-codes") {
 🟡                   val principal = call.principal<AccountSessionPrincipal>()
 🟡                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
-🟢                   call.respond(accountService.requestNewEmailChangeNewEmailCode(principal.accountId))
+🟢                   call.respond(accountService.requestNewEmailChangeNewEmailCode(principal.accountId, call.emailLanguage()))
 ⚪               }
 ⚪           }
 🟢           delete("/v1/auth/sessions/current") {
@@ -102,6 +118,14 @@
 ⚪           }
 ⚪       }
 ⚪   }
+⚪   
+⚪   /**
+⚪    * The app's current UI language, taken from the request's `Accept-Language` header so account emails
+⚪    * can be localised to match what the user sees in the app. Defaults to English when the header is
+⚪    * absent or names a language the backend does not support.
+⚪    */
+⚪   private fun ApplicationCall.emailLanguage(): EmailLanguage =
+🟢       EmailLanguage.fromAcceptLanguageHeader(request.headers[HttpHeaders.AcceptLanguage])
 ⚪   
 🟡   @Serializable data class EmailVerificationCodeRequest(val email: String)
 🟡   @Serializable data class CredentialsRequest(val email: String, val password: String)
