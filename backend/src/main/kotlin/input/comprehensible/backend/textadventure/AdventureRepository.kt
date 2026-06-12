@@ -12,11 +12,13 @@ interface AdventureRepository {
 
     /**
      * The private narration context for an adventure: the AI-authored plan and the AI-authored notes
-     * recorded on its messages so far (oldest first). These are never exposed through the API; they are
-     * fed back to the model as context when it narrates the adventure. Returns null when the adventure
+     * recorded along the branch ending at [leafMessageId] (oldest first). Because adventures branch, only
+     * notes on that message's ancestor chain are returned, so notes from sibling branches or later turns
+     * cannot mislead the narrator about things that never happened on the active branch. These are never
+     * exposed through the API; they are fed back to the model as context. Returns null when the adventure
      * does not exist.
      */
-    fun getAdventureNarrationContext(adventureId: String): AdventureNarrationContext?
+    fun getAdventureNarrationContext(adventureId: String, leafMessageId: String?): AdventureNarrationContext?
 
     fun appendUserMessage(message: PersistedUserAdventureMessage): TextAdventureMessageRemoteResponse?
 

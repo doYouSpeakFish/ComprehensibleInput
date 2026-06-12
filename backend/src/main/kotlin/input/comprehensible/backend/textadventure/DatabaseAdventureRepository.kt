@@ -108,17 +108,39 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
-    override fun getAdventureNarrationContext(adventureId: String): AdventureNarrationContext? = transaction(database) {
+    override fun getAdventureNarrationContext(
+        adventureId: String,
+        leafMessageId: String?,
+    ): AdventureNarrationContext? = transaction(database) {
         val adventureRow = findAdventureRow(adventureId) ?: return@transaction null
-        val notes = AdventureMessagesTable
+        val messageRows = AdventureMessagesTable
             .selectAll()
             .where { AdventureMessagesTable.adventureId eq adventureId }
-            .orderBy(AdventureMessagesTable.createdAt, SortOrder.ASC)
-            .mapNotNull { row -> row[AdventureMessagesTable.note]?.takeIf { it.isNotBlank() } }
+            .toList()
         AdventureNarrationContext(
             plan = adventureRow[AdventuresTable.plan],
-            notes = notes,
+            notes = notesOnAncestorChain(messageRows, leafMessageId),
         )
+    }
+
+    /**
+     * Walks the parent links from [leafMessageId] up to the root and returns the notes recorded on that
+     * chain, oldest (root) first. Along a single chain a parent is always stored before its child, so the
+     * root-to-leaf order is also chronological. Notes on sibling branches are excluded so they cannot
+     * mislead the narrator about things that never happened on the active branch.
+     */
+    private fun notesOnAncestorChain(messageRows: List<ResultRow>, leafMessageId: String?): List<String> {
+        if (leafMessageId == null) return emptyList()
+        val parentById = messageRows.associate {
+            it[AdventureMessagesTable.id] to it[AdventureMessagesTable.parentMessageId]
+        }
+        val noteById = messageRows.associate {
+            it[AdventureMessagesTable.id] to it[AdventureMessagesTable.note]
+        }
+        return generateSequence(leafMessageId) { parentById[it] }
+            .toList()
+            .asReversed()
+            .mapNotNull { messageId -> noteById[messageId]?.takeIf { it.isNotBlank() } }
     }
 
     override fun appendUserMessage(message: PersistedUserAdventureMessage): TextAdventureMessageRemoteResponse? =

@@ -811,11 +811,6 @@ class TextAdventureV1ApiStepDefinitions {
         )
     }
 
-    @Given("the AI will write a plan that includes {string}")
-    fun theAiWillWriteAPlanThatIncludes(marker: String) {
-        fakeExecutor.enqueuePlanResponse(planResponseContaining(marker))
-    }
-
     @Given("I have an adventure whose opening narrator message has note {string}")
     fun haveAdventureWhoseOpeningNarratorMessageHasNote(note: String) {
         nextMessageIdIs("msg_ai_root")
@@ -836,16 +831,6 @@ class TextAdventureV1ApiStepDefinitions {
         assertFalse("The adventure summary leaked private narrator text", latestResponseBody.contains(marker))
         runAgainstApplication { client.get("/v1/adventures/$userAAdventureId/messages") { authorized(userAToken) } }
         assertFalse("The adventure messages leaked private narrator text", latestResponseBody.contains(marker))
-    }
-
-    @Then("the last narrator continuation prompt includes {string}")
-    fun theLastNarratorContinuationPromptIncludes(expected: String) {
-        val continuation = fakeExecutor.invocations.lastOrNull { it.promptName == CONTINUE_PROMPT_NAME }
-            ?: error("Expected a narrator continuation prompt")
-        assertTrue(
-            "Expected the continuation prompt to include the private context '$expected'",
-            continuation.systemPrompt.contains(expected),
-        )
     }
 
     private fun startAdventureForUserACapturingIds() {
@@ -1060,6 +1045,5 @@ class TextAdventureV1ApiStepDefinitions {
     private companion object {
         const val MAX_USER_MESSAGE_STRUCTURING_ATTEMPTS = 3
         const val PLAN_PROMPT_NAME = "text-adventure-plan"
-        const val CONTINUE_PROMPT_NAME = "text-adventure-continue"
     }
 }

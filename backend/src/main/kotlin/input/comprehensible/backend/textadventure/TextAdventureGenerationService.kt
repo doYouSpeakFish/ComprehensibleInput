@@ -172,7 +172,7 @@ class TextAdventureGenerationService(
         messageId: String = messageIdProvider(),
         parentMessageId: String? = null,
     ): TextAdventureRemoteResponse {
-        val context = adventureRepository.getAdventureNarrationContext(adventureId)
+        val context = adventureRepository.getAdventureNarrationContext(adventureId, leafMessageId = parentMessageId)
         val response = requestAdventureResponse(
             adventureId = adventureId,
             promptName = "text-adventure-continue",
