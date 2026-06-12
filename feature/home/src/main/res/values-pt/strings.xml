@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">3 Million Words</string>
+    <string name="home_intro_eyebrow">SEU IDIOMA, EM CONTEXTO</string>
+    <string name="home_intro_title">Escolha o que acontece a seguir.</string>
+    <string name="home_intro_description">Leia e explore no seu ritmo.</string>
+    <string name="home_stories_eyebrow">LER</string>
+    <string name="home_stories">Histórias</string>
+    <string name="home_stories_description">Familiarize-se com o idioma por meio de histórias marcantes.</string>
+    <string name="home_text_adventures_eyebrow">JOGAR E EXPLORAR</string>
+    <string name="home_text_adventures">Aventuras de texto</string>
+    <string name="home_text_adventures_description">Faça escolhas e descubra aonde o idioma leva você.</string>
+    <string name="home_settings_content_description">Configurações</string>
+</resources>

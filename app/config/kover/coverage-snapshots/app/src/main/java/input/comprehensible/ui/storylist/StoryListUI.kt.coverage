@@ -1,0 +1,287 @@
+⚪   package input.comprehensible.ui.storylist
+⚪   
+⚪   import androidx.compose.foundation.Image
+⚪   import androidx.compose.foundation.border
+⚪   import androidx.compose.foundation.layout.Arrangement
+⚪   import androidx.compose.foundation.layout.Box
+⚪   import androidx.compose.foundation.layout.Column
+⚪   import androidx.compose.foundation.layout.PaddingValues
+⚪   import androidx.compose.foundation.layout.aspectRatio
+⚪   import androidx.compose.foundation.layout.fillMaxSize
+⚪   import androidx.compose.foundation.layout.padding
+⚪   import androidx.compose.foundation.lazy.grid.GridCells
+⚪   import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+⚪   import androidx.compose.foundation.lazy.grid.items
+⚪   import androidx.compose.foundation.shape.CircleShape
+⚪   import androidx.compose.material3.Card
+⚪   import androidx.compose.material3.CardDefaults
+⚪   import androidx.compose.material3.MaterialTheme
+⚪   import androidx.compose.material3.Scaffold
+⚪   import androidx.compose.material3.Text
+⚪   import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.getValue
+⚪   import androidx.compose.runtime.remember
+⚪   import androidx.compose.ui.Alignment
+⚪   import androidx.compose.ui.Modifier
+⚪   import androidx.compose.ui.draw.clip
+⚪   import androidx.compose.ui.graphics.Color
+⚪   import androidx.compose.ui.graphics.ImageBitmap
+⚪   import androidx.compose.ui.graphics.asAndroidBitmap
+⚪   import androidx.compose.ui.graphics.asImageBitmap
+⚪   import androidx.compose.ui.layout.ContentScale
+⚪   import androidx.compose.ui.platform.testTag
+⚪   import androidx.compose.ui.res.imageResource
+⚪   import androidx.compose.ui.text.style.TextAlign
+⚪   import androidx.compose.ui.text.style.TextOverflow
+⚪   import androidx.compose.ui.unit.dp
+⚪   import androidx.lifecycle.compose.collectAsStateWithLifecycle
+⚪   import androidx.lifecycle.viewmodel.compose.viewModel
+⚪   import androidx.window.core.layout.WindowSizeClass
+⚪   import input.comprehensible.R
+⚪   import input.comprehensible.extensions.isCompact
+⚪   import input.comprehensible.ui.components.LanguageSelection
+⚪   import input.comprehensible.ui.components.topbar.TopBar
+⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
+⚪   import input.comprehensible.ui.theme.backgroundDark
+⚪   import input.comprehensible.util.DefaultPreview
+⚪   
+⚪   @Composable
+🟢   internal fun StoryListScreen(
+🟢       modifier: Modifier = Modifier,
+⚪       onStorySelected: (id: String) -> Unit,
+⚪       onNavigateUp: () -> Unit,
+⚪       onSettingsClick: () -> Unit,
+🟢       viewModel: StoryListViewModel = viewModel(),
+🟡   ) {
+🟢       val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
+🟢       StoryListScreen(
+🟢           modifier = modifier,
+🟢           onStorySelected = { onStorySelected(it.id) },
+🟢           onNavigateUp = onNavigateUp,
+🟢           onSettingsClick = onSettingsClick,
+🟢           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
+🟢           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+🟢           state = state,
+⚪       )
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun StoryListScreen(
+🟢       modifier: Modifier = Modifier,
+⚪       onStorySelected: (StoryListUiState.StoryListItem.Story) -> Unit,
+⚪       onNavigateUp: () -> Unit,
+⚪       onSettingsClick: () -> Unit,
+⚪       onLearningLanguageSelected: (LanguageSelection) -> Unit,
+⚪       onTranslationLanguageSelected: (LanguageSelection) -> Unit,
+⚪       state: StoryListUiState,
+🟡   ) {
+🟢       val itemsWithIndex = remember(state.items) { state.items.withIndex().toList() }
+🟢       StoryListScaffold(
+🟢           modifier = modifier,
+🟢           onNavigateUp = onNavigateUp,
+🟢           onSettingsClick = onSettingsClick,
+🟢           learningLanguage = state.learningLanguage,
+🟢           translationLanguage = state.translationLanguage,
+🟢           languagesAvailable = state.languagesAvailable,
+🟢           onLearningLanguageSelected = onLearningLanguageSelected,
+🟢           onTranslationLanguageSelected = onTranslationLanguageSelected,
+🟢       ) { paddingValues, columns ->
+🟢           LazyVerticalGrid(
+🟢               modifier = Modifier.padding(paddingValues),
+🟢               columns = GridCells.Fixed(columns),
+🟢               contentPadding = PaddingValues(16.dp),
+🟢               verticalArrangement = Arrangement.spacedBy((-120).dp),
+🟢               horizontalArrangement = Arrangement.spacedBy(32.dp),
+🟢           ) {
+🟢               items(
+🟢                   items = itemsWithIndex,
+⚪                   key = {
+🟢                       when (val item = it.value) {
+🟢                           is StoryListUiState.StoryListItem.Story -> "story-${item.id}"
+⚪                       }
+⚪                   }
+⚪               ) {
+🟢                   val column = it.index % columns
+🟢                   val shouldAddTopPadding = column % 2 == 0
+🟢                   val shouldAddBottomPadding =
+🟢                       (column % 2 == 0) && it.index != itemsWithIndex.lastIndex
+🟢                   val itemModifier = Modifier.padding(
+🟢                       top = if (shouldAddTopPadding) 0.dp else 140.dp,
+🟢                       bottom = if (shouldAddBottomPadding) 140.dp else 0.dp,
+⚪                   )
+🟢                   when (val item = it.value) {
+🟡                       is StoryListUiState.StoryListItem.Story -> StoryListItem(
+🟢                           modifier = itemModifier,
+🟢                           onClick = { onStorySelected(item) },
+🟢                           story = item,
+⚪                       )
+🟢                   }
+🟢               }
+⚪           }
+⚪       }
+🟢   }
+⚪   
+⚪   @Composable
+🟢   private fun StoryListScaffold(
+🟢       modifier: Modifier = Modifier,
+⚪       onNavigateUp: () -> Unit,
+⚪       onSettingsClick: () -> Unit,
+🟢       windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
+⚪       learningLanguage: LanguageSelection?,
+⚪       translationLanguage: LanguageSelection?,
+⚪       languagesAvailable: List<LanguageSelection>,
+⚪       onLearningLanguageSelected: (LanguageSelection) -> Unit,
+⚪       onTranslationLanguageSelected: (LanguageSelection) -> Unit,
+⚪       content: @Composable (paddingValues: PaddingValues, columns: Int) -> Unit
+🟡   ) {
+🟢       val columns = if (windowSizeClass.isCompact) 2 else 4
+🟢       Scaffold(
+🟢           modifier = modifier,
+🟢           topBar = {
+🟢               TopBar(
+🟢                   modifier = Modifier,
+🟢                   leaningLanguage = learningLanguage,
+🟢                   translationLanguage = translationLanguage,
+🟢                   languageOptions = languagesAvailable,
+🟢                   onLanguageSelected = onLearningLanguageSelected,
+🟢                   onTranslationLanguageSelected = onTranslationLanguageSelected,
+🟢                   onNavigateUp = onNavigateUp,
+🟢                   onSettingsClick = onSettingsClick,
+⚪               )
+⚪           },
+🟢       ) { paddingValues ->
+🟢           Box(
+🟢               modifier = Modifier.fillMaxSize(),
+⚪               content = {
+🟢                   content(paddingValues, columns)
+🟢               }
+⚪           )
+⚪       }
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun StoryListItem(
+🟢       modifier: Modifier = Modifier,
+⚪       onClick: () -> Unit,
+⚪       story: StoryListUiState.StoryListItem.Story,
+🟡   ) {
+🟢       Card(
+🟢           modifier = modifier,
+🟢           onClick = onClick,
+🟢           colors = CardDefaults.cardColors(
+🟢               containerColor = Color.Transparent,
+⚪           )
+🟢       ) {
+🟢           Column(
+🟢               verticalArrangement = Arrangement.spacedBy(4.dp),
+🟢               horizontalAlignment = Alignment.CenterHorizontally,
+⚪           ) {
+🟢               FeatureImage(
+🟢                   modifier = Modifier.testTag("story-image-${story.id}"),
+🟢                   image = story.featuredImage.asImageBitmap(),
+⚪               )
+🟢               StoryTitle(title = story.title, subtitle = story.subtitle)
+🟢           }
+⚪       }
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun FeatureImage(
+🟢       modifier: Modifier = Modifier,
+⚪       image: ImageBitmap,
+🟢       contentDescription: String? = null,
+🟡   ) {
+🟢       Box(modifier, propagateMinConstraints = true) {
+🟢           Image(
+🟢               modifier = Modifier
+🟢                   .aspectRatio(1f)
+🟢                   .border(1.dp, color = backgroundDark, shape = CircleShape)
+🟢                   .clip(CircleShape),
+🟢               bitmap = image,
+🟢               contentDescription = contentDescription,
+🟢               contentScale = ContentScale.Crop,
+⚪           )
+🟢       }
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun StoryTitle(
+🟢       modifier: Modifier = Modifier,
+⚪       title: String,
+⚪       subtitle: String,
+🟢   ) {
+⚪       @Composable
+⚪       fun Title(
+⚪           title: String,
+⚪           subtitle: String,
+🟢       ) {
+🟢           Column(
+🟢               verticalArrangement = Arrangement.spacedBy(4.dp),
+🟢               horizontalAlignment = Alignment.CenterHorizontally,
+⚪           ) {
+🟢               Text(
+🟢                   text = title,
+🟢                   style = MaterialTheme.typography.titleMedium,
+🟢                   textAlign = TextAlign.Center,
+🟢                   maxLines = 2,
+🟢                   overflow = TextOverflow.Ellipsis,
+⚪               )
+🟢               Text(
+🟢                   text = subtitle,
+🟢                   style = MaterialTheme.typography.labelMedium,
+🟢                   color = MaterialTheme.colorScheme.onSurfaceVariant,
+🟢                   textAlign = TextAlign.Center,
+🟢                   maxLines = 2,
+🟢                   overflow = TextOverflow.Ellipsis,
+⚪               )
+🟢           }
+⚪       }
+🟢       Box(modifier = modifier) {
+⚪           // Add empty title with max line height to force every title to have the same height
+🟢           Title(title = "\n", subtitle = "\n")
+🟢           Title(title = title, subtitle = subtitle)
+🟢       }
+🟢   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+⚪   fun StoryListScreenPreview() {
+⚪       // Real story titles paired with their featured images (copied into res/drawable) so the
+⚪       // preview resembles the actual story list. The images are copied rather than read from the
+⚪       // assets/ story content because preview rendering cannot reliably load images from assets.
+⚪       val previewStories = listOf(
+⚪           Triple("Geheimes Heilbad", "Secret Healing Bath", R.drawable.preview_story_healing_bath),
+⚪           Triple("Kein Halt am Mars", "No Stop at Mars", R.drawable.preview_story_mars),
+⚪           Triple("Der leere Karneval", "The Empty Carnival", R.drawable.preview_story_carnival),
+⚪           Triple("Die winzigen Wikinger von Berlin", "The Tiny Vikings of Berlin", R.drawable.preview_story_vikings),
+⚪           Triple("Tag der Magie", "Day of Magic", R.drawable.preview_story_magic),
+⚪           Triple("Alter Baum", "Old Tree", R.drawable.preview_story_old_tree),
+⚪           Triple("Geisterflüstern und Herzschläge", "Ghost Whispers and Heartbeats", R.drawable.preview_story_ghosts),
+⚪           Triple("Der Laptop", "The Laptop", R.drawable.preview_story_laptop),
+⚪           Triple("Das Abenteuer des gesprenkelten Bandes", "The Adventure of the Speckled Band", R.drawable.preview_story_speckled_band),
+⚪           Triple("Der Uhrwerk-Leuchtturm", "The Clockwork Lighthouse", R.drawable.preview_story_lighthouse),
+⚪       )
+⚪       ComprehensibleInputTheme {
+🟢           StoryListScreen(
+🟢               onStorySelected = {},
+🟢               onNavigateUp = {},
+🟢               onSettingsClick = {},
+🟢               onLearningLanguageSelected = {},
+🟢               onTranslationLanguageSelected = {},
+🟢               state = StoryListUiState(
+🟢                   items = previewStories.mapIndexed { index, (germanTitle, englishTitle, image) ->
+🟢                       StoryListUiState.StoryListItem.Story(
+🟢                           id = (index + 1).toString(),
+🟢                           title = germanTitle,
+🟢                           subtitle = englishTitle,
+🟢                           featuredImage = ImageBitmap.imageResource(image).asAndroidBitmap(),
+🟢                       )
+🟢                   },
+🟢                   learningLanguage = LanguageSelection.GERMAN,
+🟢                   translationLanguage = LanguageSelection.ENGLISH,
+🟢                   languagesAvailable = LanguageSelection.entries,
+⚪               ),
+⚪           )
+⚪       }
+⚪   }

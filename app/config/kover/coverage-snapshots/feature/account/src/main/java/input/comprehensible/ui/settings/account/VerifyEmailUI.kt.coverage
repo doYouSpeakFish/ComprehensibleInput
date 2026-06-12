@@ -1,0 +1,191 @@
+⚪   package input.comprehensible.ui.settings.account
+⚪   
+⚪   import androidx.compose.foundation.layout.Arrangement
+⚪   import androidx.compose.foundation.layout.Column
+⚪   import androidx.compose.foundation.layout.fillMaxSize
+⚪   import androidx.compose.foundation.layout.fillMaxWidth
+⚪   import androidx.compose.foundation.layout.padding
+⚪   import androidx.compose.foundation.text.KeyboardOptions
+⚪   import androidx.compose.material3.MaterialTheme
+⚪   import androidx.compose.material3.OutlinedTextField
+⚪   import androidx.compose.material3.Scaffold
+⚪   import androidx.compose.material3.Text
+⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.LaunchedEffect
+⚪   import androidx.compose.runtime.getValue
+⚪   import androidx.compose.ui.Modifier
+⚪   import androidx.compose.ui.platform.testTag
+⚪   import androidx.compose.ui.res.stringResource
+⚪   import androidx.compose.ui.text.input.KeyboardType
+⚪   import androidx.compose.ui.unit.dp
+⚪   import androidx.lifecycle.compose.collectAsStateWithLifecycle
+⚪   import androidx.lifecycle.viewmodel.compose.viewModel
+⚪   import input.comprehensible.feature.account.R
+⚪   import input.comprehensible.ui.components.button.LoadingButton
+⚪   import input.comprehensible.ui.components.error.GenericErrorDialog
+⚪   import input.comprehensible.ui.components.topbar.SettingsTopBar
+⚪   import input.comprehensible.ui.theme.ComprehensibleInputTheme
+⚪   import input.comprehensible.util.DefaultPreview
+⚪   
+⚪   @Composable
+🟢   internal fun VerifyEmailScreen(
+⚪       email: String,
+⚪       onNavigateUp: () -> Unit,
+⚪       onVerified: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟢       viewModel: VerifyEmailViewModel = viewModel { VerifyEmailViewModel(email) },
+🟡   ) {
+🟢       val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+⚪   
+🟢       LaunchedEffect(uiState.verified) {
+🟢           if (uiState.verified) {
+🟢               viewModel.onNavigationConsumed()
+🟢               onVerified()
+⚪           }
+⚪       }
+⚪   
+🟢       VerifyEmailScreen(
+🟢           uiState = uiState,
+🟢           onNavigateUp = onNavigateUp,
+🟢           onCodeChanged = viewModel::onCodeChanged,
+🟢           onSubmit = viewModel::onSubmit,
+🟢           onResendCode = viewModel::onResendCode,
+🟢           onErrorDismissed = viewModel::onErrorDismissed,
+🟢           modifier = modifier,
+⚪       )
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun VerifyEmailScreen(
+⚪       uiState: VerifyEmailUiState,
+⚪       onNavigateUp: () -> Unit,
+⚪       onCodeChanged: (String) -> Unit,
+⚪       onSubmit: () -> Unit,
+⚪       onResendCode: () -> Unit,
+⚪       onErrorDismissed: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟡   ) {
+🟢       Scaffold(
+🟢           modifier = modifier,
+🟢           topBar = {
+🟢               SettingsTopBar(
+🟢                   title = stringResource(R.string.account_screen_title),
+🟢                   onNavigateUp = onNavigateUp,
+⚪               )
+⚪           },
+🟢       ) { paddingValues ->
+🟢           Column(
+🟢               modifier = Modifier
+🟢                   .fillMaxWidth()
+🟢                   .padding(paddingValues)
+🟢                   .padding(horizontal = 24.dp, vertical = 16.dp),
+🟢               verticalArrangement = Arrangement.spacedBy(16.dp),
+⚪           ) {
+🟢               Text(
+🟢                   text = stringResource(R.string.account_verify_email_message, uiState.email),
+🟢                   style = MaterialTheme.typography.bodyLarge,
+⚪               )
+🟢               OutlinedTextField(
+🟢                   value = uiState.code,
+🟢                   onValueChange = onCodeChanged,
+⚪                   label = { Text(stringResource(R.string.account_verify_email_code_label)) },
+🟢                   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+🟢                   singleLine = true,
+🟢                   modifier = Modifier
+🟢                       .fillMaxWidth()
+🟢                       .testTag("account_verify_email_code_field"),
+⚪               )
+🟢               LoadingButton(
+🟢                   text = stringResource(R.string.account_verify_email_submit_button),
+🟢                   loading = uiState.isLoading,
+🟢                   onClick = onSubmit,
+🟢                   enabled = !uiState.isLoading && !uiState.isResendingCode &&
+🟢                       uiState.code.length == VERIFICATION_CODE_LENGTH,
+🟢                   modifier = Modifier
+🟢                       .fillMaxWidth()
+🟢                       .testTag("account_verify_email_submit_button"),
+🟢                   loadingIndicatorTestTag = "account_verify_email_loading_indicator",
+⚪               )
+🟢               ResendCodeButton(
+🟢                   cooldownSeconds = uiState.resendCooldownSeconds,
+🟢                   isResending = uiState.isResendingCode,
+🟢                   enabled = !uiState.isLoading && !uiState.isResendingCode &&
+🟢                       uiState.resendCooldownSeconds == 0,
+🟢                   onClick = onResendCode,
+🟢                   resendTextRes = R.string.account_verify_email_resend_button,
+🟢                   countdownTextRes = R.string.account_verify_email_resend_button_countdown,
+🟢                   buttonTestTag = "account_verify_email_resend_button",
+🟢                   loadingIndicatorTestTag = "account_verify_email_resend_loading_indicator",
+🟢                   modifier = Modifier.fillMaxWidth(),
+⚪               )
+🟢               if (uiState.codeResent) {
+🟢                   Text(
+🟢                       text = stringResource(R.string.account_verify_email_code_resent_message),
+🟢                       style = MaterialTheme.typography.bodyMedium,
+🟢                       color = MaterialTheme.colorScheme.primary,
+🟢                       modifier = Modifier.testTag("account_verify_email_code_resent_message"),
+⚪                   )
+🟢               }
+🟢           }
+⚪       }
+⚪   
+🟢       if (uiState.showError) {
+🟢           GenericErrorDialog(onDismissRequest = onErrorDismissed)
+🟢       }
+🟢   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+⚪   fun PreviewVerifyEmail() {
+⚪       ComprehensibleInputTheme {
+⚪           VerifyEmailScreen(
+⚪               uiState = VerifyEmailUiState(email = "user@example.com"),
+⚪               onNavigateUp = {},
+⚪               onCodeChanged = {},
+⚪               onSubmit = {},
+⚪               onResendCode = {},
+⚪               onErrorDismissed = {},
+⚪               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+⚪   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+⚪   fun PreviewVerifyEmailLoading() {
+⚪       ComprehensibleInputTheme {
+⚪           VerifyEmailScreen(
+⚪               uiState = VerifyEmailUiState(
+⚪                   email = "user@example.com",
+⚪                   code = "123456",
+⚪                   isLoading = true,
+⚪               ),
+⚪               onNavigateUp = {},
+⚪               onCodeChanged = {},
+⚪               onSubmit = {},
+⚪               onResendCode = {},
+⚪               onErrorDismissed = {},
+⚪               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+⚪   }
+⚪   
+⚪   @DefaultPreview
+⚪   @Composable
+⚪   fun PreviewVerifyEmailCodeResent() {
+⚪       ComprehensibleInputTheme {
+⚪           VerifyEmailScreen(
+⚪               uiState = VerifyEmailUiState(
+⚪                   email = "user@example.com",
+⚪                   codeResent = true,
+⚪                   resendCooldownSeconds = 30,
+⚪               ),
+⚪               onNavigateUp = {},
+⚪               onCodeChanged = {},
+⚪               onSubmit = {},
+⚪               onResendCode = {},
+⚪               onErrorDismissed = {},
+⚪               modifier = Modifier.fillMaxSize(),
+⚪           )
+⚪       }
+⚪   }

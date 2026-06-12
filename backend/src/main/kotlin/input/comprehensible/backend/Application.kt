@@ -1,10 +1,12 @@
 package input.comprehensible.backend
 
+import input.comprehensible.backend.common.requireSecretValue
+import input.comprehensible.backend.textadventure.ADVENTURE_IMAGES_PATH
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.DefaultTextAdventureStructuredPromptExecutor
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
-import input.comprehensible.data.textadventures.sources.remote.ContinueTextAdventureRequest
-import input.comprehensible.data.textadventures.sources.remote.StartTextAdventureRequest
+import input.comprehensible.backend.textadventure.textAdventureV1Routes
+import input.comprehensible.backend.account.accountRoutes
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -12,24 +14,31 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.apikey.apiKey
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.principal
+import io.ktor.server.auth.bearer
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.doublereceive.DoubleReceive
 import io.ktor.server.plugins.ratelimit.RateLimit
-import io.ktor.server.request.receive
+import io.ktor.server.plugins.ratelimit.RateLimitName
+import io.ktor.server.plugins.ratelimit.rateLimit
+import io.ktor.server.request.receiveText
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
-import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
-import java.io.File
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+
 
 data class AppPrincipal(val key: String)
+data class AccountSessionPrincipal(val token: String, val accountId: String, val account: AccountPayload)
 
 data class DatabaseConnectionConfig(
     val databaseUrl: String,
@@ -86,6 +95,7 @@ fun main() {
                     ),
                 ),
                 appApiKey = apiKey,
+                accountService = AccountService(database),
             )
         },
     ).start(wait = true)
@@ -118,106 +128,116 @@ private fun migrateDatabase(config: DatabaseConnectionConfig) {
         .migrate()
 }
 
-private fun requireSecretValue(envVarName: String): String {
-    val directValue = System.getenv(envVarName)?.takeIf { it.isNotBlank() }
-    if (directValue != null) {
-        return directValue
-    }
 
-    val fileEnvVarName = "${envVarName}_FILE"
-    val secretFilePath = System.getenv(fileEnvVarName)?.takeIf { it.isNotBlank() }
-    if (secretFilePath != null) {
-        val secretValue = File(secretFilePath).readText().trim()
-        require(secretValue.isNotEmpty()) {
-            "Environment variable $fileEnvVarName points to an empty file: $secretFilePath"
+private fun Application.configureRateLimits(globalRateLimit: Int) {
+    install(RateLimit) {
+        global {
+            // A general flood / brute-force baseline applied to every route, keyed per client IP so a
+            // single source cannot use up everyone else's allowance. The text adventure feature now
+            // carries its own (low, AI-cost-driven) limit, so this catch-all only needs to stop
+            // egregious abuse and can therefore be far more generous.
+            rateLimiter(limit = globalRateLimit, refillPeriod = 10.minutes)
+            requestKey { call -> call.request.local.remoteHost }
         }
-        return secretValue
+        register(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
+            rateLimiter(limit = TEXT_ADVENTURE_RATE_LIMIT, refillPeriod = 10.minutes)
+            // A constant key applies the limit to the text adventure feature as a whole, shared
+            // across all users, rather than giving each user (or IP) their own separate allowance.
+            requestKey { TEXT_ADVENTURE_RATE_LIMIT_KEY }
+        }
+        register(RateLimitName("email-verification")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> emailFromQueryParamOrIp(call) }
+        }
+        register(RateLimitName("password-reset-request")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> emailFromQueryParamOrIp(call) }
+        }
+        register(RateLimitName("password-reset-attempt")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> emailFromQueryParamOrIp(call) }
+        }
+        register(RateLimitName("email-verification-code")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> emailFromBodyOrIp(call) }
+        }
+        register(RateLimitName("email-change-current-verification-code")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> tokenOrIp(call) }
+        }
+        register(RateLimitName("email-change-new-verification-code")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> tokenOrIp(call) }
+        }
+        register(RateLimitName("account-deletion")) {
+            rateLimiter(limit = 1, refillPeriod = 30.seconds)
+            requestKey { call -> emailFromBodyOrIp(call) }
+        }
     }
-
-    error(
-        "Missing required environment variable $envVarName. " +
-            "Set $envVarName directly or set ${envVarName}_FILE to a file containing the value."
-    )
 }
+
+private fun emailFromQueryParamOrIp(call: io.ktor.server.application.ApplicationCall): String =
+    call.request.queryParameters["email"]
+        ?: call.request.local.remoteHost
+
+private suspend fun emailFromBodyOrIp(call: io.ktor.server.application.ApplicationCall): String =
+    runCatching {
+        Json.parseToJsonElement(call.receiveText()).jsonObject["email"]?.jsonPrimitive?.content
+    }.getOrNull() ?: call.request.local.remoteHost
+
+private fun tokenOrIp(call: io.ktor.server.application.ApplicationCall): String =
+    call.request.headers["Authorization"]
+        ?: call.request.local.remoteHost
 
 fun Application.configureRouting(
     textAdventureService: TextAdventureGenerationService,
     appApiKey: String,
+    accountService: AccountService,
+    globalRateLimit: Int = GLOBAL_RATE_LIMIT,
 ) {
-    install(ContentNegotiation) {
-        json()
-    }
-    install(RateLimit) {
-        global {
-            rateLimiter(limit = 20, refillPeriod = 10.minutes)
-        }
-    }
+    install(ContentNegotiation) { json() }
+    install(DoubleReceive)
+    configureRateLimits(globalRateLimit)
     install(Authentication) {
         apiKey {
-            validate { keyFromHeader ->
-                keyFromHeader
-                    .takeIf { it == appApiKey }
-                    ?.let { AppPrincipal(it) }
-            }
-            challenge { call ->
-                call.respond(
-                    HttpStatusCode.Unauthorized,
-                    "Invalid or missing API key"
-                )
+            validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
+            challenge { call -> call.respond(HttpStatusCode.Unauthorized, "Invalid or missing API key") }
+        }
+        bearer("account-bearer") {
+            authenticate { credential ->
+                accountService.findAccountBySessionToken(credential.token)
             }
         }
     }
     routing {
-        get("/health") {
-            call.respondText(
-                text = "ok",
-                contentType = ContentType.Text.Plain,
-                status = HttpStatusCode.OK,
-            )
-        }
-
-        authenticate {
-            post("/text-adventures/start") {
-                requireNotNull(call.principal<AppPrincipal>()) { "Unauthenticated" }
-                val request = call.receive<StartTextAdventureRequest>()
-                call.respond(
-                    textAdventureService.startAdventure(
-                        learningLanguage = request.learningLanguage,
-                        translationsLanguage = request.translationsLanguage,
-                    )
-                )
-            }
-
-            post("/text-adventures/respond") {
-                requireNotNull(call.principal<AppPrincipal>()) { "Unauthenticated" }
-                val request = call.receive<ContinueTextAdventureRequest>()
-                call.respond(
-                    textAdventureService.respondToUser(
-                        adventureId = request.adventureId,
-                        learningLanguage = request.learningLanguage,
-                        translationsLanguage = request.translationsLanguage,
-                        userMessage = request.userMessage,
-                        history = request.history,
-                    )
-                )
-            }
-
-            get("/text-adventures/{adventureId}/messages") {
-                requireNotNull(call.principal<AppPrincipal>()) { "Unauthenticated" }
-                val adventureId = requireNotNull(call.parameters["adventureId"]) {
-                    "Missing adventureId path parameter"
-                }
-                val response = textAdventureService.getAdventureMessages(adventureId)
-                if (response == null) {
-                    call.respond(HttpStatusCode.NotFound)
-                } else {
-                    call.respond(response)
-                }
-            }
+        get("/health") { call.respondText("ok", ContentType.Text.Plain, HttpStatusCode.OK) }
+        // Adventure cover images are public, cacheable static assets served straight from the
+        // bundled resources (loaded by the app with Coil). They carry no user data, so they sit
+        // outside authentication and the text adventure rate limit.
+        staticResources("/$ADVENTURE_IMAGES_PATH", ADVENTURE_IMAGES_PATH)
+        accountRoutes(accountService)
+        rateLimit(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
+            textAdventureV1Routes(textAdventureService)
         }
     }
 }
 
+/**
+ * The text adventure feature is rate limited during early access. The limit is named (rather than
+ * global) so it only applies to the text adventure routes, and it uses a constant request key so the
+ * allowance is shared across all users instead of being tracked per user.
+ */
+internal const val TEXT_ADVENTURE_RATE_LIMIT_NAME = "text-adventure"
+internal const val TEXT_ADVENTURE_RATE_LIMIT = 20
+private const val TEXT_ADVENTURE_RATE_LIMIT_KEY = "text-adventure"
+
+/**
+ * General baseline rate limit applied to every route, per client IP, over 10 minutes (flood /
+ * brute-force protection). It is far more generous than the text adventure limit: that one is kept
+ * low only to cap AI usage costs, whereas this catch-all just needs to stop egregious abuse from a
+ * single source. 1000 requests per IP per 10 minutes is already well above normal use.
+ */
+internal const val GLOBAL_RATE_LIMIT = 1_000
 
 private const val AI_API_KEY_ENV_VAR = "KOOG_API_KEY"
 private const val APP_API_KEY_ENV_VAR = "APP_API_KEY"

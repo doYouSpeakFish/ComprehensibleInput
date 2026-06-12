@@ -22,14 +22,6 @@ data class StoryListUiState(
             val subtitle: String,
             val featuredImage: Bitmap,
         ) : StoryListItem
-
-        data class TextAdventure(
-            val id: String,
-            val title: String,
-            val isComplete: Boolean,
-        ) : StoryListItem
-
-        data object StartTextAdventure : StoryListItem
     }
 
     companion object {

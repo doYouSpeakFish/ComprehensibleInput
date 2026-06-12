@@ -1,0 +1,308 @@
+package input.comprehensible.ui.settings.account
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.shape.RoundedCornerShape
+import input.comprehensible.feature.account.R
+import input.comprehensible.ui.components.button.LoadingButton
+import input.comprehensible.ui.components.error.GenericErrorDialog
+import input.comprehensible.ui.components.topbar.SettingsTopBar
+import input.comprehensible.ui.theme.ComprehensibleInputTheme
+import input.comprehensible.util.DefaultPreview
+
+@Composable
+internal fun PasswordResetScreen(
+    email: String,
+    onNavigateUp: () -> Unit,
+    onPasswordReset: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: PasswordResetViewModel = viewModel { PasswordResetViewModel(email) },
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.passwordReset) {
+        if (uiState.passwordReset) {
+            viewModel.onNavigationConsumed()
+            onPasswordReset()
+        }
+    }
+
+    PasswordResetScreen(
+        uiState = uiState,
+        onNavigateUp = onNavigateUp,
+        onCodeChanged = viewModel::onCodeChanged,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
+        onSubmit = viewModel::onSubmit,
+        onResendCode = viewModel::onResendCode,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onInvalidCodeErrorDismissed = viewModel::onInvalidCodeErrorDismissed,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun PasswordResetScreen(
+    uiState: PasswordResetUiState,
+    onNavigateUp: () -> Unit,
+    onCodeChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onConfirmPasswordChanged: (String) -> Unit,
+    onSubmit: () -> Unit,
+    onResendCode: () -> Unit,
+    onErrorDismissed: () -> Unit,
+    onInvalidCodeErrorDismissed: () -> Unit,
+    modifier: Modifier = Modifier,
+    passwordsInitiallyVisible: Boolean = false,
+) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            SettingsTopBar(
+                title = stringResource(R.string.account_screen_title),
+                onNavigateUp = onNavigateUp,
+            )
+        },
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.account_password_reset_message, uiState.email),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            OutlinedTextField(
+                value = uiState.code,
+                onValueChange = onCodeChanged,
+                label = { Text(stringResource(R.string.account_password_reset_code_label)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_password_reset_code_field"),
+            )
+            PasswordTextField(
+                value = uiState.password,
+                onValueChange = onPasswordChanged,
+                label = stringResource(R.string.account_password_reset_password_label),
+                fieldTestTag = "account_password_reset_password_field",
+                toggleTestTag = "account_password_reset_password_toggle",
+                modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
+            )
+            PasswordTextField(
+                value = uiState.confirmPassword,
+                onValueChange = onConfirmPasswordChanged,
+                label = stringResource(R.string.account_password_reset_confirm_password_label),
+                fieldTestTag = "account_password_reset_confirm_password_field",
+                toggleTestTag = "account_password_reset_confirm_password_toggle",
+                modifier = Modifier.fillMaxWidth(),
+                initiallyVisible = passwordsInitiallyVisible,
+            )
+            LoadingButton(
+                text = stringResource(R.string.account_password_reset_submit_button),
+                loading = uiState.isLoading,
+                onClick = onSubmit,
+                enabled = !uiState.isLoading && !uiState.isResendingCode && uiState.isSubmitEnabled(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_password_reset_submit_button"),
+                loadingIndicatorTestTag = "account_password_reset_loading_indicator",
+            )
+            ResendCodeButton(
+                cooldownSeconds = uiState.resendCooldownSeconds,
+                isResending = uiState.isResendingCode,
+                enabled = !uiState.isLoading && !uiState.isResendingCode &&
+                    uiState.resendCooldownSeconds == 0,
+                onClick = onResendCode,
+                resendTextRes = R.string.account_password_reset_resend_button,
+                countdownTextRes = R.string.account_password_reset_resend_button_countdown,
+                buttonTestTag = "account_password_reset_resend_button",
+                loadingIndicatorTestTag = "account_password_reset_resend_loading_indicator",
+                modifier = Modifier.fillMaxWidth(),
+            )
+            if (uiState.codeResent) {
+                Text(
+                    text = stringResource(R.string.account_password_reset_code_resent_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.testTag("account_password_reset_code_resent_message"),
+                )
+            }
+        }
+    }
+
+    if (uiState.showError) {
+        GenericErrorDialog(onDismissRequest = onErrorDismissed)
+    }
+
+    if (uiState.showInvalidCodeError) {
+        InvalidResetCodeDialog(onDismissRequest = onInvalidCodeErrorDismissed)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InvalidResetCodeDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BasicAlertDialog(onDismissRequest = onDismissRequest) {
+        Surface(
+            modifier = modifier
+                .padding(horizontal = 24.dp)
+                .testTag("account_invalid_reset_code_dialog"),
+            shape = RoundedCornerShape(24.dp),
+            border = BorderStroke(1.dp, Color.Black),
+            tonalElevation = 6.dp,
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp, vertical = 32.dp)
+                    .widthIn(min = 280.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.account_invalid_reset_code_dialog_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = stringResource(R.string.account_invalid_reset_code_dialog_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                )
+                Button(onClick = onDismissRequest) {
+                    Text(text = stringResource(R.string.account_invalid_reset_code_dialog_button))
+                }
+            }
+        }
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordReset() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(email = "user@example.com"),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordResetLoading() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(
+                email = "user@example.com",
+                code = "123456",
+                password = "newpassword12345",
+                confirmPassword = "newpassword12345",
+                isLoading = true,
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordResetCodeResent() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(
+                email = "user@example.com",
+                codeResent = true,
+                resendCooldownSeconds = 30,
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
+fun PreviewPasswordResetPasswordsVisible() {
+    ComprehensibleInputTheme {
+        PasswordResetScreen(
+            uiState = PasswordResetUiState(
+                email = "user@example.com",
+                code = "123456",
+                password = "newpassword12345",
+                confirmPassword = "newpassword12345",
+            ),
+            onNavigateUp = {},
+            onCodeChanged = {},
+            onPasswordChanged = {},
+            onConfirmPasswordChanged = {},
+            onSubmit = {},
+            onResendCode = {},
+            onErrorDismissed = {},
+            onInvalidCodeErrorDismissed = {},
+            passwordsInitiallyVisible = true,
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
