@@ -28,9 +28,15 @@
 ⚪   import androidx.compose.material3.MaterialTheme
 ⚪   import androidx.compose.material3.OutlinedButton
 ⚪   import androidx.compose.material3.Scaffold
+⚪   import androidx.compose.material3.SnackbarDuration
+⚪   import androidx.compose.material3.SnackbarHost
+⚪   import androidx.compose.material3.SnackbarHostState
+⚪   import androidx.compose.material3.SnackbarResult
 ⚪   import androidx.compose.material3.Text
 ⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.LaunchedEffect
 ⚪   import androidx.compose.runtime.getValue
+⚪   import androidx.compose.runtime.remember
 ⚪   import androidx.compose.ui.Alignment
 ⚪   import androidx.compose.ui.Modifier
 ⚪   import androidx.compose.ui.graphics.Color
@@ -75,6 +81,8 @@
 🟢           onNavigateUp = onNavigateUp,
 🟢           onSettingsClick = onSettingsClick,
 🟢           onDeleteAdventure = viewModel::onDeleteAdventure,
+🟢           onUndoDelete = viewModel::onUndoDelete,
+🟢           onUndoDismissed = viewModel::onUndoDismissed,
 🟢           onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
 🟢           onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
 🟢           modifier = modifier,
@@ -91,10 +99,19 @@
 ⚪       onNavigateUp: () -> Unit,
 ⚪       onSettingsClick: () -> Unit,
 ⚪       onDeleteAdventure: (String) -> Unit,
+⚪       onUndoDelete: () -> Unit,
+⚪       onUndoDismissed: () -> Unit,
 ⚪       onLearningLanguageSelected: (LanguageSelection) -> Unit,
 ⚪       onTranslationLanguageSelected: (LanguageSelection) -> Unit,
 🟢       modifier: Modifier = Modifier,
 🟡   ) {
+🟢       val snackbarHostState = remember { SnackbarHostState() }
+🟢       UndoDeleteSnackbar(
+🟢           undoableDeletedAdventureId = state.undoableDeletedAdventureId,
+🟢           snackbarHostState = snackbarHostState,
+🟢           onUndoDelete = onUndoDelete,
+🟢           onUndoDismissed = onUndoDismissed,
+⚪       )
 🟢       Scaffold(
 🟢           modifier = modifier.testTag("text_adventures_screen"),
 🟢           topBar = {
@@ -108,6 +125,7 @@
 🟢                   onSettingsClick = onSettingsClick,
 ⚪               )
 ⚪           },
+🟢           snackbarHost = { SnackbarHost(snackbarHostState) },
 🟢       ) { paddingValues ->
 🟢           val contentModifier = Modifier
 🟢               .fillMaxSize()
@@ -136,6 +154,34 @@
 ⚪       }
 🟢   }
 ⚪   
+⚪   /**
+⚪    * Shows the "adventure deleted" snackbar with its undo action while a deletion is undoable. Leaving
+⚪    * the undoable state (an undo, a failed delete restoring the row, or a sign-out) dismisses the
+⚪    * snackbar by cancelling the effect.
+⚪    */
+⚪   @Composable
+⚪   private fun UndoDeleteSnackbar(
+⚪       undoableDeletedAdventureId: String?,
+⚪       snackbarHostState: SnackbarHostState,
+⚪       onUndoDelete: () -> Unit,
+⚪       onUndoDismissed: () -> Unit,
+🟡   ) {
+🟢       if (undoableDeletedAdventureId == null) return
+🟢       val message = stringResource(R.string.text_adventures_deleted)
+🟢       val undoLabel = stringResource(R.string.text_adventures_undo)
+🟢       LaunchedEffect(undoableDeletedAdventureId) {
+🟢           val result = snackbarHostState.showSnackbar(
+🟢               message = message,
+🟢               actionLabel = undoLabel,
+🟢               duration = SnackbarDuration.Long,
+⚪           )
+🟢           when (result) {
+🟢               SnackbarResult.ActionPerformed -> onUndoDelete()
+🟢               SnackbarResult.Dismissed -> onUndoDismissed()
+⚪           }
+⚪       }
+🟢   }
+⚪   
 ⚪   @Composable
 ⚪   private fun AdventureListContent(
 ⚪       modifier: Modifier,
@@ -159,6 +205,9 @@
 🟢                   adventure = adventure,
 🟡                   onClick = { onAdventureClick(adventure.id) },
 🟡                   onDelete = { onDeleteAdventure(adventure.id) },
+⚪                   // Animates a deleted row fading out and the rows below sliding up to close the gap
+⚪                   // (and the reverse when an undo or a failed delete restores it).
+🟢                   modifier = Modifier.animateItem(),
 🟢               )
 🟢           }
 ⚪       }

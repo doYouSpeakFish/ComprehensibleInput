@@ -5,6 +5,9 @@ import input.comprehensible.ui.components.LanguageSelection
 
 /**
  * The UI state for the text adventures list screen.
+ *
+ * [undoableDeletedAdventureId] is the id of the adventure the user has just deleted: while set, the
+ * screen shows a snackbar offering to undo the deletion.
  */
 data class TextAdventuresListUiState(
     val isSignedIn: Boolean,
@@ -15,6 +18,7 @@ data class TextAdventuresListUiState(
     val learningLanguage: LanguageSelection?,
     val translationLanguage: LanguageSelection?,
     val languagesAvailable: List<LanguageSelection>,
+    val undoableDeletedAdventureId: String? = null,
 ) {
     /**
      * A single text adventure shown in the list. The [title] is in the learning language and

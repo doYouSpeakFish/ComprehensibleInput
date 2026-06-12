@@ -13,6 +13,8 @@
     <string name="text_adventure_busy">Das System ist gerade ausgelastet. Bitte versuchen Sie es in Kürze erneut.</string>
     <string name="text_adventures_new">Neues Abenteuer starten</string>
     <string name="text_adventures_delete_content_description">Abenteuer löschen</string>
+    <string name="text_adventures_deleted">Abenteuer gelöscht</string>
+    <string name="text_adventures_undo">Rückgängig</string>
     <string name="text_adventures_status_not_started">Nicht begonnen</string>
     <string name="text_adventures_status_in_progress">Läuft</string>
     <string name="text_adventures_status_complete">Abgeschlossen</string>

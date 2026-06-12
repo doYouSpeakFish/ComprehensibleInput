@@ -167,6 +167,10 @@ class TextAdventureFeatureTestScope(
         fakeRemoteDataSource.failDeleteAdventure = true
     }
 
+    fun failRestore() {
+        fakeRemoteDataSource.failRestoreAdventure = true
+    }
+
     fun failStart() {
         fakeRemoteDataSource.failStartAdventure = true
     }

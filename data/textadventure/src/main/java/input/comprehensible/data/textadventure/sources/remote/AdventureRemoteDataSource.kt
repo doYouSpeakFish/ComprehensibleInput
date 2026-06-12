@@ -13,6 +13,12 @@ import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemo
 interface AdventureRemoteDataSource {
     suspend fun getAdventures(token: String): List<RemoteAdventure>
     suspend fun deleteAdventure(token: String, adventureId: String)
+
+    /**
+     * Undoes the deletion of an adventure (`DELETE /v1/adventures/{id}/deletion`) and returns the
+     * restored adventure so it can be cached again.
+     */
+    suspend fun restoreAdventure(token: String, adventureId: String): RemoteAdventure
     suspend fun startAdventure(
         token: String,
         learningLanguage: String,

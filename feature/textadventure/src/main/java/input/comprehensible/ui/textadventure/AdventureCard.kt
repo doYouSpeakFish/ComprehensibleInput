@@ -1,16 +1,12 @@
 package input.comprehensible.ui.textadventure
 
-import androidx.compose.animation.core.animate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -20,18 +16,17 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -39,69 +34,64 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import input.comprehensible.data.textadventure.AdventureStatus
 import input.comprehensible.feature.textadventure.R
 import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
-import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 // Fraction of a row's width it must be dragged towards the start before releasing deletes it.
-private const val DELETE_SWIPE_FRACTION = 0.4f
+// Internal so the mid-swipe preview can lay the card out at the same reveal position.
+internal const val DELETE_SWIPE_FRACTION = 0.4f
 
 // The "in progress" status colour, matching the supplied design.
 private val InProgressColor = Color(0xFF159BC5)
 
 /**
  * A single adventure, shown as an option card with swipe-to-delete: dragging the card towards the
- * start reveals a delete background and, past a threshold, deletes it. The offset is driven directly
- * so a delete snaps the card back to rest, keeping a restored row (failed delete) in place.
+ * start reveals a delete background, and a swipe past the threshold dismisses the card and deletes
+ * the adventure ([onDelete] — the caller offers an undo).
  */
 @Composable
 internal fun AdventureRow(
     adventure: AdventureItem,
     onClick: () -> Unit,
     onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-    var offsetX by remember(adventure.id) { mutableFloatStateOf(0f) }
+    val density = LocalDensity.current
+    // Deliberately a plain remember rather than rememberSwipeToDismissBoxState: that helper is
+    // backed by rememberSaveable, and a lazy list keeps saved state for removed keys. An undone
+    // deletion re-adds the row under its old key, which would restore the saved dismissed state
+    // and immediately dismiss — delete — the adventure again.
+    val dismissState = remember(adventure.id, density) {
+        SwipeToDismissBoxState(
+            initialValue = SwipeToDismissBoxValue.Settled,
+            density = density,
+            confirmValueChange = { true },
+            positionalThreshold = { totalDistance -> totalDistance * DELETE_SWIPE_FRACTION },
+        )
+    }
     val deleteLabel = stringResource(R.string.text_adventures_delete_content_description)
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-        val width = constraints.maxWidth.toFloat()
-        val deleteThreshold = width * DELETE_SWIPE_FRACTION
-        DeleteBackground(modifier = Modifier.matchParentSize())
+    SwipeToDismissBox(
+        state = dismissState,
+        backgroundContent = { DeleteBackground(modifier = Modifier.fillMaxSize()) },
+        modifier = modifier,
+        // Only the towards-the-start swipe deletes; the other direction stays put.
+        enableDismissFromStartToEnd = false,
+        onDismiss = { onDelete() },
+    ) {
         AdventureCard(
             adventure = adventure,
             onClick = onClick,
-            modifier = Modifier
-                .semantics {
-                    customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDelete(); true })
-                }
-                .offset { IntOffset(offsetX.roundToInt(), 0) }
-                .pointerInput(adventure.id) {
-                    detectHorizontalDragGestures(
-                        onHorizontalDrag = { change, dragAmount ->
-                            change.consume()
-                            offsetX = (offsetX + dragAmount).coerceIn(-width, 0f)
-                        },
-                        onDragEnd = {
-                            if (offsetX <= -deleteThreshold) {
-                                onDelete()
-                                offsetX = 0f
-                            } else {
-                                scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } }
-                            }
-                        },
-                        onDragCancel = { scope.launch { animate(offsetX, 0f) { value, _ -> offsetX = value } } },
-                    )
-                },
+            modifier = Modifier.semantics {
+                customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDelete(); true })
+            },
         )
     }
 }
 
 @Composable
-private fun AdventureCard(
+internal fun AdventureCard(
     adventure: AdventureItem,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -219,7 +209,7 @@ private fun StatusPill(status: AdventureStatus) {
 
 /** The background revealed while swiping an adventure away, signalling the delete action. */
 @Composable
-private fun DeleteBackground(modifier: Modifier = Modifier) {
+internal fun DeleteBackground(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .clip(MaterialTheme.shapes.extraLarge)

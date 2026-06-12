@@ -48,6 +48,16 @@
 🟢               }
 ⚪       }
 ⚪   
+⚪       /**
+⚪        * Undoes an adventure deletion. The backend keeps deleted adventures restorable, so this asks it
+⚪        * to bring the adventure back and re-caches the restored summary locally, where the UI picks it
+⚪        * up. The conversation is not re-cached here; it is refreshed when the adventure is opened.
+⚪        */
+🟢       suspend fun restoreAdventure(token: String, userId: String, adventureId: String): Result<Unit> = runCatching {
+🟢           val restored = remoteDataSource.restoreAdventure(token, adventureId)
+🟢           localDataSource.upsertAdventure(restored.toEntity(userId))
+🟢       }.onFailure { Timber.e(it, "Failed to restore adventure") }
+⚪   
 ⚪       /** The conversation for an adventure, observed from the local database. */
 ⚪       fun getMessages(adventureId: String): Flow<List<AdventureMessage>> =
 🟢           localDataSource.observeMessages(adventureId).map { messages ->

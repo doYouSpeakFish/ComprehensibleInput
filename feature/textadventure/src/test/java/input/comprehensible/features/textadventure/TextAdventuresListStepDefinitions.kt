@@ -68,16 +68,34 @@ class TextAdventuresListStepDefinitions {
         scope.failDelete()
     }
 
+    @Given("the restore adventure request will fail")
+    fun theRestoreAdventureRequestWillFail() {
+        scope.failRestore()
+    }
+
     @When("I tap the text adventures sign in button")
     fun iTapTheSignInButton() {
         robot.tapSignIn()
         scope.idle()
     }
 
-    @When("I delete the {string} adventure")
-    fun iDeleteTheAdventure(title: String) {
-        robot.deleteAdventure(title)
+    @When("I swipe to delete the {string} adventure")
+    fun iSwipeToDeleteTheAdventure(title: String) {
+        robot.swipeToDeleteAdventure(title)
         scope.idle()
+    }
+
+    @When("I undo the deletion")
+    fun iUndoTheDeletion() {
+        robot.undoAdventureDeletion()
+        // Two rounds so work scheduled by the restored row itself (not just the undo tap) also
+        // completes before the next assertion.
+        repeat(2) { scope.idle() }
+    }
+
+    @When("the undo message times out")
+    fun theUndoMessageTimesOut() {
+        scope.advanceTime(UNDO_SNACKBAR_TIMEOUT_MILLIS)
     }
 
     @When("I partially swipe the {string} adventure")
@@ -169,6 +187,16 @@ class TextAdventuresListStepDefinitions {
         robot.assertChatIsShown()
     }
 
+    @Then("the adventure deleted message is shown")
+    fun theAdventureDeletedMessageIsShown() {
+        robot.assertAdventureDeletedMessageIsShown()
+    }
+
+    @Then("the adventure deleted message is not shown")
+    fun theAdventureDeletedMessageIsNotShown() {
+        robot.assertAdventureDeletedMessageIsNotShown()
+    }
+
     @Then("the text adventures title is shown")
     fun theTextAdventuresTitleIsShown() {
         robot.assertTitleIsShown()
@@ -205,5 +233,10 @@ class TextAdventuresListStepDefinitions {
         "Portuguese" -> "pt"
         "Indonesian" -> "id"
         else -> error("Unknown language name: $languageName")
+    }
+
+    private companion object {
+        // Comfortably beyond the undo snackbar's 10-second duration.
+        const val UNDO_SNACKBAR_TIMEOUT_MILLIS = 11_000L
     }
 }

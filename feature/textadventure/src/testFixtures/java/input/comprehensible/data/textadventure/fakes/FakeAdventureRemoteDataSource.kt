@@ -15,11 +15,16 @@ import kotlinx.coroutines.delay
  */
 class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
     var adventures: List<RemoteAdventure> = emptyList()
+
+    // Deleted adventures are kept (mirroring the backend's restorable deletions) so a restore
+    // request can bring them back.
+    var deletedAdventures: List<RemoteAdventure> = emptyList()
     var requestDelayMillis: Long = 0
     var userMessageDelayMillis: Long = 0
     var aiMessageDelayMillis: Long = 0
     var failGetAdventures: Boolean = false
     var failDeleteAdventure: Boolean = false
+    var failRestoreAdventure: Boolean = false
     var failStartAdventure: Boolean = false
     var failGetMessages: Boolean = false
     var failSendUserMessage: Boolean = false
@@ -76,7 +81,18 @@ class FakeAdventureRemoteDataSource : AdventureRemoteDataSource {
     override suspend fun deleteAdventure(token: String, adventureId: String) {
         delayIfConfigured()
         if (failDeleteAdventure) error("Failed to delete adventure")
+        deletedAdventures = deletedAdventures + adventures.filter { it.id == adventureId }
         adventures = adventures.filterNot { it.id == adventureId }
+    }
+
+    override suspend fun restoreAdventure(token: String, adventureId: String): RemoteAdventure {
+        delayIfConfigured()
+        if (failRestoreAdventure) error("Failed to restore adventure")
+        val restored = deletedAdventures.firstOrNull { it.id == adventureId }
+            ?: error("No deleted adventure with id $adventureId to restore")
+        deletedAdventures = deletedAdventures.filterNot { it.id == adventureId }
+        adventures = adventures + restored
+        return restored
     }
 
     override suspend fun startAdventure(
