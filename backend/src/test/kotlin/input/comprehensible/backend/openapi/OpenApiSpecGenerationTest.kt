@@ -47,19 +47,25 @@ class OpenApiSpecGenerationTest {
 
     @Test
     fun `committed OpenAPI spec matches the current routes`() {
-        val generated = generateContract()
+        // GIVEN the OpenAPI contract committed at backend/openapi/openapi.json as the baseline
         val specFile = File(SPEC_PATH)
+
+        // WHEN the contract is rendered from the backend's live routing tree
+        val generated = generateContract()
         File(GENERATED_COPY_PATH).apply {
             parentFile.mkdirs()
             writeText(generated)
         }
 
+        // In update mode (-Popenapi.update) the freshly rendered contract replaces the committed
+        // baseline instead of being asserted against it.
         if (System.getProperty("openapi.update") == "true") {
             specFile.parentFile.mkdirs()
             specFile.writeText(generated)
             return
         }
 
+        // THEN a committed contract exists and matches the routes; otherwise it is missing or stale
         if (!specFile.exists()) {
             throw AssertionError("Missing OpenAPI contract at $SPEC_PATH. Generate it with: $REGEN_COMMAND")
         }
