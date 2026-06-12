@@ -55,9 +55,9 @@
 🟢       val state by viewModel.state.collectAsStateWithLifecycle(TextAdventureChatUiState.INITIAL)
 🟢       TextAdventureChatScreen(
 🟢           state = state,
-🟢           onSentenceSelected = viewModel::onSentenceSelected,
-🟢           onRetry = viewModel::onRetry,
-🟢           onSendMessage = viewModel::onSendMessage,
+🟡           onSentenceSelected = viewModel::onSentenceSelected,
+🟡           onRetry = viewModel::onRetry,
+🟡           onSendMessage = viewModel::onSendMessage,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
@@ -100,17 +100,27 @@
 ⚪       onRetry: () -> Unit,
 🟢       modifier: Modifier = Modifier,
 🟡   ) {
-🟢       val listState = rememberLazyListState()
 🟢       val headerCount = if (state.imageUrl != null) 1 else 0
+🟢       val listState = rememberLazyListState(
+🟢           initialFirstVisibleItemIndex = (headerCount + state.displayedMessages.size - 1).coerceAtLeast(0),
+⚪       )
 🟢       val itemCount = headerCount + state.displayedMessages.size + if (state.isGenerating) 1 else 0
+🟢       var initialScrollDone by remember { mutableStateOf(false) }
 🟢       LaunchedEffect(itemCount) {
-🟢           if (itemCount > 0) listState.animateScrollToItem(itemCount - 1)
+🟢           if (itemCount > 0) {
+🟢               if (!initialScrollDone) {
+🟢                   listState.scrollToItem(itemCount - 1)
+🟢                   initialScrollDone = true
+⚪               } else {
+🟢                   listState.animateScrollToItem(itemCount - 1)
+⚪               }
+⚪           }
 ⚪       }
 🟢       LazyColumn(
 🟢           state = listState,
 🟢           modifier = modifier.padding(16.dp),
 🟢           verticalArrangement = Arrangement.spacedBy(16.dp),
-🟢       ) {
+🟡       ) {
 🟢           state.imageUrl?.let { url ->
 🟢               item(key = "adventure_image") {
 🟢                   AdventureImage(
@@ -180,7 +190,7 @@
 🟢                   translatedSentences = paragraph.translatedSentences,
 🟢                   selectedSentenceIndex = selected?.sentenceIndex,
 🟢                   isSelectionTranslated = selected?.isTranslated == true,
-🟢                   onSentenceSelected = { sentenceIndex ->
+🟡                   onSentenceSelected = { sentenceIndex ->
 🟢                       onSentenceSelected(message.id, paragraphIndex, sentenceIndex)
 ⚪                   },
 ⚪               )

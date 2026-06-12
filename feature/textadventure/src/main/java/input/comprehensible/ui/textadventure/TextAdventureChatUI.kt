@@ -105,8 +105,16 @@ private fun Conversation(
         initialFirstVisibleItemIndex = (headerCount + state.displayedMessages.size - 1).coerceAtLeast(0),
     )
     val itemCount = headerCount + state.displayedMessages.size + if (state.isGenerating) 1 else 0
+    var initialScrollDone by remember { mutableStateOf(false) }
     LaunchedEffect(itemCount) {
-        if (itemCount > 0) listState.animateScrollToItem(itemCount - 1)
+        if (itemCount > 0) {
+            if (!initialScrollDone) {
+                listState.scrollToItem(itemCount - 1)
+                initialScrollDone = true
+            } else {
+                listState.animateScrollToItem(itemCount - 1)
+            }
+        }
     }
     LazyColumn(
         state = listState,
