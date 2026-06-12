@@ -34,6 +34,12 @@ import java.io.File
  * the API cannot break already-released app versions by accident. Because the assertion also fails
  * when the spec is merely out of date, the committed file is guaranteed to reflect the real routes.
  *
+ * Known limitation: response status codes are only those Ktor can infer statically from the
+ * handlers. Routes that respond with a service-returned [io.ktor.http.HttpStatusCode] (the account
+ * endpoints, e.g. POST /v1/users also returns 400) list only their statically-visible statuses, so
+ * a change to those dynamic error statuses is not flagged by the diff. Request and response *body*
+ * schema changes are captured for every endpoint, which is the higher-risk category.
+ *
  * Regenerate after an intentional API change with:
  *   ./gradlew :backend:test -Popenapi.update
  */
