@@ -55,9 +55,9 @@
 🟢       val state by viewModel.state.collectAsStateWithLifecycle(TextAdventureChatUiState.INITIAL)
 🟢       TextAdventureChatScreen(
 🟢           state = state,
-🟡           onSentenceSelected = viewModel::onSentenceSelected,
-🟡           onRetry = viewModel::onRetry,
-🟡           onSendMessage = viewModel::onSendMessage,
+🟢           onSentenceSelected = viewModel::onSentenceSelected,
+🟢           onRetry = viewModel::onRetry,
+🟢           onSendMessage = viewModel::onSendMessage,
 🟢           modifier = modifier,
 ⚪       )
 🟢   }
@@ -120,7 +120,7 @@
 🟢           state = listState,
 🟢           modifier = modifier.padding(16.dp),
 🟢           verticalArrangement = Arrangement.spacedBy(16.dp),
-🟡       ) {
+🟢       ) {
 🟢           state.imageUrl?.let { url ->
 🟢               item(key = "adventure_image") {
 🟢                   AdventureImage(
@@ -190,7 +190,7 @@
 🟢                   translatedSentences = paragraph.translatedSentences,
 🟢                   selectedSentenceIndex = selected?.sentenceIndex,
 🟢                   isSelectionTranslated = selected?.isTranslated == true,
-🟡                   onSentenceSelected = { sentenceIndex ->
+🟢                   onSentenceSelected = { sentenceIndex ->
 🟢                       onSentenceSelected(message.id, paragraphIndex, sentenceIndex)
 ⚪                   },
 ⚪               )
