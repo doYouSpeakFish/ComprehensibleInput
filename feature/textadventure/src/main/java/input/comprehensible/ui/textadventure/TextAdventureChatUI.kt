@@ -100,8 +100,10 @@ private fun Conversation(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val listState = rememberLazyListState()
     val headerCount = if (state.imageUrl != null) 1 else 0
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = (headerCount + state.displayedMessages.size - 1).coerceAtLeast(0),
+    )
     val itemCount = headerCount + state.displayedMessages.size + if (state.isGenerating) 1 else 0
     LaunchedEffect(itemCount) {
         if (itemCount > 0) listState.animateScrollToItem(itemCount - 1)
