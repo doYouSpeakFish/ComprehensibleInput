@@ -136,7 +136,7 @@
 ⚪       onSignOutClicked: () -> Unit,
 ⚪       onDeleteAccountClicked: () -> Unit,
 🟢       modifier: Modifier = Modifier,
-🟡   ) {
+🟢   ) {
 🟢       Column(
 🟢           modifier = modifier
 🟢               .fillMaxWidth()

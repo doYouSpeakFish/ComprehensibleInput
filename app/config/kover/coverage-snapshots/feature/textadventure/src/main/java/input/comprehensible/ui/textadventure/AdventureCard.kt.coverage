@@ -95,7 +95,7 @@
 ⚪       adventure: AdventureItem,
 ⚪       onClick: () -> Unit,
 🟢       modifier: Modifier = Modifier,
-🟡   ) {
+🟢   ) {
 🟢       OptionCard(
 🟢           onClick = onClick,
 🟢           modifier = modifier.testTag("adventure_${adventure.title}"),

@@ -189,7 +189,7 @@
 ⚪       onStartAdventure: () -> Unit,
 ⚪       onAdventureClick: (String) -> Unit,
 ⚪       onDeleteAdventure: (String) -> Unit,
-🟡   ) {
+🟢   ) {
 🟢       LazyColumn(
 🟢           modifier = modifier.testTag("text_adventures_list"),
 🟢           contentPadding = PaddingValues(20.dp),
@@ -218,7 +218,7 @@
 ⚪       modifier: Modifier,
 ⚪       state: TextAdventuresListUiState,
 ⚪       onStartAdventure: () -> Unit,
-🟡   ) {
+🟢   ) {
 🟢       Column(
 🟢           modifier = modifier.padding(20.dp),
 🟢           verticalArrangement = Arrangement.spacedBy(16.dp),
