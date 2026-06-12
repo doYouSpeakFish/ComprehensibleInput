@@ -2,6 +2,10 @@ package input.comprehensible.ui.home
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import input.comprehensible.ui.components.animations.defaultEnterTransition
+import input.comprehensible.ui.components.animations.defaultExitTransition
+import input.comprehensible.ui.components.animations.defaultPopEnterTransition
+import input.comprehensible.ui.components.animations.defaultPopExitTransition
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +17,12 @@ fun NavGraphBuilder.homeScreen(
     onTextAdventuresClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable<HomeRoute> {
+    composable<HomeRoute>(
+        enterTransition = defaultEnterTransition,
+        exitTransition = defaultExitTransition,
+        popEnterTransition = defaultPopEnterTransition,
+        popExitTransition = defaultPopExitTransition,
+    ) {
         HomeScreen(
             textAdventuresEnabled = textAdventuresEnabled,
             onStoriesClick = onStoriesClick,
