@@ -70,7 +70,7 @@
 ⚪       onRetry: () -> Unit,
 ⚪       onSendMessage: (String) -> Unit,
 🟢       modifier: Modifier = Modifier,
-🟡   ) {
+🟢   ) {
 🟢       Scaffold(
 🟢           modifier = modifier.testTag("text_adventure_chat"),
 🟢           topBar = {
@@ -101,7 +101,7 @@
 ⚪       onSentenceSelected: (String, Int, Int) -> Unit,
 ⚪       onRetry: () -> Unit,
 🟢       modifier: Modifier = Modifier,
-🟡   ) {
+🟢   ) {
 🟢       val listState = rememberLazyListState()
 🟢       val headerCount = if (state.imageUrl != null) 1 else 0
 🟢       val itemCount = headerCount + state.displayedMessages.size + if (state.isGenerating) 1 else 0
@@ -213,7 +213,7 @@
 🟢   }
 ⚪   
 ⚪   @Composable
-🟡   private fun ErrorWithRetry(message: String, testTag: String, onRetry: () -> Unit) {
+🟢   private fun ErrorWithRetry(message: String, testTag: String, onRetry: () -> Unit) {
 🟢       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
 🟢           Text(
 🟢               text = message,

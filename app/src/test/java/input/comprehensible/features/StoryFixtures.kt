@@ -44,7 +44,7 @@ internal object StoryFixtures {
     }
 
     /** A sentence partway through a [story], used to verify the saved reading position. */
-    fun savedPositionSentence(story: TestStory): String = story.paragraphs[3].germanSentences[9]
+    fun savedPositionSentence(story: TestStory): String = story.paragraphs[3].germanSentences[0]
 
     /** The branching story's choice label for [choice] ("keep the key" / "return the key"). */
     fun adventureChoiceText(choice: String, language: String): String =

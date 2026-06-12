@@ -82,7 +82,7 @@ class StoryReaderStepDefinitions {
 
     @When("the reader skips ahead in the {word} story")
     fun theReaderSkipsAheadInTheStory(ordinal: String) {
-        storyReader.skipToSentence(StoryFixtures.savedPositionSentence(StoryFixtures.story(ordinal)))
+        storyReader.skipToSentence(StoryFixtures.savedPositionSentence(StoryFixtures.story(ordinal)), idle = scope::idle)
         scope.idle()
     }
 

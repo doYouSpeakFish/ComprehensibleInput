@@ -132,7 +132,7 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             .performTouchInput { swipeRight() }
     }
 
-    fun skipToSentence(sentence: String) {
+    fun skipToSentence(sentence: String, idle: () -> Unit = { composeTestRule.waitForIdle() }) {
         val scrollNode = composeTestRule.onNodeWithTag(
             testTag = "story_reader_page_list",
             useUnmergedTree = true,
@@ -144,7 +144,7 @@ class StoryReaderRobot(private val composeTestRule: ComposeContentTestRule) {
             } catch (_: IllegalArgumentException) {
                 break
             }
-            composeTestRule.waitForIdle()
+            idle()
             index++
         }
         check(isSentenceDisplayed(sentence)) {
