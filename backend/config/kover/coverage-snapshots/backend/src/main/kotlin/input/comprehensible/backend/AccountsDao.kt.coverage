@@ -1,24 +1,24 @@
 ⚪   package input.comprehensible.backend
 ⚪   
-⚪   import org.jetbrains.exposed.sql.Database
-⚪   import org.jetbrains.exposed.sql.LongColumnType
-⚪   import org.jetbrains.exposed.sql.ReferenceOption
-⚪   import org.jetbrains.exposed.sql.ResultRow
-⚪   import org.jetbrains.exposed.sql.Table
-⚪   import org.jetbrains.exposed.sql.and
-⚪   import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-⚪   import org.jetbrains.exposed.sql.deleteWhere
-⚪   import org.jetbrains.exposed.sql.insert
-⚪   import org.jetbrains.exposed.sql.selectAll
-⚪   import org.jetbrains.exposed.sql.transactions.transaction
-⚪   import org.jetbrains.exposed.sql.update
+⚪   import org.jetbrains.exposed.v1.core.LongColumnType
+⚪   import org.jetbrains.exposed.v1.core.ReferenceOption
+⚪   import org.jetbrains.exposed.v1.core.ResultRow
+⚪   import org.jetbrains.exposed.v1.core.Table
+⚪   import org.jetbrains.exposed.v1.core.and
+⚪   import org.jetbrains.exposed.v1.core.eq
+⚪   import org.jetbrains.exposed.v1.jdbc.Database
+⚪   import org.jetbrains.exposed.v1.jdbc.deleteWhere
+⚪   import org.jetbrains.exposed.v1.jdbc.insert
+⚪   import org.jetbrains.exposed.v1.jdbc.selectAll
+⚪   import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+⚪   import org.jetbrains.exposed.v1.jdbc.update
 ⚪   import java.sql.Connection
 ⚪   import java.util.UUID
 ⚪   
 🟢   @Suppress("TooManyFunctions")
 🟢   class AccountsDao(private val database: Database) {
 ⚪       fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): InsertAccountResult =
-🟢           transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
+🟢           transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE, db = database) {
 🟢               val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
 🟢               if (existing != null) return@transaction InsertAccountResult.AlreadyExists(
 🟢                   accountId = existing[AccountsTable.id],
@@ -33,7 +33,7 @@
 🟢                   it[this.emailVerified] = emailVerified
 🟢                   it[createdAt] = now
 🟢                   it[updatedAt] = now
-🟢               }
+⚪               }
 🟢               InsertAccountResult.Inserted(accountId)
 ⚪           }
 ⚪   
@@ -43,7 +43,7 @@
 🟢               it[EmailVerificationTable.accountId] = accountId
 🟢               it[EmailVerificationTable.code] = code
 🟢               it[EmailVerificationTable.expiresAt] = expiresAt
-🟢           }
+⚪           }
 ⚪       }
 ⚪   
 🟢       fun storePasswordResetCode(accountId: String, code: String, expiresAt: Long) = transaction(database) {
@@ -52,7 +52,7 @@
 🟢               it[PasswordResetTable.accountId] = accountId
 🟢               it[PasswordResetTable.code] = code
 🟢               it[PasswordResetTable.expiresAt] = expiresAt
-🟢           }
+⚪           }
 ⚪       }
 ⚪   
 🟢       fun verifyEmailCode(email: String, code: String, now: Long): Boolean = transaction(database) {
@@ -81,7 +81,7 @@
 🟢               it[this.accountId] = accountId
 🟢               it[this.tokenHash] = tokenHash
 🟢               it[createdAt] = now
-🟢           }
+⚪           }
 ⚪       }
 ⚪   
 🟢       fun findSessionByTokenHash(tokenHash: String): ResultRow? = transaction(database) {
@@ -95,7 +95,7 @@
 ⚪           currentEmailCodeExpiresAt: Long,
 ⚪           now: Long,
 ⚪       ): EmailChangeRequestResult =
-🟢           transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
+🟢           transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE, db = database) {
 🟢               val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
 🟡               if (existing != null && existing[AccountsTable.id] != accountId) return@transaction EmailChangeRequestResult.AlreadyInUse
 🟢               PendingEmailChangeTable.deleteWhere { PendingEmailChangeTable.accountId eq accountId }
@@ -106,7 +106,7 @@
 🟢                   it[PendingEmailChangeTable.currentEmailCodeExpiresAt] = currentEmailCodeExpiresAt
 🟢                   it[PendingEmailChangeTable.newEmailCode] = ""
 🟢                   it[PendingEmailChangeTable.newEmailCodeExpiresAt] = 0L
-🟢               }
+⚪               }
 🟢               AccountsTable.update({ AccountsTable.id eq accountId }) { it[updatedAt] = now }
 🟢               EmailChangeRequestResult.Requested
 ⚪           }
@@ -126,7 +126,7 @@
 🟢           PendingEmailChangeTable.update({ PendingEmailChangeTable.accountId eq accountId }) {
 🟢               it[PendingEmailChangeTable.newEmailCode] = newEmailCode
 🟢               it[PendingEmailChangeTable.newEmailCodeExpiresAt] = newEmailCodeExpiresAt
-🟢           }
+⚪           }
 🟢           PendingEmailVerification(
 🟢               email = pending[PendingEmailChangeTable.email],
 🟢               code = newEmailCode,
@@ -143,7 +143,7 @@
 🟢           AccountsTable.update({ AccountsTable.id eq accountId }) {
 🟢               it[AccountsTable.email] = email
 🟢               it[updatedAt] = now
-🟢           }
+⚪           }
 🟢           EmailVerificationTable.deleteWhere { EmailVerificationTable.accountId eq accountId }
 🟢           PendingEmailChangeTable.deleteWhere { PendingEmailChangeTable.accountId eq accountId }
 🟢           SessionsTable.deleteWhere { SessionsTable.accountId eq accountId }
@@ -157,7 +157,7 @@
 ⚪           }) {
 🟢               it[currentEmailCode] = code
 🟢               it[currentEmailCodeExpiresAt] = expiresAt
-🟢           }
+⚪           }
 🟢           updated > 0
 ⚪       }
 ⚪   
@@ -169,7 +169,7 @@
 🟢           PendingEmailChangeTable.update({ PendingEmailChangeTable.accountId eq accountId }) {
 🟢               it[newEmailCode] = code
 🟢               it[newEmailCodeExpiresAt] = expiresAt
-🟢           }
+⚪           }
 🟢           pending[PendingEmailChangeTable.email]
 ⚪       }
 ⚪   
@@ -195,7 +195,7 @@
 🟢               it[AccountsTable.passwordHash] = passwordHash
 🟢               it[AccountsTable.emailVerified] = true
 🟢               it[updatedAt] = now
-🟢           }
+⚪           }
 🟢           PasswordResetTable.deleteWhere { PasswordResetTable.accountId eq accountId }
 🟢           SessionsTable.deleteWhere { SessionsTable.accountId eq accountId }
 🟢           true

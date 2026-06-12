@@ -28,8 +28,8 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.junit.Assert.assertEquals
 
 class AccountManagementApiStepDefinitions {

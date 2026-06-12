@@ -1,24 +1,24 @@
 package input.comprehensible.backend
 
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.LongColumnType
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.v1.core.LongColumnType
+import org.jetbrains.exposed.v1.core.ReferenceOption
+import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
+import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
 import java.sql.Connection
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
 class AccountsDao(private val database: Database) {
     fun insertAccount(email: String, passwordHash: String, emailVerified: Boolean, now: Long): InsertAccountResult =
-        transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
+        transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE, db = database) {
             val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
             if (existing != null) return@transaction InsertAccountResult.AlreadyExists(
                 accountId = existing[AccountsTable.id],
@@ -95,7 +95,7 @@ class AccountsDao(private val database: Database) {
         currentEmailCodeExpiresAt: Long,
         now: Long,
     ): EmailChangeRequestResult =
-        transaction(Connection.TRANSACTION_SERIALIZABLE, db = database) {
+        transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE, db = database) {
             val existing = AccountsTable.selectAll().where { AccountsTable.email eq email }.singleOrNull()
             if (existing != null && existing[AccountsTable.id] != accountId) return@transaction EmailChangeRequestResult.AlreadyInUse
             PendingEmailChangeTable.deleteWhere { PendingEmailChangeTable.accountId eq accountId }
