@@ -1,0 +1,1002 @@
+{
+    "openapi": "3.1.1",
+    "info": {
+        "title": "3 Million Words backend API",
+        "version": "1.0.0",
+        "contact": {}
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "text/plain": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/adventure-images/{**}": {
+            "get": {
+                "summary": "Adventure cover images are public, cacheable static assets served straight from the\nbundled resources (loaded by the app with Coil). They carry no user data, so they sit\noutside authentication and the text adventure rate limit.",
+                "responses": {}
+            }
+        },
+        "/v1/users": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CredentialsRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/auth/sessions": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CredentialsRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignInRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/email-verifications": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailVerificationRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/email-verification-codes": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailVerificationCodeRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/password-reset-codes": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordResetCodeRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/password-resets": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordResetRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/me": {
+            "delete": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeleteMeRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "get": {
+                "summary": "",
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountPayload"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateMeRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/email-change-current-verifications": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailChangeCurrentVerificationRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/email-change-verifications": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailVerificationRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/auth/sessions/current": {
+            "delete": {
+                "summary": "",
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/email-change-current-verification-codes": {
+            "post": {
+                "summary": "",
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/email-change-new-verification-codes": {
+            "post": {
+                "summary": "",
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/adventures": {
+            "post": {
+                "summary": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartTextAdventureV1Request"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": ""
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TextAdventureRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "",
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            },
+            "get": {
+                "summary": "",
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdventureListRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/adventures/{adventureId}": {
+            "delete": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "adventureId",
+                        "in": "path",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "204": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            },
+            "get": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "adventureId",
+                        "in": "path",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdventureSummaryRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/adventures/{adventureId}/messages": {
+            "post": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "adventureId",
+                        "in": "path",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostTextAdventureMessageV1Request"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TextAdventureMessageRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            },
+            "get": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "adventureId",
+                        "in": "path",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TextAdventureMessagesRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/adventures/{adventureId}/deletion": {
+            "delete": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "adventureId",
+                        "in": "path",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdventureSummaryRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CredentialsRequest": {
+                "type": "object",
+                "title": "CredentialsRequest",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SignInRemoteResponse": {
+                "type": "object",
+                "title": "SignInRemoteResponse",
+                "required": [
+                    "access_token",
+                    "token_type",
+                    "user_id"
+                ],
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailVerificationRequest": {
+                "type": "object",
+                "title": "EmailVerificationRequest",
+                "required": [
+                    "email",
+                    "code"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailVerificationCodeRequest": {
+                "type": "object",
+                "title": "EmailVerificationCodeRequest",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PasswordResetCodeRequest": {
+                "type": "object",
+                "title": "PasswordResetCodeRequest",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PasswordResetRequest": {
+                "type": "object",
+                "title": "PasswordResetRequest",
+                "required": [
+                    "email",
+                    "password",
+                    "code"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DeleteMeRequest": {
+                "type": "object",
+                "title": "DeleteMeRequest",
+                "properties": {
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "password": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "AccountPayload": {
+                "type": "object",
+                "title": "AccountPayload",
+                "required": [
+                    "id",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateMeRequest": {
+                "type": "object",
+                "title": "UpdateMeRequest",
+                "properties": {
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "password": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "EmailChangeCurrentVerificationRequest": {
+                "type": "object",
+                "title": "EmailChangeCurrentVerificationRequest",
+                "required": [
+                    "code"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    }
+                }
+            },
+            "StartTextAdventureV1Request": {
+                "type": "object",
+                "title": "StartTextAdventureV1Request",
+                "required": [
+                    "learningLanguage",
+                    "translationLanguage"
+                ],
+                "properties": {
+                    "learningLanguage": {
+                        "type": "string"
+                    },
+                    "translationLanguage": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TextAdventureRemoteResponse": {
+                "type": "object",
+                "title": "TextAdventureRemoteResponse",
+                "required": [
+                    "adventureId",
+                    "title",
+                    "sentences",
+                    "translatedSentences",
+                    "isEnding"
+                ],
+                "properties": {
+                    "messageId": {
+                        "type": "string"
+                    },
+                    "adventureId": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "translatedTitle": {
+                        "type": "string"
+                    },
+                    "sentences": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "translatedSentences": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "isEnding": {
+                        "type": "boolean"
+                    },
+                    "imageId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "AdventureSummaryRemoteResponse": {
+                "type": "object",
+                "title": "AdventureSummaryRemoteResponse",
+                "required": [
+                    "id",
+                    "title",
+                    "learningLanguage",
+                    "translationLanguage",
+                    "updatedAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "translatedTitle": {
+                        "type": "string"
+                    },
+                    "learningLanguage": {
+                        "type": "string"
+                    },
+                    "translationLanguage": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "integer"
+                    },
+                    "imageId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AdventureListRemoteResponse": {
+                "type": "object",
+                "title": "AdventureListRemoteResponse",
+                "required": [
+                    "items"
+                ],
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AdventureSummaryRemoteResponse"
+                        }
+                    }
+                }
+            },
+            "TextAdventureParagraphRemoteResponse": {
+                "type": "object",
+                "title": "TextAdventureParagraphRemoteResponse",
+                "required": [
+                    "sentences",
+                    "translatedSentences"
+                ],
+                "properties": {
+                    "sentences": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "translatedSentences": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "TextAdventureMessageRemoteResponse": {
+                "type": "object",
+                "title": "TextAdventureMessageRemoteResponse",
+                "required": [
+                    "id",
+                    "type",
+                    "sender",
+                    "isEnding",
+                    "paragraphs"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "parentId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "sender": {
+                        "type": "string"
+                    },
+                    "isEnding": {
+                        "type": "boolean"
+                    },
+                    "paragraphs": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TextAdventureParagraphRemoteResponse"
+                        }
+                    }
+                }
+            },
+            "TextAdventureMessagesRemoteResponse": {
+                "type": "object",
+                "title": "TextAdventureMessagesRemoteResponse",
+                "required": [
+                    "adventureId",
+                    "title",
+                    "learningLanguage",
+                    "translationsLanguage",
+                    "messages"
+                ],
+                "properties": {
+                    "adventureId": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "learningLanguage": {
+                        "type": "string"
+                    },
+                    "translationsLanguage": {
+                        "type": "string"
+                    },
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TextAdventureMessageRemoteResponse"
+                        }
+                    }
+                }
+            },
+            "PostTextAdventureMessageV1Request": {
+                "type": "object",
+                "title": "PostTextAdventureMessageV1Request",
+                "required": [
+                    "type",
+                    "parentId"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "parentId": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

@@ -72,27 +72,27 @@
 ⚪           }
 🟢           post("/v1/email-change-current-verifications") {
 🟡               val principal = call.principal<AccountSessionPrincipal>()
-🔴                   ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟡                   ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<EmailChangeCurrentVerificationRequest>()
 🟢               call.respond(accountService.verifyCurrentEmailChange(accountId = principal.accountId, code = request.code))
 ⚪           }
 🟢           rateLimit(RateLimitName("email-change-current-verification-code")) {
 🟢               post("/v1/email-change-current-verification-codes") {
 🟡                   val principal = call.principal<AccountSessionPrincipal>()
-🔴                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟡                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢                   call.respond(accountService.requestNewEmailChangeCurrentCode(principal.accountId))
 ⚪               }
 ⚪           }
 🟢           post("/v1/email-change-verifications") {
 🟡               val principal = call.principal<AccountSessionPrincipal>()
-🔴                   ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟡                   ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<EmailVerificationRequest>()
 🟢               call.respond(accountService.verifyPendingEmailChange(principal.accountId, request.email, request.code))
 ⚪           }
 🟢           rateLimit(RateLimitName("email-change-new-verification-code")) {
 🟢               post("/v1/email-change-new-verification-codes") {
 🟡                   val principal = call.principal<AccountSessionPrincipal>()
-🔴                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟡                       ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢                   call.respond(accountService.requestNewEmailChangeNewEmailCode(principal.accountId))
 ⚪               }
 ⚪           }

@@ -95,6 +95,8 @@ ktor-server-double-receive = { group = "io.ktor", name = "ktor-server-double-rec
 ktor-server-auth = { group = "io.ktor", name = "ktor-server-auth", version.ref = "ktor" }
 ktor-server-auth-api-key = { group = "io.ktor", name = "ktor-server-auth-api-key", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json-jvm", version.ref = "ktor" }
+ktor-server-openapi = { group = "io.ktor", name = "ktor-server-openapi", version.ref = "ktor" }
+ktor-server-routing-openapi = { group = "io.ktor", name = "ktor-server-routing-openapi", version.ref = "ktor" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core-jvm", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio-jvm", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation-jvm", version.ref = "ktor" }
@@ -113,6 +115,7 @@ cucumber-junit-platform-engine = { group = "io.cucumber", name = "cucumber-junit
 junit-platform-suite-api = { group = "org.junit.platform", name = "junit-platform-suite-api", version.ref = "junit-platform" }
 junit-platform-suite-engine = { group = "org.junit.platform", name = "junit-platform-suite-engine", version.ref = "junit-platform" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-platform" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx"]
@@ -130,5 +133,6 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 room = { id = "androidx.room", version.ref = "room" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppDist" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
