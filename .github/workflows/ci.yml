@@ -194,9 +194,13 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: |
           git fetch --no-tags --depth=1 origin "$BASE_REF"
-          if git show "FETCH_HEAD:backend/openapi/openapi.json" > "$RUNNER_TEMP/openapi-base.json" 2>/dev/null; then
+          # Write the baseline into the workspace (not runner.temp): the oasdiff
+          # action runs in a Docker container that only mounts the workspace at
+          # /github/workspace, so a runner.temp path is not visible inside it.
+          if git show "FETCH_HEAD:backend/openapi/openapi.json" > openapi-base.json 2>/dev/null; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
           else
+            rm -f openapi-base.json
             echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "::notice::No baseline OpenAPI spec on $BASE_REF yet; skipping the backwards-compatibility check."
           fi
@@ -205,7 +209,7 @@ jobs:
         if: ${{ steps.baseline.outputs.exists == 'true' }}
         uses: oasdiff/oasdiff-action/breaking@v0.0.57
         with:
-          base: ${{ runner.temp }}/openapi-base.json
+          base: openapi-base.json
           revision: backend/openapi/openapi.json
           fail-on: ERR
 
