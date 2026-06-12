@@ -10,6 +10,14 @@ interface AdventureRepository {
 
     fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse?
 
+    /**
+     * The private narration context for an adventure: the AI-authored plan and the AI-authored notes
+     * recorded on its messages so far (oldest first). These are never exposed through the API; they are
+     * fed back to the model as context when it narrates the adventure. Returns null when the adventure
+     * does not exist.
+     */
+    fun getAdventureNarrationContext(adventureId: String): AdventureNarrationContext?
+
     fun appendUserMessage(message: PersistedUserAdventureMessage): TextAdventureMessageRemoteResponse?
 
     fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean
@@ -49,6 +57,17 @@ data class PersistedAdventurePart(
      * when continuing an adventure so the repository preserves the image already stored.
      */
     val imageId: String? = null,
+    /**
+     * The AI-authored plan for the adventure. Set when the adventure is created; left null when
+     * continuing an adventure so the repository preserves the plan already stored. Never exposed
+     * through the API.
+     */
+    val plan: String? = null,
+    /**
+     * The AI-authored private note attached to this message, if any. Never exposed through the API;
+     * only ever fed back to the model as context.
+     */
+    val note: String? = null,
 )
 
 data class PersistedAdventureParagraph(
@@ -67,4 +86,19 @@ data class AdventureSummary(
     val imageId: String? = null,
     /** Progress of the adventure: "not_started", "in_progress" or "complete". */
     val status: String = "in_progress",
+    /**
+     * The AI-authored plan for the adventure, used to help plan later adventures differently. Never
+     * exposed through the API: the remote summary mapping deliberately drops it.
+     */
+    val plan: String? = null,
+)
+
+/**
+ * The private narration context for an adventure. Never exposed through the API; supplied to the
+ * model as context when narrating.
+ */
+data class AdventureNarrationContext(
+    val plan: String?,
+    /** AI-authored notes recorded on the adventure's messages so far, oldest first. */
+    val notes: List<String>,
 )

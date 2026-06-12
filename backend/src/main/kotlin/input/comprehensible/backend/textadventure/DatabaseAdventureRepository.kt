@@ -43,6 +43,7 @@ class DatabaseAdventureRepository(
         updatedAt = this[AdventuresTable.updatedAt],
         imageId = this[AdventuresTable.imageId],
         status = status,
+        plan = this[AdventuresTable.plan],
     )
 
     private fun loadMessagesByAdventure(adventureIds: List<String>): Map<String, List<ResultRow>> {
@@ -75,6 +76,7 @@ class DatabaseAdventureRepository(
                 now = now,
                 existingCreatedAt = existing?.get(AdventuresTable.createdAt),
                 existingImageId = existing?.get(AdventuresTable.imageId),
+                existingPlan = existing?.get(AdventuresTable.plan),
             )
             insertMessage(
                 PersistedMessageRow(
@@ -83,6 +85,7 @@ class DatabaseAdventureRepository(
                     parentMessageId = adventurePart.parentMessageId,
                     type = messageTypeAi,
                     isEnding = adventurePart.isEnding,
+                    note = adventurePart.note,
                     now = now,
                 )
             )
@@ -105,6 +108,19 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
+    override fun getAdventureNarrationContext(adventureId: String): AdventureNarrationContext? = transaction(database) {
+        val adventureRow = findAdventureRow(adventureId) ?: return@transaction null
+        val notes = AdventureMessagesTable
+            .selectAll()
+            .where { AdventureMessagesTable.adventureId eq adventureId }
+            .orderBy(AdventureMessagesTable.createdAt, SortOrder.ASC)
+            .mapNotNull { row -> row[AdventureMessagesTable.note]?.takeIf { it.isNotBlank() } }
+        AdventureNarrationContext(
+            plan = adventureRow[AdventuresTable.plan],
+            notes = notes,
+        )
+    }
+
     override fun appendUserMessage(message: PersistedUserAdventureMessage): TextAdventureMessageRemoteResponse? =
         transaction(database) {
             val adventureRow = findAdventureRow(message.adventureId) ?: return@transaction null
@@ -124,6 +140,7 @@ class DatabaseAdventureRepository(
                     translationLanguage = message.translationLanguage,
                     createdAt = adventureRow[AdventuresTable.createdAt],
                     imageId = adventureRow[AdventuresTable.imageId],
+                    plan = adventureRow[AdventuresTable.plan],
                 )
             )
             insertMessage(
@@ -133,6 +150,7 @@ class DatabaseAdventureRepository(
                     parentMessageId = message.parentMessageId,
                     type = messageTypeUser,
                     isEnding = false,
+                    note = null,
                     now = now,
                 )
             )
@@ -196,6 +214,7 @@ class DatabaseAdventureRepository(
         now: Long,
         existingCreatedAt: Long?,
         existingImageId: String?,
+        existingPlan: String?,
     ) {
         AdventuresTable.upsert {
             it[id] = adventurePart.adventureId
@@ -207,6 +226,9 @@ class DatabaseAdventureRepository(
             // The image is chosen once, when the adventure is created; continuing an adventure leaves
             // imageId null, so the image already stored is preserved.
             it[this.imageId] = adventurePart.imageId ?: existingImageId
+            // The plan is written once, when the adventure is created; continuing an adventure leaves
+            // plan null, so the plan already stored is preserved.
+            it[this.plan] = adventurePart.plan ?: existingPlan
             it[createdAt] = existingCreatedAt ?: now
             it[updatedAt] = now
         }
@@ -221,6 +243,8 @@ class DatabaseAdventureRepository(
             it[this.learningLanguage] = update.learningLanguage
             it[this.translationLanguage] = update.translationLanguage
             it[this.imageId] = update.imageId
+            // Re-supplied so appending a player message never clears the narrator's stored plan.
+            it[this.plan] = update.plan
             it[this.createdAt] = update.createdAt
             it[updatedAt] = update.now
         }
@@ -233,6 +257,7 @@ class DatabaseAdventureRepository(
             it[parentMessageId] = message.parentMessageId
             it[type] = message.type
             it[isEnding] = message.isEnding
+            it[note] = message.note
             it[createdAt] = message.now
         }
     }
@@ -312,6 +337,7 @@ private data class AdventureTimestampUpdate(
     val translationLanguage: String,
     val createdAt: Long,
     val imageId: String?,
+    val plan: String?,
 )
 
 private data class PersistedMessageRow(
@@ -320,6 +346,7 @@ private data class PersistedMessageRow(
     val parentMessageId: String?,
     val type: String,
     val isEnding: Boolean,
+    val note: String?,
     val now: Long,
 )
 
@@ -397,6 +424,9 @@ object AdventuresTable : Table("text_adventure") {
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
     val imageId = varchar("image_id", length = 255).nullable()
+
+    // The AI-authored plan for the adventure. Private context for the narrator; never exposed via the API.
+    val plan = text("plan").nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
 
@@ -420,6 +450,10 @@ object AdventureMessagesTable : Table("text_adventure_message") {
     )
     val type = varchar("type", length = 32)
     val isEnding = bool("is_ending")
+
+    // The AI-authored private note attached to the message. Never exposed via the API; only the model
+    // sees it, as context for later turns. Unrestricted by message type at the schema level.
+    val note = text("note").nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
