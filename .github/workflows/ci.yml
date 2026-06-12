@@ -176,6 +176,39 @@ jobs:
           title: Backend Code Coverage
           update-comment: true
 
+  # Fails the PR on a backwards-incompatible backend API change so we can't break
+  # already-released app versions by accident. The committed backend/openapi/openapi.json
+  # contract is kept current by OpenApiSpecGenerationTest (run in build-and-test-backend);
+  # here we diff the PR's contract against the one on the base branch.
+  check-api-compatibility:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract baseline OpenAPI spec from base branch
+        id: baseline
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          if git show "FETCH_HEAD:backend/openapi/openapi.json" > "$RUNNER_TEMP/openapi-base.json" 2>/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No baseline OpenAPI spec on $BASE_REF yet; skipping the backwards-compatibility check."
+          fi
+
+      - name: Detect breaking API changes
+        if: ${{ steps.baseline.outputs.exists == 'true' }}
+        uses: oasdiff/oasdiff-action/breaking@v0.0.57
+        with:
+          base: ${{ runner.temp }}/openapi-base.json
+          revision: backend/openapi/openapi.json
+          fail-on: ERR
+
   deploy-backend:
     runs-on: ubuntu-latest
     needs: build-and-test-backend
