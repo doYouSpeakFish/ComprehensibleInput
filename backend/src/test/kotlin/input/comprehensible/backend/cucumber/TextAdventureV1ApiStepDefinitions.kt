@@ -11,6 +11,9 @@ import input.comprehensible.backend.textadventure.ADVENTURE_IMAGE_EXTENSION
 import input.comprehensible.backend.textadventure.ADVENTURE_IMAGES_PATH
 import input.comprehensible.backend.textadventure.AdventureImage
 import input.comprehensible.backend.textadventure.AdventureImageCatalog
+import input.comprehensible.backend.textadventure.AdventurePlanLocationResponse
+import input.comprehensible.backend.textadventure.AdventurePlanNpcResponse
+import input.comprehensible.backend.textadventure.AdventurePlanStructuredResponse
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
@@ -798,6 +801,72 @@ class TextAdventureV1ApiStepDefinitions {
         assertFalse(messageHasTypeAndParent(type = "AI", parentId = messageId))
     }
 
+    @Then("the AI is asked to write a plan for an adventure")
+    fun theAiIsAskedToWriteAPlan() {
+        val planInvocation = fakeExecutor.invocations.firstOrNull { it.promptName == PLAN_PROMPT_NAME }
+            ?: error("Expected the AI to be asked to write an adventure plan")
+        assertTrue(
+            "Expected the plan prompt to instruct the AI to write a plan",
+            planInvocation.systemPrompt.contains("plan", ignoreCase = true),
+        )
+    }
+
+    @Given("I have an adventure whose opening narrator message has note {string}")
+    fun haveAdventureWhoseOpeningNarratorMessageHasNote(note: String) {
+        nextMessageIdIs("msg_ai_root")
+        fakeExecutor.enqueueResponse(narratorResponse(note = note))
+        startAdventureForUserACapturingIds()
+    }
+
+    @When("I start an adventure where the AI plans {string} and notes {string}")
+    fun startAdventureWherePlansAndNotes(planMarker: String, noteMarker: String) {
+        fakeExecutor.enqueuePlanResponse(planResponseContaining(planMarker))
+        fakeExecutor.enqueueResponse(narratorResponse(note = noteMarker))
+        startAdventureForUserACapturingIds()
+    }
+
+    @Then("neither the adventure nor its messages expose {string}")
+    fun neitherAdventureNorMessagesExpose(marker: String) {
+        runAgainstApplication { client.get("/v1/adventures/$userAAdventureId") { authorized(userAToken) } }
+        assertFalse("The adventure summary leaked private narrator text", latestResponseBody.contains(marker))
+        runAgainstApplication { client.get("/v1/adventures/$userAAdventureId/messages") { authorized(userAToken) } }
+        assertFalse("The adventure messages leaked private narrator text", latestResponseBody.contains(marker))
+    }
+
+    private fun startAdventureForUserACapturingIds() {
+        runAgainstApplication {
+            client.post("/v1/adventures") {
+                authorized(userAToken)
+                contentType(ContentType.Application.Json)
+                setBody("""{"learningLanguage":"es","translationLanguage":"en"}""")
+            }
+        }
+        userAAdventureId = extractJsonString(latestResponseBody, "adventureId")
+        rootMessageId = extractJsonString(latestResponseBody, "messageId")
+        userAAdventureIds.add(userAAdventureId)
+        adventureIdsByTitle["Lantern Trail"] = userAAdventureId
+    }
+
+    private fun narratorResponse(note: String): TextAdventureStructuredResponse = TextAdventureStructuredResponse(
+        title = "Lantern Trail",
+        translatedTitle = "Lantern Trail (translated)",
+        paragraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("Hola"))),
+        translatedParagraphs = listOf(TextAdventureStructuredParagraph(sentences = listOf("Hello"))),
+        isEnding = false,
+        note = note,
+    )
+
+    private fun planResponseContaining(marker: String): AdventurePlanStructuredResponse =
+        AdventurePlanStructuredResponse(
+            characterDescription = "Character $marker",
+            inventory = "Inventory $marker",
+            hook = "Hook $marker",
+            truthBehindHook = "Truth $marker",
+            coreChallenge = "Challenge $marker",
+            locations = listOf(AdventurePlanLocationResponse(name = "Place $marker", description = "Description $marker")),
+            npcs = listOf(AdventurePlanNpcResponse(name = "NPC $marker", description = "Role $marker")),
+        )
+
     @Then("reading adventure messages returns message id {string} followed by message id {string}")
     fun readingMessagesReturnsMessageFollowedBy(firstMessageId: String, secondMessageId: String) {
         fetchAdventureMessages()
@@ -975,5 +1044,6 @@ class TextAdventureV1ApiStepDefinitions {
 
     private companion object {
         const val MAX_USER_MESSAGE_STRUCTURING_ATTEMPTS = 3
+        const val PLAN_PROMPT_NAME = "text-adventure-plan"
     }
 }

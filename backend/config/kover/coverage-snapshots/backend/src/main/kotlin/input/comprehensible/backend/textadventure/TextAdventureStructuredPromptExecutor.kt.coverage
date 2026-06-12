@@ -19,6 +19,12 @@
 ⚪           systemPrompt: String,
 ⚪           userPrompt: String,
 ⚪       ): UserMessageStructuredResponse
+⚪   
+⚪       suspend fun executePlanResponse(
+⚪           promptName: String,
+⚪           systemPrompt: String,
+⚪           userPrompt: String,
+⚪       ): AdventurePlanStructuredResponse
 ⚪   }
 ⚪   
 🔴   class DefaultTextAdventureStructuredPromptExecutor(
@@ -43,6 +49,18 @@
 ⚪           systemPrompt: String,
 ⚪           userPrompt: String,
 🔴       ): UserMessageStructuredResponse = promptExecutor.executeStructured<UserMessageStructuredResponse>(
+🔴           prompt = prompt(promptName) {
+🔴               system(systemPrompt)
+🔴               user(userPrompt)
+⚪           },
+🔴           model = Gemini3_1FlashLite,
+🔴       ).getOrThrow().data
+⚪   
+⚪       override suspend fun executePlanResponse(
+⚪           promptName: String,
+⚪           systemPrompt: String,
+⚪           userPrompt: String,
+🔴       ): AdventurePlanStructuredResponse = promptExecutor.executeStructured<AdventurePlanStructuredResponse>(
 🔴           prompt = prompt(promptName) {
 🔴               system(systemPrompt)
 🔴               user(userPrompt)

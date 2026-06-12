@@ -31,6 +31,10 @@ class TextAdventureGenerationService(
         val previousAdventures = accountId
             ?.let { adventureRepository.listAdventureSummariesForAccount(it) }
             .orEmpty()
+        val plan = writeAdventurePlan(
+            learningLanguage = learningLanguage,
+            previousAdventures = previousAdventures,
+        )
         val response = requestAdventureResponse(
             adventureId = UUID.randomUUID().toString(),
             promptName = "text-adventure-start",
@@ -46,6 +50,8 @@ class TextAdventureGenerationService(
             """.trimIndent() +
                 imageSelectionPromptSection() +
                 previousAdventuresPromptSection(previousAdventures) +
+                planPromptSection(plan) +
+                notePromptSection() +
                 inspirationPromptSection(),
             userPrompt = "Start a new adventure.",
         )
@@ -67,6 +73,8 @@ class TextAdventureGenerationService(
                 isEnding = response.isEnding,
                 paragraphs = response.toPersistedParagraphs(),
                 imageId = chosenImageId,
+                plan = plan,
+                note = response.note,
             )
         )
         return response.toRemoteResponse(messageId, imageId = chosenImageId)
@@ -164,6 +172,7 @@ class TextAdventureGenerationService(
         messageId: String = messageIdProvider(),
         parentMessageId: String? = null,
     ): TextAdventureRemoteResponse {
+        val context = adventureRepository.getAdventureNarrationContext(adventureId, leafMessageId = parentMessageId)
         val response = requestAdventureResponse(
             adventureId = adventureId,
             promptName = "text-adventure-continue",
@@ -175,7 +184,11 @@ class TextAdventureGenerationService(
                 Keep the title (and its $translationsLanguage translatedTitle) consistent with the story so far.
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
-            """.trimIndent() + inspirationPromptSection(),
+            """.trimIndent() +
+                planPromptSection(context?.plan) +
+                notesPromptSection(context?.notes.orEmpty()) +
+                notePromptSection() +
+                inspirationPromptSection(),
             userPrompt = json.encodeToString(
                 ContinueTextAdventureRequest(
                     adventureId = adventureId,
@@ -198,6 +211,7 @@ class TextAdventureGenerationService(
                 translationLanguage = translationsLanguage,
                 isEnding = response.isEnding,
                 paragraphs = response.toPersistedParagraphs(),
+                note = response.note,
             )
         )
         return response.toRemoteResponse(messageId)
@@ -293,6 +307,93 @@ class TextAdventureGenerationService(
         """.trimIndent()
     }
 
+    /**
+     * Asks the model to write a detailed, private plan for a new adventure before any narration. The
+     * plan is given the same random inspiration words as narration, plus the plans behind the player's
+     * previous adventures so it can make this one different. The rendered plan text is returned to be
+     * stored and fed back as narration context; it is never exposed through the API.
+     */
+    private suspend fun writeAdventurePlan(
+        learningLanguage: String,
+        previousAdventures: List<AdventureSummary>,
+    ): String = runRetrying(MAX_SENTENCE_MATCH_ATTEMPTS) {
+        structuredPromptExecutor.executePlanResponse(
+            promptName = "text-adventure-plan",
+            systemPrompt = """
+                You are the architect of a text adventure that will be played in $learningLanguage.
+                Before it begins, write a detailed, private plan for the adventure. The plan is for your
+                eyes only: it is never shown to the player and is not story text. You are given it back as
+                context whenever you narrate this adventure, so it must hold everything you need to run an
+                exciting, coherent adventure.
+                A plan must not script what the player will do, because the player drives the story. Instead
+                it sets up the adventure in enough detail to stay exciting whatever the player does.
+                Describe the player's character and a brief backstory, and their starting inventory.
+                Give a clear hook that pulls the player in, and the hidden truth behind that hook.
+                Explain the core challenge of the adventure in detail.
+                Plan the key locations in concrete detail; for any building, dungeon, cave or castle plan the
+                layout and the contents of every room. Plan the NPCs in detail: who they are, what they want
+                and where they are.
+                Be specific. If something important happens somewhere, say where, what it looks like, who is
+                involved, why, what items it needs and what happens if it succeeds. If the player must find
+                something, say where it is. If there is a puzzle, give its solution. Write the plan in English.
+            """.trimIndent() +
+                previousPlansPromptSection(previousAdventures) +
+                inspirationPromptSection(),
+            userPrompt = "Plan a new adventure.",
+        ).toPlanText()
+    }
+
+    /**
+     * Summarises the plans behind the player's previous adventures so the model can plan a new one that
+     * is clearly different. Adventures without a stored plan (e.g. from before plans existed) are omitted.
+     */
+    private fun previousPlansPromptSection(previousAdventures: List<AdventureSummary>): String {
+        val planned = previousAdventures
+            .take(MAX_PREVIOUS_ADVENTURES_IN_PROMPT)
+            .filter { !it.plan.isNullOrBlank() }
+        if (planned.isEmpty()) return ""
+        val listing = planned.joinToString("\n\n") { summary -> "Adventure: \"${summary.title}\"\n${summary.plan}" }
+        return "\n\n" + """
+            This player has already played the adventures below, with the plans behind them. Plan a new
+            adventure that is clearly different from all of these in setting, theme, characters and challenge:
+        """.trimIndent() + "\n" + listing
+    }
+
+    /**
+     * Injects the adventure's private plan as narration context. Returns empty when there is no plan, so
+     * adventures created before plans existed simply narrate without one.
+     */
+    private fun planPromptSection(plan: String?): String {
+        if (plan.isNullOrBlank()) return ""
+        return "\n\n" + """
+            Below is the private plan for this adventure. It is for your eyes only and must never be shown
+            or described to the player except as it naturally emerges through play. Follow it so the
+            adventure stays coherent and exciting:
+        """.trimIndent() + "\n" + plan
+    }
+
+    /**
+     * Explains that the note field is private and how to use it. Offered only when the model writes a
+     * narrator message, never when translating a player message.
+     */
+    private fun notePromptSection(): String = "\n\n" + """
+        You may also record a private note in the note field. This note is private: it is never shown to
+        the player and is only ever given back to you as context on later turns. Use it to expand on the
+        plan as the adventure unfolds — for example to track what the player has discovered, decisions you
+        have made about details the plan left open, or threads you are setting up. Leave the note empty if
+        there is nothing worth recording this turn.
+    """.trimIndent()
+
+    /** Injects the private notes recorded on earlier turns as narration context, oldest first. */
+    private fun notesPromptSection(notes: List<String>): String {
+        if (notes.isEmpty()) return ""
+        val listing = notes.joinToString("\n") { "- $it" }
+        return "\n\n" + """
+            These are the private notes you recorded on earlier turns, in order. They are private to you
+            and expand on the plan as the adventure has unfolded so far:
+        """.trimIndent() + "\n" + listing
+    }
+
     private suspend fun requestAdventureResponse(
         adventureId: String,
         promptName: String,
@@ -334,6 +435,7 @@ class TextAdventureGenerationService(
             translatedParagraphs = response.translatedParagraphs,
             isEnding = response.isEnding,
             imageId = response.imageId.trim(),
+            note = response.note.trim(),
         )
     }
 
@@ -399,7 +501,31 @@ private data class GeneratedAdventureResponse(
     val translatedParagraphs: List<TextAdventureStructuredParagraph>,
     val isEnding: Boolean,
     val imageId: String,
+    val note: String,
 )
+
+/**
+ * Renders a structured plan into the labelled, self-contained text that is stored on the adventure and
+ * fed back to the narrator as context. Keeping the stored form as plain text means it can be injected
+ * straight into later prompts without re-parsing.
+ */
+private fun AdventurePlanStructuredResponse.toPlanText(): String = buildString {
+    appendLine("PLAYER CHARACTER: ${characterDescription.trim()}")
+    appendLine()
+    appendLine("PLAYER INVENTORY: ${inventory.trim()}")
+    appendLine()
+    appendLine("HOOK: ${hook.trim()}")
+    appendLine()
+    appendLine("TRUTH BEHIND THE HOOK: ${truthBehindHook.trim()}")
+    appendLine()
+    appendLine("CORE CHALLENGE: ${coreChallenge.trim()}")
+    appendLine()
+    appendLine("LOCATIONS:")
+    locations.forEach { appendLine("- ${it.name.trim()}: ${it.description.trim()}") }
+    appendLine()
+    appendLine("NPCS:")
+    npcs.forEach { appendLine("- ${it.name.trim()}: ${it.description.trim()}") }
+}.trim()
 
 private fun GeneratedAdventureResponse.toRemoteResponse(
     messageId: String,
@@ -445,6 +571,71 @@ data class TextAdventureStructuredResponse(
             "list whose description best fits the opening scene. Empty when continuing an adventure.",
     )
     val imageId: String = "",
+    @property:LLMDescription(
+        "A private note for you, the narrator. It is never shown to the player and is only ever given " +
+            "back to you as context on later turns. Use it to expand on the plan as the adventure " +
+            "unfolds. Leave it empty when there is nothing worth recording this turn.",
+    )
+    val note: String = "",
+)
+
+@Serializable
+@SerialName("AdventurePlanResponse")
+@LLMDescription("A detailed private plan that sets up an exciting text adventure for the narrator to run.")
+data class AdventurePlanStructuredResponse(
+    @property:LLMDescription(
+        "Who the player's character is, including a brief description of their backstory.",
+    )
+    val characterDescription: String,
+    @property:LLMDescription(
+        "A clear description of the items the player's character is carrying at the start of the adventure.",
+    )
+    val inventory: String,
+    @property:LLMDescription(
+        "The clear hook that draws the player into the adventure.",
+    )
+    val hook: String,
+    @property:LLMDescription(
+        "The hidden truth behind the hook that the player does not know at the start.",
+    )
+    val truthBehindHook: String,
+    @property:LLMDescription(
+        "The core challenge of the adventure, explained in thorough detail.",
+    )
+    val coreChallenge: String,
+    @property:LLMDescription(
+        "The key locations of the adventure, each planned out in concrete, specific detail.",
+    )
+    val locations: List<AdventurePlanLocationResponse>,
+    @property:LLMDescription(
+        "The named NPCs of the adventure, each planned out in detail.",
+    )
+    val npcs: List<AdventurePlanNpcResponse>,
+)
+
+@Serializable
+@LLMDescription("A planned location in the adventure.")
+data class AdventurePlanLocationResponse(
+    @property:LLMDescription("The name of the location.")
+    val name: String,
+    @property:LLMDescription(
+        "A detailed description of the location: where it is, what it looks like and what it contains. " +
+            "For any building, dungeon, cave or castle, plan the layout and the contents of every room, " +
+            "and the exact location of anything the player may need to find.",
+    )
+    val description: String,
+)
+
+@Serializable
+@LLMDescription("A planned NPC in the adventure.")
+data class AdventurePlanNpcResponse(
+    @property:LLMDescription("The name of the NPC.")
+    val name: String,
+    @property:LLMDescription(
+        "A detailed description of the NPC: who they are, what they want, their role in the core " +
+            "challenge and where in the adventure they can be found.",
+    )
+    val description: String,
 )
 
 @Serializable

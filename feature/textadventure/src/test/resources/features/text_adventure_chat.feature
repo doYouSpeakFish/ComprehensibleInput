@@ -87,6 +87,12 @@ Feature: Text adventure chat
     When I open the "Lantern Trail" adventure
     Then the text adventure shows "A lantern lights the way."
 
+  Scenario: The chat title shows the adventure's title
+    Given I am signed in as "user@example.com"
+    And the "Lantern Trail" adventure is cached with message "A lantern lights the way."
+    When I open the "Lantern Trail" adventure
+    Then the chat title is "Lantern Trail"
+
   Scenario: Opening a cached adventure shows the backend's refreshed conversation
     Given I am signed in as "user@example.com"
     And the "Lantern Trail" adventure is cached with message "A stale cached line."

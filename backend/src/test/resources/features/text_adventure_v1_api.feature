@@ -107,6 +107,30 @@ Feature: Text adventure v1 API
     And the response includes generated sentences and translations
 
   @v1
+  Scenario: Starting a new adventure asks the AI to write a plan first
+    Given I am authenticated as a user account
+    When I create a text adventure with learning language "es" and translation language "en"
+    Then the response status is 201
+    And the AI is asked to write a plan for an adventure
+
+  @v1
+  Scenario: An adventure's private plan and notes are never exposed through the API
+    Given I am authenticated as a user account
+    When I start an adventure where the AI plans "PLAN_SECRET" and notes "NOTE_SECRET"
+    Then the response status is 201
+    And neither the adventure nor its messages expose "PLAN_SECRET"
+    And neither the adventure nor its messages expose "NOTE_SECRET"
+
+  @v1
+  Scenario: Private narrator notes stay hidden as an adventure continues
+    Given I have an adventure whose opening narrator message has note "NOTE_SECRET"
+    And I have stored user message id "msg_user_1" with parent id "msg_ai_root" and text "Abro la puerta roja"
+    And the next message id is "msg_ai_1"
+    When I post a message with type "AI" and parent id "msg_user_1"
+    Then the response status is 201
+    And neither the adventure nor its messages expose "NOTE_SECRET"
+
+  @v1
   Scenario: Retrying AI generation reuses the same parent user message
     Given I have an existing adventure with stored user message id "msg_user_1" and text "Miro detrás de mí"
     And AI generation for message id "msg_user_1" has failed without storing an AI message

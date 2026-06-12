@@ -203,6 +203,11 @@ class TextAdventureChatStepDefinitions {
         chat.assertAdventureImageIsShown()
     }
 
+    @Then("the chat title is {string}")
+    fun theChatTitleIs(title: String) {
+        chat.assertTitleIsShown(title)
+    }
+
     @Then("the text adventure input is disabled")
     fun theTextAdventureInputIsDisabled() {
         chat.assertInputIsDisabled()
