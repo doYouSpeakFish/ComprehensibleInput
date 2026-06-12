@@ -71,6 +71,31 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  postgres-backup:
+    image: prodrigestivill/postgres-backup-local:18-alpine-d257e5d
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: comprehensible_input
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_admin_password
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: "7"
+      BACKUP_KEEP_WEEKS: "4"
+      BACKUP_KEEP_MONTHS: "6"
+    restart: unless-stopped
+    secrets:
+      - db_admin_password
+    volumes:
+      - postgres_backups:/backups
+
 secrets:
   koog_api_key:
     external: true
@@ -99,3 +124,4 @@ secrets:
 
 volumes:
   postgres_data:
+  postgres_backups:
