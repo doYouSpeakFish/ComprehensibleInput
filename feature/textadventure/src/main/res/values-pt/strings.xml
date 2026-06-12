@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_adventures_title">Aventuras de texto</string>
+    <string name="text_adventures_subtitle">Aprenda através de histórias interativas.</string>
+    <string name="text_adventures_early_access_eyebrow">ACESSO ANTECIPADO</string>
+    <string name="text_adventures_early_access">As aventuras de texto são experimentais e gratuitas durante o acesso antecipado.</string>
+    <string name="text_adventures_sign_in_message">Entre para jogar aventuras</string>
+    <string name="text_adventures_sign_in_description">Crie uma conta ou entre para começar e continuar suas aventuras de texto em todos os seus dispositivos.</string>
+    <string name="text_adventures_sign_in_button">Entrar</string>
+    <string name="text_adventures_create_account_button">Criar conta</string>
+    <string name="text_adventures_empty">Você ainda não tem nenhuma aventura. Comece uma!</string>
+    <string name="text_adventures_error">Não foi possível carregar suas aventuras. Por favor, tente novamente.</string>
+    <string name="text_adventure_busy">O sistema está ocupado no momento. Por favor, tente novamente em instantes.</string>
+    <string name="text_adventures_new">Iniciar nova aventura</string>
+    <string name="text_adventures_delete_content_description">Excluir aventura</string>
+    <string name="text_adventures_deleted">Aventura excluída</string>
+    <string name="text_adventures_undo">Desfazer</string>
+    <string name="text_adventures_status_not_started">Não iniciado</string>
+    <string name="text_adventures_status_in_progress">Em andamento</string>
+    <string name="text_adventures_status_complete">Concluído</string>
+    <string name="text_adventures_early_access_image_content_description">Ilustração de uma porta que se abre para uma aventura</string>
+    <string name="text_adventures_sign_in_image_content_description">Ilustração de um cadeado</string>
+    <string name="text_adventure_chat_title">Aventura</string>
+    <string name="text_adventure_generating_1">Planejando sua aventura…</string>
+    <string name="text_adventure_generating_2">Imaginando o que acontece a seguir…</string>
+    <string name="text_adventure_generating_3">Preparando o cenário…</string>
+    <string name="text_adventure_generation_error">Algo deu errado ao contar a história. Por favor, tente novamente.</string>
+    <string name="text_adventure_message_error">Não foi possível enviar sua mensagem. Por favor, tente novamente.</string>
+    <string name="text_adventure_retry">Tentar novamente</string>
+    <string name="text_adventure_message_hint">Digite seu próximo movimento…</string>
+    <string name="text_adventure_send">Enviar mensagem</string>
+    <string name="text_adventure_image_content_description">Imagem da aventura</string>
+</resources>

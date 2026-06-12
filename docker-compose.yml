@@ -14,6 +14,9 @@ services:
       BACKEND_DATABASE_PASSWORD_FILE: /run/secrets/db_app_password
       BACKEND_DATABASE_ADMIN_USER: admin
       BACKEND_DATABASE_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
+      CLOUDFLARE_EMAIL_SENDING_FROM_FILE: /run/secrets/cloudflare_email_sending_from
+      CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID_FILE: /run/secrets/cloudflare_email_sending_account_id
+      CLOUDFLARE_EMAIL_SENDING_TOKEN_FILE: /run/secrets/cloudflare_email_sending_token
     ports:
       - "8080:8080"
     secrets:
@@ -21,6 +24,9 @@ services:
       - app_api_key
       - db_app_password
       - db_admin_password
+      - cloudflare_email_sending_from
+      - cloudflare_email_sending_account_id
+      - cloudflare_email_sending_token
 
   postgres:
     image: postgres:17-alpine
@@ -50,6 +56,12 @@ secrets:
     file: ./compose-secrets/db_app_password.txt
   db_admin_password:
     file: ./compose-secrets/db_admin_password.txt
+  cloudflare_email_sending_from:
+    file: ./compose-secrets/cloudflare_email_sending_from.txt
+  cloudflare_email_sending_account_id:
+    file: ./compose-secrets/cloudflare_email_sending_account_id.txt
+  cloudflare_email_sending_token:
+    file: ./compose-secrets/cloudflare_email_sending_token.txt
 
 volumes:
   postgres_data:

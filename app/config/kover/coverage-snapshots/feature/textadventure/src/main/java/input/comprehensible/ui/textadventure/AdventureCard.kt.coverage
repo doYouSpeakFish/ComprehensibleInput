@@ -1,0 +1,226 @@
+⚪   package input.comprehensible.ui.textadventure
+⚪   
+⚪   import androidx.compose.foundation.background
+⚪   import androidx.compose.foundation.border
+⚪   import androidx.compose.foundation.layout.Arrangement
+⚪   import androidx.compose.foundation.layout.Box
+⚪   import androidx.compose.foundation.layout.Column
+⚪   import androidx.compose.foundation.layout.Row
+⚪   import androidx.compose.foundation.layout.fillMaxSize
+⚪   import androidx.compose.foundation.layout.padding
+⚪   import androidx.compose.foundation.layout.size
+⚪   import androidx.compose.foundation.shape.CircleShape
+⚪   import androidx.compose.material.icons.Icons
+⚪   import androidx.compose.material.icons.filled.Check
+⚪   import androidx.compose.material.icons.filled.Delete
+⚪   import androidx.compose.material.icons.filled.PlayArrow
+⚪   import androidx.compose.material3.Icon
+⚪   import androidx.compose.material3.MaterialTheme
+⚪   import androidx.compose.material3.SwipeToDismissBox
+⚪   import androidx.compose.material3.SwipeToDismissBoxState
+⚪   import androidx.compose.material3.SwipeToDismissBoxValue
+⚪   import androidx.compose.material3.Text
+⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.remember
+⚪   import androidx.compose.ui.Alignment
+⚪   import androidx.compose.ui.Modifier
+⚪   import androidx.compose.ui.draw.clip
+⚪   import androidx.compose.ui.graphics.Color
+⚪   import androidx.compose.ui.platform.LocalDensity
+⚪   import androidx.compose.ui.platform.testTag
+⚪   import androidx.compose.ui.res.stringResource
+⚪   import androidx.compose.ui.semantics.CustomAccessibilityAction
+⚪   import androidx.compose.ui.semantics.customActions
+⚪   import androidx.compose.ui.semantics.semantics
+⚪   import androidx.compose.ui.text.font.FontWeight
+⚪   import androidx.compose.ui.text.style.TextOverflow
+⚪   import androidx.compose.ui.unit.dp
+⚪   import input.comprehensible.data.textadventure.AdventureStatus
+⚪   import input.comprehensible.feature.textadventure.R
+⚪   import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
+⚪   
+⚪   // Fraction of a row's width it must be dragged towards the start before releasing deletes it.
+⚪   // Internal so the mid-swipe preview can lay the card out at the same reveal position.
+⚪   internal const val DELETE_SWIPE_FRACTION = 0.4f
+⚪   
+⚪   // The "in progress" status colour, matching the supplied design.
+🟢   private val InProgressColor = Color(0xFF159BC5)
+⚪   
+⚪   /**
+⚪    * A single adventure, shown as an option card with swipe-to-delete: dragging the card towards the
+⚪    * start reveals a delete background, and a swipe past the threshold dismisses the card and deletes
+⚪    * the adventure ([onDelete] — the caller offers an undo).
+⚪    */
+⚪   @Composable
+⚪   internal fun AdventureRow(
+⚪       adventure: AdventureItem,
+⚪       onClick: () -> Unit,
+⚪       onDelete: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟢   ) {
+🟢       val density = LocalDensity.current
+⚪       // Deliberately a plain remember rather than rememberSwipeToDismissBoxState: that helper is
+⚪       // backed by rememberSaveable, and a lazy list keeps saved state for removed keys. An undone
+⚪       // deletion re-adds the row under its old key, which would restore the saved dismissed state
+⚪       // and immediately dismiss — delete — the adventure again.
+🟢       val dismissState = remember(adventure.id, density) {
+🟢           SwipeToDismissBoxState(
+🟢               initialValue = SwipeToDismissBoxValue.Settled,
+🟢               density = density,
+🟢               confirmValueChange = { true },
+🟢               positionalThreshold = { totalDistance -> totalDistance * DELETE_SWIPE_FRACTION },
+🟢           )
+⚪       }
+🟢       val deleteLabel = stringResource(R.string.text_adventures_delete_content_description)
+🟢       SwipeToDismissBox(
+🟢           state = dismissState,
+⚪           backgroundContent = { DeleteBackground(modifier = Modifier.fillMaxSize()) },
+🟢           modifier = modifier,
+⚪           // Only the towards-the-start swipe deletes; the other direction stays put.
+🟢           enableDismissFromStartToEnd = false,
+🟢           onDismiss = { onDelete() },
+🟢       ) {
+🟢           AdventureCard(
+🟢               adventure = adventure,
+🟢               onClick = onClick,
+🟢               modifier = Modifier.semantics {
+🟢                   customActions = listOf(CustomAccessibilityAction(deleteLabel) { onDelete(); true })
+⚪               },
+⚪           )
+⚪       }
+🟢   }
+⚪   
+⚪   @Composable
+⚪   internal fun AdventureCard(
+⚪       adventure: AdventureItem,
+⚪       onClick: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟢   ) {
+🟢       OptionCard(
+🟢           onClick = onClick,
+🟢           modifier = modifier.testTag("adventure_${adventure.title}"),
+🟢       ) {
+🟢           Row(
+🟢               modifier = Modifier.padding(16.dp),
+🟢               horizontalArrangement = Arrangement.spacedBy(14.dp),
+🟢               verticalAlignment = Alignment.CenterVertically,
+⚪           ) {
+🟢               Column(
+🟢                   modifier = Modifier.weight(1f),
+🟢                   verticalArrangement = Arrangement.spacedBy(8.dp),
+⚪               ) {
+🟢                   Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+🟢                       Text(
+🟢                           text = adventure.title,
+🟢                           style = MaterialTheme.typography.titleMedium,
+🟢                           fontWeight = FontWeight.Bold,
+🟢                           maxLines = 2,
+🟢                           overflow = TextOverflow.Ellipsis,
+⚪                       )
+🟡                       if (adventure.translatedTitle.isNotBlank()) {
+🟢                           Text(
+🟢                               text = adventure.translatedTitle,
+🟢                               style = MaterialTheme.typography.bodyMedium,
+🟢                               color = MaterialTheme.colorScheme.onSurfaceVariant,
+🟢                               maxLines = 2,
+🟢                               overflow = TextOverflow.Ellipsis,
+⚪                           )
+🟢                       }
+🟢                   }
+🟢                   LanguagePill(adventure.learningLanguage, adventure.translationLanguage)
+🟢                   StatusPill(adventure.status)
+🟢               }
+🟢               AdventureImage(
+🟢                   imageUrl = adventure.imageUrl,
+🟢                   testTag = "adventure_image_${adventure.title}",
+🟢                   modifier = Modifier
+🟢                       .size(104.dp)
+🟢                       .clip(MaterialTheme.shapes.large),
+⚪               )
+🟢           }
+⚪       }
+🟢   }
+⚪   
+⚪   /** The "Spanish → English" badge naming the learning and translation languages. */
+⚪   @Composable
+🟡   private fun LanguagePill(learningLanguage: String, translationLanguage: String) {
+🟢       Text(
+🟢           text = "${languageDisplayName(learningLanguage)} → ${languageDisplayName(translationLanguage)}",
+🟢           style = MaterialTheme.typography.labelMedium,
+🟢           fontWeight = FontWeight.Bold,
+🟢           color = MaterialTheme.colorScheme.onSurfaceVariant,
+🟢           modifier = Modifier
+🟢               .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+🟢               .padding(horizontal = 10.dp, vertical = 4.dp),
+⚪       )
+🟢   }
+⚪   
+⚪   @Composable
+🟡   private fun StatusPill(status: AdventureStatus) {
+🟡       val color = when (status) {
+🟢           AdventureStatus.NOT_STARTED -> MaterialTheme.colorScheme.onSurfaceVariant
+🟢           AdventureStatus.IN_PROGRESS -> InProgressColor
+🟢           AdventureStatus.COMPLETE -> MaterialTheme.colorScheme.primary
+🔴       }
+🟢       val label = stringResource(
+🟢           when (status) {
+🟢               AdventureStatus.NOT_STARTED -> R.string.text_adventures_status_not_started
+🟢               AdventureStatus.IN_PROGRESS -> R.string.text_adventures_status_in_progress
+🟢               AdventureStatus.COMPLETE -> R.string.text_adventures_status_complete
+⚪           }
+⚪       )
+🟢       Row(
+🟢           modifier = Modifier
+🟢               .clip(CircleShape)
+🟢               .background(color.copy(alpha = 0.14f))
+🟢               .padding(horizontal = 10.dp, vertical = 4.dp),
+🟢           horizontalArrangement = Arrangement.spacedBy(6.dp),
+🟢           verticalAlignment = Alignment.CenterVertically,
+⚪       ) {
+🟡           when (status) {
+🟢               AdventureStatus.NOT_STARTED -> Box(
+🟢                   modifier = Modifier
+🟢                       .size(8.dp)
+🟢                       .clip(CircleShape)
+🟢                       .background(color),
+⚪               )
+⚪   
+🟢               AdventureStatus.IN_PROGRESS -> Icon(
+🟢                   imageVector = Icons.Default.PlayArrow,
+🟢                   contentDescription = null,
+🟢                   tint = color,
+🟢                   modifier = Modifier.size(16.dp),
+⚪               )
+⚪   
+🟢               AdventureStatus.COMPLETE -> Icon(
+🟢                   imageVector = Icons.Default.Check,
+🟢                   contentDescription = null,
+🟢                   tint = color,
+🟢                   modifier = Modifier.size(16.dp),
+⚪               )
+🔴           }
+🟢           Text(
+🟢               text = label,
+🟢               style = MaterialTheme.typography.labelMedium,
+🟢               color = MaterialTheme.colorScheme.onSurface,
+⚪           )
+🟢       }
+🟢   }
+⚪   
+⚪   /** The background revealed while swiping an adventure away, signalling the delete action. */
+⚪   @Composable
+🟡   internal fun DeleteBackground(modifier: Modifier = Modifier) {
+🟢       Box(
+🟢           modifier = modifier
+🟢               .clip(MaterialTheme.shapes.extraLarge)
+🟢               .background(MaterialTheme.colorScheme.errorContainer)
+🟢               .padding(horizontal = 24.dp),
+🟢           contentAlignment = Alignment.CenterEnd,
+⚪       ) {
+🟢           Icon(
+🟢               imageVector = Icons.Default.Delete,
+🟢               contentDescription = stringResource(R.string.text_adventures_delete_content_description),
+🟢               tint = MaterialTheme.colorScheme.onErrorContainer,
+⚪           )
+🟢       }
+🟢   }

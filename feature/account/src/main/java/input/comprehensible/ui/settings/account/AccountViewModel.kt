@@ -1,0 +1,93 @@
+package input.comprehensible.ui.settings.account
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import input.comprehensible.account.usecases.GetAccountSessionUseCase
+import input.comprehensible.account.usecases.SignInUseCase
+import input.comprehensible.account.usecases.SignOutUseCase
+import input.comprehensible.data.account.InvalidCredentialsException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class AccountViewModel(
+    private val getAccountSession: GetAccountSessionUseCase = GetAccountSessionUseCase(),
+    private val signIn: SignInUseCase = SignInUseCase(),
+    private val signOut: SignOutUseCase = SignOutUseCase(),
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(AccountUiState.INITIAL)
+    val uiState: StateFlow<AccountUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            getAccountSession().collect { session ->
+                if (session != null) {
+                    _uiState.update { AccountUiState(step = AccountUiState.Step.SignedIn(session.email)) }
+                } else {
+                    _uiState.update { state ->
+                        if (state.step is AccountUiState.Step.Loading || state.step is AccountUiState.Step.SignedIn) {
+                            AccountUiState(step = AccountUiState.Step.SignIn())
+                        } else {
+                            state
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun onSignInEmailChanged(email: String) {
+        _uiState.update { state ->
+            val step = state.step as? AccountUiState.Step.SignIn ?: return
+            state.copy(step = step.copy(email = email))
+        }
+    }
+
+    fun onSignInPasswordChanged(password: String) {
+        _uiState.update { state ->
+            val step = state.step as? AccountUiState.Step.SignIn ?: return
+            state.copy(step = step.copy(password = password))
+        }
+    }
+
+    fun onSignInSubmit() {
+        val step = _uiState.value.step as? AccountUiState.Step.SignIn ?: return
+        _uiState.update { it.copy(step = step.copy(isLoading = true)) }
+        viewModelScope.launch {
+            signIn(step.email, step.password)
+                .onFailure { throwable ->
+                    if (throwable is InvalidCredentialsException) {
+                        _uiState.update {
+                            it.copy(step = step.copy(isLoading = false), showInvalidCredentialsError = true)
+                        }
+                    } else {
+                        _uiState.update {
+                            it.copy(step = step.copy(isLoading = false), showError = true)
+                        }
+                    }
+                }
+        }
+    }
+
+    fun onSignOutClicked() {
+        viewModelScope.launch {
+            signOut().onFailure {
+                _uiState.update { it.copy(showError = true) }
+            }
+        }
+    }
+
+    fun onErrorDismissed() {
+        _uiState.update { it.copy(showError = false) }
+    }
+
+    fun onInvalidCredentialsErrorDismissed() {
+        _uiState.update { it.copy(showInvalidCredentialsError = false) }
+    }
+}
+
+internal fun AccountUiState.Step.SignIn.isSignInEnabled(): Boolean {
+    return email.trim().isNotBlank() && password.isNotBlank()
+}

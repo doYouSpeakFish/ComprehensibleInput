@@ -1,6 +1,11 @@
 services:
   backend:
     image: edwardsills/comprehensible-input:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     depends_on:
       - postgres
     environment:
@@ -11,6 +16,9 @@ services:
       BACKEND_DATABASE_PASSWORD_FILE: /run/secrets/db_app_password
       BACKEND_DATABASE_ADMIN_USER: admin
       BACKEND_DATABASE_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
+      CLOUDFLARE_EMAIL_SENDING_FROM_FILE: /run/secrets/cloudflare_email_sending_from
+      CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID_FILE: /run/secrets/cloudflare_email_sending_account_id
+      CLOUDFLARE_EMAIL_SENDING_TOKEN_FILE: /run/secrets/cloudflare_email_sending_token
     ports:
       - "8080:8080"
     secrets:
@@ -18,9 +26,34 @@ services:
       - app_api_key
       - db_app_password
       - db_admin_password
+      - cloudflare_email_sending_from
+      - cloudflare_email_sending_account_id
+      - cloudflare_email_sending_token
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+    environment:
+      TUNNEL_TOKEN_FILE: /run/secrets/cloudflared_tunnel_token
+    restart: unless-stopped
+    secrets:
+      - cloudflared_tunnel_token
 
   postgres:
     image: postgres:17-alpine
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       POSTGRES_DB: comprehensible_input
       POSTGRES_USER: admin
@@ -40,13 +73,29 @@ services:
 
 secrets:
   koog_api_key:
-    file: ./compose-secrets/koog_api_key.txt
+    external: true
+    name: app_koog_api_key
   app_api_key:
-    file: ./compose-secrets/app_api_key.txt
+    external: true
+    name: app_app_api_key
   db_app_password:
-    file: ./compose-secrets/db_app_password.txt
+    external: true
+    name: app_db_app_password
   db_admin_password:
-    file: ./compose-secrets/db_admin_password.txt
+    external: true
+    name: app_db_admin_password
+  cloudflare_email_sending_from:
+    external: true
+    name: app_cloudflare_email_sending_from
+  cloudflare_email_sending_account_id:
+    external: true
+    name: app_cloudflare_email_sending_account_id
+  cloudflare_email_sending_token:
+    external: true
+    name: app_cloudflare_email_sending_token_v2
+  cloudflared_tunnel_token:
+    external: true
+    name: app_cloudflared_tunnel_token
 
 volumes:
   postgres_data:
