@@ -4,6 +4,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import input.comprehensible.ui.components.animations.defaultEnterTransition
+import input.comprehensible.ui.components.animations.defaultExitTransition
+import input.comprehensible.ui.components.animations.defaultPopEnterTransition
+import input.comprehensible.ui.components.animations.defaultPopExitTransition
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -23,7 +27,12 @@ fun NavGraphBuilder.textAdventureNavGraph(
     onCreateAccountClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable<TextAdventuresListRoute> {
+    composable<TextAdventuresListRoute>(
+        enterTransition = defaultEnterTransition,
+        exitTransition = defaultExitTransition,
+        popEnterTransition = defaultPopEnterTransition,
+        popExitTransition = defaultPopExitTransition,
+    ) {
         TextAdventuresListScreen(
             onSignInClick = onSignInClick,
             onCreateAccountClick = onCreateAccountClick,
@@ -35,7 +44,12 @@ fun NavGraphBuilder.textAdventureNavGraph(
             onSettingsClick = onSettingsClick,
         )
     }
-    composable<TextAdventureChatRoute> { entry ->
+    composable<TextAdventureChatRoute>(
+        enterTransition = defaultEnterTransition,
+        exitTransition = defaultExitTransition,
+        popEnterTransition = defaultPopEnterTransition,
+        popExitTransition = defaultPopExitTransition,
+    ) { entry ->
         TextAdventureChatScreen(adventureId = entry.toRoute<TextAdventureChatRoute>().adventureId)
     }
 }
