@@ -123,6 +123,7 @@ private fun Route.adventureDeletionV1Routes(textAdventureService: TextAdventureG
 private data class StartTextAdventureV1Request(
     val learningLanguage: String,
     val translationLanguage: String,
+    val genre: String,
 )
 
 @Serializable

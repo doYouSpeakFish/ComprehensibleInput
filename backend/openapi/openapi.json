@@ -773,13 +773,17 @@
                 "title": "StartTextAdventureV1Request",
                 "required": [
                     "learningLanguage",
-                    "translationLanguage"
+                    "translationLanguage",
+                    "genre"
                 ],
                 "properties": {
                     "learningLanguage": {
                         "type": "string"
                     },
                     "translationLanguage": {
+                        "type": "string"
+                    },
+                    "genre": {
                         "type": "string"
                     }
                 }
