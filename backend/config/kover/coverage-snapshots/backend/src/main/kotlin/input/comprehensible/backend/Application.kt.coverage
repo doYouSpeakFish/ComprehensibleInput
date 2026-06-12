@@ -5,7 +5,6 @@
 ⚪   import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
 ⚪   import input.comprehensible.backend.textadventure.DefaultTextAdventureStructuredPromptExecutor
 ⚪   import input.comprehensible.backend.textadventure.TextAdventureGenerationService
-⚪   import input.comprehensible.backend.textadventure.textAdventureRoutes
 ⚪   import input.comprehensible.backend.textadventure.textAdventureV1Routes
 ⚪   import input.comprehensible.backend.account.accountRoutes
 ⚪   import io.ktor.http.ContentType
@@ -38,7 +37,7 @@
 ⚪   import kotlin.time.Duration.Companion.seconds
 ⚪   
 ⚪   
-🟢   data class AppPrincipal(val key: String)
+🔴   data class AppPrincipal(val key: String)
 🟢   data class AccountSessionPrincipal(val token: String, val accountId: String, val account: AccountPayload)
 ⚪   
 ⚪   data class DatabaseConnectionConfig(
@@ -201,8 +200,8 @@
 🟢       configureRateLimits(globalRateLimit)
 🟢       install(Authentication) {
 🟢           apiKey {
-🟢               validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
-🟢               challenge { call -> call.respond(HttpStatusCode.Unauthorized, "Invalid or missing API key") }
+🔴               validate { keyFromHeader -> keyFromHeader.takeIf { it == appApiKey }?.let { AppPrincipal(it) } }
+🟡               challenge { call -> call.respond(HttpStatusCode.Unauthorized, "Invalid or missing API key") }
 ⚪           }
 🟢           bearer("account-bearer") {
 🟢               authenticate { credential ->
@@ -211,14 +210,13 @@
 ⚪           }
 ⚪       }
 🟢       routing {
-🟢           get("/health") { call.respondText("ok", ContentType.Text.Plain, HttpStatusCode.OK) }
+🟡           get("/health") { call.respondText("ok", ContentType.Text.Plain, HttpStatusCode.OK) }
 ⚪           // Adventure cover images are public, cacheable static assets served straight from the
 ⚪           // bundled resources (loaded by the app with Coil). They carry no user data, so they sit
 ⚪           // outside authentication and the text adventure rate limit.
 🟢           staticResources("/$ADVENTURE_IMAGES_PATH", ADVENTURE_IMAGES_PATH)
 🟢           accountRoutes(accountService)
 🟢           rateLimit(RateLimitName(TEXT_ADVENTURE_RATE_LIMIT_NAME)) {
-🟢               textAdventureRoutes(textAdventureService)
 🟢               textAdventureV1Routes(textAdventureService)
 ⚪           }
 ⚪       }

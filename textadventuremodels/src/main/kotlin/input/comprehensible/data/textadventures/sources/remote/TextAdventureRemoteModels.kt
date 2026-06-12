@@ -57,12 +57,6 @@ data class TextAdventureHistoryMessage(
 )
 
 @Serializable
-data class StartTextAdventureRequest(
-    val learningLanguage: String,
-    val translationsLanguage: String,
-)
-
-@Serializable
 data class ContinueTextAdventureRequest(
     val adventureId: String,
     val learningLanguage: String,
