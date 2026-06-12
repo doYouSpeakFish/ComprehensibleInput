@@ -12,6 +12,8 @@
 🟢       val optimisticUserMessage: ChatMessage?,
 🟢       val selectedSentence: SelectedSentence?,
 🟢       val imageUrl: String? = null,
+⚪       /** The adventure's title, shown in the top bar once the adventure has loaded. */
+🟢       val title: String? = null,
 ⚪   ) {
 ⚪       /** The persisted messages followed by the not-yet-submitted user message, if any. */
 ⚪       val displayedMessages: List<ChatMessage>
@@ -46,6 +48,7 @@
 🟢               optimisticUserMessage = null,
 🟢               selectedSentence = null,
 🟢               imageUrl = null,
+🟢               title = null,
 ⚪           )
 ⚪       }
 ⚪   }
