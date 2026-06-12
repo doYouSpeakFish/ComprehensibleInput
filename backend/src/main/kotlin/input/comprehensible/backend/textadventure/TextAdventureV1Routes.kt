@@ -18,7 +18,7 @@ fun Route.textAdventureV1Routes(textAdventureService: TextAdventureGenerationSer
         post("/v1/adventures") {
             val principal = call.principal<AccountSessionPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
             val request = call.receive<StartTextAdventureV1Request>()
-            if (request.learningLanguage.isBlank() || request.translationLanguage.isBlank()) {
+            if (request.learningLanguage.isBlank() || request.translationLanguage.isBlank() || request.genre.isBlank()) {
                 return@post call.respond(HttpStatusCode.BadRequest)
             }
             val response = textAdventureService.startAdventure(
