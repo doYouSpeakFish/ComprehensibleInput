@@ -9,20 +9,26 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import input.comprehensible.data.AppDb
 import input.comprehensible.data.StoriesTestData
-import input.comprehensible.data.TextAdventuresTestData
-import input.comprehensible.data.languages.sources.DefaultLanguageSettingsLocalDataSource
-import input.comprehensible.data.languages.sources.LanguageSettingsLocalDataSource
+import input.comprehensible.data.account.sources.local.AccountLocalDataSource
+import input.comprehensible.data.account.sources.local.DefaultAccountLocalDataSource
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
+import input.comprehensible.data.account.sources.remote.AccountRemoteDataSource
+import input.comprehensible.data.account.sources.remote.RemoteSession
+import input.comprehensible.data.languagesettings.sources.DefaultLanguageSettingsLocalDataSource
+import input.comprehensible.data.languagesettings.sources.LanguageSettingsLocalDataSource
 import input.comprehensible.data.sample.TestStory
 import input.comprehensible.data.sources.FakeStoriesLocalDataSource
-import input.comprehensible.data.sources.FakeTextAdventureRemoteDataSource
 import input.comprehensible.data.stories.sources.stories.local.StoriesLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
-import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
-import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteDataSource
-import input.comprehensible.data.textadventures.sources.remote.TextAdventureRemoteResponse
+import input.comprehensible.data.textadventure.fakes.FakeAdventureRemoteDataSource
+import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+import input.comprehensible.data.textadventure.sources.remote.AdventureRemoteDataSource
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.AppScope
 import input.comprehensible.di.IoDispatcher
 import input.comprehensible.ui.ComprehensibleInputApp
+import input.comprehensible.ui.home.HomeRoute
+import input.comprehensible.ui.settings.settings.SettingsRoute
 import input.comprehensible.ui.settings.softwarelicences.SoftwareLicencesRoute
 import input.comprehensible.ui.storylist.StoryListRoute
 import input.comprehensible.ui.storyreader.StoryReaderRoute
@@ -30,7 +36,9 @@ import input.comprehensible.util.FeatureFlags
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.setMain
 
@@ -41,17 +49,18 @@ class ComprehensibleInputTestScope(
     val testScope: TestScope,
     private val darkTheme: Boolean,
     aiTextAdventuresEnabled: Boolean,
+    accountManagementEnabled: Boolean,
 ) {
     private var isAppUiLaunched = false
 
     private val storiesTestData = StoriesTestData()
-    private val fakeTextAdventureRemoteDataSource = FakeTextAdventureRemoteDataSource()
-    private val textAdventuresTestData = TextAdventuresTestData(fakeTextAdventureRemoteDataSource)
     private val appContext = ApplicationProvider.getApplicationContext<Application>()
     private val appDb = Room
         .inMemoryDatabaseBuilder<AppDb>(context = appContext)
         .setQueryCoroutineContext(context = dispatcher)
         .build()
+
+    private val realAccountLocalDataSource by lazy { DefaultAccountLocalDataSource(context = appContext) }
 
     private lateinit var _navController: TestNavHostController
     private val navController: TestNavHostController
@@ -69,7 +78,10 @@ class ComprehensibleInputTestScope(
 
     init {
         FeatureFlags.inject {
-            FeatureFlags(aiTextAdventuresEnabled = aiTextAdventuresEnabled)
+            FeatureFlags(
+                aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+                accountManagementEnabled = accountManagementEnabled,
+            )
         }
         input.comprehensible.di.ApplicationProvider.inject { appContext }
         Dispatchers.setMain(dispatcher)
@@ -80,8 +92,20 @@ class ComprehensibleInputTestScope(
             DefaultLanguageSettingsLocalDataSource(context = appContext)
         }
         StoriesInfoLocalDataSource.inject { appDb.getStoriesInfoDao() }
-        TextAdventuresLocalDataSource.inject { appDb.getTextAdventuresDao() }
-        TextAdventureRemoteDataSource.inject { fakeTextAdventureRemoteDataSource }
+        UserLocalDataSource.inject { appDb.getUserDao() }
+        AdventureLocalDataSource.inject { appDb.getAdventureDao() }
+        AdventureRemoteDataSource.inject { FakeAdventureRemoteDataSource() }
+        AccountRemoteDataSource.inject { object : AccountRemoteDataSource {
+            override suspend fun createAccount(email: String, password: String) = Unit
+            override suspend fun verifyEmail(email: String, code: String) = Unit
+            override suspend fun requestEmailVerificationCode(email: String) = Unit
+            override suspend fun signIn(email: String, password: String) = RemoteSession(token = "", userId = "")
+            override suspend fun signOut(token: String) = Unit
+            override suspend fun deleteAccount(email: String, password: String) = Unit
+            override suspend fun requestPasswordResetCode(email: String) = Unit
+            override suspend fun resetPassword(email: String, password: String, code: String) = Unit
+        } }
+        AccountLocalDataSource.inject { realAccountLocalDataSource }
     }
 
     fun launchAppUi() {
@@ -97,8 +121,24 @@ class ComprehensibleInputTestScope(
         isAppUiLaunched = true
     }
 
+    fun goToHome() {
+        navController.navigate(HomeRoute)
+    }
+
+    fun signInAs(email: String, userId: String = "test-user-id") {
+        testScope.launch {
+            realAccountLocalDataSource.saveSession(token = "test-token", email = email, userId = userId)
+            appDb.getUserDao().upsertUser(UserEntity(id = userId, email = email))
+        }
+        testScope.advanceUntilIdle()
+    }
+
     fun goToStoryList() {
         navController.navigate(StoryListRoute)
+    }
+
+    fun goToSettings() {
+        navController.navigate(SettingsRoute)
     }
 
     fun goToStoryReader(id: String) {
@@ -120,6 +160,15 @@ class ComprehensibleInputTestScope(
     suspend fun awaitIdle() {
         testScope.runCurrent()
         composeRule.awaitIdle()
+    }
+
+    /**
+     * Non-suspending equivalent of [awaitIdle] for Cucumber step definitions: pumps the test
+     * scheduler and then the Compose/Robolectric main looper so the UI reflects pending work.
+     */
+    fun idle() {
+        testScope.runCurrent()
+        composeRule.waitForIdle()
     }
 
     fun setLocalStories(stories: List<TestStory>) {
@@ -146,11 +195,20 @@ class ComprehensibleInputTestScope(
         storiesTestData.hideStoryForLanguage(languageCode, story)
     }
 
-    fun enqueueTextAdventure(
-        scenario: TextAdventureRemoteResponse,
-        responses: List<TextAdventureRemoteResponse>,
-    ) {
-        textAdventuresTestData.enqueueAdventure(scenario, responses)
+    suspend fun clearAccountSession() {
+        realAccountLocalDataSource.clearSession()
+    }
+
+    /**
+     * Navigates away from the screen under test so that it leaves the composition. Disposing the
+     * screen cancels any infinite animations it hosts (such as the blinking text field cursor),
+     * which would otherwise keep the test scheduler busy forever and hang [runTest]'s final drain.
+     * Software licences is used as the destination because it has no infinite animations of its own.
+     */
+    internal suspend fun disposeUiUnderTest() {
+        if (!isAppUiLaunched) return
+        _navController.navigate(SoftwareLicencesRoute)
+        awaitIdle()
     }
 
     internal fun close() {
@@ -160,6 +218,7 @@ class ComprehensibleInputTestScope(
 
 fun ComprehensibleInputTestRule.runTest(
     aiTextAdventuresEnabled: Boolean = true,
+    accountManagementEnabled: Boolean = true,
     block: suspend ComprehensibleInputTestScope.() -> Unit
 ) = kotlinx.coroutines.test.runTest(context = dispatcher) {
     ComprehensibleInputTestScope(
@@ -168,8 +227,11 @@ fun ComprehensibleInputTestRule.runTest(
         dispatcher = dispatcher,
         darkTheme = themeMode.isDarkTheme,
         aiTextAdventuresEnabled = aiTextAdventuresEnabled,
+        accountManagementEnabled = accountManagementEnabled,
     ).apply {
+        clearAccountSession()
         block()
+        disposeUiUnderTest()
         close()
     }
 }

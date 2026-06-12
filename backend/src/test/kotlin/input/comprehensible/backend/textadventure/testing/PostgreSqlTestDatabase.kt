@@ -1,8 +1,8 @@
 package input.comprehensible.backend.textadventure.testing
 
 import input.comprehensible.backend.DatabaseConnectionConfig
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 object PostgreSqlTestDatabase {
     private const val user = "sa"

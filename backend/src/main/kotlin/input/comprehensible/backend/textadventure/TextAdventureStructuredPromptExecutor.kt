@@ -13,6 +13,18 @@ interface TextAdventureStructuredPromptExecutor {
         systemPrompt: String,
         userPrompt: String,
     ): TextAdventureStructuredResponse
+
+    suspend fun executeUserMessageResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): UserMessageStructuredResponse
+
+    suspend fun executePlanResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): AdventurePlanStructuredResponse
 }
 
 class DefaultTextAdventureStructuredPromptExecutor(
@@ -25,6 +37,30 @@ class DefaultTextAdventureStructuredPromptExecutor(
         systemPrompt: String,
         userPrompt: String,
     ): TextAdventureStructuredResponse = promptExecutor.executeStructured<TextAdventureStructuredResponse>(
+        prompt = prompt(promptName) {
+            system(systemPrompt)
+            user(userPrompt)
+        },
+        model = Gemini3_1FlashLite,
+    ).getOrThrow().data
+
+    override suspend fun executeUserMessageResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): UserMessageStructuredResponse = promptExecutor.executeStructured<UserMessageStructuredResponse>(
+        prompt = prompt(promptName) {
+            system(systemPrompt)
+            user(userPrompt)
+        },
+        model = Gemini3_1FlashLite,
+    ).getOrThrow().data
+
+    override suspend fun executePlanResponse(
+        promptName: String,
+        systemPrompt: String,
+        userPrompt: String,
+    ): AdventurePlanStructuredResponse = promptExecutor.executeStructured<AdventurePlanStructuredResponse>(
         prompt = prompt(promptName) {
             system(systemPrompt)
             user(userPrompt)
