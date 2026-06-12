@@ -57,16 +57,18 @@ class TextAdventureChatViewModel(
     }.map { messages -> messages.map { it.toChatMessage() } }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val imageUrl = currentAdventureId.flatMapLatest { id ->
+    private val adventure = currentAdventureId.flatMapLatest { id ->
         if (id == null) flowOf(null) else textAdventureRepository.getAdventure(id)
-    }.map { it?.imageUrl }
+    }
+    private val imageUrl = adventure.map { it?.imageUrl }
+    private val title = adventure.map { it?.title }
 
     val state: StateFlow<TextAdventureChatUiState> = combine(
         messages,
         isGenerating,
         showError,
         showBusyMessage,
-        combine(showMessageError, optimisticUserMessage, selectedSentence, imageUrl, ::ChatExtras),
+        combine(showMessageError, optimisticUserMessage, selectedSentence, imageUrl, title, ::ChatExtras),
     ) { messages, generating, error, busy, extras ->
         TextAdventureChatUiState(
             messages = messages,
@@ -77,6 +79,7 @@ class TextAdventureChatViewModel(
             optimisticUserMessage = extras.optimisticUserMessage,
             selectedSentence = extras.selectedSentence,
             imageUrl = extras.imageUrl,
+            title = extras.title,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -209,6 +212,7 @@ private data class ChatExtras(
     val optimisticUserMessage: ChatMessage?,
     val selectedSentence: SelectedSentence?,
     val imageUrl: String?,
+    val title: String?,
 )
 
 private fun AdventureMessage.toChatMessage() = ChatMessage(

@@ -74,7 +74,9 @@ internal fun TextAdventureChatScreen(
     Scaffold(
         modifier = modifier.testTag("text_adventure_chat"),
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.text_adventure_chat_title)) })
+            TopAppBar(
+                title = { Text(state.title ?: stringResource(R.string.text_adventure_chat_title)) },
+            )
         },
         bottomBar = {
             if (!state.isInputHidden) {

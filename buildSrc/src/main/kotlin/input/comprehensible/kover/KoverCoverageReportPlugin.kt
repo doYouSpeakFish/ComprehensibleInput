@@ -21,12 +21,20 @@ class KoverCoverageReportPlugin : Plugin<Project> {
             sourceRoots.set(extension.sourceRoots)
             dependsOn(project.tasks.named("koverXmlReport"))
         }
-        project.tasks.register<Sync>("koverCoverageSnapshot") {
+        val snapshotTask = project.tasks.register<Sync>("koverCoverageSnapshot") {
             group = "verification"
             description = "Update the stored Kover custom coverage snapshot reports."
             dependsOn(reportTask)
             from(extension.outputDir)
             into(extension.snapshotDir)
+        }
+
+        // Detekt analyses the whole project tree, which contains the snapshot directory this task
+        // writes into. Order them explicitly so the two can be requested in a single invocation
+        // (e.g. `./gradlew detekt lint koverCoverageSnapshot`) without Gradle flagging an undeclared
+        // dependency between detekt's inputs and the snapshot output.
+        project.tasks.matching { it.name.startsWith("detekt") }.configureEach {
+            mustRunAfter(snapshotTask)
         }
 
         project.tasks.register<CompareKoverCoverageSnapshotsTask>("koverCoverageSnapshotCheck") {
