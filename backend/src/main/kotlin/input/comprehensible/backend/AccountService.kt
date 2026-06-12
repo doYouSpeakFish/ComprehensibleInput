@@ -5,7 +5,7 @@ import input.comprehensible.backend.email.CloudflareEmailDataSource
 import input.comprehensible.backend.email.EmailDataSource
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.v1.jdbc.Database
 import org.mindrot.jbcrypt.BCrypt
 import java.security.MessageDigest
 import java.security.SecureRandom
