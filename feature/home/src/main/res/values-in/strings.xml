@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">3 Million Words</string>
+    <string name="home_intro_eyebrow">BAHASA ANDA, DALAM KONTEKS</string>
+    <string name="home_intro_title">Pilih yang terjadi selanjutnya.</string>
+    <string name="home_intro_description">Baca dan jelajahi sesuai kecepatan Anda.</string>
+    <string name="home_stories_eyebrow">BACA</string>
+    <string name="home_stories">Cerita</string>
+    <string name="home_stories_description">Biasakan diri dengan bahasa melalui kisah-kisah yang berkesan.</string>
+    <string name="home_text_adventures_eyebrow">BERMAIN &amp; MENJELAJAH</string>
+    <string name="home_text_adventures">Petualangan teks</string>
+    <string name="home_text_adventures_description">Buat pilihan dan temukan ke mana bahasa membawa Anda.</string>
+    <string name="home_settings_content_description">Pengaturan</string>
+</resources>

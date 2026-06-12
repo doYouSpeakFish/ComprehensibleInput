@@ -1,0 +1,74 @@
+⚪   package input.comprehensible.ui.textadventure
+⚪   
+⚪   import androidx.annotation.DrawableRes
+⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.runtime.CompositionLocalProvider
+⚪   import androidx.compose.runtime.remember
+⚪   import androidx.compose.ui.platform.LocalContext
+⚪   import androidx.compose.ui.platform.LocalInspectionMode
+⚪   import coil3.annotation.ExperimentalCoilApi
+⚪   import coil3.asImage
+⚪   import coil3.compose.AsyncImagePreviewHandler
+⚪   import coil3.compose.LocalAsyncImagePreviewHandler
+⚪   import input.comprehensible.feature.textadventure.R
+⚪   
+⚪   /**
+⚪    * Helpers that let `@Preview`s (and the Roborazzi screenshots generated from them) show real cover
+⚪    * artwork instead of an empty placeholder. [AdventureImage] loads its artwork over the network with
+⚪    * Coil, which cannot reach the network from a preview, so previews wrap their content in
+⚪    * [AdventureImagePreview] to supply a real bundled image instead.
+⚪    *
+⚪    * A small selection of catalogue images is bundled as `drawable-nodpi` resources solely for this
+⚪    * purpose. They are referenced only from preview code, so release builds (which shrink unused code
+⚪    * and resources) strip both the previews and these drawables out of the shipped app.
+⚪    */
+⚪   internal object AdventurePreviewImages {
+⚪       private const val BASE = "https://preview.comprehensibleinput/adventure-images"
+⚪   
+⚪       /** Light-theme cover-image URLs whose dark variants resolve via [AdventureImageUrls.darkVariant]. */
+⚪       const val FOREST_PATH = "$BASE/forest-path.webp"
+⚪       const val MOUNTAIN_PEAK = "$BASE/mountain-peak.webp"
+⚪       const val COASTAL_VILLAGE = "$BASE/coastal-village.webp"
+⚪   }
+⚪   
+⚪   /**
+⚪    * Maps a cover-image URL to the bundled preview drawable that stands in for it, choosing the
+⚪    * dark-theme artwork when the URL is the dark variant. Unknown URLs fall back to a single image so
+⚪    * any preview that shows a cover still renders one.
+⚪    */
+⚪   @DrawableRes
+⚪   private fun previewDrawableRes(imageUrl: String): Int {
+🟢       val dark = imageUrl.contains("-dark")
+🟢       return when {
+🟢           imageUrl.contains("mountain-peak") ->
+🟢               if (dark) R.drawable.preview_mountain_peak_dark else R.drawable.preview_mountain_peak
+🟢           imageUrl.contains("coastal-village") ->
+🟢               if (dark) R.drawable.preview_coastal_village_dark else R.drawable.preview_coastal_village
+⚪           else ->
+🟢               if (dark) R.drawable.preview_forest_path_dark else R.drawable.preview_forest_path
+⚪       }
+⚪   }
+⚪   
+⚪   /**
+⚪    * Wraps preview [content] so that [AdventureImage]'s Coil `AsyncImage` resolves to a bundled
+⚪    * drawable. Inspection mode is forced on so the handler is used both in Android Studio previews and
+⚪    * in the Robolectric/Roborazzi screenshots, which render these previews headlessly.
+⚪    */
+⚪   // Preview-only, one-shot render: the configuration-invalidation concern behind
+⚪   // LocalContextGetResourceValueCall does not apply, so reading the drawable from the context is fine.
+⚪   @Suppress("LocalContextGetResourceValueCall")
+⚪   @OptIn(ExperimentalCoilApi::class)
+⚪   @Composable
+🟡   internal fun AdventureImagePreview(content: @Composable () -> Unit) {
+🟢       val context = LocalContext.current
+🟢       val previewHandler = remember(context) {
+🟢           AsyncImagePreviewHandler { request ->
+🟡               requireNotNull(context.getDrawable(previewDrawableRes(request.data.toString()))).asImage()
+🟢           }
+⚪       }
+🟢       CompositionLocalProvider(
+🟢           LocalInspectionMode provides true,
+🟢           LocalAsyncImagePreviewHandler provides previewHandler,
+🟢           content = content,
+⚪       )
+🟢   }

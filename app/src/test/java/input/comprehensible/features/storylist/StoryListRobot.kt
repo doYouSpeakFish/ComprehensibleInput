@@ -12,7 +12,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
-import input.comprehensible.ComprehensibleInputTestScope
 import input.comprehensible.data.sample.TestStory
 
 class StoryListRobot(
@@ -70,6 +69,12 @@ class StoryListRobot(
             .performClick()
     }
 
+    fun navigateUp() {
+        composeTestRule
+            .onNodeWithContentDescription("Navigate up")
+            .performClick()
+    }
+
     fun assertLearningLanguageIs(languageCode: String) {
         composeTestRule
             .onNodeWithContentDescription(learningLanguageContentDescription(languageCode))
@@ -95,7 +100,7 @@ class StoryListRobot(
             .assertCountEquals(0)
     }
 
-    suspend fun setLearningLanguage(languageCode: String) {
+    fun setLearningLanguage(languageCode: String) {
         val languageContentDescription = when (languageCode) {
             "de" -> "Select German"
             "en" -> "Select English"
@@ -107,12 +112,12 @@ class StoryListRobot(
                 label = "Select a language to learn",
                 substring = true,
             ).performClick()
-            awaitIdle()
+            waitForIdle()
             onNodeWithContentDescription(languageContentDescription).performClick()
         }
     }
 
-    suspend fun setTranslationLanguage(languageCode: String) {
+    fun setTranslationLanguage(languageCode: String) {
         val languageContentDescription = when (languageCode) {
             "de" -> "Select German"
             "en" -> "Select English"
@@ -124,7 +129,7 @@ class StoryListRobot(
                 label = "Select a language for translations",
                 substring = true,
             ).performClick()
-            awaitIdle()
+            waitForIdle()
             onNodeWithContentDescription(languageContentDescription).performClick()
         }
     }
@@ -134,34 +139,4 @@ class StoryListRobot(
             .onNodeWithText(title)
             .assertExists()
     }
-
-    fun startTextAdventure() {
-        composeTestRule
-            .onNodeWithTag("text_adventure_start_button")
-            .performScrollTo()
-            .performClick()
-    }
-
-    fun assertStartTextAdventureIsHidden() {
-        composeTestRule
-            .onAllNodesWithTag("text_adventure_start_button")
-            .assertCountEquals(0)
-    }
-
-    fun assertTextAdventureIsVisible(title: String) {
-        composeTestRule
-            .onNodeWithText(title)
-            .assertIsDisplayed()
-    }
-
-    fun selectTextAdventure(title: String) {
-        composeTestRule
-            .onNodeWithText(title)
-            .performScrollTo()
-            .performClick()
-    }
 }
-
-suspend fun ComprehensibleInputTestScope.onStoryList(
-    block: suspend StoryListRobot.() -> Unit = {}
-) = StoryListRobot(composeRule).apply { block() }

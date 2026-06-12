@@ -25,8 +25,13 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+      - name: Setup Gradle cache
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          job-id: android
+          # Only the main branch updates the cache; PR/branch builds restore
+          # from it read-only to avoid cache write contention.
+          read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Setup keystore file
         run: |
@@ -47,17 +52,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Android lint
-        run: ./gradlew :app:lint
-
-      - name: Run Detekt
-        run: ./gradlew :app:detekt
-
-      - name: Assemble with Gradle
-        run: ./gradlew :app:assemble
-
-      - name: Run tests with coverage
-        run: ./gradlew :app:koverMarkdownSnapshotCheck
+      - name: Run lint, Detekt, tests with coverage and assemble release
+        run: ./gradlew :app:lint :app:detekt :app:koverCoverageSnapshotCheck :app:assembleRelease
 
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
@@ -97,13 +93,47 @@ jobs:
           mkdir ./service-account
           echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
           echo $APP_TESTERS > testers.txt
-          ./gradlew assembleRelease appDistributionUploadRelease
+          ./gradlew :app:assembleRelease :app:appDistributionUploadRelease \
+            -PenableAllFeatureFlags=true
         env:
           FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
           APP_TESTERS: ${{ secrets.APP_TESTERS }}
 
+      - name: Deliver PR android app via firebase
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]' }}
+        run: |
+          mkdir ./service-account
+          echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY > firebase-app-distribution-key.json
+          echo $APP_TESTERS > testers.txt
+
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
+
+          RELEASE_NOTES_BODY="$PR_DESCRIPTION"
+          if [ -z "$(echo "$RELEASE_NOTES_BODY" | tr -d '[:space:]')" ]; then
+            RELEASE_NOTES_BODY="PR Branch: $PR_BRANCH_NAME"
+          fi
+          RELEASE_NOTES="$(printf '%s\n\n%s' "$PR_TITLE" "$RELEASE_NOTES_BODY")"
+
+          # Distribute the debug build for PRs so logs are available to diagnose
+          # issues. The debug build type already enables all feature flags.
+          ./gradlew :app:assembleDebug :app:appDistributionUploadDebug \
+            -PprNumber="$PR_NUMBER" \
+            -PprBackendBaseUrl="http://${{ secrets.BACKEND_STAGING_IP_ADDRESS }}:${BACKEND_PORT}" \
+            -PfirebaseReleaseNotes="$RELEASE_NOTES"
+        env:
+          FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT_KEY }}
+          APP_TESTERS: ${{ secrets.APP_TESTERS }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_DESCRIPTION: ${{ github.event.pull_request.body }}
+          PR_BRANCH_NAME: ${{ github.head_ref }}
+
   build-and-test-backend:
     runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+      CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+      CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
     permissions:
       actions: write
       contents: write
@@ -118,8 +148,13 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+      - name: Setup Gradle cache
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          job-id: backend
+          # Only the main branch updates the cache; PR/branch builds restore
+          # from it read-only to avoid cache write contention.
+          read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -131,7 +166,7 @@ jobs:
         run: ./gradlew :backend:assemble
 
       - name: Run tests with coverage
-        run: ./gradlew :backend:koverMarkdownSnapshotCheck
+        run: ./gradlew :backend:koverCoverageSnapshotCheck
 
       - name: Add coverage report to PR
         if: ${{ github.event_name == 'pull_request' }}
@@ -141,10 +176,51 @@ jobs:
           title: Backend Code Coverage
           update-comment: true
 
+  # Fails the PR on a backwards-incompatible backend API change so we can't break
+  # already-released app versions by accident. The committed backend/openapi/openapi.json
+  # contract is kept current by OpenApiSpecGenerationTest (run in build-and-test-backend);
+  # here we diff the PR's contract against the one on the base branch.
+  check-api-compatibility:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract baseline OpenAPI spec from base branch
+        id: baseline
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          # Write the baseline into the workspace (not runner.temp): the oasdiff
+          # action runs in a Docker container that only mounts the workspace at
+          # /github/workspace, so a runner.temp path is not visible inside it.
+          if git show "FETCH_HEAD:backend/openapi/openapi.json" > openapi-base.json 2>/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            rm -f openapi-base.json
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No baseline OpenAPI spec on $BASE_REF yet; skipping the backwards-compatibility check."
+          fi
+
+      - name: Detect breaking API changes
+        if: ${{ steps.baseline.outputs.exists == 'true' }}
+        uses: oasdiff/oasdiff-action/breaking@v0.0.57
+        with:
+          base: openapi-base.json
+          revision: backend/openapi/openapi.json
+          fail-on: ERR
+
   deploy-backend:
     runs-on: ubuntu-latest
     needs: build-and-test-backend
     if: github.ref == 'refs/heads/main'
+    env:
+      CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+      CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+      CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
     permissions:
       id-token: write
       actions: write
@@ -152,12 +228,25 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Log in to Docker Hub
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          attempt=1
+          max_attempts=4
+          delay=5
+          until printf '%s' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; do
+            if [ "$attempt" -ge "$max_attempts" ]; then
+              echo "Docker Hub login failed after ${attempt} attempts" >&2
+              exit 1
+            fi
+            echo "Docker Hub login attempt ${attempt} failed; retrying in ${delay}s..." >&2
+            sleep "$delay"
+            attempt=$((attempt + 1))
+            delay=$((delay * 2))
+          done
 
       - name: Setup Tailscale
         uses: tailscale/github-action@v4
@@ -177,18 +266,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Load Docker secrets
-        run: |
-          echo $KOOG_API_KEY > compose-secrets/koog_api_key.txt
-          echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
-          echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
-          echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
-        env:
-          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
-          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
-          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
-          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v6
@@ -207,10 +284,174 @@ jobs:
 
       - name: Deploy
         run: |
-          docker context create prod --docker host=$BACKEND_HOST
-          docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth
+          docker context create prod --docker host=$BACKEND_HOST || true
+
+          ensure_secret() {
+            local secret_name="$1"
+            local secret_value="$2"
+            if ! docker --context prod secret inspect "${secret_name}" >/dev/null 2>&1; then
+              printf '%s' "${secret_value}" | docker --context prod secret create "${secret_name}" -
+            fi
+          }
+
+          ensure_secret app_koog_api_key "$KOOG_API_KEY"
+          ensure_secret app_app_api_key "$BACKEND_API_KEY"
+          ensure_secret app_db_app_password "$DB_APP_PASSWORD"
+          ensure_secret app_db_admin_password "$DB_ADMIN_PASSWORD"
+          ensure_secret app_cloudflare_email_sending_from "$CLOUDFLARE_EMAIL_SENDING_FROM"
+          ensure_secret app_cloudflare_email_sending_account_id "$CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID"
+          ensure_secret app_cloudflare_email_sending_token_v2 "$CLOUDFLARE_EMAIL_SENDING_TOKEN"
+          ensure_secret app_cloudflared_tunnel_token "$CLOUDFLARE_TUNNEL_TOKEN"
+
+          docker --context prod stack deploy -c docker-compose-prod.yml app --detach=true --with-registry-auth --resolve-image always
         env:
           BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+          CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
+
+  deploy-pr-backend:
+    runs-on: ubuntu-latest
+    needs: build-and-test-backend
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]' }}
+    permissions:
+      id-token: write
+      actions: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          attempt=1
+          max_attempts=4
+          delay=5
+          until printf '%s' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; do
+            if [ "$attempt" -ge "$max_attempts" ]; then
+              echo "Docker Hub login failed after ${attempt} attempts" >&2
+              exit 1
+            fi
+            echo "Docker Hub login attempt ${attempt} failed; retrying in ${delay}s..." >&2
+            sleep "$delay"
+            attempt=$((attempt + 1))
+            delay=$((delay * 2))
+          done
+
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID_PR }}
+          audience: ${{ secrets.TS_AUDIENCE_PR }}
+          tags: tag:comprehensible-input-ci
+          version: latest
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          sudo chmod 600 ~/.ssh/id_ed25519
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Load Docker secrets
+        run: |
+          echo $KOOG_API_KEY > compose-secrets/koog_api_key.txt
+          echo $BACKEND_API_KEY > compose-secrets/app_api_key.txt
+          echo $DB_APP_PASSWORD > compose-secrets/db_app_password.txt
+          echo $DB_ADMIN_PASSWORD > compose-secrets/db_admin_password.txt
+          echo $CLOUDFLARE_EMAIL_SENDING_FROM > compose-secrets/cloudflare_email_sending_from.txt
+          echo $CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID > compose-secrets/cloudflare_email_sending_account_id.txt
+          echo $CLOUDFLARE_EMAIL_SENDING_TOKEN > compose-secrets/cloudflare_email_sending_token.txt
+        env:
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+          CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
+
+      - name: Build and push Docker image
+        id: push-pr
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: edwardsills/comprehensible-input:pr-${{ github.event.pull_request.number }}
+
+      - name: Deploy PR backend + database services
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BACKEND_PORT=$((19000 + (PR_NUMBER % 100)))
+          DB_PORT=$((29000 + (PR_NUMBER % 100)))
+          STACK=ci-pr-${PR_NUMBER}
+
+          docker context create prod --docker host=$BACKEND_HOST || true
+
+          docker --context prod service rm ${STACK}_backend || true
+          docker --context prod service rm ${STACK}_postgres || true
+
+          for _ in $(seq 1 30); do
+            backend_present=$(docker --context prod service ls --filter "name=${STACK}_backend" --format "{{.Name}}")
+            postgres_present=$(docker --context prod service ls --filter "name=${STACK}_postgres" --format "{{.Name}}")
+            if [ -z "${backend_present}" ] && [ -z "${postgres_present}" ]; then
+              break
+            fi
+            sleep 2
+          done
+
+          docker --context prod network rm ${STACK}_net || true
+          docker --context prod network create --driver overlay --attachable ${STACK}_net
+
+          docker --context prod service create \
+            --name ${STACK}_postgres \
+            --network ${STACK}_net \
+            --replicas 1 \
+            --publish published=${DB_PORT},target=5432 \
+            --mount type=volume,source=${STACK}_postgres_data,target=/var/lib/postgresql/data \
+            --env POSTGRES_DB=comprehensible_input_pr_${PR_NUMBER} \
+            --env POSTGRES_USER=admin \
+            --env POSTGRES_PASSWORD=$DB_ADMIN_PASSWORD \
+            postgres:17-alpine
+
+          docker --context prod service create \
+            --name ${STACK}_backend \
+            --network ${STACK}_net \
+            --replicas 1 \
+            --publish published=${BACKEND_PORT},target=8080 \
+            --env KOOG_API_KEY=$KOOG_API_KEY \
+            --env APP_API_KEY=$BACKEND_API_KEY \
+            --env BACKEND_DATABASE_URL=jdbc:postgresql://${STACK}_postgres:5432/comprehensible_input_pr_${PR_NUMBER} \
+            --env BACKEND_DATABASE_USER=app \
+            --env BACKEND_DATABASE_PASSWORD=$DB_APP_PASSWORD \
+            --env BACKEND_DATABASE_ADMIN_USER=admin \
+            --env BACKEND_DATABASE_ADMIN_PASSWORD=$DB_ADMIN_PASSWORD \
+            --env CLOUDFLARE_EMAIL_SENDING_FROM=$CLOUDFLARE_EMAIL_SENDING_FROM \
+            --env CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID=$CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID \
+            --env CLOUDFLARE_EMAIL_SENDING_TOKEN=$CLOUDFLARE_EMAIL_SENDING_TOKEN \
+            --with-registry-auth \
+            edwardsills/comprehensible-input@${{ steps.push-pr.outputs.digest }}
+        env:
+          BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+          KOOG_API_KEY: ${{ secrets.KOOG_API_KEY }}
+          BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
+          DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+          CLOUDFLARE_EMAIL_SENDING_FROM: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_FROM }}
+          CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL_SENDING_TOKEN: ${{ secrets.CLOUDFLARE_EMAIL_SENDING_TOKEN }}
 
   auto-merge:
     runs-on: ubuntu-latest

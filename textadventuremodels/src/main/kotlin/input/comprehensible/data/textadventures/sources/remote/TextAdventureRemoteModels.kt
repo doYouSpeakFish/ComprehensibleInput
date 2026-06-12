@@ -7,11 +7,16 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class TextAdventureRemoteResponse(
+    val messageId: String = "",
     val adventureId: String,
     val title: String,
+    /** The [title] translated into the player's translation language. */
+    val translatedTitle: String = "",
     val sentences: List<String>,
     val translatedSentences: List<String>,
     val isEnding: Boolean,
+    /** The id of the catalogue image the AI chose for this adventure, if any. */
+    val imageId: String? = null,
 )
 
 /**
@@ -28,6 +33,9 @@ data class TextAdventureMessagesRemoteResponse(
 
 @Serializable
 data class TextAdventureMessageRemoteResponse(
+    val id: String,
+    val parentId: String?,
+    val type: String,
     val sender: String,
     val isEnding: Boolean,
     val paragraphs: List<TextAdventureParagraphRemoteResponse>,
@@ -46,12 +54,6 @@ data class TextAdventureParagraphRemoteResponse(
 data class TextAdventureHistoryMessage(
     val role: String,
     val text: String,
-)
-
-@Serializable
-data class StartTextAdventureRequest(
-    val learningLanguage: String,
-    val translationsLanguage: String,
 )
 
 @Serializable

@@ -5,38 +5,40 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ktin.Singleton
+import input.comprehensible.data.account.sources.local.UserLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.StoriesInfoLocalDataSource
 import input.comprehensible.data.stories.sources.storyinfo.local.model.StoryEntity
-import input.comprehensible.data.textadventures.sources.local.TextAdventureEntity
-import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageEntity
-import input.comprehensible.data.textadventures.sources.local.TextAdventureMessageSentenceView
-import input.comprehensible.data.textadventures.sources.local.TextAdventureSentenceEntity
-import input.comprehensible.data.textadventures.sources.local.TextAdventureSummaryView
-import input.comprehensible.data.textadventures.sources.local.TextAdventuresLocalDataSource
+import input.comprehensible.data.textadventure.sources.local.AdventureEntity
+import input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource
+import input.comprehensible.data.textadventure.sources.local.MessageEntity
+import input.comprehensible.data.textadventure.sources.local.SentenceEntity
+import input.comprehensible.data.user.UserEntity
 import input.comprehensible.di.ApplicationProvider
 
 @Database(
     entities = [
         StoryEntity::class,
-        TextAdventureEntity::class,
-        TextAdventureMessageEntity::class,
-        TextAdventureSentenceEntity::class,
+        UserEntity::class,
+        AdventureEntity::class,
+        MessageEntity::class,
+        SentenceEntity::class,
     ],
-    views = [
-        TextAdventureSummaryView::class,
-        TextAdventureMessageSentenceView::class,
-    ],
-    version = 7,
+    version = 11,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5, spec = TextAdventureMigration4To5::class),
+        AutoMigration(from = 7, to = 8, spec = RemoveTextAdventurePrototypeSpec::class),
+        AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10),
+        AutoMigration(from = 10, to = 11),
     ]
 )
 abstract class AppDb : RoomDatabase() {
     abstract fun getStoriesInfoDao(): StoriesInfoLocalDataSource
-    abstract fun getTextAdventuresDao(): TextAdventuresLocalDataSource
+    abstract fun getUserDao(): UserLocalDataSource
+    abstract fun getAdventureDao(): AdventureLocalDataSource
 
     companion object : Singleton<AppDb>() {
         override fun create() = Room

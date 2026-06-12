@@ -12,6 +12,9 @@ complexity:
       - Composable
   LongMethod:
     threshold: 100
+  TooManyFunctions:
+    thresholdInClasses: 15
+    thresholdInFiles: 15
 
 naming:
   FunctionNaming:
