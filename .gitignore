@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/app/google-services.json
 /.idea
 .DS_Store
 **/build
@@ -19,3 +20,6 @@ local.properties
 /testers.txt
 /firebase-app-distribution-key.json
 /buildSrc/.kotlin/
+.claude/worktrees/
+*.log
+*_output.txt

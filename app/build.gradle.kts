@@ -6,7 +6,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.ksp)
@@ -16,7 +15,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.app.distribution)
     kotlin("plugin.serialization").version(libs.versions.kotlin.get())
-    id("input.comprehensible.kover-markdown-report")
+    id("input.comprehensible.kover-coverage-report")
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -33,17 +32,33 @@ if (localPropertiesFile.exists()) {
 }
 val backendApiKey = localProperties.getProperty("backendApiKey")
     ?: System.getenv("BACKEND_API_KEY") ?: ""
+val prBackendBaseUrl = providers.gradleProperty("prBackendBaseUrl").orNull.orEmpty()
+val prNumber = providers.gradleProperty("prNumber").orNull?.toIntOrNull() ?: 0
+val enableAllFeatureFlags = providers.gradleProperty("enableAllFeatureFlags")
+    .orNull
+    ?.toBooleanStrictOrNull()
+    ?: false
 
 android {
     namespace = "input.comprehensible"
     compileSdk = 36
 
     defaultConfig {
+        buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "false")
+        buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "false")
         applicationId = "in.comprehensible"
         minSdk = 24
         targetSdk = 36
         versionCode = 9
+        buildConfigField("String", "BACKEND_BASE_URL", "\"https://api.languagethis.com\"")
         versionName = "0.6.0"
+        if (prBackendBaseUrl.isNotEmpty()) {
+            buildConfigField("String", "BACKEND_BASE_URL", "\"$prBackendBaseUrl\"")
+        }
+        if (prNumber > 0) {
+            versionNameSuffix = "-pr-$prNumber"
+        }
+        resValue("bool", "is_cleartext_traffic_enabled", "${prBackendBaseUrl.isNotEmpty()}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -65,10 +80,29 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "true")
+            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "true")
+            // PR builds are distributed as debug so logs are available for diagnosis.
+            // Sign with the stable upload key when it is available (i.e. on CI) so each
+            // PR distribution installs over the previous one and over release builds.
+            // Without this the auto-generated debug keystore differs per runner, so
+            // Android refuses to install a new build over an existing one.
+            if (hasKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            firebaseAppDistribution {
+                artifactType = "APK"
+                testersFile = "./testers.txt"
+                serviceCredentialsFile = "./firebase-app-distribution-key.json"
+                releaseNotes = (project.findProperty("firebaseReleaseNotes") as String?)?.trim()
+            }
         }
         release {
             buildConfigField("String", "BACKEND_API_KEY", "\"$backendApiKey\"")
+            buildConfigField("boolean", "AI_TEXT_ADVENTURES_ENABLED", "$enableAllFeatureFlags")
+            buildConfigField("boolean", "ACCOUNT_MANAGEMENT_ENABLED", "$enableAllFeatureFlags")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -80,6 +114,7 @@ android {
                 artifactType = "APK"
                 testersFile = "./testers.txt"
                 serviceCredentialsFile = "./firebase-app-distribution-key.json"
+                releaseNotes = (project.findProperty("firebaseReleaseNotes") as String?)?.trim()
             }
         }
     }
@@ -95,6 +130,19 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
+    }
+    lint {
+        // CI runs `:app:lint`. Enabling checkDependencies makes it also analyse the
+        // library modules this app depends on (`:common`, `:feature-*`, `:data-*`),
+        // so a string that is missing a translation in any module fails the build
+        // rather than slipping through because only `:app` was linted.
+        checkDependencies = true
+        // A missing (or extra) translation must fail the build, not just warn. Marking
+        // MissingTranslation as fatal also makes it part of the lintVital check that
+        // runs during `:app:assembleRelease`, so release builds are guarded too.
+        fatal += "MissingTranslation"
+        abortOnError = true
     }
     packaging {
         resources {
@@ -109,6 +157,7 @@ android {
             isIncludeAndroidResources = true
             all {
                 it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware"
+                it.maxHeapSize = "4g"
             }
         }
     }
@@ -125,7 +174,16 @@ android {
 roborazzi {
     generateComposePreviewRobolectricTests {
         enable = true
-        packages = listOf("input.comprehensible")
+        // Only scan packages owned by this module (plus shared previews from :common).
+        // The account previews live in :feature-account, which generates their screenshots
+        // itself, so they are intentionally excluded here to avoid duplicate screenshots.
+        packages = listOf(
+            "input.comprehensible.ui.components",
+            "input.comprehensible.ui.settings.settings",
+            "input.comprehensible.ui.settings.softwarelicences",
+            "input.comprehensible.ui.storylist",
+            "input.comprehensible.ui.storyreader",
+        )
         includePrivatePreviews = false
         testerQualifiedClassName = "input.comprehensible.PreviewScreenshotTester"
         robolectricConfig = mapOf(
@@ -136,14 +194,56 @@ roborazzi {
     }
 }
 
+// AGP 9.2.0 built_in_kotlinc mode stores compiled Kotlin classes outside the JAR that unit
+// tests receive on their classpath. This wires the directory in explicitly.
+// afterEvaluate is required because AGP registers these tasks late in the config phase.
+// Track: https://issuetracker.google.com/issues/388556987
+val builtInKotlincClasses = layout.buildDirectory.dir(
+    "intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"
+)
+afterEvaluate {
+    tasks.named(
+        "compileDebugUnitTestKotlin",
+        org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile::class.java,
+    ) {
+        dependsOn("compileDebugKotlin")
+        libraries.from(builtInKotlincClasses)
+    }
+    tasks.named("testDebugUnitTest", Test::class.java) {
+        classpath += files(builtInKotlincClasses)
+    }
+}
+
+koverCoverageReport {
+    sourceProjects(
+        project(":common"),
+        project(":data-account"),
+        project(":data-languagesettings"),
+        project(":data-textadventure"),
+        project(":feature-account"),
+        project(":feature-home"),
+        project(":feature-textadventure"),
+    )
+}
+
 kover {
+    dependencies {
+        kover(project(":common"))
+        kover(project(":data-account"))
+        kover(project(":data-languagesettings"))
+        kover(project(":data-textadventure"))
+        kover(project(":feature-account"))
+        kover(project(":feature-home"))
+        kover(project(":feature-textadventure"))
+    }
     reports {
         filters {
             excludes {
                 packages(
                     "input.comprehensible.data.stories.sources",
-                    "input.comprehensible.data.languages.sources",
-                    "input.comprehensible.data.textadventures.sources.remote",
+                    "input.comprehensible.data.languagesettings.sources",
+                    "input.comprehensible.data.account.sources.remote",
+                    "input.comprehensible.data.textadventure.sources.remote",
                     "input.comprehensible.di",
                 )
                 classes(
@@ -157,6 +257,8 @@ kover {
                     "input.comprehensible.data.AppDb_Impl",
                     "input.comprehensible.data.languages.LanguagesDao_Impl",
                     "input.comprehensible.data.stories.StoriesDao_Impl",
+                    "input.comprehensible.data.account.sources.local.UserLocalDataSource_Impl",
+                    "input.comprehensible.data.textadventure.sources.local.AdventureLocalDataSource_Impl",
                     "input.comprehensible.data.AppDb_Impl*",
                     "input.comprehensible.*.ComposableSingletons*",
                 )
@@ -171,7 +273,13 @@ kover {
 }
 
 dependencies {
-    implementation(project(":textadventuremodels"))
+    implementation(project(":common"))
+    implementation(project(":feature-account"))
+    implementation(project(":feature-home"))
+    implementation(project(":feature-textadventure"))
+    implementation(project(":data-account"))
+    implementation(project(":data-languagesettings"))
+    implementation(project(":data-textadventure"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
@@ -184,23 +292,30 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.icons)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     implementation(libs.coroutines)
     implementation(libs.timber)
     implementation(libs.serialization.json)
+    implementation(libs.aboutLibraries.core)
+    implementation(libs.aboutLibraries.compose)
+    implementation(libs.androidx.adaptive.android)
+    implementation(libs.bundles.androidx.room)
+    implementation(libs.ktin.core)
+    implementation(libs.androidx.dataStore)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.aboutLibraries.core)
-    implementation(libs.aboutLibraries.compose)
-    implementation(libs.androidx.adaptive.android)
-    implementation(libs.androidx.dataStore)
-    implementation(libs.bundles.androidx.room)
-    implementation(libs.ktin.core)
 
     ksp(libs.androidx.room.compiler)
 
+    testImplementation(project(":commontest"))
+    testImplementation(testFixtures(project(":data-languagesettings")))
+    testImplementation(testFixtures(project(":feature-account")))
+    testImplementation(testFixtures(project(":feature-home")))
+    testImplementation(testFixtures(project(":feature-textadventure")))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.coroutines.test)

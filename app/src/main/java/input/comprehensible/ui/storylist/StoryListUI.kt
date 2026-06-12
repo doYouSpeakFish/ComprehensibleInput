@@ -13,36 +13,32 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.createBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import input.comprehensible.R
 import androidx.window.core.layout.WindowSizeClass
+import input.comprehensible.R
 import input.comprehensible.extensions.isCompact
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
@@ -54,28 +50,18 @@ import input.comprehensible.util.DefaultPreview
 internal fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (id: String) -> Unit,
-    onTextAdventureSelected: (id: String) -> Unit,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
-    onTextAdventureStarted: (id: String) -> Unit,
     viewModel: StoryListViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(initialValue = StoryListUiState.INITIAL)
-    LaunchedEffect(viewModel.events) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is StoryListEvent.TextAdventureStarted ->
-                    onTextAdventureStarted(event.adventureId)
-            }
-        }
-    }
     StoryListScreen(
         modifier = modifier,
         onStorySelected = { onStorySelected(it.id) },
-        onTextAdventureSelected = { onTextAdventureSelected(it.id) },
+        onNavigateUp = onNavigateUp,
         onSettingsClick = onSettingsClick,
         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
         onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
-        onStartTextAdventure = viewModel::onStartTextAdventure,
         state = state,
     )
 }
@@ -84,16 +70,16 @@ internal fun StoryListScreen(
 private fun StoryListScreen(
     modifier: Modifier = Modifier,
     onStorySelected: (StoryListUiState.StoryListItem.Story) -> Unit,
-    onTextAdventureSelected: (StoryListUiState.StoryListItem.TextAdventure) -> Unit,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
-    onStartTextAdventure: () -> Unit,
     state: StoryListUiState,
 ) {
     val itemsWithIndex = remember(state.items) { state.items.withIndex().toList() }
     StoryListScaffold(
         modifier = modifier,
+        onNavigateUp = onNavigateUp,
         onSettingsClick = onSettingsClick,
         learningLanguage = state.learningLanguage,
         translationLanguage = state.translationLanguage,
@@ -113,8 +99,6 @@ private fun StoryListScreen(
                 key = {
                     when (val item = it.value) {
                         is StoryListUiState.StoryListItem.Story -> "story-${item.id}"
-                        is StoryListUiState.StoryListItem.TextAdventure -> "adventure-${item.id}"
-                        StoryListUiState.StoryListItem.StartTextAdventure -> "start-text-adventure"
                     }
                 }
             ) {
@@ -132,15 +116,6 @@ private fun StoryListScreen(
                         onClick = { onStorySelected(item) },
                         story = item,
                     )
-                    is StoryListUiState.StoryListItem.TextAdventure -> TextAdventureListItem(
-                        modifier = itemModifier,
-                        onClick = { onTextAdventureSelected(item) },
-                        adventure = item,
-                    )
-                    StoryListUiState.StoryListItem.StartTextAdventure -> StartTextAdventureItem(
-                        modifier = itemModifier,
-                        onClick = onStartTextAdventure,
-                    )
                 }
             }
         }
@@ -150,6 +125,7 @@ private fun StoryListScreen(
 @Composable
 private fun StoryListScaffold(
     modifier: Modifier = Modifier,
+    onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
     learningLanguage: LanguageSelection?,
@@ -170,6 +146,7 @@ private fun StoryListScaffold(
                 languageOptions = languagesAvailable,
                 onLanguageSelected = onLearningLanguageSelected,
                 onTranslationLanguageSelected = onTranslationLanguageSelected,
+                onNavigateUp = onNavigateUp,
                 onSettingsClick = onSettingsClick,
             )
         },
@@ -205,97 +182,6 @@ private fun StoryListItem(
                 image = story.featuredImage.asImageBitmap(),
             )
             StoryTitle(title = story.title, subtitle = story.subtitle)
-        }
-    }
-}
-
-@Composable
-private fun TextAdventureListItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    adventure: StoryListUiState.StoryListItem.TextAdventure,
-) {
-    Card(
-        modifier = modifier,
-        onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
-        )
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Box(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .border(1.dp, color = backgroundDark, shape = CircleShape)
-                    .clip(CircleShape)
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                )
-            }
-            TextAdventureTitle(adventure = adventure)
-        }
-    }
-}
-
-@Composable
-private fun TextAdventureTitle(
-    modifier: Modifier = Modifier,
-    adventure: StoryListUiState.StoryListItem.TextAdventure,
-) {
-    val subtitle = if (adventure.isComplete) {
-        stringResource(R.string.text_adventure_list_complete)
-    } else {
-        stringResource(R.string.text_adventure_list_in_progress)
-    }
-    StoryTitle(
-        modifier = modifier,
-        title = adventure.title,
-        subtitle = subtitle,
-    )
-}
-
-@Composable
-private fun StartTextAdventureItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Card(
-        modifier = modifier.testTag("text_adventure_start_button"),
-        onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
-        )
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Box(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .border(1.dp, color = backgroundDark, shape = CircleShape)
-                    .clip(CircleShape)
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                )
-            }
-            StoryTitle(
-                title = stringResource(R.string.text_adventure_start_button),
-                subtitle = stringResource(R.string.text_adventure_list_in_progress),
-            )
         }
     }
 }
@@ -361,34 +247,36 @@ private fun StoryTitle(
 @DefaultPreview
 @Composable
 fun StoryListScreenPreview() {
+    // Real story titles paired with their featured images (copied into res/drawable) so the
+    // preview resembles the actual story list. The images are copied rather than read from the
+    // assets/ story content because preview rendering cannot reliably load images from assets.
+    val previewStories = listOf(
+        Triple("Geheimes Heilbad", "Secret Healing Bath", R.drawable.preview_story_healing_bath),
+        Triple("Kein Halt am Mars", "No Stop at Mars", R.drawable.preview_story_mars),
+        Triple("Der leere Karneval", "The Empty Carnival", R.drawable.preview_story_carnival),
+        Triple("Die winzigen Wikinger von Berlin", "The Tiny Vikings of Berlin", R.drawable.preview_story_vikings),
+        Triple("Tag der Magie", "Day of Magic", R.drawable.preview_story_magic),
+        Triple("Alter Baum", "Old Tree", R.drawable.preview_story_old_tree),
+        Triple("Geisterflüstern und Herzschläge", "Ghost Whispers and Heartbeats", R.drawable.preview_story_ghosts),
+        Triple("Der Laptop", "The Laptop", R.drawable.preview_story_laptop),
+        Triple("Das Abenteuer des gesprenkelten Bandes", "The Adventure of the Speckled Band", R.drawable.preview_story_speckled_band),
+        Triple("Der Uhrwerk-Leuchtturm", "The Clockwork Lighthouse", R.drawable.preview_story_lighthouse),
+    )
     ComprehensibleInputTheme {
         StoryListScreen(
             onStorySelected = {},
-            onTextAdventureSelected = {},
+            onNavigateUp = {},
             onSettingsClick = {},
-            onStartTextAdventure = {},
             onLearningLanguageSelected = {},
             onTranslationLanguageSelected = {},
             state = StoryListUiState(
-                items = buildList {
-                    add(
-                        StoryListUiState.StoryListItem.TextAdventure(
-                            id = "adventure-1",
-                            title = "Forest Trails",
-                            isComplete = false,
-                        )
+                items = previewStories.mapIndexed { index, (germanTitle, englishTitle, image) ->
+                    StoryListUiState.StoryListItem.Story(
+                        id = (index + 1).toString(),
+                        title = germanTitle,
+                        subtitle = englishTitle,
+                        featuredImage = ImageBitmap.imageResource(image).asAndroidBitmap(),
                     )
-                    addAll(
-                        List(100) {
-                            StoryListUiState.StoryListItem.Story(
-                                id = "$it",
-                                title = "Title $it",
-                                subtitle = "Translated Title $it",
-                                featuredImage = createBitmap(100, 100),
-                            )
-                        }
-                    )
-                    add(StoryListUiState.StoryListItem.StartTextAdventure)
                 },
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,

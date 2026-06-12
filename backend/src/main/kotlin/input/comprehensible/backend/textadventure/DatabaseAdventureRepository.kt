@@ -15,22 +15,83 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
 
+@Suppress("TooManyFunctions")
 class DatabaseAdventureRepository(
     private val database: Database,
     private val nowProvider: () -> Long = { System.currentTimeMillis() },
 ) : AdventureRepository {
-    override fun saveAdventurePart(adventurePart: PersistedAdventurePart) {
+
+    override fun listAdventureSummariesForAccount(accountId: String): List<AdventureSummary> = transaction(database) {
+        val adventureRows = AdventuresTable
+            .selectAll()
+            .where { (AdventuresTable.accountId eq accountId) and AdventuresTable.deletedAt.isNull() }
+            .orderBy(AdventuresTable.updatedAt, SortOrder.DESC)
+            .toList()
+        val messagesById = loadMessagesByAdventure(adventureRows.map { it[AdventuresTable.id] })
+        adventureRows.map { row -> row.toSummary(statusOf(messagesById[row[AdventuresTable.id]].orEmpty())) }
+    }
+
+    private fun ResultRow.toSummary(status: String): AdventureSummary = AdventureSummary(
+        adventureId = this[AdventuresTable.id],
+        title = this[AdventuresTable.title],
+        translatedTitle = this[AdventuresTable.translatedTitle],
+        learningLanguage = this[AdventuresTable.learningLanguage],
+        translationLanguage = this[AdventuresTable.translationLanguage],
+        updatedAt = this[AdventuresTable.updatedAt],
+        imageId = this[AdventuresTable.imageId],
+        status = status,
+        plan = this[AdventuresTable.plan],
+    )
+
+    private fun loadMessagesByAdventure(adventureIds: List<String>): Map<String, List<ResultRow>> {
+        if (adventureIds.isEmpty()) return emptyMap()
+        return AdventureMessagesTable
+            .selectAll()
+            .where { AdventureMessagesTable.adventureId inList adventureIds }
+            .toList()
+            .groupBy { it[AdventureMessagesTable.adventureId] }
+    }
+
+    /**
+     * Derives an adventure's status from its messages: not started until the player sends a message,
+     * complete once the most recent message ends the story, otherwise in progress.
+     */
+    private fun statusOf(messages: List<ResultRow>): String = when {
+        messages.none { it[AdventureMessagesTable.type] == messageTypeUser } -> statusNotStarted
+        messages.maxByOrNull { it[AdventureMessagesTable.createdAt] }
+            ?.get(AdventureMessagesTable.isEnding) == true -> statusComplete
+
+        else -> statusInProgress
+    }
+
+    override fun saveAdventurePart(adventurePart: PersistedAdventurePart): String {
         transaction(database) {
             val now = nowProvider()
-            val existingCreatedAt = findAdventureCreatedAt(adventurePart.adventureId)
-            upsertAdventure(adventurePart = adventurePart, now = now, existingCreatedAt = existingCreatedAt)
-
-            val messageIndex = findNextMessageIndex(adventurePart.adventureId)
-            insertMessage(adventurePart = adventurePart, messageIndex = messageIndex, now = now)
-            replaceSentencesForMessage(adventurePart = adventurePart, messageIndex = messageIndex)
+            val existing = findAdventureRow(adventurePart.adventureId)
+            upsertAdventure(
+                adventurePart = adventurePart,
+                now = now,
+                existingCreatedAt = existing?.get(AdventuresTable.createdAt),
+                existingImageId = existing?.get(AdventuresTable.imageId),
+                existingPlan = existing?.get(AdventuresTable.plan),
+            )
+            insertMessage(
+                PersistedMessageRow(
+                    adventureId = adventurePart.adventureId,
+                    messageId = adventurePart.messageId,
+                    parentMessageId = adventurePart.parentMessageId,
+                    type = messageTypeAi,
+                    isEnding = adventurePart.isEnding,
+                    note = adventurePart.note,
+                    now = now,
+                )
+            )
+            replaceSentencesForMessage(adventurePart)
         }
+        return adventurePart.messageId
     }
 
     override fun getAdventureMessages(adventureId: String): TextAdventureMessagesRemoteResponse? = transaction(database) {
@@ -38,7 +99,7 @@ class DatabaseAdventureRepository(
         val sentenceRowsByMessage = findSentenceRowsByMessage(adventureId)
         val messages = findMessageRows(adventureId).map { messageRow ->
             messageRow.toRemoteMessage(
-                sentencesForMessage = sentenceRowsByMessage[messageRow[AdventureMessagesTable.messageIndex]].orEmpty(),
+                sentencesForMessage = sentenceRowsByMessage[messageRow[AdventureMessagesTable.id]].orEmpty(),
                 learningLanguage = adventureRow[AdventuresTable.learningLanguage],
                 translationLanguage = adventureRow[AdventuresTable.translationLanguage],
             )
@@ -47,66 +108,194 @@ class DatabaseAdventureRepository(
         adventureRow.toRemoteAdventureMessages(adventureId = adventureId, messages = messages)
     }
 
-    private fun findAdventureCreatedAt(adventureId: String): Long? = AdventuresTable
-        .select(AdventuresTable.createdAt)
-        .where { AdventuresTable.id eq adventureId }
-        .singleOrNull()
-        ?.get(AdventuresTable.createdAt)
+    override fun getAdventureNarrationContext(
+        adventureId: String,
+        leafMessageId: String?,
+    ): AdventureNarrationContext? = transaction(database) {
+        val adventureRow = findAdventureRow(adventureId) ?: return@transaction null
+        val messageRows = AdventureMessagesTable
+            .selectAll()
+            .where { AdventureMessagesTable.adventureId eq adventureId }
+            .toList()
+        AdventureNarrationContext(
+            plan = adventureRow[AdventuresTable.plan],
+            notes = notesOnAncestorChain(messageRows, leafMessageId),
+        )
+    }
+
+    /**
+     * Walks the parent links from [leafMessageId] up to the root and returns the notes recorded on that
+     * chain, oldest (root) first. Along a single chain a parent is always stored before its child, so the
+     * root-to-leaf order is also chronological. Notes on sibling branches are excluded so they cannot
+     * mislead the narrator about things that never happened on the active branch.
+     */
+    private fun notesOnAncestorChain(messageRows: List<ResultRow>, leafMessageId: String?): List<String> {
+        if (leafMessageId == null) return emptyList()
+        val parentById = messageRows.associate {
+            it[AdventureMessagesTable.id] to it[AdventureMessagesTable.parentMessageId]
+        }
+        val noteById = messageRows.associate {
+            it[AdventureMessagesTable.id] to it[AdventureMessagesTable.note]
+        }
+        return generateSequence(leafMessageId) { parentById[it] }
+            .toList()
+            .asReversed()
+            .mapNotNull { messageId -> noteById[messageId]?.takeIf { it.isNotBlank() } }
+    }
+
+    override fun appendUserMessage(message: PersistedUserAdventureMessage): TextAdventureMessageRemoteResponse? =
+        transaction(database) {
+            val adventureRow = findAdventureRow(message.adventureId) ?: return@transaction null
+            if (adventureRow[AdventuresTable.accountId] != message.accountId) return@transaction null
+            if (!messageExists(adventureId = message.adventureId, messageId = message.parentMessageId)) {
+                return@transaction null
+            }
+            val now = nowProvider()
+            updateAdventureTimestamp(
+                AdventureTimestampUpdate(
+                    adventureId = message.adventureId,
+                    now = now,
+                    accountId = message.accountId,
+                    title = adventureRow[AdventuresTable.title],
+                    translatedTitle = adventureRow[AdventuresTable.translatedTitle],
+                    learningLanguage = message.learningLanguage,
+                    translationLanguage = message.translationLanguage,
+                    createdAt = adventureRow[AdventuresTable.createdAt],
+                    imageId = adventureRow[AdventuresTable.imageId],
+                    plan = adventureRow[AdventuresTable.plan],
+                )
+            )
+            insertMessage(
+                PersistedMessageRow(
+                    adventureId = message.adventureId,
+                    messageId = message.messageId,
+                    parentMessageId = message.parentMessageId,
+                    type = messageTypeUser,
+                    isEnding = false,
+                    note = null,
+                    now = now,
+                )
+            )
+            message.paragraphs.forEachIndexed { paragraphIndex, paragraph ->
+                insertSentencesForMessage(
+                    messageId = message.messageId,
+                    paragraphIndex = paragraphIndex,
+                    language = message.learningLanguage,
+                    sentences = paragraph.sentences,
+                )
+                insertSentencesForMessage(
+                    messageId = message.messageId,
+                    paragraphIndex = paragraphIndex,
+                    language = message.translationLanguage,
+                    sentences = paragraph.translatedSentences,
+                )
+            }
+            findMessageRow(message.messageId)?.toRemoteMessage(
+                sentencesForMessage = findSentenceRowsForMessage(message.messageId),
+                learningLanguage = message.learningLanguage,
+                translationLanguage = message.translationLanguage,
+            )
+        }
+
+    /**
+     * Deletes by marking the row deleted rather than removing it, so the deletion can be undone via
+     * [restoreAdventureForAccount] (the snackbar undo in the app). Reads treat marked rows as gone.
+     */
+    override fun deleteAdventureForAccount(accountId: String, adventureId: String): Boolean = transaction(database) {
+        AdventuresTable.update({
+            (AdventuresTable.id eq adventureId) and
+                (AdventuresTable.accountId eq accountId) and
+                AdventuresTable.deletedAt.isNull()
+        }) {
+            it[deletedAt] = nowProvider()
+        } > 0
+    }
+
+    override fun restoreAdventureForAccount(accountId: String, adventureId: String): AdventureSummary? =
+        transaction(database) {
+            val restored = AdventuresTable.update({
+                (AdventuresTable.id eq adventureId) and
+                    (AdventuresTable.accountId eq accountId) and
+                    AdventuresTable.deletedAt.isNotNull()
+            }) {
+                it[deletedAt] = null
+            } > 0
+            if (!restored) return@transaction null
+            findAdventureRow(adventureId)
+                ?.toSummary(statusOf(loadMessagesByAdventure(listOf(adventureId))[adventureId].orEmpty()))
+        }
+
+    override fun deleteAllAdventuresForAccount(accountId: String) {
+        transaction(database) {
+            AdventuresTable.deleteWhere { AdventuresTable.accountId eq accountId }
+        }
+    }
 
     private fun upsertAdventure(
         adventurePart: PersistedAdventurePart,
         now: Long,
         existingCreatedAt: Long?,
+        existingImageId: String?,
+        existingPlan: String?,
     ) {
         AdventuresTable.upsert {
             it[id] = adventurePart.adventureId
+            it[this.accountId] = adventurePart.accountId
             it[this.title] = adventurePart.title
+            it[this.translatedTitle] = adventurePart.translatedTitle
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
+            // The image is chosen once, when the adventure is created; continuing an adventure leaves
+            // imageId null, so the image already stored is preserved.
+            it[this.imageId] = adventurePart.imageId ?: existingImageId
+            // The plan is written once, when the adventure is created; continuing an adventure leaves
+            // plan null, so the plan already stored is preserved.
+            it[this.plan] = adventurePart.plan ?: existingPlan
             it[createdAt] = existingCreatedAt ?: now
             it[updatedAt] = now
         }
     }
 
-    private fun findNextMessageIndex(adventureId: String): Int {
-        val latestMessageIndex = AdventureMessagesTable
-            .select(AdventureMessagesTable.messageIndex)
-            .where { AdventureMessagesTable.adventureId eq adventureId }
-            .orderBy(AdventureMessagesTable.messageIndex, SortOrder.DESC)
-            .limit(1)
-            .singleOrNull()
-            ?.get(AdventureMessagesTable.messageIndex)
-
-        return (latestMessageIndex ?: -1) + 1
+    private fun updateAdventureTimestamp(update: AdventureTimestampUpdate) {
+        AdventuresTable.upsert {
+            it[id] = update.adventureId
+            it[this.accountId] = update.accountId
+            it[this.title] = update.title
+            it[this.translatedTitle] = update.translatedTitle
+            it[this.learningLanguage] = update.learningLanguage
+            it[this.translationLanguage] = update.translationLanguage
+            it[this.imageId] = update.imageId
+            // Re-supplied so appending a player message never clears the narrator's stored plan.
+            it[this.plan] = update.plan
+            it[this.createdAt] = update.createdAt
+            it[updatedAt] = update.now
+        }
     }
 
-    private fun insertMessage(adventurePart: PersistedAdventurePart, messageIndex: Int, now: Long) {
+    private fun insertMessage(message: PersistedMessageRow) {
         AdventureMessagesTable.insert {
-            it[this.adventureId] = adventurePart.adventureId
-            it[this.sender] = senderAi
-            it[this.isEnding] = adventurePart.isEnding
-            it[this.createdAt] = now
-            it[this.messageIndex] = messageIndex
+            it[id] = message.messageId
+            it[adventureId] = message.adventureId
+            it[parentMessageId] = message.parentMessageId
+            it[type] = message.type
+            it[isEnding] = message.isEnding
+            it[note] = message.note
+            it[createdAt] = message.now
         }
     }
 
-    private fun replaceSentencesForMessage(adventurePart: PersistedAdventurePart, messageIndex: Int) {
-        AdventureSentencesTable.deleteWhere {
-            (AdventureSentencesTable.adventureId eq adventurePart.adventureId) and
-                (AdventureSentencesTable.messageIndex eq messageIndex)
-        }
+    private fun replaceSentencesForMessage(adventurePart: PersistedAdventurePart) {
+        AdventureSentencesTable.deleteWhere { AdventureSentencesTable.messageId eq adventurePart.messageId }
 
         adventurePart.paragraphs.forEachIndexed { paragraphIndex, paragraph ->
             insertSentencesForMessage(
-                adventureId = adventurePart.adventureId,
-                messageIndex = messageIndex,
+                messageId = adventurePart.messageId,
                 paragraphIndex = paragraphIndex,
                 language = adventurePart.learningLanguage,
                 sentences = paragraph.sentences,
             )
             insertSentencesForMessage(
-                adventureId = adventurePart.adventureId,
-                messageIndex = messageIndex,
+                messageId = adventurePart.messageId,
                 paragraphIndex = paragraphIndex,
                 language = adventurePart.translationLanguage,
                 sentences = paragraph.translatedSentences,
@@ -119,25 +308,69 @@ class DatabaseAdventureRepository(
         .where { AdventuresTable.id eq adventureId }
         .singleOrNull()
 
-    private fun findSentenceRowsByMessage(adventureId: String): Map<Int, List<ResultRow>> = AdventureSentencesTable
+    private fun messageExists(adventureId: String, messageId: String): Boolean = AdventureMessagesTable
+        .select(AdventureMessagesTable.id)
+        .where { (AdventureMessagesTable.adventureId eq adventureId) and (AdventureMessagesTable.id eq messageId) }
+        .singleOrNull() != null
+
+    private fun findMessageRow(messageId: String): ResultRow? = AdventureMessagesTable
         .selectAll()
-        .where { AdventureSentencesTable.adventureId eq adventureId }
-        .orderBy(AdventureSentencesTable.messageIndex, SortOrder.ASC)
+        .where { AdventureMessagesTable.id eq messageId }
+        .singleOrNull()
+
+    private fun findSentenceRowsByMessage(adventureId: String): Map<String, List<ResultRow>> = AdventureSentencesTable
+        .innerJoin(AdventureMessagesTable)
+        .selectAll()
+        .where { AdventureMessagesTable.adventureId eq adventureId }
         .orderBy(AdventureSentencesTable.paragraphIndex, SortOrder.ASC)
         .orderBy(AdventureSentencesTable.sentenceIndex, SortOrder.ASC)
         .toList()
-        .groupBy { it[AdventureSentencesTable.messageIndex] }
+        .groupBy { it[AdventureSentencesTable.messageId] }
+
+    private fun findSentenceRowsForMessage(messageId: String): List<ResultRow> = AdventureSentencesTable
+        .selectAll()
+        .where { AdventureSentencesTable.messageId eq messageId }
+        .orderBy(AdventureSentencesTable.paragraphIndex, SortOrder.ASC)
+        .orderBy(AdventureSentencesTable.sentenceIndex, SortOrder.ASC)
+        .toList()
 
     private fun findMessageRows(adventureId: String): List<ResultRow> = AdventureMessagesTable
         .selectAll()
         .where { AdventureMessagesTable.adventureId eq adventureId }
-        .orderBy(AdventureMessagesTable.messageIndex, SortOrder.ASC)
+        .orderBy(AdventureMessagesTable.createdAt, SortOrder.ASC)
         .toList()
 
     private companion object {
-        const val senderAi = "AI"
+        const val messageTypeAi = "AI"
+        const val messageTypeUser = "user"
+        const val statusNotStarted = "not_started"
+        const val statusInProgress = "in_progress"
+        const val statusComplete = "complete"
     }
 }
+
+private data class AdventureTimestampUpdate(
+    val adventureId: String,
+    val now: Long,
+    val accountId: String?,
+    val title: String,
+    val translatedTitle: String,
+    val learningLanguage: String,
+    val translationLanguage: String,
+    val createdAt: Long,
+    val imageId: String?,
+    val plan: String?,
+)
+
+private data class PersistedMessageRow(
+    val adventureId: String,
+    val messageId: String,
+    val parentMessageId: String?,
+    val type: String,
+    val isEnding: Boolean,
+    val note: String?,
+    val now: Long,
+)
 
 private fun ResultRow.toRemoteMessage(
     sentencesForMessage: List<ResultRow>,
@@ -165,7 +398,10 @@ private fun ResultRow.toRemoteMessage(
         }
 
     return TextAdventureMessageRemoteResponse(
-        sender = this[AdventureMessagesTable.sender],
+        id = this[AdventureMessagesTable.id],
+        parentId = this[AdventureMessagesTable.parentMessageId],
+        type = this[AdventureMessagesTable.type],
+        sender = this[AdventureMessagesTable.type],
         isEnding = this[AdventureMessagesTable.isEnding],
         paragraphs = paragraphs,
     )
@@ -183,16 +419,14 @@ private fun ResultRow.toRemoteAdventureMessages(
 )
 
 private fun insertSentencesForMessage(
-    adventureId: String,
-    messageIndex: Int,
+    messageId: String,
     paragraphIndex: Int,
     language: String,
     sentences: List<String>,
 ) {
     sentences.forEachIndexed { sentenceIndex, sentence ->
         AdventureSentencesTable.insert {
-            it[this.adventureId] = adventureId
-            it[this.messageIndex] = messageIndex
+            it[this.messageId] = messageId
             it[this.paragraphIndex] = paragraphIndex
             it[this.sentenceIndex] = sentenceIndex
             it[this.language] = language
@@ -203,48 +437,62 @@ private fun insertSentencesForMessage(
 
 object AdventuresTable : Table("text_adventure") {
     val id = varchar("id", length = 255)
+    val accountId = optReference("account_id",
+        input.comprehensible.backend.AccountsTable.id,
+        onDelete = ReferenceOption.CASCADE,
+    )
     val title = text("title")
+    val translatedTitle = text("translated_title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
+    val imageId = varchar("image_id", length = 255).nullable()
+
+    // The AI-authored plan for the adventure. Private context for the narrator; never exposed via the API.
+    val plan = text("plan").nullable()
     val createdAt = registerColumn("created_at", LongColumnType())
     val updatedAt = registerColumn("updated_at", LongColumnType())
+
+    // Set when the adventure is deleted; reads treat rows with a deletion time as gone, and undoing
+    // the deletion clears it.
+    val deletedAt = registerColumn<Long>("deleted_at", LongColumnType()).nullable()
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
 }
 
 object AdventureMessagesTable : Table("text_adventure_message") {
+    val id = varchar("id", length = 255)
     val adventureId = varchar("adventure_id", length = 255).references(
         AdventuresTable.id,
         onDelete = ReferenceOption.CASCADE,
     )
-    val sender = varchar("sender", length = 32)
+    val parentMessageId = optReference(
+        name = "parent_message_id",
+        refColumn = id,
+        onDelete = ReferenceOption.CASCADE,
+    )
+    val type = varchar("type", length = 32)
     val isEnding = bool("is_ending")
-    val createdAt = registerColumn("created_at", LongColumnType())
-    val messageIndex = integer("message_index")
 
-    override val primaryKey: PrimaryKey = PrimaryKey(adventureId, messageIndex)
+    // The AI-authored private note attached to the message. Never exposed via the API; only the model
+    // sees it, as context for later turns. Unrestricted by message type at the schema level.
+    val note = text("note").nullable()
+    val createdAt = registerColumn("created_at", LongColumnType())
+
+    override val primaryKey: PrimaryKey = PrimaryKey(id)
 }
 
 object AdventureSentencesTable : Table("text_adventure_sentence") {
-    val adventureId = varchar("adventure_id", length = 255)
-    val messageIndex = integer("message_index")
+    val messageId = varchar("message_id", length = 255).references(
+        AdventureMessagesTable.id,
+        onDelete = ReferenceOption.CASCADE,
+    )
     val paragraphIndex = integer("paragraph_index")
     val sentenceIndex = integer("sentence_index")
     val language = varchar("language", length = 64)
     val text = text("text")
 
-    init {
-        foreignKey(
-            adventureId,
-            messageIndex,
-            target = AdventureMessagesTable.primaryKey,
-            onDelete = ReferenceOption.CASCADE,
-        )
-    }
-
     override val primaryKey: PrimaryKey = PrimaryKey(
-        adventureId,
-        messageIndex,
+        messageId,
         paragraphIndex,
         sentenceIndex,
         language,

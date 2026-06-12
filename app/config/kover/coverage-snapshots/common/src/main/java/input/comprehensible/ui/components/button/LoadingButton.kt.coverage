@@ -1,0 +1,94 @@
+⚪   package input.comprehensible.ui.components.button
+⚪   
+⚪   import androidx.compose.foundation.layout.size
+⚪   import androidx.compose.material3.Button
+⚪   import androidx.compose.material3.ButtonColors
+⚪   import androidx.compose.material3.ButtonDefaults
+⚪   import androidx.compose.material3.CircularProgressIndicator
+⚪   import androidx.compose.material3.MaterialTheme
+⚪   import androidx.compose.material3.OutlinedButton
+⚪   import androidx.compose.material3.Text
+⚪   import androidx.compose.runtime.Composable
+⚪   import androidx.compose.ui.Modifier
+⚪   import androidx.compose.ui.graphics.Color
+⚪   import androidx.compose.ui.platform.testTag
+⚪   import androidx.compose.ui.unit.dp
+⚪   
+🟢   private val LOADING_INDICATOR_SIZE = 20.dp
+🟢   private val LOADING_INDICATOR_STROKE_WIDTH = 2.dp
+⚪   
+⚪   /**
+⚪    * A filled [Button] that replaces its [text] with a centered progress spinner while [loading]. Used
+⚪    * for the primary submit action on screens that perform a network request.
+⚪    *
+⚪    * Pass [loadingIndicatorTestTag] to tag the spinner so tests can assert the in-progress state.
+⚪    */
+⚪   @Composable
+🟢   fun LoadingButton(
+⚪       text: String,
+⚪       loading: Boolean,
+⚪       onClick: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟢       enabled: Boolean = true,
+🟢       colors: ButtonColors = ButtonDefaults.buttonColors(),
+🟢       loadingIndicatorColor: Color = MaterialTheme.colorScheme.onPrimary,
+🔴       loadingIndicatorTestTag: String? = null,
+🟡   ) {
+🟢       Button(onClick = onClick, enabled = enabled, colors = colors, modifier = modifier) {
+🟢           LoadingButtonContent(
+🟢               text = text,
+🟢               loading = loading,
+🟢               loadingIndicatorColor = loadingIndicatorColor,
+🟢               loadingIndicatorTestTag = loadingIndicatorTestTag,
+⚪           )
+⚪       }
+🟢   }
+⚪   
+⚪   /**
+⚪    * An [OutlinedButton] variant of [LoadingButton] for secondary actions, such as resending a code.
+⚪    */
+⚪   @Composable
+🔴   fun LoadingOutlinedButton(
+⚪       text: String,
+⚪       loading: Boolean,
+⚪       onClick: () -> Unit,
+🟢       modifier: Modifier = Modifier,
+🟢       enabled: Boolean = true,
+🟢       loadingIndicatorColor: Color = MaterialTheme.colorScheme.primary,
+🔴       loadingIndicatorTestTag: String? = null,
+🟡   ) {
+🟢       OutlinedButton(onClick = onClick, enabled = enabled, modifier = modifier) {
+🟢           LoadingButtonContent(
+🟢               text = text,
+🟢               loading = loading,
+🟢               loadingIndicatorColor = loadingIndicatorColor,
+🟢               loadingIndicatorTestTag = loadingIndicatorTestTag,
+⚪           )
+⚪       }
+🟢   }
+⚪   
+⚪   @Composable
+⚪   private fun LoadingButtonContent(
+⚪       text: String,
+⚪       loading: Boolean,
+⚪       loadingIndicatorColor: Color,
+⚪       loadingIndicatorTestTag: String?,
+🟢   ) {
+🟢       if (loading) {
+🟢           CircularProgressIndicator(
+🟢               modifier = Modifier
+🟢                   .size(LOADING_INDICATOR_SIZE)
+🟢                   .then(
+🟡                       if (loadingIndicatorTestTag != null) {
+🟢                           Modifier.testTag(loadingIndicatorTestTag)
+⚪                       } else {
+🔴                           Modifier
+⚪                       },
+⚪                   ),
+🟢               color = loadingIndicatorColor,
+🟢               strokeWidth = LOADING_INDICATOR_STROKE_WIDTH,
+⚪           )
+🟢       } else {
+🟢           Text(text)
+⚪       }
+🟢   }
