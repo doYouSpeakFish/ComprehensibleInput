@@ -15,8 +15,12 @@ import io.ktor.server.routing.getAllRoutes
 import io.ktor.server.routing.routing
 import io.ktor.server.routing.openapi.plus
 import io.ktor.server.testing.testApplication
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.Test
 import java.io.File
 
@@ -37,7 +41,7 @@ class OpenApiSpecGenerationTest {
 
     @Test
     fun `committed OpenAPI spec matches the current routes`() {
-        val generated = generateSpecYaml()
+        val generated = generateContract()
         val specFile = File(SPEC_PATH)
         File(GENERATED_COPY_PATH).apply {
             parentFile.mkdirs()
@@ -64,8 +68,8 @@ class OpenApiSpecGenerationTest {
         }
     }
 
-    private fun generateSpecYaml(): String {
-        lateinit var spec: String
+    private fun generateContract(): String {
+        lateinit var contract: String
         testApplication {
             val database = connectDatabase(PostgreSqlTestDatabase.createConfig())
             val textAdventureService = TextAdventureGenerationService(
@@ -91,10 +95,67 @@ class OpenApiSpecGenerationTest {
             // before reading the configured routing tree.
             startApplication()
             val doc = OpenApiDoc(info = OpenApiInfo(title = API_TITLE, version = API_VERSION)) + root.getAllRoutes()
-            spec = SPEC_JSON.encodeToString(doc)
+            contract = renderContract(doc)
         }
-        return spec.trimEnd() + "\n"
+        return contract
     }
+
+    /**
+     * Serialises the generated document and patches two gaps left by pure code inference, both of
+     * which would otherwise let a genuinely breaking change slip past oasdiff:
+     *  - every request body is marked required, because `call.receive<T>()` rejects an empty body
+     *    (without this, turning a bodyless endpoint into one that needs a body reads as a
+     *    backwards-compatible "optional body added"); and
+     *  - the bearer security scheme that the protected operations reference is declared, so the
+     *    document is valid and a change to the auth mechanism is visible to the diff.
+     */
+    private fun renderContract(doc: OpenApiDoc): String {
+        val root = SPEC_JSON.encodeToJsonElement(OpenApiDoc.serializer(), doc).jsonObject
+        val normalized = buildJsonObject {
+            root.forEach { (key, value) ->
+                when (key) {
+                    "paths" -> put("paths", markRequestBodiesRequired(value.jsonObject))
+                    "components" -> put("components", withBearerSecurityScheme(value.jsonObject))
+                    else -> put(key, value)
+                }
+            }
+            if ("components" !in root) put("components", withBearerSecurityScheme(buildJsonObject {}))
+        }
+        return SPEC_JSON.encodeToString(JsonObject.serializer(), normalized).trimEnd() + "\n"
+    }
+
+    private fun markRequestBodiesRequired(paths: JsonObject): JsonObject = buildJsonObject {
+        paths.forEach { (path, pathItem) ->
+            put(
+                path,
+                buildJsonObject {
+                    pathItem.jsonObject.forEach { (method, operation) ->
+                        val op = operation as? JsonObject
+                        val body = op?.get("requestBody") as? JsonObject
+                        if (op != null && body != null) {
+                            put(method, JsonObject(op + ("requestBody" to JsonObject(body + ("required" to JsonPrimitive(true))))))
+                        } else {
+                            put(method, operation)
+                        }
+                    }
+                },
+            )
+        }
+    }
+
+    private fun withBearerSecurityScheme(components: JsonObject): JsonObject = JsonObject(
+        components + (
+            "securitySchemes" to buildJsonObject {
+                put(
+                    SECURITY_SCHEME_NAME,
+                    buildJsonObject {
+                        put("type", "http")
+                        put("scheme", "bearer")
+                    },
+                )
+            }
+            ),
+    )
 
     private companion object {
         // Stable, diff-friendly rendering: declaration order is deterministic, nulls are dropped to
@@ -110,5 +171,6 @@ class OpenApiSpecGenerationTest {
         const val REGEN_COMMAND = "./gradlew :backend:test -Popenapi.update"
         const val API_TITLE = "3 Million Words backend API"
         const val API_VERSION = "1.0.0"
+        const val SECURITY_SCHEME_NAME = "account-bearer"
     }
 }
