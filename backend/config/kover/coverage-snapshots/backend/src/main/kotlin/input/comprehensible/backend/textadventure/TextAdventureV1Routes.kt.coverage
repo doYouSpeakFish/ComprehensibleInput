@@ -83,6 +83,36 @@
 ⚪           }
 ⚪   
 🟢           adventureDeletionV1Routes(textAdventureService)
+🟢           preplannedAdventureV1Routes(textAdventureService)
+⚪       }
+⚪   }
+⚪   
+⚪   /**
+⚪    * Preplanned adventures: a catalogue of ready-made adventures a player can start. Listing returns the
+⚪    * catalogue as metadata only (never the private plan or the opening message). Starting one copies it
+⚪    * into a new private adventure owned by the player, returned just like a freshly generated adventure;
+⚪    * from then on it is played through the ordinary adventure and message endpoints, so two players who
+⚪    * start the same preplanned adventure get separate adventures and never see each other's messages.
+⚪    */
+⚪   private fun Route.preplannedAdventureV1Routes(textAdventureService: TextAdventureGenerationService) {
+🟢       get("/v1/preplanned-adventures") {
+🟡           call.principal<AccountSessionPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
+🟢           call.respond(
+🟢               textAdventureService.listPreplannedAdventures(
+🟡                   learningLanguage = call.request.queryParameters["learningLanguage"]?.takeIf { it.isNotBlank() },
+🟡                   translationLanguage = call.request.queryParameters["translationLanguage"]?.takeIf { it.isNotBlank() },
+⚪               )
+⚪           )
+⚪       }
+⚪   
+🟢       post("/v1/preplanned-adventures/{preplannedAdventureId}/adventures") {
+🟡           val principal = call.principal<AccountSessionPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
+🟡           val preplannedAdventureId = requireNotNull(call.parameters["preplannedAdventureId"])
+🟢           val response = textAdventureService.startPreplannedAdventureForAccount(
+🟢               accountId = principal.accountId,
+🟢               preplannedAdventureId = preplannedAdventureId,
+⚪           )
+🟢           if (response == null) call.respond(HttpStatusCode.NotFound) else call.respond(HttpStatusCode.Created, response)
 ⚪       }
 ⚪   }
 ⚪   

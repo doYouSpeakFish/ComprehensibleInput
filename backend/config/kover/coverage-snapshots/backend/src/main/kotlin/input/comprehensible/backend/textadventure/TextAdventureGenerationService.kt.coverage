@@ -99,6 +99,69 @@
 🟢           return response.toRemoteResponse(messageId, imageId = chosenImageId)
 ⚪       }
 ⚪   
+⚪       /**
+⚪        * Lists the preplanned adventures a player can start, optionally narrowed to a [learningLanguage]
+⚪        * and/or [translationLanguage] so the app only offers ones written for the player's language pair.
+⚪        * Returns metadata only: the private plan and the opening message stay hidden until the player
+⚪        * actually starts the adventure.
+⚪        */
+⚪       fun listPreplannedAdventures(
+🔴           learningLanguage: String? = null,
+🔴           translationLanguage: String? = null,
+⚪       ): PreplannedAdventureListRemoteResponse =
+🟢           PreplannedAdventureListRemoteResponse(
+🟢               items = PreplannedAdventureCatalog.adventures
+🟢                   .filter { learningLanguage == null || it.learningLanguage == learningLanguage }
+🟢                   .filter { translationLanguage == null || it.translationLanguage == translationLanguage }
+🟢                   .map { it.toRemoteSummary() },
+⚪           )
+⚪   
+⚪       /**
+⚪        * Starts the preplanned adventure with id [preplannedAdventureId] for [accountId] by copying it
+⚪        * into a new, private adventure owned by that account: the opening narrator message, the cover
+⚪        * image, the difficulty level and the private plan are all stored just as if they had been
+⚪        * generated. From then on it is an ordinary adventure — continued through the normal message
+⚪        * endpoints and visible only to its owner, so two players who start the same preplanned adventure
+⚪        * never see each other's messages. Each call creates a fresh adventure. Returns null when no
+⚪        * preplanned adventure has that id.
+⚪        */
+⚪       fun startPreplannedAdventureForAccount(
+⚪           accountId: String,
+⚪           preplannedAdventureId: String,
+⚪       ): TextAdventureRemoteResponse? {
+🟢           val preplanned = PreplannedAdventureCatalog.findById(preplannedAdventureId) ?: return null
+🟢           val adventureId = UUID.randomUUID().toString()
+🟢           val messageId = messageIdProvider()
+🟢           adventureRepository.saveAdventurePart(
+🟢               PersistedAdventurePart(
+🟢                   adventureId = adventureId,
+🟢                   accountId = accountId,
+🟢                   messageId = messageId,
+🟢                   parentMessageId = null,
+🟢                   title = preplanned.title,
+🟢                   translatedTitle = preplanned.translatedTitle,
+🟢                   learningLanguage = preplanned.learningLanguage,
+🟢                   translationLanguage = preplanned.translationLanguage,
+🟢                   isEnding = false,
+🟢                   paragraphs = preplanned.firstMessage.paragraphs,
+🟢                   imageId = preplanned.imageId,
+🟢                   plan = preplanned.plan.toPlanText(),
+🟢                   note = preplanned.firstMessage.note,
+🟢                   languageLevel = preplanned.languageLevel,
+⚪               )
+⚪           )
+🟢           return TextAdventureRemoteResponse(
+🟢               messageId = messageId,
+🟢               adventureId = adventureId,
+🟢               title = preplanned.title,
+🟢               translatedTitle = preplanned.translatedTitle,
+🟢               sentences = preplanned.firstMessage.paragraphs.flatMap { it.sentences },
+🟢               translatedSentences = preplanned.firstMessage.paragraphs.flatMap { it.translatedSentences },
+🟢               isEnding = false,
+🟢               imageId = preplanned.imageId,
+⚪           )
+⚪       }
+⚪   
 ⚪       fun listAdventuresForAccount(accountId: String): AdventureListRemoteResponse =
 🟢           AdventureListRemoteResponse(
 🟢               items = adventureRepository.listAdventureSummariesForAccount(accountId).map { it.toRemoteResponse() },
@@ -504,6 +567,16 @@
 🟢       status = status,
 ⚪   )
 ⚪   
+🟢   private fun PreplannedAdventure.toRemoteSummary(): PreplannedAdventureRemoteResponse = PreplannedAdventureRemoteResponse(
+🟢       id = id,
+🟢       title = title,
+🟢       translatedTitle = translatedTitle,
+🟢       learningLanguage = learningLanguage,
+🟢       translationLanguage = translationLanguage,
+🟢       languageLevel = languageLevel,
+🟢       imageId = imageId,
+⚪   )
+⚪   
 🟢   private fun TextAdventureMessagesRemoteResponse.toHistory(): List<TextAdventureHistoryMessage> = messages.mapNotNull { message ->
 🟢       val text = message.paragraphs.flatMap { it.sentences }.joinToString(" ").trim()
 🟡       if (text.isBlank()) {
@@ -690,5 +763,26 @@
 🟢       val imageId: String? = null,
 ⚪       /** Progress of the adventure: "not_started", "in_progress" or "complete". */
 🟢       val status: String = "in_progress",
+⚪   )
+⚪   
+🔴   @Serializable
+🟢   data class PreplannedAdventureListRemoteResponse(val items: List<PreplannedAdventureRemoteResponse>)
+⚪   
+⚪   /**
+⚪    * A preplanned adventure a player can start, as returned by `GET /v1/preplanned-adventures`. This is
+⚪    * metadata only: [id] is the catalogue id used to start the adventure (not a player's adventure id),
+⚪    * and the private plan and opening message are deliberately omitted until the player starts it.
+⚪    */
+🔴   @Serializable
+⚪   data class PreplannedAdventureRemoteResponse(
+🟢       val id: String,
+🟢       val title: String,
+🟢       val translatedTitle: String,
+🟢       val learningLanguage: String,
+🟢       val translationLanguage: String,
+⚪       /** The CEFR difficulty level (e.g. "B1") the adventure is written at. */
+🟢       val languageLevel: String,
+⚪       /** The id of the catalogue cover image for this adventure. */
+🟢       val imageId: String,
 ⚪   )
 ⚪   

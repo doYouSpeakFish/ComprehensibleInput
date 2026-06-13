@@ -1,0 +1,277 @@
+⚪   package input.comprehensible.backend.textadventure
+⚪   
+⚪   /**
+⚪    * A hand-authored adventure that ships with the backend, ready to play without asking the model to
+⚪    * invent one. A preplanned adventure carries everything a freshly generated adventure would have by
+⚪    * the time its opening scene is stored: a fixed language pair and difficulty, a cover image, a title,
+⚪    * the private [plan] that guides the narrator, and the [firstMessage] the player sees first.
+⚪    *
+⚪    * It is deliberately the same shape as a generated adventure so that, once a player starts it, it
+⚪    * becomes an ordinary adventure: it is copied into a private, per-player adventure (keyed by the
+⚪    * player's account) and continued through the normal message endpoints. Two players who start the
+⚪    * same preplanned adventure therefore get two independent adventures and never see each other's
+⚪    * messages.
+⚪    *
+⚪    * [id] is a stable catalogue identifier used to start the adventure; it is not the id of any player's
+⚪    * adventure instance. [plan] is private narrator context and, like every plan, is never exposed
+⚪    * through the API.
+⚪    */
+🟢   data class PreplannedAdventure(
+🟢       val id: String,
+🟢       val learningLanguage: String,
+🟢       val translationLanguage: String,
+🟢       val languageLevel: String,
+🟢       val imageId: String,
+🟢       val title: String,
+🟢       val translatedTitle: String,
+🟢       val plan: AdventurePlanStructuredResponse,
+🟢       val firstMessage: PreplannedFirstMessage,
+⚪   )
+⚪   
+⚪   /**
+⚪    * The opening narrator message of a preplanned adventure. [paragraphs] hold the learning-language
+⚪    * sentences and their matching translations (one [PersistedAdventureParagraph] per paragraph), just
+⚪    * as a generated opening message would. [note] is an optional private narrator note stored on the
+⚪    * opening message; like all notes it is never exposed through the API and is only fed back to the
+⚪    * model as context on later turns.
+⚪    */
+⚪   data class PreplannedFirstMessage(
+🟢       val paragraphs: List<PersistedAdventureParagraph>,
+🟢       val note: String? = null,
+⚪   )
+⚪   
+⚪   /**
+⚪    * The fixed catalogue of preplanned adventures bundled with the backend.
+⚪    *
+⚪    * Each entry is written out in full, like code: the plan is a structured [AdventurePlanStructuredResponse]
+⚪    * (the same type the model returns when it plans an adventure) so it stays complete and consistent, and
+⚪    * the opening message is written sentence by sentence with a matching translation for every sentence.
+⚪    * The [init] block enforces these invariants so a malformed adventure fails fast at start-up rather
+⚪    * than at play time.
+⚪    */
+⚪   object PreplannedAdventureCatalog {
+⚪   
+🟢       val adventures: List<PreplannedAdventure> = listOf(
+🟢           theDarkenedLighthouse(),
+⚪       )
+⚪   
+🟢       private val adventuresById: Map<String, PreplannedAdventure> = adventures.associateBy { it.id }
+⚪   
+🟢       fun findById(id: String): PreplannedAdventure? = adventuresById[id]
+⚪   
+🟢       init {
+🟡           require(adventures.isNotEmpty()) { "The preplanned adventure catalogue must not be empty" }
+🟡           require(adventuresById.size == adventures.size) { "Preplanned adventure ids must be unique" }
+🟢           adventures.forEach(::validate)
+⚪       }
+⚪   
+⚪       private fun validate(adventure: PreplannedAdventure) {
+🟡           require(adventure.id.isNotBlank()) { "A preplanned adventure must have a non-blank id" }
+🟡           require(adventure.learningLanguage.isNotBlank()) { "${adventure.id}: learning language must not be blank" }
+🟡           require(adventure.translationLanguage.isNotBlank()) { "${adventure.id}: translation language must not be blank" }
+🟡           require(adventure.learningLanguage != adventure.translationLanguage) {
+🔴               "${adventure.id}: learning and translation languages must differ"
+⚪           }
+🟡           require(adventure.languageLevel in SUPPORTED_LANGUAGE_LEVELS) {
+🔴               "${adventure.id}: unsupported language level '${adventure.languageLevel}'"
+⚪           }
+🟡           require(AdventureImageCatalog.contains(adventure.imageId)) {
+🔴               "${adventure.id}: image '${adventure.imageId}' is not in the cover image catalogue"
+⚪           }
+🟡           require(adventure.title.isNotBlank()) { "${adventure.id}: title must not be blank" }
+🟡           require(adventure.translatedTitle.isNotBlank()) { "${adventure.id}: translated title must not be blank" }
+🟢           validatePlan(adventure)
+🟢           validateFirstMessage(adventure)
+⚪       }
+⚪   
+⚪       private fun validatePlan(adventure: PreplannedAdventure) {
+🟢           val plan = adventure.plan
+🟡           require(plan.characterDescription.isNotBlank()) { "${adventure.id}: plan needs a character description" }
+🟡           require(plan.inventory.isNotBlank()) { "${adventure.id}: plan needs a starting inventory" }
+🟡           require(plan.hook.isNotBlank()) { "${adventure.id}: plan needs a hook" }
+🟡           require(plan.truthBehindHook.isNotBlank()) { "${adventure.id}: plan needs the truth behind the hook" }
+🟡           require(plan.coreChallenge.isNotBlank()) { "${adventure.id}: plan needs a core challenge" }
+🟡           require(plan.locations.isNotEmpty()) { "${adventure.id}: plan needs at least one location" }
+🟡           require(plan.npcs.isNotEmpty()) { "${adventure.id}: plan needs at least one NPC" }
+⚪       }
+⚪   
+⚪       private fun validateFirstMessage(adventure: PreplannedAdventure) {
+🟢           val paragraphs = adventure.firstMessage.paragraphs
+🟡           require(paragraphs.isNotEmpty()) { "${adventure.id}: the first message must have at least one paragraph" }
+🟢           paragraphs.forEach { paragraph ->
+🟡               require(paragraph.sentences.isNotEmpty()) { "${adventure.id}: a first-message paragraph has no sentences" }
+🟡               require(paragraph.sentences.size == paragraph.translatedSentences.size) {
+🔴                   "${adventure.id}: every first-message sentence must have exactly one translation"
+⚪               }
+🟢           }
+⚪       }
+⚪   }
+⚪   
+⚪   /**
+⚪    * "The Darkened Lighthouse" — a Spanish (B1) coastal mystery translated into English.
+⚪    *
+⚪    * The lighthouse has gone dark in a storm and a ship is drifting toward the rocks. The player, Lucía,
+⚪    * must get inside, find the trapped keeper, recover the gear that turns the lamp and relight it in
+⚪    * time. The twist is gentle rather than villainous: the keeper's nephew hid the gear out of love, to
+⚪    * force his stubborn uncle off the lonely cliff, and the best ending is reached by understanding him.
+⚪    */
+🟢   private fun theDarkenedLighthouse(): PreplannedAdventure = PreplannedAdventure(
+🟢       id = "darkened-lighthouse-es-b1",
+🟢       learningLanguage = "es",
+🟢       translationLanguage = "en",
+🟢       languageLevel = "B1",
+🟢       imageId = "lighthouse-cliff",
+🟢       title = "El faro a oscuras",
+🟢       translatedTitle = "The Darkened Lighthouse",
+🟢       plan = darkenedLighthousePlan(),
+🟢       firstMessage = darkenedLighthouseFirstMessage(),
+⚪   )
+⚪   
+🟢   private fun darkenedLighthousePlan(): AdventurePlanStructuredResponse = AdventurePlanStructuredResponse(
+🟢       characterDescription = "The player is Lucía, a young woman from the fishing village of Las Gaviotas at the foot " +
+⚪           "of the cliff. As a child she spent long hours alone, and the old lighthouse keeper, Don Tomás, taught her " +
+⚪           "to read using the ships' logbooks. She is brave, curious and fiercely loyal to the few people who were " +
+⚪           "ever kind to her. Tonight she has come up to the lighthouse because Don Tomás sent for her.",
+🟢       inventory = "Lucía carries Don Tomás's letter, which reads only 'Ven. Te necesito.' ('Come. I need you.'); a " +
+⚪           "small brass oil lamp with almost no oil left, so its flame will soon die; a yellow raincoat against the " +
+⚪           "storm; and a small folding knife.",
+🟢       hook = "For the first time in living memory the great cliff-top lighthouse has gone completely dark, on the " +
+⚪           "night of a violent storm. Out at sea a fishing boat, the Estrella del Norte, is steering slowly toward " +
+⚪           "the rocks below and will be wrecked unless the lamp is relit. Don Tomás, who sent for Lucía, is nowhere " +
+⚪           "to be seen, and the heavy red door of the lighthouse is locked.",
+🟢       truthBehindHook = "The light did not fail by accident. Don Tomás's nephew, Julián, secretly removed the heavy " +
+⚪           "brass gear that turns the lamp and hid it, hoping a failed lighthouse would force the authorities to close " +
+⚪           "it and finally bring his stubborn, ageing uncle off the lonely cliff to live safely with him in the city. " +
+⚪           "Julián never dreamed a ship would be caught in a storm the very same night. Don Tomás discovered what his " +
+⚪           "nephew had done and, hurrying to the cellar for the spare gear, fell on the stairs and hurt his leg; he is " +
+⚪           "now trapped below, unable to climb. Julián is hiding at the top of the tower, ashamed and frightened.",
+🟢       coreChallenge = "Lucía must relight the lighthouse lamp before the Estrella del Norte reaches the rocks. To do " +
+⚪           "that she must get inside the locked tower, find Don Tomás and learn that the lamp will not turn because its " +
+⚪           "brass gear is missing, recover the hidden gear, fit it back into the mechanism, fill the lamp with oil and " +
+⚪           "light it. The heart of the challenge is Julián: he is not a villain but a frightened young man who acted " +
+⚪           "out of love. Lucía can take the gear back by force or threat, but the best resolution is to talk with him, " +
+⚪           "understand why he did it, and persuade him to give it back and help. The pressure comes from the " +
+⚪           "approaching ship and from Lucía's own oil lamp slowly running dry, which threatens to leave her in the dark.",
+🟢       locations = darkenedLighthouseLocations(),
+🟢       npcs = darkenedLighthouseNpcs(),
+⚪   )
+⚪   
+🟢   private fun darkenedLighthouseLocations(): List<AdventurePlanLocationResponse> = listOf(
+🟢       AdventurePlanLocationResponse(
+🟢           name = "El camino del acantilado y la puerta roja (the cliff path and the red door)",
+🟢           description = "A steep path climbs from the village to the lighthouse through wind and rain. At the top " +
+⚪               "stands the round white tower with a heavy red iron door, now locked. To the right of the door are " +
+⚪               "three worn stone steps; the third step is cracked, and under it, beneath a loose stone, Don Tomás " +
+⚪               "always keeps a spare iron key to the door. Far above, a rusty old foghorn and some seabird nests " +
+⚪               "cling to the outside gallery.",
+⚪       ),
+🟢       AdventurePlanLocationResponse(
+🟢           name = "La planta baja (the ground floor)",
+🟢           description = "Inside the door is a cold, round stone room. There is a wooden desk holding the open " +
+⚪               "ship's logbook and a tin of long matches, a row of hooks with oilskin coats, and an unlit storm " +
+⚪               "lantern. A spiral iron staircase winds upward toward the bedroom and the lamp room. Set into the " +
+⚪               "floor is a wooden trapdoor with an iron ring that leads down to the cellar, and from below a faint " +
+⚪               "voice can be heard calling for help.",
+⚪       ),
+🟢       AdventurePlanLocationResponse(
+🟢           name = "El sótano (the cellar)",
+🟢           description = "A low, damp store-room reached by a short wooden staircase. Barrels of lamp oil line one " +
+⚪               "wall and a funnel hangs from a nail. Don Tomás is here, propped against the barrels with an injured " +
+⚪               "leg, unable to climb. He can explain everything: the lamp itself is sound but will not turn because " +
+⚪               "the brass gear is gone, and his nephew Julián is the only other person on the cliff tonight. He " +
+⚪               "begs Lucía to relight the lamp and to be gentle with the boy. He can give her the tin of matches.",
+⚪       ),
+🟢       AdventurePlanLocationResponse(
+🟢           name = "El dormitorio del farero (the keeper's bedroom)",
+🟢           description = "A small round room off the first landing, with a narrow bed, a stove and a wooden chest. " +
+⚪               "Inside the chest is Don Tomás's diary, whose last pages describe Julián's letters begging him to " +
+⚪               "leave the lighthouse, and his own refusals. A small key hangs on a hook by the window; it opens the " +
+⚪               "tool cabinet up in the lamp room. The window looks out onto the gallery where the foghorn stands.",
+⚪       ),
+🟢       AdventurePlanLocationResponse(
+🟢           name = "La sala de la lámpara (the lamp room)",
+🟢           description = "The glass-walled top of the tower holds the great lamp and its lens. At its base is the " +
+⚪               "turning mechanism, with an empty square socket where the heavy brass gear belongs; without the gear " +
+⚪               "the lamp can neither rotate nor be lit safely. An oil reservoir must be filled from the cellar's " +
+⚪               "oil, and a locked tool cabinet (opened by the bedroom key) holds cleaning cloths and the crank " +
+⚪               "handle. A low door leads out onto the windy gallery.",
+⚪       ),
+🟢       AdventurePlanLocationResponse(
+🟢           name = "La galería y la vieja sirena de niebla (the gallery and the old foghorn)",
+🟢           description = "A narrow walkway runs around the outside of the lamp room, high above the crashing sea. " +
+⚪               "The rusted foghorn stands here, its wide brass mouth deep enough to hide something inside. Wrapped " +
+⚪               "in oilcloth deep within the foghorn is the missing brass gear. Julián is out here in the rain, " +
+⚪               "gripping the railing, watching the ship's lights draw closer. If Lucía is kind he confesses the " +
+⚪               "truth and shows her the gear; if she threatens him he panics.",
+⚪       ),
+⚪   )
+⚪   
+🟢   private fun darkenedLighthouseNpcs(): List<AdventurePlanNpcResponse> = listOf(
+🟢       AdventurePlanNpcResponse(
+🟢           name = "Don Tomás",
+🟢           description = "The lighthouse keeper, in his seventies, who taught Lucía to read. Honest, proud and " +
+⚪               "stubborn, he has kept this light for forty years and refuses to leave it. Tonight he is trapped in " +
+⚪               "the cellar with an injured leg after falling on the stairs. He wants two things: the lamp relit to " +
+⚪               "save the ship, and his nephew forgiven rather than punished. He can give Lucía the matches, tell " +
+⚪               "her the gear is missing and that Julián is somewhere above, and explain how the lamp works, but he " +
+⚪               "cannot climb to the lamp room himself.",
+⚪       ),
+🟢       AdventurePlanNpcResponse(
+🟢           name = "Julián",
+🟢           description = "Don Tomás's nephew, a soft-hearted, anxious young man from the city. He took the brass " +
+⚪               "gear and hid it in the foghorn on the gallery, hoping a failed inspection would force his uncle off " +
+⚪               "the dangerous, lonely cliff and into a safe life with him. He never expected a ship to be in " +
+⚪               "danger, and now he is frozen on the gallery with guilt and fear. If Lucía threatens him he refuses " +
+⚪               "and panics; if she listens and reassures him, he confesses, hands over the gear and helps her carry " +
+⚪               "it to the mechanism.",
+⚪       ),
+🟢       AdventurePlanNpcResponse(
+🟢           name = "La Estrella del Norte (the ship)",
+🟢           description = "A fishing boat returning late, caught in the storm and steering from memory toward the " +
+⚪               "harbour. Without the lighthouse its crew cannot see the rocks. It is not someone Lucía can speak " +
+⚪               "to; instead its slow approach is the clock the whole adventure runs against. Each turn its lights " +
+⚪               "should grow a little closer and brighter through the rain, and if the lamp is not lit in time the " +
+⚪               "ship strikes the rocks.",
+⚪       ),
+⚪   )
+⚪   
+🟢   private fun darkenedLighthouseFirstMessage(): PreplannedFirstMessage = PreplannedFirstMessage(
+🟢       paragraphs = listOf(
+🟢           PersistedAdventureParagraph(
+🟢               sentences = listOf(
+🟢                   "Te llamas Lucía y vives en Las Gaviotas, un pequeño pueblo de pescadores al pie del acantilado.",
+🟢                   "Cuando eras niña, el viejo farero, don Tomás, te enseñó a leer con los cuadernos de los barcos.",
+🟢                   "Esta tarde, un vecino te ha traído una carta suya con solo tres palabras: «Ven. Te necesito.»",
+🟢                   "Llevas esa carta en el bolsillo, un pequeño farol de aceite casi vacío, un impermeable amarillo y una navaja.",
+⚪               ),
+🟢               translatedSentences = listOf(
+🟢                   "Your name is Lucía and you live in Las Gaviotas, a small fishing village at the foot of the cliff.",
+🟢                   "When you were a child, the old lighthouse keeper, Don Tomás, taught you to read with the ships' logbooks.",
+🟢                   "This afternoon a neighbour brought you a letter from him with only three words: \"Come. I need you.\"",
+🟢                   "You are carrying that letter in your pocket, a small oil lamp that is almost empty, " +
+⚪                       "a yellow raincoat and a folding knife.",
+⚪               ),
+⚪           ),
+🟢           PersistedAdventureParagraph(
+🟢               sentences = listOf(
+🟢                   "Subes por el camino del acantilado mientras la tormenta crece sobre el mar.",
+🟢                   "Frente a ti, el gran faro está completamente a oscuras por primera vez que recuerdas.",
+🟢                   "A lo lejos, las luces de un barco se acercan despacio a las rocas.",
+🟢                   "La puerta roja del faro está cerrada con llave y el viento ruge a tu alrededor.",
+🟢                   "¿Qué haces?",
+⚪               ),
+🟢               translatedSentences = listOf(
+🟢                   "You climb the cliff path while the storm grows over the sea.",
+🟢                   "Ahead of you, the great lighthouse is completely dark for the first time you can remember.",
+🟢                   "In the distance, the lights of a ship are drawing slowly closer to the rocks.",
+🟢                   "The red door of the lighthouse is locked and the wind roars around you.",
+🟢                   "What do you do?",
+⚪               ),
+⚪           ),
+⚪       ),
+🟢       note = "Opening turn. The Estrella del Norte is still far out but approaching; treat roughly six to eight player " +
+⚪           "turns as the time remaining before it reaches the rocks, and make the danger feel a little closer each " +
+⚪           "turn. The spare key to the red door is under a loose stone beneath the cracked third step beside the door. " +
+⚪           "Don Tomás is trapped in the cellar; Julián and the missing brass gear are up on the gallery. Lucía's own " +
+⚪           "oil lamp is nearly empty, so it may gutter out and leave her in the dark after a few turns.",
+⚪   )

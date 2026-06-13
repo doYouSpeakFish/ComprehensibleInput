@@ -15,6 +15,7 @@ import input.comprehensible.backend.textadventure.AdventurePlanLocationResponse
 import input.comprehensible.backend.textadventure.AdventurePlanNpcResponse
 import input.comprehensible.backend.textadventure.AdventurePlanStructuredResponse
 import input.comprehensible.backend.textadventure.DatabaseAdventureRepository
+import input.comprehensible.backend.textadventure.PreplannedAdventureCatalog
 import input.comprehensible.backend.textadventure.TextAdventureGenerationService
 import input.comprehensible.backend.textadventure.TextAdventureStructuredParagraph
 import input.comprehensible.backend.textadventure.TextAdventureStructuredResponse
@@ -994,6 +995,132 @@ class TextAdventureV1ApiStepDefinitions {
         }
     }
 
+    @When("I list preplanned adventures")
+    fun listPreplannedAdventures() {
+        runAgainstApplication {
+            client.get("/v1/preplanned-adventures") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    @When("I list preplanned adventures for learning language {string} and translation language {string}")
+    fun listPreplannedAdventuresForLanguages(learningLanguage: String, translationLanguage: String) {
+        runAgainstApplication {
+            client.get("/v1/preplanned-adventures?learningLanguage=$learningLanguage&translationLanguage=$translationLanguage") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    @Then("the preplanned adventure list includes every bundled preplanned adventure")
+    fun preplannedListIncludesEveryBundledAdventure() {
+        PreplannedAdventureCatalog.adventures.forEach { adventure ->
+            assertTrue(
+                "Expected preplanned adventure '${adventure.id}' in the list but it was missing",
+                latestResponseBody.contains("\"id\":\"${adventure.id}\""),
+            )
+        }
+    }
+
+    @Then("the preplanned adventure list is empty")
+    fun preplannedListIsEmpty() {
+        assertTrue("Expected an empty preplanned adventure list", latestResponseBody.contains("\"items\":[]"))
+    }
+
+    @When("I start the first bundled preplanned adventure")
+    @Given("I have started the first bundled preplanned adventure")
+    fun startFirstBundledPreplannedAdventure() {
+        startPreplannedAdventure(firstPreplannedAdventureId(), token = null)
+        captureStartedPreplannedAdventureIds()
+    }
+
+    @When("I start preplanned adventure {string}")
+    fun startNamedPreplannedAdventure(preplannedAdventureId: String) {
+        startPreplannedAdventure(preplannedAdventureId, token = null)
+    }
+
+    @Given("user A starts the first bundled preplanned adventure")
+    fun userAStartsFirstBundledPreplannedAdventure() {
+        startPreplannedAdventure(firstPreplannedAdventureId(), token = userAToken)
+        userAAdventureId = extractJsonString(latestResponseBody, "adventureId")
+        rootMessageId = extractJsonString(latestResponseBody, "messageId")
+        userAAdventureIds.add(userAAdventureId)
+    }
+
+    @Given("user B starts the first bundled preplanned adventure")
+    fun userBStartsFirstBundledPreplannedAdventure() {
+        startPreplannedAdventure(firstPreplannedAdventureId(), token = userBToken)
+        userBAdventureId = extractJsonString(latestResponseBody, "adventureId")
+    }
+
+    @Then("user A's started adventure and user B's started adventure have different ids")
+    fun userAAndUserBStartedAdventuresHaveDifferentIds() {
+        assertTrue(userAAdventureId.isNotBlank())
+        assertTrue(userBAdventureId.isNotBlank())
+        assertFalse("Each player should get their own adventure", userAAdventureId == userBAdventureId)
+    }
+
+    @When("user B fetches user A's started preplanned adventure messages")
+    fun userBFetchesUserAStartedPreplannedAdventureMessages() {
+        runAgainstApplication {
+            client.get("/v1/adventures/$userAAdventureId/messages") {
+                authorized(userBToken)
+            }
+        }
+    }
+
+    @When("I fetch adventure messages for the started preplanned adventure")
+    fun fetchMessagesForStartedPreplannedAdventure() {
+        runAgainstApplication {
+            client.get("/v1/adventures/$userAAdventureId/messages") {
+                authorizedIfPresent()
+            }
+        }
+    }
+
+    @Then("the started preplanned adventure is listed")
+    fun theStartedPreplannedAdventureIsListed() {
+        assertTrue(userAAdventureId.isNotBlank())
+        assertTrue(latestResponseBody.contains(userAAdventureId))
+    }
+
+    @When("I continue the started preplanned adventure with text {string}")
+    fun continueStartedPreplannedAdventure(text: String) {
+        postMessage(adventureId = userAAdventureId, type = "user", parentId = rootMessageId, text = text)
+    }
+
+    @Then("neither the started adventure nor its messages expose the preplanned plan")
+    fun neitherStartedAdventureNorMessagesExposePreplannedPlan() {
+        runAgainstApplication { client.get("/v1/adventures/$userAAdventureId") { authorizedIfPresent() } }
+        assertFalse("The adventure summary leaked the private plan", latestResponseBody.contains(PLAN_LABEL_MARKER))
+        runAgainstApplication { client.get("/v1/adventures/$userAAdventureId/messages") { authorizedIfPresent() } }
+        assertFalse("The adventure messages leaked the private plan", latestResponseBody.contains(PLAN_LABEL_MARKER))
+    }
+
+    private fun firstPreplannedAdventureId(): String = PreplannedAdventureCatalog.adventures.first().id
+
+    /**
+     * Posts to start a preplanned adventure. A [token] authorises as that specific user; null falls
+     * back to the active token only when authenticated, so the unauthenticated scenarios send no
+     * credentials and get a 401.
+     */
+    private fun startPreplannedAdventure(preplannedAdventureId: String, token: String?) {
+        runAgainstApplication {
+            client.post("/v1/preplanned-adventures/$preplannedAdventureId/adventures") {
+                if (token != null) authorized(token) else authorizedIfPresent()
+            }
+        }
+    }
+
+    /** Captures the active player's newly started preplanned adventure, but only on a successful start. */
+    private fun captureStartedPreplannedAdventureIds() {
+        if (latestResponseStatus != HttpStatusCode.Created) return
+        userAAdventureId = extractJsonString(latestResponseBody, "adventureId")
+        rootMessageId = extractJsonString(latestResponseBody, "messageId")
+        userAAdventureIds.add(userAAdventureId)
+    }
+
     private fun runAgainstApplication(
         block: suspend ApplicationTestBuilder.() -> HttpResponse,
     ) {
@@ -1130,5 +1257,9 @@ class TextAdventureV1ApiStepDefinitions {
         const val PLAN_PROMPT_NAME = "text-adventure-plan"
         const val START_PROMPT_NAME = "text-adventure-start"
         const val CONTINUE_PROMPT_NAME = "text-adventure-continue"
+
+        // A label that the rendered plan always carries but narration never does, so finding it in an
+        // API response would mean the private plan had leaked.
+        const val PLAN_LABEL_MARKER = "TRUTH BEHIND THE HOOK"
     }
 }
