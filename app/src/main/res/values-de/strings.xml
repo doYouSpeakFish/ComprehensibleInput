@@ -11,23 +11,6 @@
     <string name="text_adventure_list_in_progress">Textabenteuer · In Bearbeitung</string>
     <string name="text_adventure_list_complete">Textabenteuer · Abgeschlossen</string>
     <string name="text_adventure_ending_label">Ende</string>
-    <string-array name="story_reader_tap_to_translate_explainer">
-        <item>Tippen Sie auf einen Satz, um ihn zu übersetzen</item>
-        <item>Naja, fast jeder Satz</item>
-        <item>Sie können auch auf den Titel tippen</item>
-        <item>Im Ernst, hören Sie auf, diesen Satz zu tippen</item>
-        <item>Es wird nicht übersetzen</item>
-        <item>Was willst du von mir!</item>
-        <item>Na gut, ich habe die Übersetzungen deaktiviert</item>
-        <item>Nur ein Scherz, das kann ich nicht tun</item>
-        <item>Ich bin nur ein Satz in einer Box</item>
-        <item>Letzte Warnung</item>
-        <item />
-        <item>Sie haben mich wieder gefunden!</item>
-        <item>Ich gebe auf</item>
-        <item>Du gewinnst</item>
-        <item>Rydych chi wedi tapio digon!</item>
-    </string-array>
     <string name="story_reader_error_dialog_title">Geschichte kann nicht geladen werden</string>
     <string name="story_reader_error_dialog_message">Wir konnten diese Geschichte nicht öffnen. Bitte versuchen Sie es später noch einmal.</string>
     <string name="story_reader_error_dialog_button">OK</string>

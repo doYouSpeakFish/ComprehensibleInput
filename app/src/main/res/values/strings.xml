@@ -11,23 +11,6 @@
     <string name="text_adventure_list_in_progress">Text adventure · In progress</string>
     <string name="text_adventure_list_complete">Text adventure · Finished</string>
     <string name="text_adventure_ending_label">Ending</string>
-    <string-array name="story_reader_tap_to_translate_explainer">
-        <item>Tap on any sentence to translate it</item>
-        <item>Well, almost any sentence</item>
-        <item>You can also tap on the title</item>
-        <item>Seriously, stop tapping this sentence</item>
-        <item>It won\'t translate</item>
-        <item>What do you want from me!</item>
-        <item>Fine, I\'ve disabled translations</item>
-        <item>Just kidding, I can\'t do that</item>
-        <item>I\'m just a sentence in a box</item>
-        <item>Last warning</item>
-        <item />
-        <item>You found me again!</item>
-        <item>I give up</item>
-        <item>You win</item>
-        <item>Rydych chi wedi tapio digon!</item>
-    </string-array>
     <string name="story_reader_error_dialog_title">Unable to load story</string>
     <string name="story_reader_error_dialog_message">We couldn\'t open this story. Please try again later.</string>
     <string name="story_reader_error_dialog_button">OK</string>

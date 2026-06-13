@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.textadventure.R
 import input.comprehensible.ui.components.TranslatableText
+import input.comprehensible.ui.components.TranslateExplainer
 import input.comprehensible.ui.textadventure.TextAdventureChatUiState.SelectedSentence
 import kotlinx.coroutines.delay
 
@@ -103,7 +105,9 @@ private fun Conversation(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    val headerCount = if (state.imageUrl != null) 1 else 0
+    var timesExplainerTapped by rememberSaveable { mutableIntStateOf(0) }
+    // The translate explainer is always the first item, with the cover image (when present) after it.
+    val headerCount = 1 + if (state.imageUrl != null) 1 else 0
     val itemCount = headerCount + state.displayedMessages.size + if (state.isGenerating) 1 else 0
     LaunchedEffect(itemCount) {
         if (itemCount > 0) listState.animateScrollToItem(itemCount - 1)
@@ -113,6 +117,12 @@ private fun Conversation(
         modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        item(key = "translate_explainer") {
+            TranslateExplainer(
+                onExplainerTapped = { timesExplainerTapped++ },
+                timesExplainerTapped = timesExplainerTapped,
+            )
+        }
         state.imageUrl?.let { url ->
             item(key = "adventure_image") {
                 AdventureImage(

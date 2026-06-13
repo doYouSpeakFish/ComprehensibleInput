@@ -1,13 +1,10 @@
 ⚪   package input.comprehensible.ui.storyreader
 ⚪   
 ⚪   import androidx.compose.animation.AnimatedVisibility
-⚪   import androidx.compose.animation.animateContentSize
 ⚪   import androidx.compose.foundation.BorderStroke
 ⚪   import androidx.compose.foundation.ExperimentalFoundationApi
 ⚪   import androidx.compose.foundation.Image
-⚪   import androidx.compose.foundation.background
 ⚪   import androidx.compose.foundation.border
-⚪   import androidx.compose.foundation.clickable
 ⚪   import androidx.compose.foundation.layout.Arrangement
 ⚪   import androidx.compose.foundation.layout.Box
 ⚪   import androidx.compose.foundation.layout.Column
@@ -52,7 +49,6 @@
 ⚪   import androidx.compose.ui.platform.testTag
 ⚪   import androidx.compose.ui.res.imageResource
 ⚪   import androidx.compose.ui.res.painterResource
-⚪   import androidx.compose.ui.res.stringArrayResource
 ⚪   import androidx.compose.ui.res.stringResource
 ⚪   import androidx.compose.ui.text.style.TextAlign
 ⚪   import androidx.compose.ui.unit.dp
@@ -60,6 +56,7 @@
 ⚪   import androidx.lifecycle.viewmodel.compose.viewModel
 ⚪   import input.comprehensible.R
 ⚪   import input.comprehensible.common.R as CommonR
+⚪   import input.comprehensible.ui.components.TranslateExplainer
 ⚪   import input.comprehensible.ui.components.rememberPagerState
 ⚪   import input.comprehensible.ui.components.storycontent.part.StoryContentPart
 ⚪   import input.comprehensible.ui.components.storycontent.part.StoryContentPartUiState
@@ -340,34 +337,6 @@
 🟢                   style = MaterialTheme.typography.headlineLarge,
 ⚪               )
 ⚪           }
-🟢       }
-🟢   }
-⚪   
-⚪   @Composable
-⚪   private fun TranslateExplainer(
-🟢       modifier: Modifier = Modifier,
-⚪       onExplainerTapped: () -> Unit,
-⚪       timesExplainerTapped: Int,
-🟢   ) {
-🟢       val explainerMessages =
-🟢           stringArrayResource(id = R.array.story_reader_tap_to_translate_explainer)
-🟢       Box(modifier, propagateMinConstraints = true) {
-🟢           Text(
-🟢               modifier = Modifier
-🟢                   .background(
-🟢                       color = MaterialTheme.colorScheme.onBackground,
-🟢                       shape = CircleShape
-⚪                   )
-🟢                   .padding(vertical = 4.dp, horizontal = 12.dp)
-🟢                   .clickable(
-🟢                       onClick = onExplainerTapped,
-🟡                       enabled = timesExplainerTapped < explainerMessages.lastIndex,
-⚪                   )
-🟢                   .animateContentSize(),
-🟡               text = explainerMessages.getOrElse(timesExplainerTapped) { explainerMessages.last() },
-🟢               style = MaterialTheme.typography.labelLarge,
-🟢               color = MaterialTheme.colorScheme.background,
-⚪           )
 🟢       }
 🟢   }
 ⚪   
