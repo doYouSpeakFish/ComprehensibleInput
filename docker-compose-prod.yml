@@ -94,7 +94,7 @@ services:
     secrets:
       - db_admin_password
     volumes:
-      - /var/opt/pgbackups:/backups
+      - pgbackups:/backups
 
 secrets:
   koog_api_key:
@@ -124,3 +124,4 @@ secrets:
 
 volumes:
   postgres_data:
+  pgbackups:
