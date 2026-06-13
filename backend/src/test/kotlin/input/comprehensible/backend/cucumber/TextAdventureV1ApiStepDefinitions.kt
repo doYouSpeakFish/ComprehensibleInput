@@ -811,6 +811,29 @@ class TextAdventureV1ApiStepDefinitions {
         )
     }
 
+    @Then("the AI is asked to open by describing the player and their inventory")
+    fun theAiIsAskedToOpenByDescribingPlayerAndInventory() {
+        val startInvocation = fakeExecutor.invocations.firstOrNull { it.promptName == START_PROMPT_NAME }
+            ?: error("Expected the AI to be asked to start an adventure")
+        // Inspect only the narrator's own opening instructions, not the private plan that is appended
+        // afterwards: the plan always describes the character and inventory, so checking the whole
+        // prompt would pass even without an explicit instruction to open by describing them.
+        val planMarker = "Below is the private plan"
+        assertTrue(
+            "Expected the start prompt to include the private plan section",
+            startInvocation.systemPrompt.contains(planMarker),
+        )
+        val openingInstructions = startInvocation.systemPrompt.substringBefore(planMarker)
+        assertTrue(
+            "Expected the opening instructions to describe who the player's character is",
+            openingInstructions.contains("character", ignoreCase = true),
+        )
+        assertTrue(
+            "Expected the opening instructions to describe the player's starting inventory",
+            openingInstructions.contains("inventory", ignoreCase = true),
+        )
+    }
+
     @Given("I have an adventure whose opening narrator message has note {string}")
     fun haveAdventureWhoseOpeningNarratorMessageHasNote(note: String) {
         nextMessageIdIs("msg_ai_root")
@@ -1045,5 +1068,6 @@ class TextAdventureV1ApiStepDefinitions {
     private companion object {
         const val MAX_USER_MESSAGE_STRUCTURING_ATTEMPTS = 3
         const val PLAN_PROMPT_NAME = "text-adventure-plan"
+        const val START_PROMPT_NAME = "text-adventure-start"
     }
 }

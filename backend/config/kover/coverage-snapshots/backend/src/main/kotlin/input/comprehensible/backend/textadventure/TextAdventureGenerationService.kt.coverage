@@ -41,6 +41,8 @@
 ⚪               systemPrompt = """
 ⚪                   You are a text adventure narrator.
 🟢                   Generate the opening scene in $learningLanguage.
+⚪                   Open the scene by introducing who the player's character is and what they are carrying
+⚪                   in their starting inventory, then lead into the start of the adventure.
 🟢                   Provide a short, evocative title for the adventure in $learningLanguage.
 🟢                   Provide that same title translated into $translationsLanguage as translatedTitle.
 🟢                   Provide translations for each paragraph in $translationsLanguage with matching sentence counts and order.
