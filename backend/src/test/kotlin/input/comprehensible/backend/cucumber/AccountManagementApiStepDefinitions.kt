@@ -112,6 +112,24 @@ class AccountManagementApiStepDefinitions {
         }
     }
 
+    @When("I create user with email {string} and password {string} in app language {string}")
+    fun createUserInAppLanguage(email: String, password: String, appLanguage: String) = runCall {
+        post("/v1/users") {
+            header(HttpHeaders.AcceptLanguage, appLanguage)
+            contentType(ContentType.Application.Json)
+            setBody(credentialsBody(email, password))
+        }
+    }
+
+    @When("I request a password reset code for {string} in app language {string}")
+    fun requestPasswordResetCodeInAppLanguage(email: String, appLanguage: String) = runCall {
+        post("/v1/password-reset-codes") {
+            header(HttpHeaders.AcceptLanguage, appLanguage)
+            contentType(ContentType.Application.Json)
+            setBody("{\"email\":\"$email\"}")
+        }
+    }
+
     @When("I reset password for {string} to {string} using code {string}")
     fun resetPassword(email: String, password: String, code: String) = runCall {
         post("/v1/password-resets") {

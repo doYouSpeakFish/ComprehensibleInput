@@ -26,6 +26,24 @@ Feature: Account management API
     When I create user with email "bad" and password "short"
     Then account API status should be 400
 
+  Scenario: Localising the verification email to the app language
+    When I create user with email "alice@example.com" and password "SecurePass123!" in app language "de"
+    Then account API status should be 200
+    And an email should be sent to "alice@example.com" containing "Bestätigungscode"
+
+  Scenario: Localising the password reset email to the app language
+    Given existing user "alice@example.com" with password "SecurePass123!"
+    And the next verification code will be "654321"
+    When I request a password reset code for "alice@example.com" in app language "es"
+    Then account API status should be 202
+    And an email should be sent to "alice@example.com" containing "restablecimiento de contraseña"
+    And an email should be sent to "alice@example.com" containing "654321"
+
+  Scenario: Falling back to English for an unsupported app language
+    When I create user with email "alice@example.com" and password "SecurePass123!" in app language "ja"
+    Then account API status should be 200
+    And an email should be sent to "alice@example.com" containing "Verify your 3 Million Words email address"
+
   Scenario: Signing in requires verified email
     Given existing user "alice@example.com" with password "SecurePass123!"
     When I sign in with email "alice@example.com" and password "SecurePass123!"

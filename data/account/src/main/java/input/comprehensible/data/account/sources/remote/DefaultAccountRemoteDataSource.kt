@@ -2,6 +2,7 @@ package input.comprehensible.data.account.sources.remote
 
 import input.comprehensible.data.account.InvalidCredentialsException
 import input.comprehensible.data.account.InvalidResetCodeException
+import input.comprehensible.locale.appLanguageTag
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -13,6 +14,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
@@ -26,6 +28,12 @@ private const val TIMEOUT_MILLIS = 30_000L
 class DefaultAccountRemoteDataSource(
     private val baseUrl: String,
     private val apiKey: String,
+    /**
+     * Supplies the app's current UI language as a BCP-47 tag, sent on every request as the
+     * `Accept-Language` header so the backend can localise the emails it sends (verification codes,
+     * password resets, etc.) to the language the app is displayed in.
+     */
+    private val languageTagProvider: () -> String = { appLanguageTag() },
     private val httpClient: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -39,6 +47,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun createAccount(email: String, password: String) {
         val response = httpClient.post("$baseUrl/v1/users") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(CreateAccountRequest(email = email, password = password))
         }
@@ -50,6 +59,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun verifyEmail(email: String, code: String) {
         val response = httpClient.post("$baseUrl/v1/email-verifications") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(VerifyEmailRequest(email = email, code = code))
         }
@@ -61,6 +71,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun requestEmailVerificationCode(email: String) {
         val response = httpClient.post("$baseUrl/v1/email-verification-codes") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(EmailVerificationCodeRequest(email = email))
         }
@@ -72,6 +83,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun signIn(email: String, password: String): RemoteSession {
         val response = httpClient.post("$baseUrl/v1/auth/sessions") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(SignInRequest(email = email, password = password))
         }
@@ -88,6 +100,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun signOut(token: String) {
         val response = httpClient.delete("$baseUrl/v1/auth/sessions/current") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             header("Authorization", "Bearer $token")
         }
         if (!response.status.isSuccess()) {
@@ -98,6 +111,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun deleteAccount(email: String, password: String) {
         val response = httpClient.delete("$baseUrl/v1/me") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(DeleteAccountRequest(email = email, password = password))
         }
@@ -112,6 +126,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun requestPasswordResetCode(email: String) {
         val response = httpClient.post("$baseUrl/v1/password-reset-codes") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(PasswordResetCodeRequest(email = email))
         }
@@ -123,6 +138,7 @@ class DefaultAccountRemoteDataSource(
     override suspend fun resetPassword(email: String, password: String, code: String) {
         val response = httpClient.post("$baseUrl/v1/password-resets") {
             header("X-Api-Key", apiKey)
+            header(HttpHeaders.AcceptLanguage, languageTagProvider())
             contentType(ContentType.Application.Json)
             setBody(PasswordResetRequest(email = email, password = password, code = code))
         }
