@@ -49,6 +49,7 @@ class TextAdventureChatViewModel(
     private val showMessageError = MutableStateFlow(false)
     private val optimisticUserMessage = MutableStateFlow<ChatMessage?>(null)
     private val selectedSentence = MutableStateFlow<SelectedSentence?>(null)
+    private val isTitleTranslated = MutableStateFlow(false)
     private var pendingRetry: (() -> Unit)? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -60,15 +61,16 @@ class TextAdventureChatViewModel(
     private val adventure = currentAdventureId.flatMapLatest { id ->
         if (id == null) flowOf(null) else textAdventureRepository.getAdventure(id)
     }
-    private val imageUrl = adventure.map { it?.imageUrl }
-    private val title = adventure.map { it?.title }
+    private val adventureMeta = adventure.map {
+        AdventureMeta(title = it?.title, translatedTitle = it?.translatedTitle, imageUrl = it?.imageUrl)
+    }
 
     val state: StateFlow<TextAdventureChatUiState> = combine(
         messages,
         isGenerating,
         showError,
         showBusyMessage,
-        combine(showMessageError, optimisticUserMessage, selectedSentence, imageUrl, title, ::ChatExtras),
+        combine(showMessageError, optimisticUserMessage, selectedSentence, adventureMeta, isTitleTranslated, ::ChatExtras),
     ) { messages, generating, error, busy, extras ->
         TextAdventureChatUiState(
             messages = messages,
@@ -78,8 +80,10 @@ class TextAdventureChatViewModel(
             showMessageError = extras.showMessageError,
             optimisticUserMessage = extras.optimisticUserMessage,
             selectedSentence = extras.selectedSentence,
-            imageUrl = extras.imageUrl,
-            title = extras.title,
+            imageUrl = extras.adventureMeta.imageUrl,
+            title = extras.adventureMeta.title,
+            translatedTitle = extras.adventureMeta.translatedTitle,
+            isTitleTranslated = extras.isTitleTranslated,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -116,6 +120,11 @@ class TextAdventureChatViewModel(
                 SelectedSentence(messageId, paragraphIndex, sentenceIndex, isTranslated = true)
             }
         }
+    }
+
+    /** Toggles whether the adventure's title is shown translated in the top bar. */
+    fun onTitleSelected() {
+        isTitleTranslated.update { !it }
     }
 
     private fun startAdventure() {
@@ -211,8 +220,15 @@ private data class ChatExtras(
     val showMessageError: Boolean,
     val optimisticUserMessage: ChatMessage?,
     val selectedSentence: SelectedSentence?,
-    val imageUrl: String?,
+    val adventureMeta: AdventureMeta,
+    val isTitleTranslated: Boolean,
+)
+
+/** The adventure's display metadata, derived together from the cached adventure. */
+private data class AdventureMeta(
     val title: String?,
+    val translatedTitle: String?,
+    val imageUrl: String?,
 )
 
 private fun AdventureMessage.toChatMessage() = ChatMessage(

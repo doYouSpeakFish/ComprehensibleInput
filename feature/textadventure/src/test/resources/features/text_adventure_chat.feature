@@ -93,6 +93,23 @@ Feature: Text adventure chat
     When I open the "Lantern Trail" adventure
     Then the chat title is "Lantern Trail"
 
+  Scenario: The adventure title can be translated by tapping it
+    Given I am signed in as "user@example.com"
+    And the "Lantern Trail" adventure, whose title translates to "El Sendero del Farol", is cached with message "A lantern lights the way."
+    When I open the "Lantern Trail" adventure
+    Then the chat title is "Lantern Trail"
+    When I tap the adventure title
+    Then the chat title is "El Sendero del Farol"
+
+  Scenario: A translated adventure title can be switched back to the learning language
+    Given I am signed in as "user@example.com"
+    And the "Lantern Trail" adventure, whose title translates to "El Sendero del Farol", is cached with message "A lantern lights the way."
+    When I open the "Lantern Trail" adventure
+    And I tap the adventure title
+    Then the chat title is "El Sendero del Farol"
+    When I tap the adventure title
+    Then the chat title is "Lantern Trail"
+
   Scenario: Opening a cached adventure shows the backend's refreshed conversation
     Given I am signed in as "user@example.com"
     And the "Lantern Trail" adventure is cached with message "A stale cached line."

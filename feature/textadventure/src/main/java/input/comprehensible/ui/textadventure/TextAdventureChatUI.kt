@@ -58,6 +58,7 @@ internal fun TextAdventureChatScreen(
     TextAdventureChatScreen(
         state = state,
         onSentenceSelected = viewModel::onSentenceSelected,
+        onTitleSelected = viewModel::onTitleSelected,
         onRetry = viewModel::onRetry,
         onSendMessage = viewModel::onSendMessage,
         modifier = modifier,
@@ -69,6 +70,7 @@ internal fun TextAdventureChatScreen(
 internal fun TextAdventureChatScreen(
     state: TextAdventureChatUiState,
     onSentenceSelected: (String, Int, Int) -> Unit,
+    onTitleSelected: () -> Unit,
     onRetry: () -> Unit,
     onSendMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -77,7 +79,7 @@ internal fun TextAdventureChatScreen(
         modifier = modifier.testTag("text_adventure_chat"),
         topBar = {
             TopAppBar(
-                title = { Text(state.title ?: stringResource(R.string.text_adventure_chat_title)) },
+                title = { ChatTitle(state = state, onTitleSelected = onTitleSelected) },
             )
         },
         bottomBar = {
@@ -94,6 +96,30 @@ internal fun TextAdventureChatScreen(
                 .fillMaxSize()
                 .padding(paddingValues),
         )
+    }
+}
+
+@Composable
+private fun ChatTitle(
+    state: TextAdventureChatUiState,
+    onTitleSelected: () -> Unit,
+) {
+    val title = state.title
+    val translatedTitle = state.translatedTitle
+    // The title is tap-to-translate once the adventure has loaded with a translation; until then
+    // (or without one) it falls back to a plain, non-tappable label.
+    if (title != null && !translatedTitle.isNullOrBlank()) {
+        TranslatableText(
+            modifier = Modifier.testTag("chat_title"),
+            text = title,
+            translation = translatedTitle,
+            onTextSelected = onTitleSelected,
+            isTextSelected = state.isTitleTranslated,
+            isTextTranslated = state.isTitleTranslated,
+            textStyle = MaterialTheme.typography.titleLarge,
+        )
+    } else {
+        Text(title ?: stringResource(R.string.text_adventure_chat_title))
     }
 }
 

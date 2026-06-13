@@ -14,6 +14,10 @@ data class TextAdventureChatUiState(
     val imageUrl: String? = null,
     /** The adventure's title, shown in the top bar once the adventure has loaded. */
     val title: String? = null,
+    /** The title in the player's translation language; the title is tap-to-translate when present. */
+    val translatedTitle: String? = null,
+    /** Whether the title is currently showing its translation, toggled by tapping it. */
+    val isTitleTranslated: Boolean = false,
 ) {
     /** The persisted messages followed by the not-yet-submitted user message, if any. */
     val displayedMessages: List<ChatMessage>
@@ -49,6 +53,8 @@ data class TextAdventureChatUiState(
             selectedSentence = null,
             imageUrl = null,
             title = null,
+            translatedTitle = null,
+            isTitleTranslated = false,
         )
     }
 }
