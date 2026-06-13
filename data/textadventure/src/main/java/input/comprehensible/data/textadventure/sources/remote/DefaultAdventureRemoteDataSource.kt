@@ -74,12 +74,13 @@ class DefaultAdventureRemoteDataSource(
         token: String,
         learningLanguage: String,
         translationLanguage: String,
+        languageLevel: String,
     ): TextAdventureRemoteResponse {
         val response = httpClient.post("$baseUrl/v1/adventures") {
             header("X-Api-Key", apiKey)
             header("Authorization", "Bearer $token")
             contentType(ContentType.Application.Json)
-            setBody(StartAdventureRequest(learningLanguage, translationLanguage))
+            setBody(StartAdventureRequest(learningLanguage, translationLanguage, languageLevel))
         }
         response.ensureSuccessful("Start adventure failed")
         return response.body()
@@ -153,6 +154,7 @@ class DefaultAdventureRemoteDataSource(
 private data class StartAdventureRequest(
     val learningLanguage: String,
     val translationLanguage: String,
+    val languageLevel: String,
 )
 
 @Serializable

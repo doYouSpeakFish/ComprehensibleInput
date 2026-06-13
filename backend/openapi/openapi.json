@@ -858,6 +858,9 @@
                     },
                     "translationLanguage": {
                         "type": "string"
+                    },
+                    "languageLevel": {
+                        "type": "string"
                     }
                 }
             },

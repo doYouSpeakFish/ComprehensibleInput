@@ -207,6 +207,17 @@ class TextAdventureFeatureTestScope(
         }
     }
 
+    /**
+     * Asserts the CEFR level (e.g. "A2") the most recent start-adventure request was made with, so a
+     * test can confirm the picker's level reaches the backend when a new adventure is started.
+     */
+    fun assertAdventureStartedAtLevel(languageLevel: String) {
+        val actualLevel = fakeRemoteDataSource.lastStartLanguageLevel
+        check(actualLevel == languageLevel) {
+            "Expected the adventure to be started at level '$languageLevel' but was '$actualLevel'"
+        }
+    }
+
     fun startReturns(text: String, translation: String) {
         fakeRemoteDataSource.startResponse = TextAdventureRemoteResponse(
             messageId = "message-1",

@@ -18,13 +18,17 @@
 🟢           post("/v1/adventures") {
 🟡               val principal = call.principal<AccountSessionPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<StartTextAdventureV1Request>()
-🟡               if (request.learningLanguage.isBlank() || request.translationLanguage.isBlank()) {
+🟢               if (request.learningLanguage.isBlank() ||
+🟡                   request.translationLanguage.isBlank() ||
+🟢                   request.languageLevel !in SUPPORTED_LANGUAGE_LEVELS
+⚪               ) {
 🟢                   return@post call.respond(HttpStatusCode.BadRequest)
 ⚪               }
 🟢               val response = textAdventureService.startAdventure(
 🟢                   learningLanguage = request.learningLanguage,
 🟢                   translationsLanguage = request.translationLanguage,
 🟢                   accountId = principal.accountId,
+🟢                   languageLevel = request.languageLevel,
 ⚪               )
 🟢               call.respond(HttpStatusCode.Created, response)
 ⚪           }
@@ -123,6 +127,8 @@
 ⚪   private data class StartTextAdventureV1Request(
 🟢       val learningLanguage: String,
 🟢       val translationLanguage: String,
+⚪       /** The CEFR difficulty level (e.g. "B1"). Optional; defaults for older clients that omit it. */
+🟢       val languageLevel: String = DEFAULT_LANGUAGE_LEVEL,
 ⚪   )
 ⚪   
 🟡   @Serializable

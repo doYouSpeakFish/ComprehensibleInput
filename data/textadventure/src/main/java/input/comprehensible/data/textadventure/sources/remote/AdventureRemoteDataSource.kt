@@ -23,6 +23,7 @@ interface AdventureRemoteDataSource {
         token: String,
         learningLanguage: String,
         translationLanguage: String,
+        languageLevel: String,
     ): TextAdventureRemoteResponse
     suspend fun getMessages(token: String, adventureId: String): TextAdventureMessagesRemoteResponse
     suspend fun sendUserMessage(

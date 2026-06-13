@@ -126,8 +126,9 @@
 🟢               val session = currentSession()
 🟢               val learningLanguage = languageSettingsRepository.learningLanguage.first()
 🟢               val translationLanguage = languageSettingsRepository.translationsLanguage.first()
+🟢               val languageLevel = languageSettingsRepository.languageLevel.first()
 🟢               textAdventureRepository
-🟢                   .startAdventure(session.token, session.userId, learningLanguage, translationLanguage)
+🟢                   .startAdventure(session.token, session.userId, learningLanguage, translationLanguage, languageLevel)
 🟢                   .onSuccess { newAdventureId ->
 🟢                       currentAdventureId.value = newAdventureId
 🟢                       isGenerating.value = false

@@ -36,6 +36,11 @@ Feature: Story list
     Then the first story is not listed
     And the second story is listed
 
+  Scenario: The language level picker is hidden on the story list
+    Given the story library is available
+    And the story list is open
+    Then the language level picker is not shown
+
   Scenario: Story content follows the learning language
     Given the story library is available
     And the story list is open

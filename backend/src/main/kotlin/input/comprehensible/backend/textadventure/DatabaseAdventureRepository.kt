@@ -75,13 +75,7 @@ class DatabaseAdventureRepository(
         transaction(database) {
             val now = nowProvider()
             val existing = findAdventureRow(adventurePart.adventureId)
-            upsertAdventure(
-                adventurePart = adventurePart,
-                now = now,
-                existingCreatedAt = existing?.get(AdventuresTable.createdAt),
-                existingImageId = existing?.get(AdventuresTable.imageId),
-                existingPlan = existing?.get(AdventuresTable.plan),
-            )
+            upsertAdventure(adventurePart = adventurePart, now = now, existing = existing)
             insertMessage(
                 PersistedMessageRow(
                     adventureId = adventurePart.adventureId,
@@ -124,6 +118,7 @@ class DatabaseAdventureRepository(
         AdventureNarrationContext(
             plan = adventureRow[AdventuresTable.plan],
             notes = notesOnAncestorChain(messageRows, leafMessageId),
+            languageLevel = adventureRow[AdventuresTable.languageLevel],
         )
     }
 
@@ -167,6 +162,7 @@ class DatabaseAdventureRepository(
                     createdAt = adventureRow[AdventuresTable.createdAt],
                     imageId = adventureRow[AdventuresTable.imageId],
                     plan = adventureRow[AdventuresTable.plan],
+                    languageLevel = adventureRow[AdventuresTable.languageLevel],
                 )
             )
             insertMessage(
@@ -238,9 +234,7 @@ class DatabaseAdventureRepository(
     private fun upsertAdventure(
         adventurePart: PersistedAdventurePart,
         now: Long,
-        existingCreatedAt: Long?,
-        existingImageId: String?,
-        existingPlan: String?,
+        existing: ResultRow?,
     ) {
         AdventuresTable.upsert {
             it[id] = adventurePart.adventureId
@@ -249,13 +243,17 @@ class DatabaseAdventureRepository(
             it[this.translatedTitle] = adventurePart.translatedTitle
             it[this.learningLanguage] = adventurePart.learningLanguage
             it[this.translationLanguage] = adventurePart.translationLanguage
+            // The level is chosen once, when the adventure is created; continuing an adventure leaves
+            // languageLevel null, so the level already stored is preserved.
+            it[this.languageLevel] =
+                adventurePart.languageLevel ?: existing?.get(AdventuresTable.languageLevel) ?: DEFAULT_LANGUAGE_LEVEL
             // The image is chosen once, when the adventure is created; continuing an adventure leaves
             // imageId null, so the image already stored is preserved.
-            it[this.imageId] = adventurePart.imageId ?: existingImageId
+            it[this.imageId] = adventurePart.imageId ?: existing?.get(AdventuresTable.imageId)
             // The plan is written once, when the adventure is created; continuing an adventure leaves
             // plan null, so the plan already stored is preserved.
-            it[this.plan] = adventurePart.plan ?: existingPlan
-            it[createdAt] = existingCreatedAt ?: now
+            it[this.plan] = adventurePart.plan ?: existing?.get(AdventuresTable.plan)
+            it[createdAt] = existing?.get(AdventuresTable.createdAt) ?: now
             it[updatedAt] = now
         }
     }
@@ -271,6 +269,8 @@ class DatabaseAdventureRepository(
             it[this.imageId] = update.imageId
             // Re-supplied so appending a player message never clears the narrator's stored plan.
             it[this.plan] = update.plan
+            // Re-supplied so appending a player message never resets the adventure's stored level.
+            it[this.languageLevel] = update.languageLevel
             it[this.createdAt] = update.createdAt
             it[updatedAt] = update.now
         }
@@ -364,6 +364,7 @@ private data class AdventureTimestampUpdate(
     val createdAt: Long,
     val imageId: String?,
     val plan: String?,
+    val languageLevel: String,
 )
 
 private data class PersistedMessageRow(
@@ -449,6 +450,10 @@ object AdventuresTable : Table("text_adventure") {
     val translatedTitle = text("translated_title")
     val learningLanguage = varchar("learning_language", length = 64)
     val translationLanguage = varchar("translation_language", length = 64)
+
+    // The CEFR difficulty level (e.g. "B1") the adventure is written at, chosen when it is started.
+    // Defaults to B1 so adventures created before levels existed keep their original difficulty.
+    val languageLevel = varchar("language_level", length = 8).default(DEFAULT_LANGUAGE_LEVEL)
     val imageId = varchar("image_id", length = 255).nullable()
 
     // The AI-authored plan for the adventure. Private context for the narrator; never exposed via the API.

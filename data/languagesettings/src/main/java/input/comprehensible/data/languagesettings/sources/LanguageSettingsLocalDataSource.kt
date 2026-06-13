@@ -18,6 +18,11 @@ interface LanguageSettingsLocalDataSource {
     val translationsLanguage: Flow<String>
 
     /**
+     * The CEFR difficulty level (e.g. "B1") content should be written at.
+     */
+    val languageLevel: Flow<String>
+
+    /**
      * Sets the learning language.
      */
     suspend fun setLearningLanguage(language: String)
@@ -26,6 +31,11 @@ interface LanguageSettingsLocalDataSource {
      * Sets the translation language.
      */
     suspend fun setTranslationLanguage(language: String)
+
+    /**
+     * Sets the CEFR difficulty level (e.g. "B1").
+     */
+    suspend fun setLanguageLevel(level: String)
 
     companion object : InjectedSingleton<LanguageSettingsLocalDataSource>()
 }

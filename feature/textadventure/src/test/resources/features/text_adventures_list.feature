@@ -218,3 +218,28 @@ Feature: Text adventures list
     When I set the learning language to Spanish
     And I start a new adventure
     Then the adventure is started learning Spanish with translations in English
+
+  # ---------------------------------------------------------------------------
+  # The language level picker in the top bar
+  # ---------------------------------------------------------------------------
+
+  Scenario: The language level picker defaults to B1
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    Then the language picker shows B1 as the language level
+
+  Scenario: Changing the language level updates the picker
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the language level to A2
+    Then the language picker shows A2 as the language level
+
+  Scenario: A new adventure is started at the selected language level
+    Given I am signed in as "user@example.com"
+    And the adventures request will return no adventures
+    And the text adventures screen is open
+    When I set the language level to C1
+    And I start a new adventure
+    Then the adventure is started at language level C1

@@ -11,6 +11,20 @@
 ⚪   import kotlinx.serialization.json.Json
 ⚪   import java.util.UUID
 ⚪   
+⚪   /**
+⚪    * The CEFR difficulty level a new adventure is written at when the client does not specify one.
+⚪    * Kept as the request and column default so adventures from app versions that predate the level
+⚪    * picker keep behaving as before.
+⚪    */
+⚪   internal const val DEFAULT_LANGUAGE_LEVEL = "B1"
+⚪   
+⚪   /**
+⚪    * The CEFR levels the picker offers and the only values a start request may specify. Requests are
+⚪    * validated against this set before any (expensive) generation runs, so an unsupported or oversized
+⚪    * level is rejected up front rather than failing the fixed-width database write afterwards.
+⚪    */
+🟢   internal val SUPPORTED_LANGUAGE_LEVELS = setOf("A1", "A2", "B1", "B2", "C1")
+⚪   
 🟢   @Suppress("TooManyFunctions")
 ⚪   class TextAdventureGenerationService(
 🟢       private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,
@@ -27,6 +41,7 @@
 ⚪           learningLanguage: String,
 ⚪           translationsLanguage: String,
 🔴           accountId: String? = null,
+🔴           languageLevel: String = DEFAULT_LANGUAGE_LEVEL,
 ⚪       ): TextAdventureRemoteResponse {
 🟢           val previousAdventures = accountId
 🟡               ?.let { adventureRepository.listAdventureSummariesForAccount(it) }
@@ -50,6 +65,7 @@
 ⚪                   Avoid markdown and keep punctuation natural for the language.
 ⚪                   The story should not end yet, so set isEnding to false.
 🟢               """.trimIndent() +
+🟢                   languageLevelPromptSection(learningLanguage, languageLevel) +
 🟢                   imageSelectionPromptSection() +
 🟢                   previousAdventuresPromptSection(previousAdventures) +
 🟢                   planPromptSection(plan) +
@@ -77,6 +93,7 @@
 🟢                   imageId = chosenImageId,
 🟢                   plan = plan,
 🟢                   note = response.note,
+🟢                   languageLevel = languageLevel,
 ⚪               )
 ⚪           )
 🟢           return response.toRemoteResponse(messageId, imageId = chosenImageId)
@@ -187,6 +204,7 @@
 ⚪                   Do not include extra commentary outside the requested fields.
 ⚪                   Avoid markdown and keep punctuation natural for the language.
 🟢               """.trimIndent() +
+🟡                   languageLevelPromptSection(learningLanguage, context?.languageLevel ?: DEFAULT_LANGUAGE_LEVEL) +
 🟡                   planPromptSection(context?.plan) +
 🟡                   notesPromptSection(context?.notes.orEmpty()) +
 🟢                   notePromptSection() +
@@ -297,6 +315,17 @@
 🟢           val unused = AdventureImageCatalog.images.firstOrNull { it.id !in previousImageIds }
 🟡           return (unused ?: AdventureImageCatalog.fallback).id
 ⚪       }
+⚪   
+⚪       /**
+⚪        * Instructs the narrator to pitch its [learningLanguage] writing at the adventure's CEFR
+⚪        * difficulty [languageLevel] (e.g. "B1"). Included when an adventure is started and again on
+⚪        * every later turn so the difficulty stays consistent across the whole adventure.
+⚪        */
+⚪       private fun languageLevelPromptSection(learningLanguage: String, languageLevel: String): String = "\n\n" + """
+🟢           Write the $learningLanguage narration at CEFR level $languageLevel.
+🟢           Use vocabulary, grammar and sentence length a learner at $languageLevel can follow, keeping the
+⚪           difficulty within that level rather than noticeably easier or harder.
+🟢       """.trimIndent()
 ⚪   
 ⚪       private fun inspirationPromptSection(): String {
 🟢           val words = inspirationWordSampler.sample()
