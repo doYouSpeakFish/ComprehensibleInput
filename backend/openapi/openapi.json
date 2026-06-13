@@ -681,6 +681,90 @@
                     }
                 ]
             }
+        },
+        "/v1/preplanned-adventures": {
+            "get": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "learningLanguage",
+                        "in": "query",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "translationLanguage",
+                        "in": "query",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PreplannedAdventureListRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/preplanned-adventures/{preplannedAdventureId}/adventures": {
+            "post": {
+                "summary": "",
+                "parameters": [
+                    {
+                        "name": "preplannedAdventureId",
+                        "in": "path",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TextAdventureRemoteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "account-bearer": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1074,6 +1158,57 @@
                             "string",
                             "null"
                         ]
+                    }
+                }
+            },
+            "PreplannedAdventureRemoteResponse": {
+                "type": "object",
+                "title": "PreplannedAdventureRemoteResponse",
+                "required": [
+                    "id",
+                    "title",
+                    "translatedTitle",
+                    "learningLanguage",
+                    "translationLanguage",
+                    "languageLevel",
+                    "imageId"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "translatedTitle": {
+                        "type": "string"
+                    },
+                    "learningLanguage": {
+                        "type": "string"
+                    },
+                    "translationLanguage": {
+                        "type": "string"
+                    },
+                    "languageLevel": {
+                        "type": "string"
+                    },
+                    "imageId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PreplannedAdventureListRemoteResponse": {
+                "type": "object",
+                "title": "PreplannedAdventureListRemoteResponse",
+                "required": [
+                    "items"
+                ],
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PreplannedAdventureRemoteResponse"
+                        }
                     }
                 }
             }

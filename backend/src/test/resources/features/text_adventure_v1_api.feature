@@ -299,6 +299,83 @@ Feature: Text adventure v1 API
     And user B adventure still exists
 
   @v1
+  Scenario: Listing preplanned adventures returns the bundled adventures
+    When I list preplanned adventures
+    Then the response status is 200
+    And the preplanned adventure list includes every bundled preplanned adventure
+
+  @v1
+  Scenario: Listing preplanned adventures can be filtered to the player's language pair
+    When I list preplanned adventures for learning language "es" and translation language "en"
+    Then the response status is 200
+    And the preplanned adventure list includes every bundled preplanned adventure
+
+  @v1
+  Scenario: Listing preplanned adventures returns none for a language pair with no adventures
+    When I list preplanned adventures for learning language "zz" and translation language "en"
+    Then the response status is 200
+    And the preplanned adventure list is empty
+
+  @v1
+  Scenario: Starting a preplanned adventure returns its first narrator message
+    When I start the first bundled preplanned adventure
+    Then the response status is 201
+    And the response includes an adventure id
+    And the response includes a title
+    And the response includes adventure status "active"
+    And the response includes a latest narrator message
+    And the response includes a cover image
+
+  @v1
+  Scenario: A started preplanned adventure appears in the player's adventure list
+    Given I have started the first bundled preplanned adventure
+    When I list adventures
+    Then the response status is 200
+    And the started preplanned adventure is listed
+
+  @v1
+  Scenario: A started preplanned adventure can be read back with its opening message
+    Given I have started the first bundled preplanned adventure
+    When I fetch adventure messages for the started preplanned adventure
+    Then the response status is 200
+    And exactly 1 messages are returned
+
+  @v1
+  Scenario: A started preplanned adventure can be continued like any other adventure
+    Given I have started the first bundled preplanned adventure
+    And the next message id is "msg_user_1"
+    When I continue the started preplanned adventure with text "Busco la llave debajo del tercer escalón"
+    Then the response status is 201
+    And the response message has type "user"
+
+  @v1
+  Scenario: Two players starting the same preplanned adventure cannot read each other's messages
+    Given user A starts the first bundled preplanned adventure
+    And user B starts the first bundled preplanned adventure
+    Then the two started adventures have different ids
+    When user B fetches user A's started preplanned adventure messages
+    Then the response status is 404
+
+  @v1
+  Scenario: Starting an unknown preplanned adventure returns not found
+    When I start preplanned adventure "does-not-exist"
+    Then the response status is 404
+
+  @v1
+  Scenario: A preplanned adventure's private plan is never exposed through the API
+    When I start the first bundled preplanned adventure
+    Then the response status is 201
+    And neither the started adventure nor its messages expose the preplanned plan
+
+  @v1
+  Scenario: Preplanned adventure requests require authentication
+    Given I am not authenticated
+    When I list preplanned adventures
+    Then the response status is 401
+    When I start the first bundled preplanned adventure
+    Then the response status is 401
+
+  @v1
   Scenario: Requests without authentication are rejected
     Given I am not authenticated
     When I create a text adventure with learning language "es" and translation language "en"
