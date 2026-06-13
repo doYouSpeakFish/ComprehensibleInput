@@ -75,14 +75,7 @@
 🟢           transaction(database) {
 🟢               val now = nowProvider()
 🟢               val existing = findAdventureRow(adventurePart.adventureId)
-🟢               upsertAdventure(
-🟢                   adventurePart = adventurePart,
-🟢                   now = now,
-🟢                   existingCreatedAt = existing?.get(AdventuresTable.createdAt),
-🟢                   existingImageId = existing?.get(AdventuresTable.imageId),
-🟢                   existingPlan = existing?.get(AdventuresTable.plan),
-🟢                   existingLanguageLevel = existing?.get(AdventuresTable.languageLevel),
-⚪               )
+🟢               upsertAdventure(adventurePart = adventurePart, now = now, existing = existing)
 🟢               insertMessage(
 🟢                   PersistedMessageRow(
 🟢                       adventureId = adventurePart.adventureId,
@@ -241,10 +234,7 @@
 ⚪       private fun upsertAdventure(
 ⚪           adventurePart: PersistedAdventurePart,
 ⚪           now: Long,
-⚪           existingCreatedAt: Long?,
-⚪           existingImageId: String?,
-⚪           existingPlan: String?,
-⚪           existingLanguageLevel: String?,
+⚪           existing: ResultRow?,
 ⚪       ) {
 🟢           AdventuresTable.upsert {
 🟢               it[id] = adventurePart.adventureId
@@ -255,14 +245,15 @@
 🟢               it[this.translationLanguage] = adventurePart.translationLanguage
 ⚪               // The level is chosen once, when the adventure is created; continuing an adventure leaves
 ⚪               // languageLevel null, so the level already stored is preserved.
-🟡               it[this.languageLevel] = adventurePart.languageLevel ?: existingLanguageLevel ?: DEFAULT_LANGUAGE_LEVEL
+🟢               it[this.languageLevel] =
+🟡                   adventurePart.languageLevel ?: existing?.get(AdventuresTable.languageLevel) ?: DEFAULT_LANGUAGE_LEVEL
 ⚪               // The image is chosen once, when the adventure is created; continuing an adventure leaves
 ⚪               // imageId null, so the image already stored is preserved.
-🟢               it[this.imageId] = adventurePart.imageId ?: existingImageId
+🟡               it[this.imageId] = adventurePart.imageId ?: existing?.get(AdventuresTable.imageId)
 ⚪               // The plan is written once, when the adventure is created; continuing an adventure leaves
 ⚪               // plan null, so the plan already stored is preserved.
-🟢               it[this.plan] = adventurePart.plan ?: existingPlan
-🟢               it[createdAt] = existingCreatedAt ?: now
+🟡               it[this.plan] = adventurePart.plan ?: existing?.get(AdventuresTable.plan)
+🟢               it[createdAt] = existing?.get(AdventuresTable.createdAt) ?: now
 🟢               it[updatedAt] = now
 ⚪           }
 ⚪       }

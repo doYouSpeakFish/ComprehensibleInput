@@ -315,6 +315,12 @@ Feature: Text adventure v1 API
     Then the response status is 400
 
   @v1
+  Scenario: Creating an adventure with an unsupported language level is rejected
+    Given I am authenticated as a user account
+    When I create a text adventure with learning language "es", translation language "en" and language level "Z9"
+    Then the response status is 400
+
+  @v1
   Scenario: Text adventure requests are rejected once the shared rate limit is exceeded
     Given I am authenticated as a user account
     When I exhaust the text adventure rate limit and make one more request

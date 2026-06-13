@@ -18,6 +18,13 @@ import java.util.UUID
  */
 internal const val DEFAULT_LANGUAGE_LEVEL = "B1"
 
+/**
+ * The CEFR levels the picker offers and the only values a start request may specify. Requests are
+ * validated against this set before any (expensive) generation runs, so an unsupported or oversized
+ * level is rejected up front rather than failing the fixed-width database write afterwards.
+ */
+internal val SUPPORTED_LANGUAGE_LEVELS = setOf("A1", "A2", "B1", "B2", "C1")
+
 @Suppress("TooManyFunctions")
 class TextAdventureGenerationService(
     private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,

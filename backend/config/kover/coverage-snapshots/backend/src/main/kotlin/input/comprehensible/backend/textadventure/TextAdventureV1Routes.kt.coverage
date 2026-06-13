@@ -18,7 +18,10 @@
 🟢           post("/v1/adventures") {
 🟡               val principal = call.principal<AccountSessionPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
 🟢               val request = call.receive<StartTextAdventureV1Request>()
-🟡               if (request.learningLanguage.isBlank() || request.translationLanguage.isBlank()) {
+🟢               if (request.learningLanguage.isBlank() ||
+🟡                   request.translationLanguage.isBlank() ||
+🟢                   request.languageLevel !in SUPPORTED_LANGUAGE_LEVELS
+⚪               ) {
 🟢                   return@post call.respond(HttpStatusCode.BadRequest)
 ⚪               }
 🟢               val response = textAdventureService.startAdventure(
