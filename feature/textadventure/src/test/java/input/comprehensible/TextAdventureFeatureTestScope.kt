@@ -311,11 +311,15 @@ class TextAdventureFeatureTestScope(
         )
     }
 
-    fun cacheAdventureWithMessage(title: String, message: String) {
+    fun cacheAdventureWithMessage(
+        title: String,
+        message: String,
+        translatedTitle: String = "$title (translated)",
+    ) {
         val messageId = "$title-message"
         testScope.launch {
             seedUser(currentEmail)
-            db.getAdventureDao().upsertAdventure(adventureEntity(title, currentEmail))
+            db.getAdventureDao().upsertAdventure(adventureEntity(title, currentEmail, translatedTitle))
             db.getAdventureDao().upsertMessage(
                 MessageEntity(
                     id = messageId,
@@ -376,11 +380,15 @@ class TextAdventureFeatureTestScope(
         db.getUserDao().upsertUser(UserEntity(id = userIdFor(email), email = email))
     }
 
-    private fun adventureEntity(title: String, email: String) = AdventureEntity(
+    private fun adventureEntity(
+        title: String,
+        email: String,
+        translatedTitle: String = "$title (translated)",
+    ) = AdventureEntity(
         id = title,
         userId = userIdFor(email),
         title = title,
-        translatedTitle = "$title (translated)",
+        translatedTitle = translatedTitle,
         learningLanguage = "de",
         translationLanguage = "en",
         updatedAt = 0L,

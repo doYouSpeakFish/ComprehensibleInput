@@ -84,6 +84,12 @@ class TextAdventureChatRobot(private val composeTestRule: ComposeTestRule) {
             .performTouchInput { click(Offset(1f, 1f)) }
     }
 
+    fun tapTitle() {
+        composeTestRule
+            .onNodeWithTag("chat_title")
+            .performTouchInput { click(Offset(1f, 1f)) }
+    }
+
     fun sendMessage(text: String) {
         composeTestRule.onNodeWithTag("message_input").performTextInput(text)
         composeTestRule.onNodeWithTag("send_message_button").performClick()

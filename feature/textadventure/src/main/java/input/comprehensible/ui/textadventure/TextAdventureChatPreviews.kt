@@ -78,6 +78,21 @@ fun PreviewTextAdventureChatTranslated() {
 
 @DefaultPreview
 @Composable
+fun PreviewTextAdventureChatTitleTranslated() {
+    ComprehensibleInputTheme {
+        PreviewChatScreen(
+            previewChatState.copy(
+                messages = listOf(previewAiMessage),
+                title = "The Quiet Harbor",
+                translatedTitle = "El Puerto Tranquilo",
+                isTitleTranslated = true,
+            ),
+        )
+    }
+}
+
+@DefaultPreview
+@Composable
 fun PreviewTextAdventureChatError() {
     ComprehensibleInputTheme {
         PreviewChatScreen(
@@ -170,6 +185,7 @@ private fun PreviewChatScreen(state: TextAdventureChatUiState) {
         TextAdventureChatScreen(
             state = state,
             onSentenceSelected = { _, _, _ -> },
+            onTitleSelected = {},
             onRetry = {},
             onSendMessage = {},
             modifier = Modifier.fillMaxSize(),

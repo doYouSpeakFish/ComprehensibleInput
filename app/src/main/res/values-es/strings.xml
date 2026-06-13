@@ -11,23 +11,6 @@
     <string name="text_adventure_list_in_progress">Aventura de texto · En curso</string>
     <string name="text_adventure_list_complete">Aventura de texto · Finalizada</string>
     <string name="text_adventure_ending_label">Final</string>
-    <string-array name="story_reader_tap_to_translate_explainer">
-        <item>Toca cualquier oración para traducirla</item>
-        <item>Bueno, casi cualquier oración</item>
-        <item>También puedes tocar el título</item>
-        <item>En serio, deja de tocar esta oración</item>
-        <item>No se traducirá</item>
-        <item>¿Qué quieres de mí?</item>
-        <item>Está bien, he deshabilitado las traducciones</item>
-        <item>Es broma, no puedo hacer eso</item>
-        <item>Soy solo una oración en una caja</item>
-        <item>Última advertencia</item>
-        <item />
-        <item>¡Me encontraste de nuevo!</item>
-        <item>Me rindo</item>
-        <item>Ganas</item>
-        <item>Rydych chi wedi tapio digon!</item>
-    </string-array>
     <string name="story_reader_error_dialog_title">No se puede cargar la historia</string>
     <string name="story_reader_error_dialog_message">No pudimos abrir esta historia. Inténtalo de nuevo más tarde.</string>
     <string name="story_reader_error_dialog_button">Aceptar</string>

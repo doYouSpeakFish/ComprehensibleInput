@@ -55,6 +55,15 @@ class TextAdventureChatStepDefinitions {
         scope.cacheAdventureWithMessage(title, message)
     }
 
+    @Given("the {string} adventure, whose title translates to {string}, is cached with message {string}")
+    fun theAdventureWithTranslatedTitleIsCachedWithMessage(
+        title: String,
+        translatedTitle: String,
+        message: String,
+    ) {
+        scope.cacheAdventureWithMessage(title, message, translatedTitle)
+    }
+
     @Given("the {string} adventure refreshes to {string}")
     fun theAdventureRefreshesTo(title: String, text: String) {
         scope.adventureRefreshesTo(title, text)
@@ -142,6 +151,12 @@ class TextAdventureChatStepDefinitions {
     @When("I tap {string} to translate it")
     fun iTapToTranslateIt(text: String) {
         chat.tapSentence(text)
+        scope.idle()
+    }
+
+    @When("I tap the adventure title")
+    fun iTapTheAdventureTitle() {
+        chat.tapTitle()
         scope.idle()
     }
 

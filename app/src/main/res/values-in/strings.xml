@@ -11,23 +11,6 @@
     <string name="text_adventure_list_in_progress">Petualangan teks · Sedang berlangsung</string>
     <string name="text_adventure_list_complete">Petualangan teks · Selesai</string>
     <string name="text_adventure_ending_label">Akhir</string>
-    <string-array name="story_reader_tap_to_translate_explainer">
-        <item>Ketuk kalimat apa pun untuk menerjemahkannya</item>
-        <item>Yah, hampir semua kalimat</item>
-        <item>Kamu juga bisa mengetuk judulnya</item>
-        <item>Serius, berhenti mengetuk kalimat ini</item>
-        <item>Kalimat ini tidak akan diterjemahkan</item>
-        <item>Apa yang kamu inginkan dariku?!</item>
-        <item>Baiklah, aku telah menonaktifkan terjemahan</item>
-        <item>Cuma bercanda, aku tidak bisa melakukan itu</item>
-        <item>Aku hanyalah sebuah kalimat dalam kotak</item>
-        <item>Peringatan terakhir</item>
-        <item />
-        <item>Kamu menemukanku lagi!</item>
-        <item>Aku menyerah</item>
-        <item>Kamu menang</item>
-        <item>Rydych chi wedi tapio digon!</item>
-    </string-array>
     <string name="story_reader_error_dialog_title">Tidak dapat memuat cerita</string>
     <string name="story_reader_error_dialog_message">Kami tidak dapat membuka cerita ini. Silakan coba lagi nanti.</string>
     <string name="story_reader_error_dialog_button">Oke</string>

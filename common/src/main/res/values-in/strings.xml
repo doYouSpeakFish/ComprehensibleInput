@@ -31,4 +31,21 @@
     <string name="settings_button_description">Pengaturan</string>
     <!-- BCP-47 language tag for this locale (folder values-in, modern tag "id"). See values/strings.xml. -->
     <string name="app_language_tag">id</string>
+    <string-array name="tap_to_translate_explainer">
+        <item>Ketuk kalimat apa pun untuk menerjemahkannya</item>
+        <item>Yah, hampir semua kalimat</item>
+        <item>Kamu juga bisa mengetuk judulnya</item>
+        <item>Serius, berhenti mengetuk kalimat ini</item>
+        <item>Kalimat ini tidak akan diterjemahkan</item>
+        <item>Apa yang kamu inginkan dariku?!</item>
+        <item>Baiklah, aku telah menonaktifkan terjemahan</item>
+        <item>Cuma bercanda, aku tidak bisa melakukan itu</item>
+        <item>Aku hanyalah sebuah kalimat dalam kotak</item>
+        <item>Peringatan terakhir</item>
+        <item />
+        <item>Kamu menemukanku lagi!</item>
+        <item>Aku menyerah</item>
+        <item>Kamu menang</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
 </resources>

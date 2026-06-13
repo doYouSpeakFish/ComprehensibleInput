@@ -31,4 +31,21 @@
     <string name="settings_button_description">Configurações</string>
     <!-- BCP-47 language tag for this locale, reported to the backend. See values/strings.xml. -->
     <string name="app_language_tag">pt</string>
+    <string-array name="tap_to_translate_explainer">
+        <item>Toque em qualquer frase para traduzi-la</item>
+        <item>Bem, quase qualquer frase</item>
+        <item>Você também pode tocar no título</item>
+        <item>Sério, pare de tocar nesta frase</item>
+        <item>Ela não vai traduzir</item>
+        <item>O que você quer de mim?!</item>
+        <item>Tudo bem, desativei as traduções</item>
+        <item>Brincadeira, não posso fazer isso</item>
+        <item>Sou apenas uma frase em uma caixa</item>
+        <item>Último aviso</item>
+        <item />
+        <item>Você me encontrou de novo!</item>
+        <item>Eu desisto</item>
+        <item>Você venceu</item>
+        <item>Rydych chi wedi tapio digon!</item>
+    </string-array>
 </resources>
