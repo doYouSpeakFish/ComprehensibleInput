@@ -19,8 +19,15 @@
     <string name="language_selector_id_language_name">Indonésien</string>
     <string name="language_selector_select_learning_language_content_description">Sélectionnez une langue à apprendre. Actuellement en train d\'apprendre %1$s</string>
     <string name="language_selector_select_translation_language_content_description">Sélectionnez une langue pour les traductions. Actuellement en train de traduire en %1$s</string>
+    <string name="language_selector_select_language_level_content_description">Sélectionnez un niveau de langue. Actuellement %1$s</string>
     <string name="top_bar_language_picker_translations_label">Traductions</string>
     <string name="top_bar_language_picker_learning_label">Apprentissage</string>
+    <string name="top_bar_language_picker_level_label">Niveau</string>
+    <string name="language_level_a1_description">Débutant</string>
+    <string name="language_level_a2_description">Élémentaire</string>
+    <string name="language_level_b1_description">Intermédiaire</string>
+    <string name="language_level_b2_description">Intermédiaire supérieur</string>
+    <string name="language_level_c1_description">Avancé</string>
     <string name="settings_button_description">Paramètres</string>
     <!-- BCP-47 language tag for this locale, reported to the backend. See values/strings.xml. -->
     <string name="app_language_tag">fr</string>

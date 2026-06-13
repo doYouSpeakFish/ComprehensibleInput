@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import input.comprehensible.feature.textadventure.R
+import input.comprehensible.ui.components.LanguageLevel
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.topbar.TopBar
 import input.comprehensible.ui.theme.homeOptionCardColor
@@ -85,6 +86,7 @@ internal fun TextAdventuresListScreen(
         onUndoDismissed = viewModel::onUndoDismissed,
         onLearningLanguageSelected = viewModel::onLearningLanguageSelected,
         onTranslationLanguageSelected = viewModel::onTranslationLanguageSelected,
+        onLanguageLevelSelected = viewModel::onLanguageLevelSelected,
         modifier = modifier,
     )
 }
@@ -103,6 +105,7 @@ internal fun TextAdventuresListScreen(
     onUndoDismissed: () -> Unit,
     onLearningLanguageSelected: (LanguageSelection) -> Unit,
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
+    onLanguageLevelSelected: (LanguageLevel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -123,6 +126,8 @@ internal fun TextAdventuresListScreen(
                 onTranslationLanguageSelected = onTranslationLanguageSelected,
                 onNavigateUp = onNavigateUp,
                 onSettingsClick = onSettingsClick,
+                languageLevel = state.languageLevel,
+                onLanguageLevelSelected = onLanguageLevelSelected,
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },

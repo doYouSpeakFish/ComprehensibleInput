@@ -19,8 +19,15 @@
     <string name="language_selector_id_language_name">Indonesio</string>
     <string name="language_selector_select_learning_language_content_description">Selecciona un idioma para aprender. Actualmente aprendiendo %1$s</string>
     <string name="language_selector_select_translation_language_content_description">Selecciona un idioma para traducciones. Actualmente traduciendo al %1$s</string>
+    <string name="language_selector_select_language_level_content_description">Selecciona un nivel de idioma. Actualmente %1$s</string>
     <string name="top_bar_language_picker_translations_label">Traducciones</string>
     <string name="top_bar_language_picker_learning_label">Aprendizaje</string>
+    <string name="top_bar_language_picker_level_label">Nivel</string>
+    <string name="language_level_a1_description">Principiante</string>
+    <string name="language_level_a2_description">Elemental</string>
+    <string name="language_level_b1_description">Intermedio</string>
+    <string name="language_level_b2_description">Intermedio alto</string>
+    <string name="language_level_c1_description">Avanzado</string>
     <string name="settings_button_description">Configuración</string>
     <!-- BCP-47 language tag for this locale, reported to the backend. See values/strings.xml. -->
     <string name="app_language_tag">es</string>

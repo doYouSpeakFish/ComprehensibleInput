@@ -21,6 +21,11 @@ class LanguageSettingsRepository(
     val learningLanguage = languageSettingsLocalDataSource.learningLanguage
 
     /**
+     * The CEFR difficulty level (e.g. "B1") content should be written at.
+     */
+    val languageLevel = languageSettingsLocalDataSource.languageLevel
+
+    /**
      * Sets the learning language.
      */
     suspend fun setLearningLanguage(language: String) {
@@ -43,6 +48,13 @@ class LanguageSettingsRepository(
             languageSettingsLocalDataSource.setLearningLanguage(oldTranslationLanguage)
         }
         languageSettingsLocalDataSource.setTranslationLanguage(language)
+    }
+
+    /**
+     * Sets the CEFR difficulty level (e.g. "B1").
+     */
+    suspend fun setLanguageLevel(level: String) {
+        languageSettingsLocalDataSource.setLanguageLevel(level)
     }
 
     companion object : Singleton<LanguageSettingsRepository>() {

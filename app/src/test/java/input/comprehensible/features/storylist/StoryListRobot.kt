@@ -3,6 +3,7 @@ package input.comprehensible.features.storylist
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -85,6 +86,14 @@ class StoryListRobot(
         composeTestRule
             .onNodeWithContentDescription(translationLanguageContentDescription(languageCode))
             .assertExists()
+    }
+
+    // The CEFR level picker is reused from the text adventures screen but kept hidden here, so the
+    // story list shows no level toggle.
+    fun assertLanguageLevelPickerIsHidden() {
+        composeTestRule
+            .onAllNodesWithContentDescription(label = "Select a language level", substring = true)
+            .assertCountEquals(0)
     }
 
     fun assertStoryIsNotVisible(story: TestStory, learningLanguage: String = "de") {

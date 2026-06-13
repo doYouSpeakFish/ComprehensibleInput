@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import input.comprehensible.common.R
+import input.comprehensible.ui.components.LanguageLevel
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.components.LanguageSelector
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -23,6 +24,9 @@ import input.comprehensible.util.DefaultPreview
 /**
  * A top bar with an up button, a settings button, and a language selector for picking the learning
  * and translation languages.
+ *
+ * Supplying a [languageLevel] also shows the CEFR difficulty picker beside the learning language;
+ * leaving it null hides that picker, so a screen can reuse this bar without offering a level yet.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +39,8 @@ fun TopBar(
     onTranslationLanguageSelected: (LanguageSelection) -> Unit,
     onNavigateUp: () -> Unit,
     onSettingsClick: () -> Unit,
+    languageLevel: LanguageLevel? = null,
+    onLanguageLevelSelected: (LanguageLevel) -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -53,6 +59,8 @@ fun TopBar(
                 languageOptions = languageOptions,
                 onLanguageSelected = onLanguageSelected,
                 onTranslationLanguageSelected = onTranslationLanguageSelected,
+                languageLevel = languageLevel,
+                onLanguageLevelSelected = onLanguageLevelSelected,
             )
         },
         actions = {

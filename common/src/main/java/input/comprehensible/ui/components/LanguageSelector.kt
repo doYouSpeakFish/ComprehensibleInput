@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import input.comprehensible.common.R
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -88,6 +92,10 @@ enum class LanguageSelection(
 /**
  * A language selector that allows the user to select from two drop down lists of languages, to
  * pick the language they wish to learn and the language they wish to get translations in.
+ *
+ * When a [languageLevel] is supplied a third picker is shown to the right of the learning language,
+ * letting the user choose the CEFR difficulty level the content is written at. Passing null hides
+ * it, so a screen can opt out of the level picker while reusing the same component.
  */
 @Composable
 fun LanguageSelector(
@@ -97,9 +105,13 @@ fun LanguageSelector(
     leaningLanguage: LanguageSelection?,
     translationLanguage: LanguageSelection?,
     languageOptions: List<LanguageSelection>,
+    languageLevel: LanguageLevel? = null,
+    onLanguageLevelSelected: (LanguageLevel) -> Unit = {},
+    languageLevelOptions: List<LanguageLevel> = LanguageLevel.entries,
 ) {
     var isLearningLanguageMenuShown by remember { mutableStateOf(false) }
     var isTranslationLanguageMenuShown by remember { mutableStateOf(false) }
+    var isLanguageLevelMenuShown by remember { mutableStateOf(false) }
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -135,6 +147,20 @@ fun LanguageSelector(
                     R.string.language_selector_select_learning_language_content_description,
                     stringResource(leaningLanguage.languageName)
                 )
+            )
+        }
+        languageLevel?.let {
+            LanguageLevelSelector(
+                title = stringResource(R.string.top_bar_language_picker_level_label),
+                languageLevel = languageLevel,
+                onLanguageLevelSelected = onLanguageLevelSelected,
+                isMenuShown = isLanguageLevelMenuShown,
+                onMenuShownChanged = { isLanguageLevelMenuShown = it },
+                levelOptions = languageLevelOptions,
+                contentDescription = stringResource(
+                    R.string.language_selector_select_language_level_content_description,
+                    languageLevel.code,
+                ),
             )
         }
     }
@@ -244,6 +270,97 @@ private fun LanguageToggleButton(
             painter = painterResource(languageSelection.flag),
             contentDescription = contentDescription,
             contentScale = ContentScale.FillHeight,
+        )
+    }
+}
+
+/**
+ * A circular toggle button showing the current CEFR [languageLevel] (e.g. "B1") that opens a drop
+ * down of the available levels. Each option pairs the CEFR code with a plain-language description
+ * so a learner unfamiliar with the scale can still choose; the option stacks the two vertically so
+ * it stays legible at large font sizes rather than truncating on one line.
+ */
+@Composable
+fun LanguageLevelSelector(
+    modifier: Modifier = Modifier,
+    title: String,
+    languageLevel: LanguageLevel,
+    onLanguageLevelSelected: (LanguageLevel) -> Unit,
+    isMenuShown: Boolean,
+    onMenuShownChanged: (Boolean) -> Unit,
+    levelOptions: List<LanguageLevel> = LanguageLevel.entries,
+    contentDescription: String,
+) {
+    Box(modifier) {
+        LanguageLevelToggleButton(
+            languageLevel = languageLevel,
+            onClick = { onMenuShownChanged(!isMenuShown) },
+            contentDescription = contentDescription,
+        )
+        DropdownMenu(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            expanded = isMenuShown,
+            onDismissRequest = { onMenuShownChanged(false) },
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = title
+            )
+            levelOptions.forEach { level ->
+                DropdownMenuItem(
+                    text = { LanguageLevelOption(level) },
+                    onClick = {
+                        onLanguageLevelSelected(level)
+                        onMenuShownChanged(false)
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LanguageLevelToggleButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    languageLevel: LanguageLevel,
+    contentDescription: String,
+) {
+    OutlinedIconButton(
+        modifier = modifier.semantics { this.contentDescription = contentDescription },
+        shape = CircleShape,
+        onClick = onClick
+    ) {
+        Text(
+            text = languageLevel.code,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+/**
+ * One level in the drop down: the CEFR code above its plain-language description. Stacking them (and
+ * letting each wrap) keeps the option readable when the user has scaled the system font right up.
+ */
+@Composable
+private fun LanguageLevelOption(level: LanguageLevel) {
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(
+            text = level.code,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            text = stringResource(level.description),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

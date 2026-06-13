@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import input.comprehensible.data.textadventure.AdventureStatus
+import input.comprehensible.ui.components.LanguageLevel
 import input.comprehensible.ui.components.LanguageSelection
 import input.comprehensible.ui.textadventure.TextAdventuresListUiState.AdventureItem
 import input.comprehensible.ui.theme.ComprehensibleInputTheme
@@ -57,6 +58,7 @@ fun PreviewTextAdventuresSignedOut() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
             ),
         )
     }
@@ -76,6 +78,7 @@ fun PreviewTextAdventuresList() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
             ),
         )
     }
@@ -120,6 +123,7 @@ fun PreviewTextAdventuresDeletedSnackbar() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
                 undoableDeletedAdventureId = previewAdventures.first().id,
             ),
         )
@@ -140,6 +144,7 @@ fun PreviewTextAdventuresEmpty() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
             ),
         )
     }
@@ -159,6 +164,7 @@ fun PreviewTextAdventuresLoading() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
             ),
         )
     }
@@ -178,6 +184,7 @@ fun PreviewTextAdventuresError() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
             ),
         )
     }
@@ -197,6 +204,7 @@ fun PreviewTextAdventuresBusy() {
                 learningLanguage = LanguageSelection.GERMAN,
                 translationLanguage = LanguageSelection.ENGLISH,
                 languagesAvailable = LanguageSelection.entries,
+                languageLevel = LanguageLevel.B1,
             ),
         )
     }
@@ -218,6 +226,7 @@ private fun PreviewScreen(state: TextAdventuresListUiState) {
             onUndoDismissed = {},
             onLearningLanguageSelected = {},
             onTranslationLanguageSelected = {},
+            onLanguageLevelSelected = {},
             modifier = Modifier.fillMaxSize(),
         )
     }

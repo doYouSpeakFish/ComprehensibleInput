@@ -77,8 +77,9 @@ class TextAdventureRepository(
         userId: String,
         learningLanguage: String,
         translationLanguage: String,
+        languageLevel: String,
     ): Result<String> = runCatching {
-        val response = remoteDataSource.startAdventure(token, learningLanguage, translationLanguage)
+        val response = remoteDataSource.startAdventure(token, learningLanguage, translationLanguage, languageLevel)
         localDataSource.upsertAdventure(
             AdventureEntity(
                 id = response.adventureId,

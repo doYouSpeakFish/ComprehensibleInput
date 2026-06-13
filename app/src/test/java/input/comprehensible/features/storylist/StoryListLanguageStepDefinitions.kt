@@ -33,4 +33,9 @@ class StoryListLanguageStepDefinitions {
     fun theTranslationLanguageIs(language: String) {
         storyList.assertTranslationLanguageIs(StoryFixtures.languageCode(language))
     }
+
+    @Then("the language level picker is not shown")
+    fun theLanguageLevelPickerIsNotShown() {
+        storyList.assertLanguageLevelPickerIsHidden()
+    }
 }
