@@ -60,6 +60,12 @@ data class PersistedAdventurePart(
      */
     val imageId: String? = null,
     /**
+     * The CEFR difficulty level (e.g. "B1") the adventure is written at. Set when the adventure is
+     * created; left null when continuing an adventure so the repository preserves the level already
+     * stored.
+     */
+    val languageLevel: String? = null,
+    /**
      * The AI-authored plan for the adventure. Set when the adventure is created; left null when
      * continuing an adventure so the repository preserves the plan already stored. Never exposed
      * through the API.
@@ -103,4 +109,6 @@ data class AdventureNarrationContext(
     val plan: String?,
     /** AI-authored notes recorded on the adventure's messages so far, oldest first. */
     val notes: List<String>,
+    /** The CEFR difficulty level (e.g. "B1") the adventure is written at. */
+    val languageLevel: String,
 )

@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.map
 
 private val LEARNING_LANGUAGE = stringPreferencesKey("learning_language")
 private val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
+private val LANGUAGE_LEVEL = stringPreferencesKey("language_level")
+
+// The CEFR level new users start at, matching the backend's backwards-compatible default.
+private const val DEFAULT_LANGUAGE_LEVEL = "B1"
 
 /**
  * The default implementation of [LanguageSettingsLocalDataSource].
@@ -32,6 +36,9 @@ class DefaultLanguageSettingsLocalDataSource(
     override val translationsLanguage = context.dataStore.data
         .map { it[TRANSLATION_LANGUAGE] ?: "en" }
 
+    override val languageLevel = context.dataStore.data
+        .map { it[LANGUAGE_LEVEL] ?: DEFAULT_LANGUAGE_LEVEL }
+
     override suspend fun setLearningLanguage(language: String) {
         context.dataStore.edit {
             it[LEARNING_LANGUAGE] = language
@@ -41,6 +48,12 @@ class DefaultLanguageSettingsLocalDataSource(
     override suspend fun setTranslationLanguage(language: String) {
         context.dataStore.edit {
             it[TRANSLATION_LANGUAGE] = language
+        }
+    }
+
+    override suspend fun setLanguageLevel(level: String) {
+        context.dataStore.edit {
+            it[LANGUAGE_LEVEL] = level
         }
     }
 }

@@ -343,6 +343,43 @@ class TextAdventureV1ApiStepDefinitions {
         }
     }
 
+    @When("I create a text adventure with learning language {string}, translation language {string} and language level {string}")
+    fun createAdventureWithLevel(learningLanguage: String, translationLanguage: String, languageLevel: String) {
+        enqueueNarratorResponse(title = "Lantern Trail", sentence = "Hola", translation = "Hello")
+        runAgainstApplication {
+            client.post("/v1/adventures") {
+                authorizedIfPresent()
+                contentType(ContentType.Application.Json)
+                setBody(
+                    """
+                    {
+                      "learningLanguage":"$learningLanguage",
+                      "translationLanguage":"$translationLanguage",
+                      "languageLevel":"$languageLevel"
+                    }
+                    """.trimIndent(),
+                )
+            }
+        }
+    }
+
+    @Given("I have an existing adventure created at language level {string}")
+    fun haveExistingAdventureCreatedAtLanguageLevel(languageLevel: String) {
+        nextMessageIdIs("msg_ai_root")
+        enqueueNarratorResponse(title = "Lantern Trail", sentence = "Hola", translation = "Hello")
+        runAgainstApplication {
+            client.post("/v1/adventures") {
+                authorized(userAToken)
+                contentType(ContentType.Application.Json)
+                setBody("""{"learningLanguage":"es","translationLanguage":"en","languageLevel":"$languageLevel"}""")
+            }
+        }
+        userAAdventureId = extractJsonString(latestResponseBody, "adventureId")
+        rootMessageId = extractJsonString(latestResponseBody, "messageId")
+        userAAdventureIds.add(userAAdventureId)
+        adventureIdsByTitle["Lantern Trail"] = userAAdventureId
+    }
+
     @When("user A lists adventures")
     fun userAListsAdventures() {
         runAgainstApplication {
@@ -811,6 +848,29 @@ class TextAdventureV1ApiStepDefinitions {
         )
     }
 
+    @Then("the AI is asked to write at language level {string}")
+    fun theAiIsAskedToWriteAtLanguageLevel(languageLevel: String) {
+        assertNarratorPromptWritesAtLevel(promptName = START_PROMPT_NAME, languageLevel = languageLevel)
+    }
+
+    @Then("the AI is asked to continue writing at language level {string}")
+    fun theAiIsAskedToContinueWritingAtLanguageLevel(languageLevel: String) {
+        assertNarratorPromptWritesAtLevel(promptName = CONTINUE_PROMPT_NAME, languageLevel = languageLevel)
+    }
+
+    /**
+     * Asserts the most recent narrator prompt with [promptName] tells the AI to write at CEFR level
+     * [languageLevel], which is how the requested (or stored) difficulty reaches the model.
+     */
+    private fun assertNarratorPromptWritesAtLevel(promptName: String, languageLevel: String) {
+        val invocation = fakeExecutor.invocations.lastOrNull { it.promptName == promptName }
+            ?: error("Expected the AI to be asked to narrate with prompt '$promptName'")
+        assertTrue(
+            "Expected the $promptName prompt to instruct CEFR level $languageLevel",
+            invocation.systemPrompt.contains("CEFR level $languageLevel"),
+        )
+    }
+
     @Then("the AI is asked to open by describing the player and their inventory")
     fun theAiIsAskedToOpenByDescribingPlayerAndInventory() {
         val startInvocation = fakeExecutor.invocations.firstOrNull { it.promptName == START_PROMPT_NAME }
@@ -1069,5 +1129,6 @@ class TextAdventureV1ApiStepDefinitions {
         const val MAX_USER_MESSAGE_STRUCTURING_ATTEMPTS = 3
         const val PLAN_PROMPT_NAME = "text-adventure-plan"
         const val START_PROMPT_NAME = "text-adventure-start"
+        const val CONTINUE_PROMPT_NAME = "text-adventure-continue"
     }
 }

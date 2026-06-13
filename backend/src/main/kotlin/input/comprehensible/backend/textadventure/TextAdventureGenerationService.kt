@@ -11,6 +11,13 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.util.UUID
 
+/**
+ * The CEFR difficulty level a new adventure is written at when the client does not specify one.
+ * Kept as the request and column default so adventures from app versions that predate the level
+ * picker keep behaving as before.
+ */
+internal const val DEFAULT_LANGUAGE_LEVEL = "B1"
+
 @Suppress("TooManyFunctions")
 class TextAdventureGenerationService(
     private val structuredPromptExecutor: TextAdventureStructuredPromptExecutor,
@@ -27,6 +34,7 @@ class TextAdventureGenerationService(
         learningLanguage: String,
         translationsLanguage: String,
         accountId: String? = null,
+        languageLevel: String = DEFAULT_LANGUAGE_LEVEL,
     ): TextAdventureRemoteResponse {
         val previousAdventures = accountId
             ?.let { adventureRepository.listAdventureSummariesForAccount(it) }
@@ -50,6 +58,7 @@ class TextAdventureGenerationService(
                 Avoid markdown and keep punctuation natural for the language.
                 The story should not end yet, so set isEnding to false.
             """.trimIndent() +
+                languageLevelPromptSection(learningLanguage, languageLevel) +
                 imageSelectionPromptSection() +
                 previousAdventuresPromptSection(previousAdventures) +
                 planPromptSection(plan) +
@@ -77,6 +86,7 @@ class TextAdventureGenerationService(
                 imageId = chosenImageId,
                 plan = plan,
                 note = response.note,
+                languageLevel = languageLevel,
             )
         )
         return response.toRemoteResponse(messageId, imageId = chosenImageId)
@@ -187,6 +197,7 @@ class TextAdventureGenerationService(
                 Do not include extra commentary outside the requested fields.
                 Avoid markdown and keep punctuation natural for the language.
             """.trimIndent() +
+                languageLevelPromptSection(learningLanguage, context?.languageLevel ?: DEFAULT_LANGUAGE_LEVEL) +
                 planPromptSection(context?.plan) +
                 notesPromptSection(context?.notes.orEmpty()) +
                 notePromptSection() +
@@ -297,6 +308,17 @@ class TextAdventureGenerationService(
         val unused = AdventureImageCatalog.images.firstOrNull { it.id !in previousImageIds }
         return (unused ?: AdventureImageCatalog.fallback).id
     }
+
+    /**
+     * Instructs the narrator to pitch its [learningLanguage] writing at the adventure's CEFR
+     * difficulty [languageLevel] (e.g. "B1"). Included when an adventure is started and again on
+     * every later turn so the difficulty stays consistent across the whole adventure.
+     */
+    private fun languageLevelPromptSection(learningLanguage: String, languageLevel: String): String = "\n\n" + """
+        Write the $learningLanguage narration at CEFR level $languageLevel.
+        Use vocabulary, grammar and sentence length a learner at $languageLevel can follow, keeping the
+        difficulty within that level rather than noticeably easier or harder.
+    """.trimIndent()
 
     private fun inspirationPromptSection(): String {
         val words = inspirationWordSampler.sample()

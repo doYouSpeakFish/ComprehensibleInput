@@ -122,6 +122,12 @@ class TextAdventuresListStepDefinitions {
         scope.idle()
     }
 
+    @When("I set the language level to {word}")
+    fun iSetTheLanguageLevelTo(level: String) {
+        robot.setLanguageLevel(level)
+        scope.idle()
+    }
+
     @Then("the text adventures sign in prompt is shown")
     fun theSignInPromptIsShown() {
         robot.assertSignInPromptIsShown()
@@ -215,6 +221,16 @@ class TextAdventuresListStepDefinitions {
     @Then("the language picker shows {word} as the translation language")
     fun theLanguagePickerShowsAsTheTranslationLanguage(language: String) {
         robot.assertTranslationLanguageIs(language)
+    }
+
+    @Then("the language picker shows {word} as the language level")
+    fun theLanguagePickerShowsAsTheLanguageLevel(level: String) {
+        robot.assertLanguageLevelIs(level)
+    }
+
+    @Then("the adventure is started at language level {word}")
+    fun theAdventureIsStartedAtLanguageLevel(level: String) {
+        scope.assertAdventureStartedAtLevel(level)
     }
 
     @Then("the adventure is started learning {word} with translations in {word}")

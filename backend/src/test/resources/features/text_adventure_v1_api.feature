@@ -121,6 +121,29 @@ Feature: Text adventure v1 API
     And the AI is asked to open by describing the player and their inventory
 
   @v1
+  Scenario: A new adventure is written at the requested difficulty level
+    Given I am authenticated as a user account
+    When I create a text adventure with learning language "es", translation language "en" and language level "A2"
+    Then the response status is 201
+    And the AI is asked to write at language level "A2"
+
+  @v1
+  Scenario: A new adventure defaults to B1 difficulty when none is given
+    Given I am authenticated as a user account
+    When I create a text adventure with learning language "es" and translation language "en"
+    Then the response status is 201
+    And the AI is asked to write at language level "B1"
+
+  @v1
+  Scenario: An adventure keeps writing at its difficulty level as it continues
+    Given I have an existing adventure created at language level "C1"
+    And I have stored user message id "msg_user_1" with parent id "msg_ai_root" and text "Sigo adelante"
+    And the next message id is "msg_ai_1"
+    When I post a message with type "AI" and parent id "msg_user_1"
+    Then the response status is 201
+    And the AI is asked to continue writing at language level "C1"
+
+  @v1
   Scenario: An adventure's private plan and notes are never exposed through the API
     Given I am authenticated as a user account
     When I start an adventure where the AI plans "PLAN_SECRET" and notes "NOTE_SECRET"

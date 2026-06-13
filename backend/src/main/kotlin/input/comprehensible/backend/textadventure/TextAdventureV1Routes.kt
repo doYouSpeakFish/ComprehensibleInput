@@ -25,6 +25,7 @@ fun Route.textAdventureV1Routes(textAdventureService: TextAdventureGenerationSer
                 learningLanguage = request.learningLanguage,
                 translationsLanguage = request.translationLanguage,
                 accountId = principal.accountId,
+                languageLevel = request.languageLevel,
             )
             call.respond(HttpStatusCode.Created, response)
         }
@@ -123,6 +124,8 @@ private fun Route.adventureDeletionV1Routes(textAdventureService: TextAdventureG
 private data class StartTextAdventureV1Request(
     val learningLanguage: String,
     val translationLanguage: String,
+    /** The CEFR difficulty level (e.g. "B1"). Optional; defaults for older clients that omit it. */
+    val languageLevel: String = DEFAULT_LANGUAGE_LEVEL,
 )
 
 @Serializable

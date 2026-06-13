@@ -160,6 +160,22 @@ class TextAdventuresListRobot(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    // The level picker mirrors the language pickers: the toggle button describes the current level
+    // and each menu entry shows its CEFR code, so a level is chosen by tapping its code.
+    fun setLanguageLevel(level: String) {
+        composeTestRule.apply {
+            onNodeWithContentDescription("Select a language level", substring = true).performClick()
+            waitForIdle()
+            onNodeWithText(level).performClick()
+        }
+    }
+
+    fun assertLanguageLevelIs(level: String) {
+        composeTestRule
+            .onNodeWithContentDescription("Select a language level. Currently $level")
+            .assertIsDisplayed()
+    }
+
     fun assertAccountScreenIsShown() {
         composeTestRule.onNodeWithTag("account_screen").assertIsDisplayed()
     }

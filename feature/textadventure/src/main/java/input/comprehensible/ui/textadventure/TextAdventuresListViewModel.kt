@@ -8,6 +8,7 @@ import input.comprehensible.data.languagesettings.LanguageSettingsRepository
 import input.comprehensible.data.textadventure.AdventureSummary
 import input.comprehensible.data.textadventure.TextAdventureRepository
 import input.comprehensible.data.textadventure.sources.remote.isRateLimited
+import input.comprehensible.ui.components.LanguageLevel
 import input.comprehensible.ui.components.LanguageSelection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,10 +44,12 @@ class TextAdventuresListViewModel(
     private val languages = combine(
         languageSettingsRepository.learningLanguage,
         languageSettingsRepository.translationsLanguage,
-    ) { learning, translation ->
+        languageSettingsRepository.languageLevel,
+    ) { learning, translation, level ->
         Languages(
             learning = LanguageSelection.entries.firstOrNull { it.languageCode == learning },
             translation = LanguageSelection.entries.firstOrNull { it.languageCode == translation },
+            level = LanguageLevel.fromCode(level),
         )
     }
 
@@ -80,6 +83,7 @@ class TextAdventuresListViewModel(
             learningLanguage = currentLanguages.learning,
             translationLanguage = currentLanguages.translation,
             languagesAvailable = LanguageSelection.entries,
+            languageLevel = currentLanguages.level,
             undoableDeletedAdventureId = deletion.undoableDeleteId,
         )
     }.stateIn(
@@ -112,6 +116,16 @@ class TextAdventuresListViewModel(
     fun onTranslationLanguageSelected(translationLanguage: LanguageSelection) {
         viewModelScope.launch {
             languageSettingsRepository.setTranslationLanguage(translationLanguage.languageCode)
+        }
+    }
+
+    /**
+     * Called when the user picks a CEFR difficulty level from the top bar's level picker. New
+     * adventures are started at this level.
+     */
+    fun onLanguageLevelSelected(languageLevel: LanguageLevel) {
+        viewModelScope.launch {
+            languageSettingsRepository.setLanguageLevel(languageLevel.code)
         }
     }
 
@@ -183,6 +197,7 @@ class TextAdventuresListViewModel(
     private data class Languages(
         val learning: LanguageSelection?,
         val translation: LanguageSelection?,
+        val level: LanguageLevel,
     )
 
     private companion object {
