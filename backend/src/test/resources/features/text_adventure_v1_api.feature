@@ -352,7 +352,7 @@ Feature: Text adventure v1 API
   Scenario: Two players starting the same preplanned adventure cannot read each other's messages
     Given user A starts the first bundled preplanned adventure
     And user B starts the first bundled preplanned adventure
-    Then the two started adventures have different ids
+    Then user A's started adventure and user B's started adventure have different ids
     When user B fetches user A's started preplanned adventure messages
     Then the response status is 404
 
@@ -368,10 +368,14 @@ Feature: Text adventure v1 API
     And neither the started adventure nor its messages expose the preplanned plan
 
   @v1
-  Scenario: Preplanned adventure requests require authentication
+  Scenario: Listing preplanned adventures requires authentication
     Given I am not authenticated
     When I list preplanned adventures
     Then the response status is 401
+
+  @v1
+  Scenario: Starting a preplanned adventure requires authentication
+    Given I am not authenticated
     When I start the first bundled preplanned adventure
     Then the response status is 401
 

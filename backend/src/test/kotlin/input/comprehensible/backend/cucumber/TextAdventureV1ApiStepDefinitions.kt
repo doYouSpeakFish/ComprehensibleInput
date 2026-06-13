@@ -1054,8 +1054,8 @@ class TextAdventureV1ApiStepDefinitions {
         userBAdventureId = extractJsonString(latestResponseBody, "adventureId")
     }
 
-    @Then("the two started adventures have different ids")
-    fun theTwoStartedAdventuresHaveDifferentIds() {
+    @Then("user A's started adventure and user B's started adventure have different ids")
+    fun userAAndUserBStartedAdventuresHaveDifferentIds() {
         assertTrue(userAAdventureId.isNotBlank())
         assertTrue(userBAdventureId.isNotBlank())
         assertFalse("Each player should get their own adventure", userAAdventureId == userBAdventureId)
