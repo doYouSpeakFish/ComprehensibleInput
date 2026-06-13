@@ -114,6 +114,13 @@ Feature: Text adventure v1 API
     And the AI is asked to write a plan for an adventure
 
   @v1
+  Scenario: The first narrator message introduces the player, their inventory and the start of the adventure
+    Given I am authenticated as a user account
+    When I create a text adventure with learning language "es" and translation language "en"
+    Then the response status is 201
+    And the AI is asked to open by describing the player and their inventory
+
+  @v1
   Scenario: An adventure's private plan and notes are never exposed through the API
     Given I am authenticated as a user account
     When I start an adventure where the AI plans "PLAN_SECRET" and notes "NOTE_SECRET"
